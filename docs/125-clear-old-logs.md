@@ -1,7 +1,3 @@
-I'll create the user story for Clear Old Logs (US-125).
-
----
-
 # US-125: Clear Old Logs
 
 ## User Story

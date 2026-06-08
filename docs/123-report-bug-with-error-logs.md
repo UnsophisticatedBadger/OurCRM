@@ -1,7 +1,3 @@
-I'll create the user story for Report Bug with Error Logs (US-123).
-
----
-
 # US-123: Report Bug with Error Logs
 
 ## User Story

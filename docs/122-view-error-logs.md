@@ -1,7 +1,3 @@
-I'll create the user story for View Error Logs (US-122), starting the Error Handling & Logging category.
-
----
-
 # US-122: View Error Logs
 
 ## User Story
