@@ -1,0 +1,84 @@
+[project]
+name = "ourcrm"
+version = "0.1.0"
+description = "A desktop CRM for real estate agents."
+readme = "README.md"
+requires-python = ">=3.14"
+
+dependencies = [
+    "pyside6>=6.11.1",
+]
+
+
+[dependency-groups]
+dev = [
+    "mypy>=1.14",
+    "nuitka>=2.5",
+    "pre-commit>=4.0",
+    "pytest>=9.0",
+    "pytest-bdd>=8.1",
+    "pytest-cov>=7.1",
+    "ruff>=0.9",
+]
+
+# ---------------------------------------------------------------------------
+# ruff — linter + formatter (replaces black, isort, flake8)
+# ---------------------------------------------------------------------------
+[tool.ruff]
+target-version = "py313"
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "N",   # pep8-naming
+    "UP",  # pyupgrade
+    "ANN", # flake8-annotations (enforces type hints)
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "SIM", # flake8-simplify
+    "RUF", # ruff-specific rules
+]
+ignore = [
+
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["ANN"]  # don't require annotations in test files
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+# ---------------------------------------------------------------------------
+# mypy — strict type checking
+# ---------------------------------------------------------------------------
+[tool.mypy]
+python_version = "3.14"
+mypy_path = "src"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+show_error_codes = true
+pretty = true
+
+# ---------------------------------------------------------------------------
+# pytest
+# ---------------------------------------------------------------------------
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+addopts = [
+    "--cov=ourcrm",
+    "--cov-report=term-missing",
+    "--cov-report=html:htmlcov",
+    "--strict-markers",
+]
+
+[tool.coverage.run]
+source = ["src/ourcrm"]
+omit = ["tests/*"]
