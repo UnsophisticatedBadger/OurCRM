@@ -11,5 +11,6 @@ repos:
     hooks:
       - id: mypy
         args: [--strict]
+        files: ^(src|scripts)/
         additional_dependencies:
           - PySide6-stubs

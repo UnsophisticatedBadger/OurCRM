@@ -9,3 +9,4 @@
 |US-003| Run Linters and Formatters|	S|	Testing|
 |US-004| Run Test Suite|	S|	Testing|
 |US-005| Build Standalone Executable|	M|	Distribution|
+|US-173| Setup CI Pipeline|	S|	Infrastructure|

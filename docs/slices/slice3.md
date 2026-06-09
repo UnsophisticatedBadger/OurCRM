@@ -9,4 +9,6 @@ US-134: In-App Help & Documentation
 US-169: Dashboard Quick Actions Widget
 US-170: Dashboard Stats Widget
 
-Total: 9 stories
+US-174: Build Executable on Tag
+
+Total: 10 stories

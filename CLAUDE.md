@@ -62,7 +62,7 @@ A slice is a collection of related user stories defined in `docs/slices/SliceN.m
 | Start of slice | 50% | Tests exist and are meaningful before building |
 | End of slice | 85% | Slice is complete and well-covered |
 
-## Development Workflow (Red-Green-Refactor)
+## Development Workflow (Double-Loop TDD)
 
 Every change follows these steps in strict order. No step is skipped or compressed.
 
@@ -71,21 +71,36 @@ Every change follows these steps in strict order. No step is skipped or compress
 - Explain the planned changes
 - Answer questions → wait for explicit confirmation before proceeding
 
-### Step 2 — Red (failing test)
-- Write the test(s)
-- Run them to confirm they fail
+### Step 2 — BDD Red
+- Write the `.feature` file
+- Write step definitions for every step in the feature file
+- Run them to confirm they all fail
 - Answer questions → wait for explicit confirmation before proceeding
 
-### Step 3 — Green (passing implementation)
-- Write the minimum code to make the tests pass
-- Run the tests to confirm they pass
-- Run `ruff`, `mypy`, and coverage to confirm gates are met
+### Step 3 — Inner Loop (repeat for each unit until the BDD step turns Green)
 
-### Step 4 — Refactor
+#### 3a — Unit Red
+- Write a failing unit test for the smallest unit needed by the current BDD step
+- Run it to confirm it fails
+- Answer questions → wait for explicit confirmation before proceeding
+
+#### 3b — Unit Green
+- Write the minimum code to make the unit test pass
+- Run the unit test to confirm it passes
+
+#### 3c — Unit Refactor
 - Explain what refactorings can and should be done
 - Answer questions → wait for explicit confirmation before proceeding
 - Apply the agreed refactorings
 - Re-run tests to confirm nothing broke
+
+#### 3d — BDD step check
+- If the BDD step now passes with the units built so far, mark it Green and move to the next step
+- Otherwise return to 3a for the next unit
+
+### Step 4 — Slice complete
+- All BDD steps are Green
+- Run `ruff`, `mypy`, and coverage to confirm the 85% gate is met
 
 ## User Stories
 All stories live in `docs/NNN-story-name.md`. Always read the relevant story before starting.
