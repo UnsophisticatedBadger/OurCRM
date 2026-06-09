@@ -1,0 +1,32 @@
+# Normalize all text files to LF in the repo; Git converts on checkout per-OS
+* text=auto eol=lf
+
+# Explicit text files
+*.py    text eol=lf
+*.toml  text eol=lf
+*.yaml  text eol=lf
+*.yml   text eol=lf
+*.md    text eol=lf
+*.txt   text eol=lf
+*.cfg   text eol=lf
+*.ini   text eol=lf
+*.sh    text eol=lf
+*.feature text eol=lf
+
+# Windows scripts keep CRLF
+*.bat   text eol=crlf
+*.cmd   text eol=crlf
+*.ps1   text eol=crlf
+
+# Binary — never mangle
+*.png   binary
+*.jpg   binary
+*.ico   binary
+*.db    binary
+*.sqlite binary
+*.exe   binary
+*.dll   binary
+*.so    binary
+*.dylib binary
+*.pdf   binary
+*.zip   binary
