@@ -116,6 +116,7 @@ Then I should see information about the exponential backoff
   And I should be able to understand how it works
 ```
 
+
 ## Manual Testing Steps
 
 ### Test 1: View all Security settings

@@ -4,6 +4,13 @@ version = "0.1.0"
 description = "A desktop CRM for real estate agents."
 readme = "README.md"
 requires-python = ">=3.14"
+dependencies = [
+    "alembic>=1.18.4",
+    "argon2-cffi>=25.1.0",
+    "cryptography>=48.0.0",
+    "keyring>=25.7.0",
+    "sqlalchemy>=2.0.50",
+]
 
 [project.scripts]
 ourcrm = "ourcrm.main:main"
@@ -87,6 +94,9 @@ addopts = [
     "--cov-report=term-missing",
     "--cov-report=html:htmlcov",
     "--strict-markers",
+]
+filterwarnings = [
+    "ignore:unclosed database:ResourceWarning",
 ]
 
 [tool.coverage.run]

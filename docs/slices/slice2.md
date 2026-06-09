@@ -7,4 +7,3 @@
 | US-014 |	Create Encrypted Database | M | Database + Security |
 | US-127 |	Change Master Password | M | Security + UI |
 | US-128 |	Password Recovery Using Recovery Password| M | Security + UI |
-| US-129 | Logout Functionality |S | Security + UI|

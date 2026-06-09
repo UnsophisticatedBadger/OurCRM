@@ -165,7 +165,7 @@ Given I am recovering my password When I enter a new password And enter a differ
 - [ ] Database is re-encrypted with new password
 - [ ] User can log in with new password immediately
 - [ ] All data remains accessible after recovery
-- [ ] Recovery attempts are logged
+- [ ] Recovery attempts are logged — **deferred to US-169 (Security Event Logging)**
 - [ ] Recovery password can be used multiple times
 - [ ] Error messages don't reveal if recovery password exists
 - [ ] Recovery flow is secure and atomic
