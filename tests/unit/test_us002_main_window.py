@@ -1,29 +1,32 @@
-"""Unit tests for US-002: MainWindow."""
+"""Unit tests for US-002: Run Application entry point."""
+
+from __future__ import annotations
 
 from unittest.mock import patch
 
 from pytestqt.qtbot import QtBot
 
-
-def test_main_window_title(qtbot: QtBot) -> None:
-    from ourcrm.ui.main_window import MainWindow
-
-    window = MainWindow()
-    qtbot.addWidget(window)
-    assert window.windowTitle() == "OurCRM"
+from ourcrm.main import main
+from ourcrm.ui.main_window import MainWindow
 
 
-def test_main_creates_window_and_shows_it() -> None:
+def test_main_creates_and_shows_main_window(qtbot: QtBot) -> None:
+    captured: list[MainWindow] = []
+
+    def make_window() -> MainWindow:
+        w = MainWindow()
+        captured.append(w)
+        return w
+
     with (
         patch("ourcrm.main.QApplication") as mock_app_cls,
-        patch("ourcrm.main.MainWindow") as mock_window_cls,
         patch("ourcrm.main.sys.exit"),
+        patch("ourcrm.main.MainWindow", side_effect=make_window),
     ):
+        mock_app_cls.instance.return_value = None
         mock_app_cls.return_value.exec.return_value = 0
-
-        from ourcrm.main import main
-
         main()
 
-        mock_window_cls.assert_called_once()
-        mock_window_cls.return_value.show.assert_called_once()
+    assert len(captured) == 1
+    assert captured[0].isVisible()
+    qtbot.addWidget(captured[0])

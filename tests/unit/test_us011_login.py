@@ -17,6 +17,11 @@ def service() -> AuthService:
     return svc
 
 
+@pytest.fixture
+def service_no_password() -> AuthService:
+    return AuthService(hasher=_HASHER)
+
+
 # ── LoginResult contract ───────────────────────────────────────────────────────
 
 
@@ -81,6 +86,20 @@ def test_empty_password_returns_failure(service: AuthService) -> None:
 def test_empty_password_error_message(service: AuthService) -> None:
     result = service.login("")
     assert result.error == "Password is required"
+
+
+def test_login_without_master_password_set_returns_failure(
+    service_no_password: AuthService,
+) -> None:
+    result = service_no_password.login(_PASSWORD)
+    assert not result.success
+
+
+def test_login_without_master_password_set_error_message(
+    service_no_password: AuthService,
+) -> None:
+    result = service_no_password.login(_PASSWORD)
+    assert result.error == "No master password set"
 
 
 # ── Exponential backoff ────────────────────────────────────────────────────────

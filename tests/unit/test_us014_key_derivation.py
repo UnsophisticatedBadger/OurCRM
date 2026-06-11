@@ -5,6 +5,19 @@ from ourcrm.core.security.key_derivation import KeyDerivationService
 _SERVICE = KeyDerivationService(time_cost=1, memory_cost=8, parallelism=1)
 
 
+# ── Default construction ───────────────────────────────────────────────────────
+
+
+def test_default_params_derive_key_returns_bytes() -> None:
+    service = KeyDerivationService()
+    key = service.derive_key("SecureP@ssw0rd!2024", b"\x00" * 16)
+    assert isinstance(key, bytes)
+    assert len(key) == 32
+
+
+# ── derive_key ─────────────────────────────────────────────────────────────────
+
+
 def test_derive_key_returns_32_bytes() -> None:
     salt = b"\x00" * 16
     key = _SERVICE.derive_key("SecureP@ssw0rd!2024", salt)

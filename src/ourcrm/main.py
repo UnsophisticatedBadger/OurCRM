@@ -6,7 +6,7 @@ from ourcrm.ui.main_window import MainWindow
 
 
 def main() -> None:
-    app = QApplication(sys.argv)
+    app = QApplication.instance() or QApplication(sys.argv)
     window = MainWindow()
     window.show()
     sys.exit(app.exec())

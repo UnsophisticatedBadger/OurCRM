@@ -5,6 +5,15 @@ from ourcrm.core.security.password_hasher import PasswordHasher
 FAST_HASHER = PasswordHasher(time_cost=1, memory_cost=8, parallelism=1)
 
 
+# ── Default construction ───────────────────────────────────────────────────────
+
+
+def test_default_hasher_hashes_and_verifies() -> None:
+    hasher = PasswordHasher()
+    hashed = hasher.hash("SecureP@ssw0rd!2024")
+    assert hasher.verify("SecureP@ssw0rd!2024", hashed) is True
+
+
 # ── Hash format ────────────────────────────────────────────────────────────────
 
 
@@ -43,6 +52,15 @@ def test_wrong_password_does_not_verify() -> None:
 def test_empty_password_does_not_verify_against_hash() -> None:
     hashed = FAST_HASHER.hash("SecureP@ssw0rd!2024")
     assert FAST_HASHER.verify("", hashed) is False
+
+
+def test_verify_with_invalid_hash_format_returns_false() -> None:
+    assert FAST_HASHER.verify("SecureP@ssw0rd!2024", "not-a-valid-hash") is False
+
+
+def test_verify_with_truncated_hash_returns_false() -> None:
+    hashed = FAST_HASHER.hash("SecureP@ssw0rd!2024")
+    assert FAST_HASHER.verify("SecureP@ssw0rd!2024", hashed[:10]) is False
 
 
 # ── Strength evaluation ────────────────────────────────────────────────────────
