@@ -119,7 +119,18 @@ Then those transactions should be highlighted
   And I should be able to see them at a glance
 ```
 
-### Scenario 8: List loads quickly
+### Scenario 8: Transaction list state is preserved when switching sections
+
+```
+Given I am viewing the transaction list
+  And I have filtered by "Under Contract" status
+When I navigate to the Contacts section
+  And I navigate back to Transactions
+Then only Under Contract transactions should still be displayed
+  And the status filter should still be active
+```
+
+### Scenario 9: List loads quickly
 
 ```
 Given I have 150 transactions
@@ -191,7 +202,16 @@ Then the list should load in under 2 seconds
 5. Test scrolling performance
 6. Verify UI remains responsive
 
-### Test 8: Test on all platforms
+### Test 8: Test state preservation when switching sections
+
+1. Navigate to the Transactions section
+2. Apply the "Under Contract" status filter
+3. Navigate to the Contacts section
+4. Navigate back to Transactions
+5. Verify the "Under Contract" filter is still active
+6. Verify only matching transactions are shown
+
+### Test 9: Test on all platforms
 
 1. Test transaction list on Windows
 2. Verify it works
@@ -214,6 +234,7 @@ Then the list should load in under 2 seconds
 - [ ] List loads in under 2 seconds with 150 transactions
 - [ ] Scrolling is smooth with large lists
 - [ ] UI remains responsive
+- [ ] Section state (scroll position, sort column and direction, active status filter) is preserved when navigating away and back
 - [ ] Works on Windows, macOS, and Linux
 - [ ] Visual design is clean and professional
 - [ ] Status colors are consistent and readable

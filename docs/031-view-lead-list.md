@@ -109,7 +109,18 @@ Then the leads should be sorted by budget
   And high-budget leads should appear first (or last, depending on user preference)
 ```
 
-### Scenario 7: List loads quickly
+### Scenario 7: Lead list state is preserved when switching sections
+
+```
+Given I am viewing the lead list
+  And I have filtered by "Hot" status
+When I navigate to the Contacts section
+  And I navigate back to Leads
+Then only Hot leads should still be displayed
+  And the status filter should still be active
+```
+
+### Scenario 8: List loads quickly
 
 ```
 Given I have 200 leads
@@ -172,7 +183,16 @@ Then the list should load in under 2 seconds
 5. Test scrolling performance
 6. Verify UI remains responsive
 
-### Test 7: Test on all platforms
+### Test 7: Test state preservation when switching sections
+
+1. Navigate to the Leads section
+2. Apply the "Hot" status filter
+3. Navigate to the Contacts section
+4. Navigate back to Leads
+5. Verify the "Hot" filter is still active
+6. Verify only Hot leads are shown
+
+### Test 8: Test on all platforms
 
 1. Test lead list on Windows
 2. Verify it works
@@ -194,6 +214,7 @@ Then the list should load in under 2 seconds
 - [ ] List loads in under 2 seconds with 200 leads
 - [ ] Scrolling is smooth with large lists
 - [ ] UI remains responsive
+- [ ] Section state (scroll position, sort column and direction, active status filter) is preserved when navigating away and back
 - [ ] Works on Windows, macOS, and Linux
 - [ ] Visual design is clean and professional
 - [ ] Status colors are consistent and readable

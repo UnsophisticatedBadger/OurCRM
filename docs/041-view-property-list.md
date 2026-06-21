@@ -109,7 +109,18 @@ Then the properties should be sorted by address
   And the sorting should be alphabetical
 ```
 
-### Scenario 7: List loads quickly
+### Scenario 7: Property list state is preserved when switching sections
+
+```
+Given I am viewing the property list
+  And I have filtered by "Active" status
+When I navigate to the Contacts section
+  And I navigate back to Properties
+Then only Active properties should still be displayed
+  And the status filter should still be active
+```
+
+### Scenario 8: List loads quickly
 
 ```
 Given I have 100 properties
@@ -173,7 +184,16 @@ Then the list should load in under 2 seconds
 5. Test scrolling performance
 6. Verify UI remains responsive
 
-### Test 7: Test on all platforms
+### Test 7: Test state preservation when switching sections
+
+1. Navigate to the Properties section
+2. Apply the "Active" status filter
+3. Navigate to the Contacts section
+4. Navigate back to Properties
+5. Verify the "Active" filter is still active
+6. Verify only Active properties are shown
+
+### Test 8: Test on all platforms
 
 1. Test property list on Windows
 2. Verify it works
@@ -195,6 +215,7 @@ Then the list should load in under 2 seconds
 - [ ] List loads in under 2 seconds with 100 properties
 - [ ] Scrolling is smooth with large lists
 - [ ] UI remains responsive
+- [ ] Section state (scroll position, sort column and direction, active status filter) is preserved when navigating away and back
 - [ ] Works on Windows, macOS, and Linux
 - [ ] Visual design is clean and professional
 - [ ] Status colors are consistent and readable

@@ -110,7 +110,18 @@ Then I can move to:
   - Today (jump to current date)
 ```
 
-### Scenario 8: Events are color-coded
+### Scenario 8: Calendar state is preserved when switching sections
+
+```
+Given I am viewing the calendar in week view
+  And I have navigated to a specific week
+When I navigate to the Contacts section
+  And I navigate back to Calendar
+Then the calendar should still be in week view
+  And the same week should be displayed
+```
+
+### Scenario 9: Events are color-coded
 
 ```
 Given I have different types of events
@@ -190,7 +201,17 @@ Then events should be color-coded by type:
 4. Verify it's easy to distinguish
 5. Check in all views
 
-### Test 9: Test on all platforms
+### Test 9: Test state preservation when switching sections
+
+1. Navigate to the Calendar section
+2. Switch to week view
+3. Navigate to a specific week (not the current week)
+4. Navigate to the Contacts section
+5. Navigate back to Calendar
+6. Verify the calendar is still in week view
+7. Verify the same week is displayed
+
+### Test 10: Test on all platforms
 
 1. Test on Windows
 2. Verify it works
@@ -212,6 +233,7 @@ Then events should be color-coded by type:
 - [ ] Events are color-coded by type
 - [ ] Calendar loads quickly
 - [ ] Scrolling is smooth
+- [ ] Section state (current view mode and displayed date/period) is preserved when navigating away and back
 - [ ] Works on Windows, macOS, and Linux
 - [ ] Visual design is clean and professional
 - [ ] Calendar is intuitive and easy to use

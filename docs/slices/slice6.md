@@ -1,12 +1,15 @@
-SLICE 6: Lead Core (Sprint 13-15)
-US-030: Create a New Lead
-US-031: View Lead List
-US-032: Assign Lead Status
-US-033: Set Lead Budget Range
-US-034: Track Lead Source
-US-035: Move Lead Through Pipeline
-US-036: View Sales Pipeline
-US-037: Mark Lead as Converted
-US-038: View Converted Leads
-US-131: Lead Activity History
-Total: 10 stories
+# Slice 6: Contact Core & Search
+
+| Story # | Title | Layer | Status |
+|---------|-------|-------|--------|
+| US-020 | Create a New Contact | Data + UI | |
+| US-021 | View Contact List | Data + UI | |
+| US-022 | View Contact Details | Data + UI | |
+| US-023 | Edit a Contact | Data + UI | |
+| US-024 | Delete a Contact | Data + UI | |
+| US-025 | Add Notes to a Contact | Data + UI | |
+| US-028 | Search Contacts | Data + UI | |
+| US-029 | Search Across All Fields | Data + UI | |
+| US-060 | Search Contacts Globally | Data + UI | |
+| US-130 | Contact Categories/Groups | Data + UI | |
+| US-169 | Security Event Logging | Security | |

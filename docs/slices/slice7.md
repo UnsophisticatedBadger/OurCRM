@@ -1,10 +1,15 @@
-SLICE 7: Email Integration (Sprint 16-18)
-US-073: Configure Email Settings
-US-070: Send Email to Contact
-US-071: Use Email Templates
-US-072: View Email History in Contact Timeline
-US-074: Send Email with Attachments
-US-075: Attach Contact Documents to Email
-US-141: Check for Application Updates
-US-142: Update Notifications and Installation
-Total: 8 stories
+# Slice 7: Lead Management
+
+| Story # | Title | Layer | Status |
+|---------|-------|-------|--------|
+| US-030 | Create a New Lead | Data + UI | |
+| US-031 | View Lead List | Data + UI | |
+| US-032 | Assign Lead Status | Data + UI | |
+| US-033 | Set Lead Budget Range | Data + UI | |
+| US-034 | Track Lead Source | Data + UI | |
+| US-035 | Move Lead Through Pipeline | Data + UI | |
+| US-036 | View Sales Pipeline | Data + UI | |
+| US-037 | Mark Lead as Converted | Data + UI | |
+| US-038 | View Converted Leads | Data + UI | |
+| US-039 | Track Conversion Rate | Data + UI | |
+| US-131 | Lead Activity History | Data + UI | |

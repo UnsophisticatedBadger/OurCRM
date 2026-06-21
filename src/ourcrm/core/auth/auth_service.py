@@ -18,6 +18,7 @@ class AuthService:
         self._hasher = hasher
         self._validator = validator if validator is not None else PasswordValidator()
         self._failure_count: int = 0
+        self._is_logged_in: bool = False
 
     def create_master_password(self, password: str) -> None:
         hashed = self._hasher.hash(password)
@@ -33,6 +34,7 @@ class AuthService:
 
         if self._hasher.verify(password, stored_hash):
             self._failure_count = 0
+            self._is_logged_in = True
             return LoginResult(success=True)
 
         self._failure_count += 1
@@ -71,6 +73,13 @@ class AuthService:
         new_hash = self._hasher.hash(new_password)
         keyring.set_password(_SERVICE, _MASTER_HASH_KEY, new_hash)
         return AuthResult(success=True)
+
+    def logout(self) -> None:
+        self._is_logged_in = False
+
+    @property
+    def is_logged_in(self) -> bool:
+        return self._is_logged_in
 
     @property
     def failure_count(self) -> int:

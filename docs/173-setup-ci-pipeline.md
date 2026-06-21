@@ -41,77 +41,15 @@ A GitHub Actions workflow should run automatically on every push and pull reques
 
 The pipeline should use uv caching to keep install times under 60 seconds.
 
-## BDD Scenarios
-
-### Scenario 1: Pipeline passes on clean code
-
-```
-Given a push is made to a branch with all checks passing
-When the CI pipeline runs
-Then all steps complete successfully
-  And the pipeline reports green
-```
-
-### Scenario 2: Pipeline fails on lint error
-
-```
-Given a push is made with a ruff violation
-When the CI pipeline runs
-Then the ruff step fails
-  And the pipeline reports red
-  And the failure message identifies the violation
-```
-
-### Scenario 3: Pipeline fails on type error
-
-```
-Given a push is made with a mypy error
-When the CI pipeline runs
-Then the mypy step fails
-  And the pipeline reports red
-```
-
-### Scenario 4: Pipeline fails on test failure
-
-```
-Given a push is made with a failing test
-When the CI pipeline runs
-Then the pytest step fails
-  And the pipeline reports red
-```
-
-## Manual Testing Steps
-
-### Test 1: Verify pipeline triggers on push
-
-1. Push a commit to a feature branch
-2. Open GitHub Actions tab
-3. Verify the workflow starts automatically
-4. Verify all steps run
-
-### Test 2: Verify pipeline fails correctly
-
-1. Introduce an intentional ruff violation
-2. Push the commit
-3. Verify the ruff step fails
-4. Verify the error message is clear
-5. Revert the violation
-
-### Test 3: Verify caching works
-
-1. Trigger the pipeline twice
-2. Compare the install step duration
-3. Verify the second run is faster due to caching
-
 ## Acceptance Criteria
 
-- [ ] Workflow file exists at `.github/workflows/ci.yml`
-- [ ] Pipeline triggers on push and pull_request to main
-- [ ] Pipeline runs on ubuntu-latest with Python 3.13
-- [ ] uv is installed and dependencies are cached
-- [ ] ruff check passes
-- [ ] ruff format --check passes
-- [ ] mypy src/ scripts/ passes
-- [ ] pytest passes with coverage
-- [ ] Pipeline status is visible on PRs
-- [ ] Failed steps produce clear error messages
+- [x] Workflow file exists at `.github/workflows/ci.yml`
+- [x] Pipeline triggers on push and pull_request to main
+- [x] Pipeline runs on ubuntu-latest with Python 3.14
+- [x] uv is installed and dependencies are cached
+- [x] ruff check passes
+- [x] ruff format --check passes
+- [x] mypy src/ scripts/ tests/ passes
+- [x] pytest passes with coverage
+- [x] Pipeline status is visible on PRs
+- [x] Failed steps produce clear error messages

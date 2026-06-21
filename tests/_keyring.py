@@ -2,7 +2,7 @@ from keyring.backend import KeyringBackend
 
 
 class InMemoryKeyring(KeyringBackend):
-    priority: float = 10.0
+    priority: float = 10.0  # type: ignore[assignment]
 
     def __init__(self) -> None:
         self._store: dict[tuple[str, str], str] = {}

@@ -104,7 +104,19 @@ Then the contact details should open
   And I should be able to view all information about the contact
 ```
 
-### Scenario 7: List loads quickly
+### Scenario 7: Contact list state is preserved when switching sections
+
+```
+Given I am viewing the contact list
+  And I have sorted by email ascending
+  And I have scrolled to the middle of the list
+When I navigate to the Leads section
+  And I navigate back to Contacts
+Then the contact list should still be sorted by email ascending
+  And the scroll position should be preserved
+```
+
+### Scenario 8: List loads quickly
 
 ```
 Given I have 500 contacts
@@ -179,7 +191,17 @@ Then the list should load in under 2 seconds
 4. Verify it's not awkward with just 1-2 items
 5. Test with 0 contacts (empty state)
 
-### Test 8: Test on all platforms
+### Test 8: Test state preservation when switching sections
+
+1. Navigate to the Contacts section
+2. Sort by email
+3. Scroll to the middle of the list
+4. Navigate to the Leads section
+5. Navigate back to Contacts
+6. Verify the sort column and direction are unchanged
+7. Verify the scroll position is restored
+
+### Test 9: Test on all platforms
 
 1. Test contact list on Windows
 2. Verify it displays correctly
@@ -202,5 +224,6 @@ Then the list should load in under 2 seconds
 - [ ] List loads in under 2 seconds with 500 contacts
 - [ ] Scrolling is smooth with large lists
 - [ ] UI remains responsive with large lists
+- [ ] Section state (scroll position, sort column and direction) is preserved when navigating away and back
 - [ ] Works on Windows, macOS, and Linux
 - [ ] Visual design is clean and professional

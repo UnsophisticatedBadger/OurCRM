@@ -1,3 +1,5 @@
-SLICE 19: Plugin System (Sprint 47-48)
-US-164: Plugin Installation and Management
-Total: 1 story
+# Slice 19: Time Zones
+
+| Story # | Title | Layer | Status |
+|---------|-------|-------|--------|
+| US-161 | Display Times in Different Time Zones | Data + UI | |

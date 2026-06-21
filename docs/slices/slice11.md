@@ -1,11 +1,12 @@
-SLICE 11: Import/Export & Backup (Sprint 28-29)
-US-135: Import from Excel
-US-136: Save Field Mappings for Import
-US-137: Export to JSON (Full Backup)
-US-138: Export Selected or Filtered Contacts
-US-112: Handle Duplicate Contacts During Import
-US-113: Import Leads from CSV
-US-105: Create Manual Backup
-US-106: Restore from Backup
-US-107: View Backup History
-Total: 9 stories
+# Slice 11: Email Integration
+
+| Story # | Title | Layer | Status |
+|---------|-------|-------|--------|
+| US-073 | Configure Email Settings | Integration | |
+| US-070 | Send Email to Contact | Integration | |
+| US-071 | Use Email Templates | Integration | |
+| US-072 | View Email History in Contact Timeline | Integration | |
+| US-074 | Send Email with Attachments | Integration | |
+| US-075 | Attach Contact Documents to Email | Integration | |
+| US-141 | Check for Application Updates | Infrastructure | |
+| US-142 | Update Notifications and Installation | Infrastructure | |

@@ -1,23 +1,13 @@
-SLICE 4: Contact Core + Task Core (Sprint 7-10)
-US-020: Create a New Contact
-US-021: View Contact List
-US-022: View Contact Details
-US-023: Edit a Contact
-US-024: Delete a Contact
-US-028: Search Contacts
-US-029: Search Across All Fields
-US-060: Search Contacts Globally
-US-025: Add Notes to a Contact
-US-130: Contact Categories/Groups
-US-080: Create a Task
-US-081: View Task List
-US-082: Mark Task as Complete
-US-083: Set Task Priority
-US-084: Task Due Date and Reminder
-US-085: View Overdue Tasks
-US-086: View Today's Tasks
-US-087: Edit a Task
-US-088: Delete a Task
-US-171: Dashboard Today's Schedule Widget
-US-172: Dashboard Recent Activity Widget
-Total: 21 stories
+# Slice 4: Calendar & Showings
+
+| Story # | Title | Layer | Status |
+|---------|-------|-------|--------|
+| US-076 | Create a Calendar Event | Data + UI | |
+| US-077 | View Calendar | Data + UI | |
+| US-078 | Edit Calendar Event | Data + UI | |
+| US-079 | Delete Calendar Event | Data + UI | |
+| US-056 | Schedule a Showing | Data + UI | |
+| US-057 | View Upcoming Showings | Data + UI | |
+| US-058 | Mark Showing as Completed | Data + UI | |
+| US-059 | Add Notes to a Showing | Data + UI | |
+| US-171 | Dashboard Today's Schedule Widget | UI | |

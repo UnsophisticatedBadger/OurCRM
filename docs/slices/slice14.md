@@ -1,10 +1,15 @@
-SLICE 14: Search Enhancements (Sprint 36-37)
-US-154: Fuzzy Search / Typo Tolerance
-US-155: Search Operators (AND, OR, NOT)
-US-156: Search Filters (Date Ranges, Custom Criteria)
-US-132: Save Search Criteria
-US-061: Search Across All Sections
-US-062: Quick Actions Menu
-US-063: Recent Searches and Quick Access
-Total: 7 stories
+# Slice 14: AI Features
 
+| Story # | Title | Layer | Status |
+|---------|-------|-------|--------|
+| US-064 | Configure AI Settings | AI | |
+| US-065 | Qualify a Lead with AI | AI | |
+| US-066 | View AI Qualification Results | AI | |
+| US-067 | Override AI Qualification | AI | |
+| US-068 | View Qualification History | AI | |
+| US-069 | View AI Usage Statistics | AI | |
+| US-149 | AI Email Drafting | AI | |
+| US-150 | AI Lead Summarization | AI | |
+| US-151 | AI Property Description Generation | AI | |
+| US-152 | AI Document Analysis | AI | |
+| US-153 | Natural Language Queries | AI | |

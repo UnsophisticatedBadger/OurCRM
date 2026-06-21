@@ -3,19 +3,23 @@ repos:
     rev: v0.9.10
     hooks:
       - id: ruff
-        args: [--fix]
       - id: ruff-format
 
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: v1.14.1
     hooks:
       - id: mypy
-        args: [--strict]
-        files: ^(src|scripts)/
+        args: [--strict, src/, scripts/, tests/]
+        pass_filenames: false
+        files: ^(src|scripts|tests)/
         additional_dependencies:
           - PySide6-stubs
+          - tomli-w>=1.2.0
           - sqlalchemy[mypy]>=2.0.50
           - alembic>=1.18.4
           - argon2-cffi>=25.1.0
           - keyring>=25.7.0
           - cryptography
+          - pytest
+          - pytest-bdd
+          - pytest-qt

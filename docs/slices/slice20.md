@@ -1,4 +1,5 @@
-SLICE 20: Mobile & Multi-User (Sprint 49+)
-US-165: Mobile-Responsive UI
-US-166: User Accounts and Profiles
-Total: 2 stories
+# Slice 20: Plugin System
+
+| Story # | Title | Layer | Status |
+|---------|-------|-------|--------|
+| US-164 | Plugin Installation and Management | Infrastructure | |

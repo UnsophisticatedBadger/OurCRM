@@ -17,7 +17,7 @@ uv run ourcrm                          # launch the app
 uv run pytest                          # run all tests with coverage
 uv run ruff check .                    # lint
 uv run ruff format .                   # format
-uv run mypy src/                       # type check
+uv run mypy src/ tests/ scripts/       # type check
 uv run pre-commit run --all-files      # run all hooks
 ```
 
