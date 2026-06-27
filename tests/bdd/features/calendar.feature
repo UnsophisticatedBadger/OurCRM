@@ -1,4 +1,4 @@
-﻿Feature: Calendar
+eature: Calendar
 
   @us-060
   Scenario: Calendar section shows a month grid

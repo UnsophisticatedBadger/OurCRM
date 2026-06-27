@@ -1,4 +1,4 @@
-﻿Feature: Authentication
+eature: Authentication
 
   @us-003
   Scenario: Accept a password that meets all requirements
