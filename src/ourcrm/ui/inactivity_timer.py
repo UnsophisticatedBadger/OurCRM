@@ -1,4 +1,4 @@
-"""Inactivity timer for auto-lock — US-094."""
+"""Inactivity timer for auto-lock — US-007."""
 
 from __future__ import annotations
 

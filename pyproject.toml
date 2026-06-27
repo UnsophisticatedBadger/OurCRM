@@ -91,7 +91,7 @@ disable_error_code = ["misc"]
 
 [[tool.mypy.overrides]]
 # PySide6-stubs (pre-commit) lacks QStyleHints.setColorScheme (added Qt 6.7)
-module = ["ourcrm.ui.theme", "tests.unit.test_us018_settings_panel_wiring", "tests._keyring"]
+module = ["ourcrm.ui.theme", "tests.unit.shell.test_settings_panel_wiring", "tests._keyring"]
 warn_unused_ignores = false
 
 # ---------------------------------------------------------------------------
@@ -123,4 +123,26 @@ skip_covered = false
 exclude_lines = [
     "pragma: no cover",
     "if __name__ == .__main__.:",
+]
+
+# ---------------------------------------------------------------------------
+# ourcrm — project-level configuration
+# ---------------------------------------------------------------------------
+[tool.ourcrm]
+capabilities = [
+    "authentication",
+    "shell",
+    "contacts",
+    "leads",
+    "calendar",
+    "tasks",
+    "properties",
+    "transactions",
+    "email",
+    "mls",
+    "ai",
+    "notifications",
+    "backup",
+    "import_export",
+    "infrastructure",
 ]

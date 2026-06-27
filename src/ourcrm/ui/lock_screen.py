@@ -1,4 +1,4 @@
-"""Lock screen overlay widget — US-094."""
+"""Lock screen overlay widget — US-007."""
 
 from __future__ import annotations
 

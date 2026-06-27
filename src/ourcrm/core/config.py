@@ -1,4 +1,4 @@
-"""Application configuration models — US-018, US-019."""
+"""Application configuration models — US-012, US-013."""
 
 from __future__ import annotations
 

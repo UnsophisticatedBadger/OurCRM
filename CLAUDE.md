@@ -8,7 +8,7 @@ Desktop CRM for real estate agents. Python 3.14 desktop app (PySide6).
 - **Linter/formatter:** ruff (replaces black + isort + flake8)
 - **Type checker:** mypy strict
 - **Testing:** pytest + pytest-bdd + pytest-cov
-- **Architecture:** Vertical slices with dependency injection
+- **Architecture:** Capability-grouped vertical slices with dependency injection
 
 ## Essential Commands
 
@@ -24,8 +24,7 @@ uv run pre-commit run --all-files      # run all hooks
 ## Project Layout
 
 ```
-docs/slices/          # slice definitions — each file groups related user stories
-docs/NNN-*.md         # individual user story files
+docs/NNN-*.md         # individual user story files (capability group lives inside each story)
 
 src/ourcrm/
 ├── main.py           # entry point (ourcrm.main:main)
@@ -38,29 +37,119 @@ src/ourcrm/
 └── lead_generation/  # lead pipeline
 
 tests/
-├── unit/             # fast, no I/O
-├── integration/      # database + real filesystem
-└── bdd/              # pytest-bdd .feature files
+├── unit/<capability>/          # fast, no I/O — one subdir per capability
+├── integration/                # database + real filesystem
+├── bdd/
+│   ├── features/<capability>.feature   # one feature file per capability
+│   └── test_<capability>.py            # step definitions
+├── manual/<capability>/        # markdown checklists — one subdir per capability
+└── test_structure.py           # enforces canonical capability directory names
 ```
 
 ## Architecture Rules
 
 1. **No story, no code.** Every feature must reference a User Story in `docs/`.
 2. **Strict typing.** All code must pass `mypy --strict`. No `Any` without justification.
-3. **Slice isolation.** Imports flow inward: slices may import from `core/`, never from each other.
+3. **Capability isolation.** Imports flow inward: capabilities may import from `core/`, never from each other.
 4. **Dependency injection.** Dependencies are injected, never instantiated internally. Services receive their dependencies via constructor injection. The DI container lives in `core/`.
 5. **BDD first.** Write the `.feature` file before the implementation.
 
-## What Is a Slice
+## Canonical Capabilities
 
-A slice is a collection of related user stories defined in `docs/slices/SliceN.md`. Each slice file contains a table of story numbers, titles, effort estimates, and layers. Slices are the unit of planning and delivery — a slice is done when all its stories are implemented and coverage gates are met.
+Every story belongs to exactly one capability group. The canonical list is defined in `pyproject.toml` under `[tool.ourcrm]` and enforced automatically by `tests/test_structure.py` on every `uv run pytest`.
+
+| Capability | Directory | Covers |
+|------------|-----------|--------|
+| Authentication & Security | `authentication` | auth, startup, encryption |
+| App Shell | `shell` | main window, navigation, settings |
+| Contacts | `contacts` | contact CRUD, search, tags |
+| Leads | `leads` | lead management, pipeline |
+| Calendar & Showings | `calendar` | calendar events, showings |
+| Tasks | `tasks` | task management |
+| Properties | `properties` | property listings |
+| Transactions | `transactions` | transaction tracking |
+| Email | `email` | email integration |
+| MLS Integration | `mls` | HAR MLS integration |
+| AI Features | `ai` | AI features |
+| Notifications | `notifications` | desktop and in-app notifications |
+| Backup & Recovery | `backup` | backup and recovery |
+| Import & Export | `import_export` | import and export |
+| Infrastructure | `infrastructure` | CI/CD, build, dev setup |
+
+## Test Conventions
+
+### File naming — what the component does
+Test files are named after the functionality they test, not the class name or story number.
+
+```
+tests/unit/authentication/test_password_validation.py   ✓
+tests/unit/authentication/test_us010_password_hasher.py ✗  (story number)
+tests/unit/authentication/test_password_validator.py    ✗  (class name)
+```
+
+### Test function naming — action and precise result
+Names describe what the user or system does and what specifically results. The result must be
+functionally unambiguous — not technically true-but-vague.
+
+```python
+def test_wrong_password_cannot_open_database(): ...      ✓
+def test_valid_password_opens_the_database(): ...        ✓
+def test_wrong_password_produces_different_key(): ...    ✗  (ambiguous — salting makes every key different)
+def test_validate_minimum_length(): ...                  ✗  (implementation detail, not behavior)
+```
+
+### BDD scenario naming — what the user does
+Scenario names describe user actions and observable outcomes, not internal component behavior.
+
+```gherkin
+Scenario: User creates a password shorter than 12 characters and sees an error  ✓
+Scenario: PasswordValidator rejects short input                                  ✗
+```
+
+### Manual test naming — user-action focused
+Manual test headings read as instructions a human tester can follow without any tooling.
+This allows manual execution when automated tests are unavailable or during debugging.
+
+```markdown
+## User enters the wrong password and is denied access    ✓
+## Test password validation                               ✗
+```
+
+### Test locations per story
+Every story's `## Test Locations` table maps artifacts to exact paths:
+
+| Artifact | Path pattern |
+|----------|-------------|
+| BDD feature | `tests/bdd/features/<capability>.feature` |
+| BDD step defs | `tests/bdd/test_<capability>.py` |
+| Unit tests | `tests/unit/<capability>/test_<functionality>.py` |
+| Manual tests | `tests/manual/<capability>/<functionality>.md` |
+
+### BDD tagging
+Every scenario is tagged with its story number so individual stories can be run in isolation:
+
+```gherkin
+@us-003
+Scenario: User creates a password shorter than 12 characters and sees an error
+```
+
+Run a single story's BDD: `uv run pytest -k "us-003"`
+
+### Manual test traceability
+Every manual test file begins with a story link so a tester can trace the test back to its requirement:
+
+```markdown
+# Password Validation — Manual Tests
+
+**Story:** [US-003 — Create Master Password](../../docs/003-create-master-password.md)
+```
 
 ## Coverage Gates
 
 | Gate | Target | Meaning |
 |------|--------|---------|
-| Start of slice | 50% | Tests exist and are meaningful before building |
-| End of slice | 85% | Slice is complete and well-covered |
+| Start of story | 50% | Tests exist and are meaningful before building |
+| End of capability | 85% | All stories in the capability are complete and well-covered |
 
 ## Development Workflow (Double-Loop TDD)
 
@@ -72,8 +161,8 @@ Every change follows these steps in strict order. No step is skipped or compress
 - Answer questions → wait for explicit confirmation before proceeding
 
 ### Step 2 — BDD Red
-- Write the `.feature` file
-- Write step definitions for every step in the feature file
+- Add scenarios to the capability `.feature` file (tagged `@us-NNN`)
+- Write step definitions in the capability step-def file
 - Run them to confirm they all fail
 - Answer questions → wait for explicit confirmation before proceeding
 
@@ -98,10 +187,12 @@ Every change follows these steps in strict order. No step is skipped or compress
 - If the BDD step now passes with the units built so far, mark it Green and move to the next step
 - Otherwise return to 3a for the next unit
 
-### Step 4 — Slice complete
-- All BDD steps are Green
-- Run `ruff`, `mypy`, and coverage to confirm the 85% gate is met
+### Step 4 — Story complete
+- All BDD steps for this story are Green
+- Run `ruff`, `mypy`, and coverage to confirm gates are met
+- Verify the feature is reachable from the running app (end-to-end smoke)
 
 ## User Stories
 All stories live in `docs/NNN-story-name.md`. Always read the relevant story before starting.
-All slices live in `docs/slices/SliceN.md`. Always check the slice table to understand scope.
+Each story doc contains its own capability group, BDD scenarios, test locations, and Definition of Done.
+There are no separate slice files — grouping and scope live inside the story itself.

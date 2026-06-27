@@ -91,6 +91,10 @@ class EncryptedDatabase:
         self._salt = None
 
     @property
+    def is_open(self) -> bool:
+        return self._conn is not None
+
+    @property
     def engine(self) -> Engine:
         if self._engine is None:
             raise RuntimeError("Database is not open")

@@ -1,4 +1,4 @@
-"""Theme application — US-018."""
+"""Theme application — US-012."""
 
 from __future__ import annotations
 

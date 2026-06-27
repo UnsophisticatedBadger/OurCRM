@@ -11,6 +11,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QAbstractButton,
     QApplication,
+    QDialog,
     QLabel,
     QLineEdit,
     QMenu,
@@ -32,6 +33,7 @@ from ourcrm.database.encrypted_database import EncryptedDatabase, InvalidDatabas
 from ourcrm.database.manager import DatabaseManager
 from ourcrm.ui.main_window import MainWindow
 from ourcrm.ui.navigation import Section
+from ourcrm.ui.startup_dialog import StartupDialog, StartupMode
 from tests._keyring import InMemoryKeyring
 
 scenarios("features/authentication.feature")
@@ -59,7 +61,7 @@ def _find_button(window: MainWindow, label: str) -> QPushButton | None:
     )
 
 
-# ── US-010: Create Master Password ────────────────────────────────────────────
+# ── US-003: Create Master Password ────────────────────────────────────────────
 
 
 @given("the password validator is available", target_fixture="validator")
@@ -147,7 +149,7 @@ def plain_password_not_in_keyring(mem_keyring: InMemoryKeyring) -> None:
         assert "$argon2id$" in value, f"Non-hashed value found in keyring: {value[:20]}"
 
 
-# ── US-011: Log In with Master Password ───────────────────────────────────────
+# ── US-006: Log In with Master Password ───────────────────────────────────────
 
 
 @given(
@@ -196,7 +198,7 @@ def failure_count_reset(auth_service: AuthService, count: int) -> None:
     assert auth_service.failure_count == count
 
 
-# ── US-012: Generate Recovery Password ────────────────────────────────────────
+# ── US-004: Generate Recovery Password ────────────────────────────────────────
 
 
 @given("the recovery password generator is available", target_fixture="generator")
@@ -258,7 +260,7 @@ def dashes_removed_equals_raw(formatted_result: tuple[str, str]) -> None:
     assert formatted.replace("-", "") == raw
 
 
-# ── US-013: Confirm Recovery Password Saved ───────────────────────────────────
+# ── US-004: Confirm Recovery Password Saved ───────────────────────────────────
 
 
 @given("a recovery confirmation", target_fixture="confirmation")
@@ -291,7 +293,7 @@ def cannot_proceed(confirmation: RecoveryConfirmation) -> None:
     assert not confirmation.can_proceed
 
 
-# ── US-014: Create Encrypted Database ─────────────────────────────────────────
+# ── US-005: Create Encrypted Database ─────────────────────────────────────────
 
 
 @given("an in-memory database manager", target_fixture="db_manager")
@@ -427,7 +429,7 @@ def marker_value_present(encrypted_db: EncryptedDatabase) -> None:
     assert row[0] == _MARKER_VALUE
 
 
-# ── US-094: Auto-Lock After Inactivity ────────────────────────────────────────
+# ── US-007: Auto-Lock After Inactivity ────────────────────────────────────────
 
 
 @given("the main window is open with auto-lock enabled", target_fixture="main_window")
@@ -562,7 +564,7 @@ def timer_not_running(main_window: MainWindow) -> None:
     assert timer is None or not timer.is_active(), "Timer should not run when set to Never"
 
 
-# ── US-127: Change Master Password ────────────────────────────────────────────
+# ── US-008: Change Master Password ────────────────────────────────────────────
 
 
 @given(
@@ -616,7 +618,7 @@ def login_with_fails(auth_service: AuthService, password: str) -> None:
     assert not result.success
 
 
-# ── US-128: Password Recovery ─────────────────────────────────────────────────
+# ── US-009: Password Recovery ─────────────────────────────────────────────────
 
 
 @given(
@@ -663,7 +665,7 @@ def recovery_error_contains(recovery_result: AuthResult, text: str) -> None:
     assert text in recovery_result.error
 
 
-# ── US-129: Logout Functionality ──────────────────────────────────────────────
+# ── US-006: Logout Functionality ──────────────────────────────────────────────
 
 
 @given("the main window is open and the user is logged in", target_fixture="main_window")
@@ -761,3 +763,80 @@ def main_window_still_open(main_window: MainWindow) -> None:
 def auth_service_logged_out(main_window: MainWindow) -> None:
     assert main_window.auth_service is not None, "auth_service is None"
     assert not main_window.auth_service.is_logged_in, "User is still logged in after logout"
+
+
+# ── US-003: Application Startup Dialog ────────────────────────────────────────
+
+
+@given("the startup dialog is open in create mode", target_fixture="startup_dialog")
+def startup_dialog_create_mode(qtbot: QtBot) -> StartupDialog:
+    dialog = StartupDialog(StartupMode.CREATE)
+    qtbot.addWidget(dialog)
+    dialog.show()
+    return dialog
+
+
+@given("the startup dialog is open in open mode", target_fixture="startup_dialog")
+def startup_dialog_open_mode(qtbot: QtBot) -> StartupDialog:
+    dialog = StartupDialog(StartupMode.OPEN)
+    qtbot.addWidget(dialog)
+    dialog.show()
+    return dialog
+
+
+@then(parsers.parse('the dialog title is "{title}"'))
+def dialog_title_is(startup_dialog: StartupDialog, title: str) -> None:
+    assert startup_dialog.windowTitle() == title
+
+
+@then(parsers.parse('the submit button is labelled "{label}"'))
+def submit_button_labelled(startup_dialog: StartupDialog, label: str) -> None:
+    btn = startup_dialog.findChild(QPushButton, "startup_submit_btn")
+    assert btn is not None, "startup_submit_btn not found"
+    assert btn.text() == label
+
+
+@when(parsers.parse('I type "{password}" in the startup password field'))
+def type_password(startup_dialog: StartupDialog, password: str) -> None:
+    field = startup_dialog.findChild(QLineEdit, "startup_password_field")
+    assert field is not None, "startup_password_field not found"
+    field.setText(password)
+
+
+@when("I click the startup dialog submit button")
+def click_submit_button(startup_dialog: StartupDialog, qtbot: QtBot) -> None:
+    btn = startup_dialog.findChild(QPushButton, "startup_submit_btn")
+    assert btn is not None, "startup_submit_btn not found"
+    qtbot.mouseClick(btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+
+
+@then("the startup dialog is accepted")
+def dialog_is_accepted(startup_dialog: StartupDialog) -> None:
+    assert startup_dialog.result() == QDialog.DialogCode.Accepted
+
+
+@then(parsers.parse('the submitted password is "{expected}"'))
+def submitted_password_is(startup_dialog: StartupDialog, expected: str) -> None:
+    assert startup_dialog.password() == expected
+
+
+@when("I close the startup dialog")
+def close_startup_dialog(startup_dialog: StartupDialog) -> None:
+    startup_dialog.reject()
+
+
+@then("the startup dialog is rejected")
+def dialog_is_rejected(startup_dialog: StartupDialog) -> None:
+    assert startup_dialog.result() == QDialog.DialogCode.Rejected
+
+
+@when(parsers.parse('show_error is called with "{message}"'))
+def show_error_called(startup_dialog: StartupDialog, message: str) -> None:
+    startup_dialog.show_error(message)
+
+
+@then(parsers.parse('the error label reads "{expected}"'))
+def error_label_reads(startup_dialog: StartupDialog, expected: str) -> None:
+    label = startup_dialog.findChild(QLabel, "startup_error_label")
+    assert label is not None, "startup_error_label not found"
+    assert label.text() == expected

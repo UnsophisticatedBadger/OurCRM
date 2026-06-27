@@ -3,6 +3,7 @@ from pathlib import Path
 
 from PySide6.QtWidgets import QApplication
 
+from ourcrm.calendar.repository import CalendarEventRepository
 from ourcrm.core.config import AppConfig
 from ourcrm.ui.main_window import MainWindow
 
@@ -22,7 +23,8 @@ def main() -> None:
     _existing = QApplication.instance()
     app: QApplication = _existing if _existing is not None else QApplication(sys.argv)  # type: ignore[assignment]
     config = AppConfig(_config_path())
-    window = MainWindow(app_config=config, qt_app=app)
+    calendar_repository = CalendarEventRepository()
+    window = MainWindow(app_config=config, qt_app=app, calendar_repository=calendar_repository)
     window.show()
     sys.exit(app.exec())
 

@@ -1,4 +1,4 @@
-"""Settings panel for OurCRM — US-017, US-018, US-019."""
+"""Settings panel for OurCRM — US-011, US-012, US-013."""
 
 from __future__ import annotations
 

@@ -1,4 +1,4 @@
-"""Home dashboard page widget — US-133, US-170, US-175."""
+"""Home dashboard page widget — US-014, US-042, US-015."""
 
 from __future__ import annotations
 

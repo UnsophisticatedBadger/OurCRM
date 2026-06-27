@@ -1,4 +1,4 @@
-"""General settings page widget — US-018."""
+"""General settings page widget — US-012."""
 
 from __future__ import annotations
 

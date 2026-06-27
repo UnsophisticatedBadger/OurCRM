@@ -16,8 +16,10 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from ourcrm.calendar.repository import CalendarEventRepositoryProtocol
 from ourcrm.core.auth.auth_service import AuthService
 from ourcrm.core.config import AppConfig
+from ourcrm.ui.calendar_page import CalendarPage
 from ourcrm.ui.dashboard_page import DashboardPage
 from ourcrm.ui.help_window import AboutDialog, HelpWindow, KeyboardShortcutsDialog
 from ourcrm.ui.inactivity_timer import InactivityTimer
@@ -41,12 +43,14 @@ class MainWindow(QMainWindow):
         qt_app: QApplication | None = None,
         auth_service: AuthService | None = None,
         auto_lock_timeout_minutes: int | None = None,
+        calendar_repository: CalendarEventRepositoryProtocol | None = None,
     ) -> None:
         super().__init__()
         self._settings = settings if settings is not None else QSettings("OurCRM", "OurCRM")
         self._app_config = app_config
         self._qt_app = qt_app
         self._auth_service = auth_service
+        self._calendar_repository = calendar_repository
         self._prior_section: Section = Section.DASHBOARD
         self._inactivity_timer: InactivityTimer | None = None
         self._help_window: HelpWindow | None = None
@@ -134,6 +138,8 @@ class MainWindow(QMainWindow):
     def _create_section_widget(self, section: Section) -> QWidget:
         if section == Section.DASHBOARD:
             return DashboardPage(navigate_to=self.navigate_to)
+        if section == Section.CALENDAR:
+            return CalendarPage(repository=self._calendar_repository)
         if section == Section.SETTINGS:
             return SettingsPanel(app_config=self._app_config, qt_app=self._qt_app)
         return QLabel(section.name.capitalize())

@@ -1,4 +1,4 @@
-"""Login screen widget — US-129."""
+"""Login screen widget — US-006."""
 
 from __future__ import annotations
 
