@@ -52,15 +52,15 @@ def test_ourcrm_lead_generation_is_importable() -> None:
 
 
 def test_tests_unit_dir_exists() -> None:
-    tests_dir = Path(__file__).parent.parent
+    tests_dir = Path(__file__).parent.parent.parent
     assert (tests_dir / "unit").is_dir()
 
 
 def test_tests_integration_dir_exists() -> None:
-    tests_dir = Path(__file__).parent.parent
+    tests_dir = Path(__file__).parent.parent.parent
     assert (tests_dir / "integration").is_dir()
 
 
 def test_tests_bdd_dir_exists() -> None:
-    tests_dir = Path(__file__).parent.parent
+    tests_dir = Path(__file__).parent.parent.parent
     assert (tests_dir / "bdd").is_dir()
