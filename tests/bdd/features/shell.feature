@@ -1,4 +1,4 @@
-eature: Shell
+Feature: Shell
 
   @us-010
   Scenario: Main window appears after login

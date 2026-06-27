@@ -1,4 +1,4 @@
-eature: Infrastructure
+Feature: Infrastructure
 
   @us-002
   Scenario: Nuitka build command is correctly configured
