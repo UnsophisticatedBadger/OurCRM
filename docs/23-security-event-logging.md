@@ -1,6 +1,7 @@
-# US-126 — Security Event Logging
+# 23 - Security Event Logging
 
 **Capability:** authentication
+**Milestone:** v0.2.0 — Secure Shell
 **Status:** Not Done
 **GitHub Issue:** #23
 **Priority:** Should Have
@@ -18,37 +19,37 @@ As an agent, I want security-relevant events to be written to a persistent audit
 3. Every logout event is written to the table with timestamp
 4. Every password change is written to the table with timestamp
 5. Every recovery password generation attempt — successful or failed — is written to the table with timestamp and outcome
-6. Security events are displayed in the audit log view (US-106) in reverse chronological order
+6. Security events are displayed in the audit log view (#157) in reverse chronological order
 
 ## BDD Scenarios
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/authentication.feature`.
 
 ```gherkin
-@us169
+@story_143
 Scenario: Failed login attempt is written to the security event log
   Given the database exists
   When the user enters an incorrect password at the login screen
   Then a failed login event is recorded in the security_events table with a failure reason
 
-@us169
+@story_143
 Scenario: Successful login is written to the security event log
   Given the database exists
   When the user logs in with the correct password
   Then a successful login event is recorded in the security_events table
 
-@us169
+@story_143
 Scenario: Password change is written to the security event log
   Given the user is logged in
   When the user changes their password
   Then a password change event is recorded in the security_events table
 
-@us169
+@story_143
 Scenario: Recovery attempt is written to the security event log
   Given the user initiates recovery with an incorrect recovery password
   When the attempt fails
   Then a failed recovery event is recorded in the security_events table
 
-@us169
+@story_143
 Scenario: Security events appear in the audit log view in reverse chronological order
   Given multiple security events have been recorded
   When the user opens the audit log view
@@ -56,7 +57,7 @@ Scenario: Security events appear in the audit log view in reverse chronological 
 ```
 
 ## Manual Tests
-**Story:** [US-115 — Security Event Logging](../docs/105-security-event-logging.md)
+**Story:** [#166 — Security Event Logging](../docs/105-security-event-logging.md)
 
 ### Failed and successful logins are logged
 1. Enter the wrong password at the login screen

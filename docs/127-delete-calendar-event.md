@@ -1,6 +1,7 @@
-# US-080 — Delete Calendar Event
+# 127 - Delete Calendar Event
 
 **Capability:** Calendar & Showings
+**Milestone:** v0.8.0 — Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #127
 
@@ -25,26 +26,26 @@ As a real estate agent, I want to delete a cancelled or unnecessary calendar eve
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/calendar.feature`.
 
 ```gherkin
-@us079
+@story_126
 Scenario: Clicking Delete shows a confirmation dialog with event details
   Given a calendar event "Showing - 123 Oak St" exists on tomorrow at 2:00 PM
   When the user clicks "Delete" on that event
   Then a confirmation dialog appears showing "Showing - 123 Oak St" and the date and time
   And the dialog includes the text "This action cannot be undone"
 
-@us079
+@story_126
 Scenario: Confirming deletion removes the event from the calendar
   Given the delete confirmation dialog is open for "Showing - 123 Oak St"
   When the user confirms the deletion
   Then "Showing - 123 Oak St" is no longer visible in the calendar
 
-@us079
+@story_126
 Scenario: Cancelling deletion leaves the event unchanged
   Given the delete confirmation dialog is open for "Showing - 123 Oak St"
   When the user clicks Cancel
   Then "Showing - 123 Oak St" is still visible in the calendar
 
-@us079
+@story_126
 Scenario: Deleted event is absent after the application restarts
   Given the user has deleted a calendar event titled "Old Appointment"
   When the user restarts the application and views the calendar
@@ -53,7 +54,7 @@ Scenario: Deleted event is absent after the application restarts
 
 ## Manual Tests
 
-**Story:** [US-066 — Delete Calendar Event](../docs/066-delete-calendar-event.md)
+**Story:** [#113 — Delete Calendar Event](../docs/066-delete-calendar-event.md)
 
 ### Delete action is reachable from calendar and detail view
 1. Right-click (or click) a calendar event to open its context menu

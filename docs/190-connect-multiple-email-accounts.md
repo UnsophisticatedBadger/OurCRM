@@ -1,6 +1,7 @@
-# US-182 — Connect Multiple Email Accounts
+# 190 - Connect Multiple Email Accounts
 
 **Capability:** email
+**Milestone:** v1.1.0+ — Post-Production
 **Status:** Not Done
 **GitHub Issue:** #190
 **Priority:** Post-MVP
@@ -24,25 +25,25 @@ As an agent, I want to connect more than one Gmail or Outlook account, so that I
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/email.feature`.
 
 ```gherkin
-@us183
+@story_191
 Scenario: User connects a second Gmail account and both appear in Settings
   Given one Gmail account is already connected
   When the user clicks "Add another Gmail account" and completes OAuth
   Then both accounts are listed in Settings → Email → Gmail
 
-@us183
+@story_191
 Scenario: From dropdown in compose form lists all connected accounts
   Given two Gmail accounts are connected
   When the user opens the email compose form
   Then the "From" dropdown shows both Gmail addresses
 
-@us183
+@story_191
 Scenario: Email is sent from the selected account
   Given two Gmail accounts are connected
   When the user selects the second account in the "From" dropdown and sends an email
   Then the email is sent via the second Gmail account
 
-@us183
+@story_191
 Scenario: Disconnecting one account does not affect the other
   Given two Gmail accounts are connected
   When the user disconnects the second account
@@ -50,7 +51,7 @@ Scenario: Disconnecting one account does not affect the other
 ```
 
 ## Manual Tests
-**Story:** [US-171 — Connect Multiple Email Accounts](../docs/067-connect-multiple-email-accounts.md)
+**Story:** [#145 — Connect Multiple Email Accounts](../docs/067-connect-multiple-email-accounts.md)
 
 ### User connects a second Gmail account and sees both in Settings
 1. Connect a first Gmail account

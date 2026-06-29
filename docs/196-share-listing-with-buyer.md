@@ -1,6 +1,7 @@
-# US-188 — Share MLS Listing with Buyer
+# 196 - Share MLS Listing With Buyer
 
 **Capability:** email
+**Milestone:** v1.1.0+ — Post-Production
 **Status:** Not Done
 **GitHub Issue:** #196
 **Priority:** Post-MVP
@@ -16,7 +17,7 @@ As an agent, I want to email an MLS listing's details to a contact from within t
 1. A "Share with Buyer" button appears on the MLS listing detail view
 2. Clicking it opens the email compose form with: a recipient picker pre-populated from the agent's contacts, the subject pre-filled as "Property at [address]", and the email body pre-filled with: address, list price, beds/baths/sqft, and a link or note to contact the agent for more details
 3. The user can edit the recipient, subject, and body before sending
-4. Sending follows the same flow as US-079 (via configured email provider)
+4. Sending follows the same flow as #126 (via configured email provider)
 
 ## BDD Scenarios
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/email.feature`.
@@ -37,7 +38,7 @@ Scenario: User can edit the pre-filled compose form before sending
 ```
 
 ## Manual Tests
-**Story:** [US-177 — Share MLS Listing with Buyer](../docs/177-share-listing-with-buyer.md)
+**Story:** [#151 — Share MLS Listing with Buyer](../docs/177-share-listing-with-buyer.md)
 
 ### Compose form is pre-filled with listing details
 1. Open an MLS listing detail and click "Share with Buyer"

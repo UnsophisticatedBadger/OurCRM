@@ -1,6 +1,7 @@
-# US-121 — Log File Management
+# 85 - Log File Management
 
 **Capability:** Infrastructure
+**Milestone:** v0.5.0 — MVP
 **Status:** Not Done
 **GitHub Issue:** #85
 **Priority:** Should Have (deferrable to post-MVP)
@@ -16,7 +17,7 @@ As a real estate agent, I want log files to be managed automatically so that the
 
 ## Notes
 
-This story covers the automated housekeeping layer beneath the log viewer. US-109 provides manual clearing; US-111 adds automatic size-based rotation and age-based cleanup so the user rarely needs to intervene.
+This story covers the automated housekeeping layer beneath the log viewer. #160 provides manual clearing; #162 adds automatic size-based rotation and age-based cleanup so the user rarely needs to intervene.
 
 Log files are stored in a dedicated folder (e.g., `<app-data>/logs/`). Each file is named with a date stamp: `ourcrm-YYYY-MM-DD.log`. A new file is started when the current one reaches the size limit or when the calendar date rolls over, whichever comes first. When multiple files exist for the same date (rotation by size), they are distinguished by a sequence suffix: `ourcrm-YYYY-MM-DD-2.log`, `ourcrm-YYYY-MM-DD-3.log`, etc.
 
@@ -32,24 +33,24 @@ Log files are stored in a dedicated folder (e.g., `<app-data>/logs/`). Each file
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/infrastructure.feature`.
 
 ```gherkin
-@us139
+@story_170
 Scenario: Log files are written to a dedicated folder with date-stamped names
   Given the application is running and producing log output
   Then the log file is located in the app-data logs folder and named "ourcrm-YYYY-MM-DD.log" for the current date
 
-@us139
+@story_170
 Scenario: A new file is started when the current log file reaches 10 MB
   Given the current log file has reached the 10 MB size limit
   When a new log entry is written
   Then a new file named "ourcrm-YYYY-MM-DD-2.log" is created and the original file is not modified further
 
-@us139
+@story_170
 Scenario: Old log files are deleted at startup beyond the retention period
   Given the log folder contains files with dates older than the configured retention period
   When the application starts
   Then those files are deleted and only files within the retention window remain
 
-@us139
+@story_170
 Scenario: Log retention period is configurable in Settings
   Given the user opens Settings → Advanced → Log Retention and sets the period to 14 days
   When the application restarts
@@ -58,7 +59,7 @@ Scenario: Log retention period is configurable in Settings
 
 ## Manual Tests
 
-**Story:** [US-111 — Log File Management](../docs/111-log-file-management.md)
+**Story:** [#162 — Log File Management](../docs/111-log-file-management.md)
 
 ### Log files exist in a dedicated folder with correct names
 1. Run the app and generate some activity (open a few screens, trigger a contact search, etc.)

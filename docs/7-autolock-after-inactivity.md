@@ -1,6 +1,7 @@
-﻿# US-007 — Auto-Lock After Inactivity
+﻿# #7 — Auto-Lock After Inactivity
 
 **Capability:** Authentication & Security
+**Milestone:** v0.2.0 — Secure Shell
 **Status:** Not Done
 **GitHub Issue:** #7
 

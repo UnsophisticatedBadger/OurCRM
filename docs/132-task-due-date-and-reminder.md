@@ -1,6 +1,7 @@
-# US-086 — Set Task Due Date and Reminder
+# 132 - Set Task Due Date And Reminder
 
 **Capability:** Tasks
+**Milestone:** v0.8.0 — Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #132
 
@@ -28,26 +29,26 @@ As a real estate agent, I want to set a due date and reminder for a task so that
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/tasks.feature`.
 
 ```gherkin
-@us084
+@story_130
 Scenario: Task reminder fires a desktop notification at the scheduled time
   Given the user creates a task due in 2 minutes with reminder set to "At due time"
   When 2 minutes elapse
   Then a desktop notification appears with the task title and due time and an "Open Task" action
 
-@us084
+@story_130
 Scenario: No notification fires if the task is already complete at reminder time
   Given a task has a reminder due in 1 minute
   And the user marks the task complete before the reminder time
   When 1 minute elapses
   Then no notification is sent for that task
 
-@us084
+@story_130
 Scenario: Changing the due time reschedules the reminder
   Given a task has a reminder scheduled for 9:00 AM tomorrow
   When the user changes the due time to 11:00 AM tomorrow and saves
   Then the reminder fires at 11:00 AM tomorrow, not 9:00 AM
 
-@us084
+@story_130
 Scenario: Clearing the due date cancels the scheduled reminder
   Given a task has a due date and reminder set
   When the user clears the due date and saves
@@ -56,7 +57,7 @@ Scenario: Clearing the due date cancels the scheduled reminder
 
 ## Manual Tests
 
-**Story:** [US-072 — Set Task Due Date and Reminder](../docs/072-task-due-date-and-reminder.md)
+**Story:** [#119 — Set Task Due Date and Reminder](../docs/072-task-due-date-and-reminder.md)
 
 ### Due time field and reminder options are present
 1. Open the task creation form

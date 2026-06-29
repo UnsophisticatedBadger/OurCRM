@@ -1,6 +1,7 @@
-# US-109 — Scheduled Automatic Backups
+# 160 - Scheduled Automatic Backups
 
 **Capability:** backup
+**Milestone:** v1.0.0 — Production
 **Status:** Not Done
 **GitHub Issue:** #160
 **Priority:** Post-MVP
@@ -14,35 +15,35 @@ As an agent, I want OurCRM to create backups automatically on a schedule, so tha
 ## Acceptance Criteria
 1. Settings → Backup → Automatic Backups includes a toggle to enable or disable scheduled backups; disabled by default
 2. When enabled, the user can set the schedule: Daily or Weekly (day of week + time)
-3. Backups created by the schedule follow the same format and destination folder as manual backups (US-098)
+3. Backups created by the schedule follow the same format and destination folder as manual backups (#181)
 4. A scheduled backup runs at the configured time while the app is running; if the app is not running at the scheduled time, the backup runs on the next app launch after the missed time
-5. Automatic backups appear in the backup history (US-127) labelled "Automatic"
+5. Automatic backups appear in the backup history (#24) labelled "Automatic"
 6. The most recent 10 automatic backups are retained; older automatic backups are deleted automatically
 
 ## BDD Scenarios
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/backup.feature`.
 
 ```gherkin
-@us201
+@story_205
 Scenario: Enabling automatic backups with a Daily schedule saves the setting
   Given the user enables automatic backups and selects "Daily at 11:00 PM"
   When the user saves Settings
   Then the automatic backup schedule is saved as Daily at 11:00 PM
 
-@us201
+@story_205
 Scenario: Missed backup runs on next app launch
   Given a daily backup was scheduled for a time that has already passed today
   And the app was not running at that time
   When the user launches the app
   Then a backup is created immediately on launch
 
-@us201
+@story_205
 Scenario: Automatic backup appears in backup history labelled "Automatic"
   Given automatic backups are enabled and a scheduled backup has run
   When the user views the backup history
   Then the backup is listed with the label "Automatic"
 
-@us201
+@story_205
 Scenario: Oldest automatic backup is deleted when the 10-backup limit is reached
   Given 10 automatic backups already exist
   When a new scheduled backup runs
@@ -51,7 +52,7 @@ Scenario: Oldest automatic backup is deleted when the 10-backup limit is reached
 ```
 
 ## Manual Tests
-**Story:** [US-192 — Scheduled Automatic Backups](../docs/192-scheduled-automatic-backups.md)
+**Story:** [#101 — Scheduled Automatic Backups](../docs/192-scheduled-automatic-backups.md)
 
 ### Daily backup runs at the configured time
 1. Enable automatic backups and set a schedule for a time 2 minutes from now

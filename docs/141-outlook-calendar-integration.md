@@ -1,6 +1,7 @@
-# US-167 — Sync with Outlook Calendar
+# 141 - Sync With Outlook Calendar
 
 **Capability:** calendar
+**Milestone:** v0.8.0 — Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #141
 **Priority:** Post-MVP
@@ -29,40 +30,40 @@ As an agent, I want to sync my OurCRM calendar with Outlook Calendar, so that I 
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/calendar.feature`.
 
 ```gherkin
-@us144
+@story_93
 Scenario: User connects Outlook Calendar via OAuth
   Given the user is in Settings → Calendar
   When the user clicks "Connect Outlook Calendar" and completes the Microsoft OAuth flow
   Then Outlook Calendar shows as connected in Settings
   And a success confirmation is shown
 
-@us144
+@story_93
 Scenario: New OurCRM event is pushed to Outlook Calendar after sync
   Given Outlook Calendar is connected
   When the user creates a new event in OurCRM
   Then the event is pushed to the user's Outlook Calendar
 
-@us144
+@story_93
 Scenario: New Outlook Calendar event appears in OurCRM after sync
   Given Outlook Calendar is connected
   When a new event is created in Outlook Calendar
   Then the event appears in OurCRM on the next sync
 
-@us144
+@story_93
 Scenario: Editing a synced event in OurCRM updates Outlook Calendar
   Given Outlook Calendar is connected
   And a synced event exists in both systems
   When the user edits the event in OurCRM
   Then the updated details are reflected in Outlook Calendar
 
-@us144
+@story_93
 Scenario: Deleting a synced event in OurCRM removes it from Outlook Calendar
   Given Outlook Calendar is connected
   And a synced event exists in both systems
   When the user deletes the event in OurCRM
   Then the event is removed from Outlook Calendar
 
-@us144
+@story_93
 Scenario: User disconnects Outlook Calendar
   Given Outlook Calendar is connected
   When the user clicks "Disconnect" in Settings
@@ -71,7 +72,7 @@ Scenario: User disconnects Outlook Calendar
   And new OurCRM events are no longer pushed to Outlook Calendar
   And existing synced events remain in OurCRM
 
-@us144 @live_microsoft
+@story_93 @live_microsoft
 Scenario: App authenticates with Microsoft OAuth and retrieves the calendar list
   Given the user has a valid Microsoft account
   When the user completes the Microsoft OAuth flow
@@ -79,7 +80,7 @@ Scenario: App authenticates with Microsoft OAuth and retrieves the calendar list
 ```
 
 ## Manual Tests
-**Story:** [US-156 — Sync with Outlook Calendar](../docs/137-outlook-caldendar-integration.md)
+**Story:** [#37 — Sync with Outlook Calendar](../docs/137-outlook-caldendar-integration.md)
 
 ### User connects Outlook Calendar and sees it show as connected
 1. Go to Settings → Calendar → Outlook Calendar

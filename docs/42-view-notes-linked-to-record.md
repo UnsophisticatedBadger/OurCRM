@@ -1,6 +1,7 @@
-# US-161 — View Notes Linked to a Record
+# 42 - View Notes Linked To A Record
 
 **Capability:** shell
+**Milestone:** v0.2.0 — Secure Shell
 **Status:** Not Done
 **GitHub Issue:** #42
 **Priority:** Post-MVP
@@ -43,7 +44,7 @@ Scenario: Clicking a linked note opens it in the Notes section
 ```
 
 ## Manual Tests
-**Story:** [US-150 — View Notes Linked to a Record](../docs/183-view-notes-linked-to-record.md)
+**Story:** [#31 — View Notes Linked to a Record](../docs/183-view-notes-linked-to-record.md)
 
 ### Linked note appears on the record's Notes tab
 1. Create a note and link it to a contact

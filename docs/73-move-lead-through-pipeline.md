@@ -1,6 +1,7 @@
-# US-049 — Move Lead Through Pipeline
+# 73 - Move Lead Through Pipeline
 
 **Capability:** Leads
+**Milestone:** v0.5.0 — MVP
 **Status:** Not Done
 **GitHub Issue:** #73
 
@@ -26,31 +27,31 @@ As a real estate agent, I want to move a lead through pipeline stages as our rel
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/leads.feature`.
 
 ```gherkin
-@us035
+@story_63
 Scenario: User advances a lead to the next pipeline stage
   Given the user is viewing a lead in the "New Lead" stage
   When the user changes the stage to "Contacted" and saves
   Then the lead details show the stage "Contacted"
 
-@us035
+@story_63
 Scenario: User marks a lead as Lost and provides a reason
   Given the user is viewing a lead
   When the user changes the stage to "Lost" and enters reason "Chose another agent"
   Then the lead details show stage "Lost" and reason "Chose another agent"
 
-@us035
+@story_63
 Scenario: User moves a lead backward in the pipeline
   Given the user is viewing a lead in the "Qualified" stage
   When the user changes the stage to "Contacted" and saves
   Then the lead details show the stage "Contacted"
 
-@us035
+@story_63
 Scenario: Pipeline stage is visible in the lead list
   Given a lead "Sara Lee" exists with stage "Showing Scheduled"
   When the user views the lead list
   Then the row for "Sara Lee" shows stage "Showing Scheduled"
 
-@us035
+@story_63
 Scenario: Stage change persists after an application restart
   Given the user has set a lead's stage to "Offer Made"
   When the application is restarted and the user opens that lead
@@ -59,7 +60,7 @@ Scenario: Stage change persists after an application restart
 
 ## Manual Tests
 
-**Story:** [US-037 — Move Lead Through Pipeline](../docs/037-move-lead-through-pipeline.md)
+**Story:** [#65 — Move Lead Through Pipeline](../docs/037-move-lead-through-pipeline.md)
 
 ### User sees the current pipeline stage in lead details
 1. Open any lead's details view

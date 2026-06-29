@@ -1,6 +1,7 @@
-# US-133 — View Qualification History
+# 185 - View Qualification History
 
 **Capability:** AI Features
+**Milestone:** v1.1.0+ — Post-Production
 **Status:** Not Done
 **GitHub Issue:** #185
 
@@ -26,7 +27,7 @@ As a real estate agent, I want to view the full history of a lead's AI qualifica
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/ai.feature`.
 
 ```gherkin
-@us068
+@story_115
 Scenario: History shows AI qualification and manual override in reverse chronological order
   Given a lead was AI-qualified with score 30 and status "Cold" at 10:00 AM
   And the agent overrode it to status "Hot" with note "Very motivated" at 11:00 AM
@@ -34,14 +35,14 @@ Scenario: History shows AI qualification and manual override in reverse chronolo
   Then the 11:00 AM override event appears first, showing status "Hot" and note "Very motivated"
   And the 10:00 AM AI event appears below it, showing score 30 and status "Cold"
 
-@us068
+@story_115
 Scenario: Re-qualification adds a new event without removing older events
   Given a lead was qualified at 9:00 AM with score 40
   When the user re-qualifies the lead at 2:00 PM and the AI returns score 75
   Then the history shows the 2:00 PM event (score 75) first
   And the 9:00 AM event (score 40) is still present below it
 
-@us068
+@story_115
 Scenario: Lead with no history shows an appropriate message
   Given a lead has never been qualified by AI
   When the user views the qualification history section
@@ -50,7 +51,7 @@ Scenario: Lead with no history shows an appropriate message
 
 ## Manual Tests
 
-**Story:** [US-122 — View Qualification History](../docs/106-view-qualification-history.md)
+**Story:** [#86 — View Qualification History](../docs/106-view-qualification-history.md)
 
 ### History shows all events in reverse chronological order
 1. Qualify a lead, note the time and result

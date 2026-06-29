@@ -1,6 +1,7 @@
-# US-195 — Generate Property Description with AI
+# 199 - Generate Property Description With AI
 
 **Capability:** ai
+**Milestone:** v1.1.0+ — Post-Production
 **Status:** Not Done
 **GitHub Issue:** #199
 **Priority:** Post-MVP
@@ -26,33 +27,33 @@ As an agent, I want to generate a property listing description using AI, so that
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/ai.feature`.
 
 ```gherkin
-@us151
+@story_32
 Scenario: User generates a property description with a selected tone and length
   Given AI is configured
   And a property exists with beds, baths, sqft, and features filled in
   When the user selects "Luxury" tone and "Standard" length and clicks "Generate Description"
   Then a description appears in the preview panel
 
-@us151
+@story_32
 Scenario: User regenerates to get a different description
   Given a description has been generated
   When the user clicks "Regenerate"
   Then a new description with different wording is shown in the preview panel
 
-@us151
+@story_32
 Scenario: User inserts the description into the property form
   Given a description has been generated
   When the user clicks "Use This Description"
   Then the description field in the property form is populated with the generated text
 
-@us151
+@story_32
 Scenario: "Generate Description" is disabled when AI is not configured
   Given AI is not configured
   When the user opens the property create or edit form
   Then the "Generate Description" button is disabled
   And hovering shows a tooltip directing the user to Settings → AI
 
-@us151 @live_ai
+@story_32 @live_ai
 Scenario: Real AI provider generates a description from property details
   Given a real AI provider is configured
   And a property has beds, baths, sqft, and at least one feature
@@ -61,7 +62,7 @@ Scenario: Real AI provider generates a description from property details
 ```
 
 ## Manual Tests
-**Story:** [US-184 — Generate Property Description with AI](../docs/077-ai-property-description-generation.md)
+**Story:** [#192 — Generate Property Description with AI](../docs/077-ai-property-description-generation.md)
 
 ### User generates a description and inserts it into the property form
 1. Open a property with details filled in

@@ -1,6 +1,7 @@
-# US-142 — Export Selected or Filtered Contacts
+# 173 - Export Selected Or Filtered Contacts
 
 **Capability:** Import & Export
+**Milestone:** v1.0.0 — Production
 **Status:** Not Done
 **GitHub Issue:** #173
 **Priority:** Should Have (deferrable to post-MVP)
@@ -17,7 +18,7 @@ As a real estate agent, I want to export only a selected subset of contacts so t
 
 ## Notes
 
-US-104 and US-105 already export all contacts. This story adds a scoping layer: selection (manual multi-pick from the list) and filtering (export the contacts currently visible through the active filter). The resulting file format is identical to US-104/US-105 — only the scope changes.
+#155 and #156 already export all contacts. This story adds a scoping layer: selection (manual multi-pick from the list) and filtering (export the contacts currently visible through the active filter). The resulting file format is identical to #155/#156 — only the scope changes.
 
 "Export Filtered" exports all contacts matching the active filter, not just the visible page if the list is paginated.
 
@@ -26,7 +27,7 @@ US-104 and US-105 already export all contacts. This story adds a scoping layer: 
 1. The contact list shows a checkbox on each row; a header checkbox selects or deselects all currently visible contacts
 2. When one or more contacts are selected, "Export Selected (N)" is available in the Export menu, where N is the count of selected contacts
 3. When the contact list has active filters applied (search text, tags, or category), "Export Filtered (N)" is available in the Export menu, where N is the total count of contacts matching the filter
-4. Both options offer the same format choices as the full export: vCard (US-104) and CSV (US-105)
+4. Both options offer the same format choices as the full export: vCard (#155) and CSV (#156)
 5. A confirmation step shows the contact count before the file dialog opens; the user can cancel at this point
 6. The exported file contains only the scoped contacts, in the chosen format, identical in structure to the full-export output
 
@@ -35,30 +36,30 @@ US-104 and US-105 already export all contacts. This story adds a scoping layer: 
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/import_export.feature`.
 
 ```gherkin
-@us138
+@story_169
 Scenario: Contact list shows checkboxes for selection
   Given the user is viewing the contact list
   When the user looks at the list
   Then each contact row has a checkbox and a header checkbox is present
 
-@us138
+@story_169
 Scenario: Export Selected option appears when contacts are checked
   Given the user has checked 3 contacts in the contact list
   When the user opens the Export menu
   Then "Export Selected (3)" is available as an option
 
-@us138
+@story_169
 Scenario: Export Filtered option appears when a filter is active
   Given the contact list is filtered by tag "VIP" showing 8 matching contacts
   When the user opens the Export menu
   Then "Export Filtered (8)" is available as an option
 
-@us138
+@story_169
 Scenario: Confirmation step shows count before file dialog
   Given the user clicks "Export Selected (3)"
   Then a confirmation step is shown with "3 contacts will be exported" before the file dialog opens
 
-@us138
+@story_169
 Scenario: Exported CSV contains only the selected contacts
   Given the user has selected 2 specific contacts and chooses Export Selected as CSV
   When the export completes
@@ -67,7 +68,7 @@ Scenario: Exported CSV contains only the selected contacts
 
 ## Manual Tests
 
-**Story:** [US-131 — Export Selected or Filtered Contacts](../docs/121-export-selected-filtered-contacts.md)
+**Story:** [#90 — Export Selected or Filtered Contacts](../docs/121-export-selected-filtered-contacts.md)
 
 ### Checkboxes appear on the contact list
 1. Open the contact list

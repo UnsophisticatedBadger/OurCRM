@@ -1,6 +1,7 @@
-# US-172 — Sync Multiple Calendar Accounts
+# 146 - Sync Multiple Calendar Accounts
 
 **Capability:** calendar
+**Milestone:** v0.8.0 — Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #146
 **Priority:** Post-MVP
@@ -22,20 +23,20 @@ As an agent, I want to connect more than one Google or Outlook account, so that 
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/calendar.feature`.
 
 ```gherkin
-@us180
+@story_188
 Scenario: User connects a second Google account and its events appear in OurCRM
   Given one Google Calendar account is already connected
   When the user connects a second Google account via OAuth
   Then both accounts are listed in Settings
   And events from both accounts appear in the OurCRM calendar view
 
-@us180
+@story_188
 Scenario: Events from different accounts are colour-coded
   Given two Google Calendar accounts are connected
   When the user views the OurCRM calendar
   Then events from each account are shown in a distinct colour
 
-@us180
+@story_188
 Scenario: Disconnecting one account removes only its events
   Given two Google Calendar accounts are connected with synced events
   When the user disconnects the second account
@@ -44,7 +45,7 @@ Scenario: Disconnecting one account removes only its events
 ```
 
 ## Manual Tests
-**Story:** [US-161 — Sync Multiple Calendar Accounts](../docs/161-sync-multiple-calendar-accounts.md)
+**Story:** [#42 — Sync Multiple Calendar Accounts](../docs/161-sync-multiple-calendar-accounts.md)
 
 ### User connects a second Google account and sees both accounts listed in Settings
 1. Connect a first Google Calendar account

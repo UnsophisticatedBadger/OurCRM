@@ -1,6 +1,7 @@
-# US-141 — Export to JSON (Full Backup)
+# 172 - Export To JSON (Full Backup)
 
 **Capability:** Import & Export
+**Milestone:** v1.0.0 — Production
 **Status:** Not Done
 **GitHub Issue:** #172
 **Priority:** Should Have (deferrable to post-MVP)
@@ -16,7 +17,7 @@ As a real estate agent, I want to export all my data to a single JSON file so th
 
 ## Notes
 
-This is a full-data export for migration and interoperability purposes, complementing the encrypted in-app backup (US-081/US-078). The resulting JSON file is unencrypted and human-readable — users should be advised to store it securely.
+This is a full-data export for migration and interoperability purposes, complementing the encrypted in-app backup (#21/#125). The resulting JSON file is unencrypted and human-readable — users should be advised to store it securely.
 
 The export is structured as a single JSON object with one key per entity type. All relationships between records (e.g., a contact linked to a transaction) are preserved via their internal IDs.
 
@@ -34,30 +35,30 @@ The export is structured as a single JSON object with one key per entity type. A
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/import_export.feature`.
 
 ```gherkin
-@us137
+@story_168
 Scenario: Full JSON export option is accessible from the menu
   Given the user is in the main app window
   When the user opens the Export menu
   Then "Full Backup (JSON)" is listed as an option
 
-@us137
+@story_168
 Scenario: Exported file is valid JSON containing all entity types
   Given the user has contacts, leads, properties, transactions, tasks, and notes in the app
   When the user exports a full JSON backup
   Then the resulting file is valid JSON containing a key for each entity type
 
-@us137
+@story_168
 Scenario: Exported file includes a metadata block
   Given the user exports a full JSON backup
   Then the file contains a "metadata" key with the export date, application version, and record counts
 
-@us137
+@story_168
 Scenario: Default filename includes the current date
   Given the user initiates a full JSON export
   When the file dialog opens
   Then the suggested filename matches the pattern "ourcrm-backup-YYYY-MM-DD.json"
 
-@us137
+@story_168
 Scenario: Success message shows the file path and size
   Given the user completes a full JSON export
   Then a success message is shown containing the saved file path and the file size
@@ -65,7 +66,7 @@ Scenario: Success message shows the file path and size
 
 ## Manual Tests
 
-**Story:** [US-130 — Export to JSON (Full Backup)](../docs/119-export-to-json.md)
+**Story:** [#89 — Export to JSON (Full Backup)](../docs/119-export-to-json.md)
 
 ### Export option is accessible
 1. Open the app and locate the Export or File menu

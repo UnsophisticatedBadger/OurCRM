@@ -1,6 +1,7 @@
-# US-023 — Search HAR MLS Listings
+# 51 - Search HAR MLS Listings
 
 **Capability:** MLS Integration
+**Milestone:** v0.5.0 — MVP
 **Status:** Not Done
 **GitHub Issue:** #51
 
@@ -14,7 +15,7 @@ As a real estate agent, I want to search through fetched HAR listings by specifi
 
 ## Notes
 
-Search operates on the locally cached listings retrieved by US-085 — no additional API call is made. If the cache is empty, the search section shows the same "Fetch listings first" prompt as US-085.
+Search operates on the locally cached listings retrieved by #131 — no additional API call is made. If the cache is empty, the search section shows the same "Fetch listings first" prompt as #131.
 
 ## Acceptance Criteria
 
@@ -30,37 +31,37 @@ Search operates on the locally cached listings retrieved by US-085 — no additi
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/mls.feature`.
 
 ```gherkin
-@us102
+@story_153
 Scenario: Search by city filters cached listings to that city
   Given 10 cached HAR listings exist, 4 in Houston and 6 in Sugar Land
   When the user enters city "Houston" and clicks "Search"
   Then 4 listings are shown, all in Houston
 
-@us102
+@story_153
 Scenario: Multiple criteria are combined with AND logic
   Given cached listings include properties at various prices and bedroom counts
   When the user enters min price $300,000, max price $500,000, and min bedrooms 3 and clicks "Search"
   Then only listings that satisfy all three criteria are shown
 
-@us102
+@story_153
 Scenario: Search by ZIP code returns only listings in that ZIP
   Given cached listings include properties in multiple ZIP codes
   When the user enters ZIP code "77005" and clicks "Search"
   Then only listings with ZIP code 77005 are shown
 
-@us102
+@story_153
 Scenario: Sorting by price low to high reorders results
   Given search results contain listings at $350,000 and $420,000
   When the user selects sort "Price: Low to High"
   Then the $350,000 listing appears before the $420,000 listing
 
-@us102
+@story_153
 Scenario: No matching listings shows an empty-results message
   Given cached listings contain no 5-bedroom properties
   When the user searches for min bedrooms 5
   Then the message "No listings match your search" is shown
 
-@us102
+@story_153
 Scenario: Clearing criteria and searching restores the full cached set
   Given a filtered search is showing 3 of 10 cached listings
   When the user clears all criteria and clicks "Search"
@@ -69,7 +70,7 @@ Scenario: Clearing criteria and searching restores the full cached set
 
 ## Manual Tests
 
-**Story:** [US-086 — Search HAR MLS Listings](../docs/074-search-harmls-listings.md)
+**Story:** [#132 — Search HAR MLS Listings](../docs/074-search-harmls-listings.md)
 
 ### Search by single criterion
 1. Fetch listings so the cache is populated

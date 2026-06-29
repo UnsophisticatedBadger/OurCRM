@@ -1,6 +1,7 @@
-# US-082 — Create a Task
+# 128 - Create A Task
 
 **Capability:** Tasks
+**Milestone:** v0.8.0 — Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #128
 
@@ -25,19 +26,19 @@ As a real estate agent, I want to create a task so that I can track follow-ups a
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/tasks.feature`.
 
 ```gherkin
-@us080
+@story_127
 Scenario: User creates a task with a title and it appears in the list
   Given the user is in the Tasks section
   When the user clicks "New Task", enters the title "Call Alice about contract", and saves
   Then the task "Call Alice about contract" appears in the task list
 
-@us080
+@story_127
 Scenario: Submitting the task form without a title shows a validation error
   Given the task creation form is open
   When the user leaves the title empty and clicks Save
   Then a validation error is shown and no task is created
 
-@us080
+@story_127
 Scenario: Task created with all fields persists after restart
   Given the user creates a task with title "Send disclosure", priority High, and linked to contact "Alice Smith"
   When the user restarts the application and opens the Tasks section
@@ -46,7 +47,7 @@ Scenario: Task created with all fields persists after restart
 
 ## Manual Tests
 
-**Story:** [US-068 — Create a Task](../docs/106-create-a-task.md)
+**Story:** [#115 — Create a Task](../docs/106-create-a-task.md)
 
 ### New Task form is accessible and contains all expected fields
 1. Navigate to the Tasks section

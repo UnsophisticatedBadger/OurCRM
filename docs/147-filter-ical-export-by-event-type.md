@@ -1,6 +1,7 @@
-# US-173 — Filter iCal Export by Event Type
+# 147 - Filter ICal Export By Event Type
 
 **Capability:** calendar
+**Milestone:** v0.8.0 — Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #147
 **Priority:** Post-MVP
@@ -22,20 +23,20 @@ As an agent, I want to choose which types of events are included in my iCal expo
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/calendar.feature`.
 
 ```gherkin
-@us181
+@story_189
 Scenario: All event types are included by default
   Given iCal export is newly enabled
   When the user views Settings → Calendar → iCal Export
   Then all event type checkboxes are checked
 
-@us181
+@story_189
 Scenario: Deselecting Showings removes showings from the .ics file
   Given iCal export is enabled with all types checked
   And the .ics file contains a showing
   When the user unchecks "Showings"
   Then the showing is no longer present in the .ics file
 
-@us181
+@story_189
 Scenario: Re-selecting a type adds those events back to the .ics file
   Given "Task Due Dates" is unchecked
   When the user checks "Task Due Dates"
@@ -43,7 +44,7 @@ Scenario: Re-selecting a type adds those events back to the .ics file
 ```
 
 ## Manual Tests
-**Story:** [US-162 — Filter iCal Export by Event Type](../docs/162-filter-ical-export-by-event-type.md)
+**Story:** [#95 — Filter iCal Export by Event Type](../docs/162-filter-ical-export-by-event-type.md)
 
 ### All event types are included by default
 1. Enable iCal export for the first time

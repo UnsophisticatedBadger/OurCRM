@@ -1,6 +1,7 @@
-# US-031 — Edit a Contact
+# 59 - Edit A Contact
 
 **Capability:** Contacts
+**Milestone:** v0.5.0 — MVP
 **Status:** Not Done
 **GitHub Issue:** #59
 
@@ -15,7 +16,7 @@ As a real estate agent, I want to edit a contact's information, so that I can ke
 ## Acceptance Criteria
 
 1. The Edit button on the contact details view opens an edit form pre-populated with the contact's current data
-2. All fields can be changed; validation rules match the create form (US-016)
+2. All fields can be changed; validation rules match the create form (#43)
 3. Saving updates the contact in the database, returns to the details view, and shows the updated values immediately
 4. Cancel discards all changes and returns to the details view with the original data unchanged
 5. Edited data persists across application restarts
@@ -26,19 +27,19 @@ As a real estate agent, I want to edit a contact's information, so that I can ke
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/contacts.feature`.
 
 ```gherkin
-@us023
+@story_51
 Scenario: User edits a contact's phone and the new value appears in the details view
   Given the user is viewing the details for "Jane Smith" with phone "555-0000"
   When the user clicks Edit, changes the phone to "555-9999", and clicks Save
   Then the details view shows the phone "555-9999"
 
-@us023
+@story_51
 Scenario: User cancels an edit and the original data is unchanged
   Given the edit form is open for "Jane Smith" with email "old@example.com"
   When the user changes the email to "new@example.com" and clicks Cancel
   Then the details view still shows "old@example.com"
 
-@us023
+@story_51
 Scenario: Edited data persists after an application restart
   Given the user has edited "Jane Smith" phone to "555-9999" and saved
   When the application is restarted and the user opens "Jane Smith"
@@ -47,7 +48,7 @@ Scenario: Edited data persists after an application restart
 
 ## Manual Tests
 
-**Story:** [US-019 — Edit a Contact](../docs/013-edit-contact.md)
+**Story:** [#46 — Edit a Contact](../docs/013-edit-contact.md)
 
 ### User opens the edit form from contact details
 1. Open any contact's details

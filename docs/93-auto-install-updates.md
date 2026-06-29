@@ -1,6 +1,7 @@
-# US-144 — Auto-Install Updates
+# 93 - Auto-Install Updates
 
 **Capability:** infrastructure
+**Milestone:** v0.5.0 — MVP
 **Status:** Not Done
 **GitHub Issue:** #93
 **Priority:** Post-MVP
@@ -17,18 +18,18 @@ As a user, I want updates to download and install automatically, so that I'm alw
 3. After the download completes and the checksum is verified, the update installs automatically
 4. The user is notified with a "Restart to finish updating" prompt after the silent install completes
 5. If the user dismisses the prompt, the update is applied on the next manual restart
-6. Auto-install can be disabled from Settings at any time; disabling reverts to the manual flow from US-113
+6. Auto-install can be disabled from Settings at any time; disabling reverts to the manual flow from #164
 
 ## BDD Scenarios
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/infrastructure.feature`.
 
 ```gherkin
-@us176
+@story_150
 Scenario: Auto-install is off by default
   Given the user opens Settings → General → Updates
   Then the "Automatically install updates" toggle is off
 
-@us176
+@story_150
 Scenario: Update downloads and installs silently when auto-install is enabled
   Given "Automatically install updates" is enabled
   And a newer version is available
@@ -36,14 +37,14 @@ Scenario: Update downloads and installs silently when auto-install is enabled
   Then the update is downloaded and installed without prompting the user
   And a "Restart to finish updating" notification appears
 
-@us176
+@story_150
 Scenario: User dismisses restart prompt and update applies on next restart
   Given an update has been silently installed
   And the user has dismissed the restart prompt
   When the user restarts the application
   Then the new version is running
 
-@us176
+@story_150
 Scenario: Disabling auto-install reverts to manual update flow
   Given "Automatically install updates" is enabled
   When the user disables the toggle
@@ -51,7 +52,7 @@ Scenario: Disabling auto-install reverts to manual update flow
 ```
 
 ## Manual Tests
-**Story:** [US-133 — Auto-Install Updates](../docs/133-auto-install-updates.md)
+**Story:** [#185 — Auto-Install Updates](../docs/133-auto-install-updates.md)
 
 ### Auto-install is off by default on a fresh install
 1. Open Settings → General → Updates

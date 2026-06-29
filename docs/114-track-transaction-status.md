@@ -1,6 +1,7 @@
-# US-067 — Change Transaction Status
+# 114 - Change Transaction Status
 
 **Capability:** Transactions
+**Milestone:** v0.8.0 — Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #114
 
@@ -16,7 +17,7 @@ As a real estate agent, I want to change a transaction's status to reflect where
 
 1. The transaction details view allows changing the status by clicking the status field and selecting a new value from Under Contract, Pending, Closed, or Cancelled
 2. Status can also be changed via right-click > Change Status from the transaction list without navigating to the details view
-3. Selecting Closed from either UI redirects to the Record Closing Date flow (US-054); selecting Cancelled redirects to the Cancel Transaction flow (US-056)
+3. Selecting Closed from either UI redirects to the Record Closing Date flow (#20); selecting Cancelled redirects to the Cancel Transaction flow (#105)
 4. The row's colour indicator in the list updates immediately after an Under Contract / Pending change
 5. Status changes persist across application restarts
 
@@ -25,32 +26,32 @@ As a real estate agent, I want to change a transaction's status to reflect where
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/transactions.feature`.
 
 ```gherkin
-@us050
+@story_74
 Scenario: User changes status from Under Contract to Pending in the details view
   Given the user is viewing a transaction with status "Under Contract"
   When the user clicks the status field and selects "Pending"
   Then the details view shows status "Pending"
   And the transaction list row shows the orange Pending indicator
 
-@us050
+@story_74
 Scenario: User right-clicks a transaction and changes its status from the list
   Given a transaction "123 Oak St Sale" with status "Under Contract" is in the list
   When the user right-clicks it and selects "Change Status" then "Pending"
   Then the row updates to "Pending" immediately without navigating away
 
-@us050
+@story_74
 Scenario: Status change updates the row colour immediately
   Given a transaction with status "Under Contract" (yellow) is in the list
   When the user changes its status to "Pending" via right-click
   Then the row indicator changes to orange immediately
 
-@us050
+@story_74
 Scenario: Selecting Closed from the status picker redirects to the closing date flow
   Given the user is changing a transaction's status
   When the user selects "Closed"
   Then the Record Closing Date dialog opens instead of applying the change directly
 
-@us050
+@story_74
 Scenario: Status change persists after an application restart
   Given the user has changed a transaction's status to "Pending"
   When the application is restarted and the user opens the Transactions section
@@ -59,7 +60,7 @@ Scenario: Status change persists after an application restart
 
 ## Manual Tests
 
-**Story:** [US-053 — Change Transaction Status](../docs/061-track-transaction-status.md)
+**Story:** [#77 — Change Transaction Status](../docs/061-track-transaction-status.md)
 
 ### User changes status in the details view
 1. Open any Under Contract transaction's details

@@ -1,6 +1,7 @@
-# US-064 — Create a New Transaction
+# 111 - Create A New Transaction
 
 **Capability:** Transactions
+**Milestone:** v0.8.0 — Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #111
 
@@ -30,31 +31,31 @@ As a real estate agent, I want to create a transaction to track a deal from cont
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/transactions.feature`.
 
 ```gherkin
-@us047
+@story_71
 Scenario: User creates a transaction and sees it in the transaction list
   Given the user is in the Transactions section
   When the user clicks "New Transaction", enters contract date today and type "Sale", and clicks Save
   Then the transaction list shows the new transaction with type "Sale"
 
-@us047
+@story_71
 Scenario: User submits the form with no contract date and sees an error
   Given the new transaction form is open
   When the user leaves the contract date empty and clicks Save
   Then an inline error is shown and the form stays open
 
-@us047
+@story_71
 Scenario: User enters a closing date before the contract date and sees an error
   Given the new transaction form is open
   When the user enters contract date 2026-07-01 and closing date 2026-06-01 and clicks Save
   Then "Closing date must be on or after contract date" is shown
 
-@us047
+@story_71
 Scenario: Commission amount is shown when price and percentage are both entered
   Given the new transaction form is open
   When the user enters sale price 500000 and commission 3
   Then the form shows "$500,000 × 3% = $15,000"
 
-@us047
+@story_71
 Scenario: Transaction persists after an application restart
   Given the user has created a transaction with contract date today
   When the application is restarted and the user opens the Transactions section
@@ -63,7 +64,7 @@ Scenario: Transaction persists after an application restart
 
 ## Manual Tests
 
-**Story:** [US-050 — Create a New Transaction](../docs/050-create-new-transaction.md)
+**Story:** [#74 — Create a New Transaction](../docs/050-create-new-transaction.md)
 
 ### User opens the new transaction form and sees all fields
 1. Navigate to the Transactions section and click "New Transaction"

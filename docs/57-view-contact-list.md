@@ -1,6 +1,7 @@
-# US-029 — View Contact List
+# 57 - View Contact List
 
 **Capability:** Contacts
+**Milestone:** v0.5.0 — MVP
 **Status:** Not Done
 **GitHub Issue:** #57
 
@@ -25,21 +26,21 @@ As a real estate agent, I want to see all my contacts in a sortable list, so tha
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/contacts.feature`.
 
 ```gherkin
-@us021
+@story_48
 Scenario: User with contacts sees them listed in the Contacts section
   Given the user has created contacts "Alice Brown" and "Bob Carter"
   When the user opens the Contacts section
   Then the list shows "Alice Brown" and "Bob Carter"
   And the list is sorted by name by default
 
-@us021
+@story_48
 Scenario: User with no contacts sees an empty state
   Given the user has no contacts
   When the user opens the Contacts section
   Then "No contacts yet" is shown
   And a "Create Your First Contact" button is visible
 
-@us021
+@story_48
 Scenario: User sorts the contact list by clicking a column header
   Given the user is viewing a contact list with multiple contacts
   When the user clicks the "Name" column header
@@ -47,13 +48,13 @@ Scenario: User sorts the contact list by clicking a column header
   When the user clicks the "Name" column header again
   Then the contacts are sorted by name descending
 
-@us021
+@story_48
 Scenario: User double-clicks a contact and sees its details
   Given the user is viewing the contact list
   When the user double-clicks "Alice Brown"
   Then the contact details view opens for "Alice Brown"
 
-@us021
+@story_48
 Scenario: Sort order is preserved when the user navigates away and back
   Given the user has sorted the contact list by email ascending
   When the user navigates to the Leads section and back to Contacts
@@ -62,7 +63,7 @@ Scenario: Sort order is preserved when the user navigates away and back
 
 ## Manual Tests
 
-**Story:** [US-017 — View Contact List](../docs/011-view-contact-list.md)
+**Story:** [#44 — View Contact List](../docs/011-view-contact-list.md)
 
 ### User sees all contacts in the list
 1. Create 5 contacts with varied names

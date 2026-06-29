@@ -1,6 +1,7 @@
-# US-198 — Reply to Email with AI Draft
+# 202 - Reply To Email With AI Draft
 
 **Capability:** ai
+**Milestone:** v1.1.0+ — Post-Production
 **Status:** Not Done
 **GitHub Issue:** #202
 **Priority:** Post-MVP
@@ -23,7 +24,7 @@ As an agent, I want to generate an AI-drafted reply directly from an email in th
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/ai.feature`.
 
 ```gherkin
-@us188
+@story_196
 Scenario: User clicks "Reply with AI" and the compose form opens pre-filled
   Given AI is configured
   And an email exists in the contact timeline
@@ -32,13 +33,13 @@ Scenario: User clicks "Reply with AI" and the compose form opens pre-filled
   And the subject is "Re: [original subject]"
   And the original email body is quoted below the cursor
 
-@us188
+@story_196
 Scenario: AI draft is generated automatically from the quoted context
   Given the user has clicked "Reply with AI" on an email
   When the compose form opens
   Then an AI-generated reply appears in the body above the quoted original
 
-@us188
+@story_196
 Scenario: "Reply with AI" is disabled when AI is not configured
   Given AI is not configured
   When the user views an email entry in the contact timeline
@@ -47,7 +48,7 @@ Scenario: "Reply with AI" is disabled when AI is not configured
 ```
 
 ## Manual Tests
-**Story:** [US-187 — Reply to Email with AI Draft](../docs/187-reply-to-email-with-ai-draft.md)
+**Story:** [#195 — Reply to Email with AI Draft](../docs/187-reply-to-email-with-ai-draft.md)
 
 ### Clicking "Reply with AI" opens the compose form pre-filled
 1. View an email in a contact's timeline

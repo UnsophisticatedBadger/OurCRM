@@ -1,6 +1,7 @@
-# US-043 — Search Across All Sections
+# 17 - Search Across All Sections
 
 **Capability:** App Shell
+**Milestone:** v0.2.0 — Secure Shell
 **Status:** Not Done
 **GitHub Issue:** #17
 
@@ -26,7 +27,7 @@ As a real estate agent, I want the global search to find contacts, leads, proper
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/shell.feature`.
 
 ```gherkin
-@us061
+@story_110
 Scenario: User types a term matching records in multiple sections and sees grouped results
   Given a contact "Alice Smith", a lead "Bob Jones", and a property "Alice Lane" exist
   When the user opens global search and types "Alice"
@@ -34,7 +35,7 @@ Scenario: User types a term matching records in multiple sections and sees group
   And a "Properties" section header appears with "Alice Lane"
   And no "Leads" or "Transactions" section header is shown
 
-@us061
+@story_110
 Scenario: User clicks a lead result and is taken to that lead
   Given a lead "Bob Jones" exists
   And the global search shows "Bob Jones" under the Leads section
@@ -42,7 +43,7 @@ Scenario: User clicks a lead result and is taken to that lead
   Then Bob Jones's lead detail view opens
   And the overlay closes
 
-@us061
+@story_110
 Scenario: User clicks a property result and is taken to that property
   Given a property "123 Oak St" exists
   And the global search shows it under the Properties section
@@ -50,13 +51,13 @@ Scenario: User clicks a property result and is taken to that property
   Then the property detail view for "123 Oak St" opens
   And the overlay closes
 
-@us061
+@story_110
 Scenario: User types a term matching only contacts and only the Contacts section is shown
   Given a contact named "Zelda" exists and no leads, properties, or transactions match "Zelda"
   When the user types "Zelda" in global search
   Then only the "Contacts" section header is shown
 
-@us061
+@story_110
 Scenario: User types a term matching no records across any section
   Given the global search overlay is open
   When the user types "zzznomatch"
@@ -66,7 +67,7 @@ Scenario: User types a term matching no records across any section
 
 ## Manual Tests
 
-**Story:** [US-031 — Search Across All Sections](../docs/035-search-across-all-sections.md)
+**Story:** [#59 — Search Across All Sections](../docs/035-search-across-all-sections.md)
 
 ### Results are grouped by section and only non-empty sections appear
 1. Create at least one contact, one lead, one property, and one transaction that all share a keyword (e.g., "Smith")

@@ -1,6 +1,7 @@
-# US-106 — Notification for Email Received
+# 157 - Notification For Email Received
 
 **Capability:** Notifications
+**Milestone:** v1.0.0 — Production
 **Status:** Not Done
 **GitHub Issue:** #157
 
@@ -18,7 +19,7 @@ As a real estate agent, I want to receive a notification when a contact emails m
 
 ## Notes
 
-Email-received notifications use the same desktop/in-app delivery channels established by US-093 and US-094. The email account must be configured (US-078) before this story applies.
+Email-received notifications use the same desktop/in-app delivery channels established by #176 and #177. The email account must be configured (#125) before this story applies.
 
 Live email receipt requires an active email account connection. BDD scenarios that depend on a real incoming email are tagged `@live_email` for CI skip. Unit tests inject a simulated incoming-email event directly into the notification dispatcher.
 
@@ -27,15 +28,15 @@ Live email receipt requires an active email account connection. BDD scenarios th
 1. When OurCRM detects a new incoming email whose sender address matches a contact, a notification fires with title "New Email from [Contact Name]" and body showing the email subject
 2. When the sender is not a known contact, the notification title shows the sender's email address instead of a contact name
 3. Clicking a notification for a known contact navigates to that contact's email history; clicking a notification for an unknown sender navigates to the email inbox view
-4. Notifications use desktop delivery (US-093 pattern) when the app is in the background and in-app toast (US-094 pattern) when the user is actively in the app
-5. Email-received notifications respect the Email Received toggle in notification preferences (US-095); if that toggle is off, no notification fires
+4. Notifications use desktop delivery (#176 pattern) when the app is in the background and in-app toast (#177 pattern) when the user is actively in the app
+5. Email-received notifications respect the Email Received toggle in notification preferences (#178); if that toggle is off, no notification fires
 
 ## BDD Scenarios
 
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/notifications.feature`.
 
 ```gherkin
-@us120 @live_email
+@story_84 @live_email
 Scenario: New email from a known contact triggers a notification
   Given an email account is configured in Settings
   And a contact "Jane Smith" exists with email "jane@example.com"
@@ -43,7 +44,7 @@ Scenario: New email from a known contact triggers a notification
   When an email from "jane@example.com" with subject "Re: Property Visit" arrives
   Then a notification fires with title "New Email from Jane Smith" and body "Re: Property Visit"
 
-@us120 @live_email
+@story_84 @live_email
 Scenario: New email from an unknown sender shows the sender address as title
   Given an email account is configured
   And Email Received notifications are enabled
@@ -51,13 +52,13 @@ Scenario: New email from an unknown sender shows the sender address as title
   And "unknown@example.com" does not match any contact
   Then a notification fires with title "unknown@example.com" and body "Enquiry"
 
-@us120 @live_email
+@story_84 @live_email
 Scenario: Clicking the notification for a known contact opens email history
   Given a notification "New Email from Jane Smith" has fired
   When the user clicks the notification
   Then OurCRM comes to the foreground and Jane Smith's email history is shown
 
-@us120 @live_email
+@story_84 @live_email
 Scenario: No notification fires when Email Received preference is disabled
   Given Email Received notifications are disabled in notification preferences
   When a new email arrives from a known contact
@@ -66,7 +67,7 @@ Scenario: No notification fires when Email Received preference is disabled
 
 ## Manual Tests
 
-**Story:** [US-097 — Notification for Email Received](../docs/093-notification-for-email-received.md)
+**Story:** [#180 — Notification for Email Received](../docs/093-notification-for-email-received.md)
 
 ### New email from a contact triggers a notification
 1. Configure an email account in Settings

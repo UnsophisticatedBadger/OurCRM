@@ -1,6 +1,7 @@
-# US-093 — Send Email to Contact
+# 176 - Send Email To Contact
 
 **Capability:** Email
+**Milestone:** v1.1.0+ — Post-Production
 **Status:** Not Done
 **GitHub Issue:** #176
 
@@ -15,9 +16,9 @@ As a real estate agent, I want to send an email with optional file attachments t
 
 ## Notes
 
-US-078 must be completed before this story. Although US-078 has a higher file number, it is the configuration prerequisite.
+#125 must be completed before this story. Although #125 has a higher file number, it is the configuration prerequisite.
 
-The full attachment capability (multi-file, size and type validation) from US-082 is folded into this story. US-082 is no longer a separate story — see [US-082](082-send-email-with-attachments.md) for the redirect note.
+The full attachment capability (multi-file, size and type validation) from #128 is folded into this story. #128 is no longer a separate story — see [#128](082-send-email-with-attachments.md) for the redirect note.
 
 **Third-party testability:** Scenarios that invoke a live SMTP server must be tagged `@live_email` and skipped in CI. Cover the email-sending service with unit tests that stub the SMTP transport.
 
@@ -31,68 +32,68 @@ The full attachment capability (multi-file, size and type validation) from US-08
 6. Clicking Send transmits the email and all attachments via the configured SMTP server; on success a confirmation message is shown and the form closes
 7. If the SMTP server returns an error, a clear error message is shown and the compose form stays open with all content intact so the agent can retry
 8. If email is not configured, clicking "Send Email" shows a message directing the user to Settings → Email
-9. After a successful send, the email is recorded in the contact's email history (US-081) with subject, timestamp, and a body preview
+9. After a successful send, the email is recorded in the contact's email history (#21) with subject, timestamp, and a body preview
 
 ## BDD Scenarios
 
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/email.feature`.
 
 ```gherkin
-@us070
+@story_117
 Scenario: User opens the compose form and recipient is pre-filled
   Given a contact "Alice Smith" with email "alice@example.com" exists
   When the user clicks "Send Email" on Alice Smith's detail view
   Then the compose form opens with "alice@example.com" in the recipient field
 
-@us070
+@story_117
 Scenario: User cannot send without a subject
   Given the compose form is open with a recipient and body but no subject
   When the user clicks Send
   Then a validation error is shown and the email is not sent
 
-@us070
+@story_117
 Scenario: Sent email is logged in the contact's email history
   Given the user has sent an email with subject "Showing follow-up" to "Alice Smith"
   When the user views Alice Smith's contact detail page
   Then "Showing follow-up" appears in the email history section with a timestamp
 
-@us070
+@story_117
 Scenario: User attaches files and they appear in the attachments list
   Given the compose form is open
   When the user attaches "contract.pdf" (2 MB) and "photo.jpg" (1 MB)
   Then both files appear in the attachments list showing their filenames and sizes
 
-@us070
+@story_117
 Scenario: User removes an attachment before sending
   Given the compose form has "contract.pdf" attached
   When the user clicks the remove action next to "contract.pdf"
   Then "contract.pdf" is removed from the attachments list
 
-@us070
+@story_117
 Scenario: Attaching a file over 25 MB is rejected
   Given the compose form is open
   When the user tries to attach a 30 MB file
   Then a validation error is shown and the file is not added to the attachments list
 
-@us070
+@story_117
 Scenario: Attaching an executable file is rejected
   Given the compose form is open
   When the user tries to attach "setup.exe"
   Then a security warning is shown and the file is not attached
 
-@us070
+@story_117
 Scenario: Email is not configured — user is directed to Settings
   Given no SMTP settings have been configured
   When the user clicks "Send Email" on a contact's detail view
   Then a message is shown directing the user to configure email in Settings → Email
 
-@us070 @live_email
+@story_117 @live_email
 Scenario: User sends an email successfully via SMTP
   Given the compose form has a valid recipient, subject, body, and SMTP is configured
   When the user clicks Send
   Then a success confirmation is shown and the form closes
 
-@us070 @live_email
+@story_117 @live_email
 Scenario: SMTP error keeps the form open for retry
   Given the compose form has a complete email ready to send
   And the SMTP server is unreachable
@@ -103,7 +104,7 @@ Scenario: SMTP error keeps the form open for retry
 
 ## Manual Tests
 
-**Story:** [US-079 — Send Email to Contact](../docs/079-send-email-to-contact.md)
+**Story:** [#126 — Send Email to Contact](../docs/079-send-email-to-contact.md)
 
 ### Compose form opens with recipient pre-filled
 1. Open any contact's detail view that has an email address

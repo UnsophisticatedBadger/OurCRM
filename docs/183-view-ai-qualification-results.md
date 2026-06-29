@@ -1,6 +1,7 @@
-# US-100 — View AI Qualification Results
+# 183 - View AI Qualification Results
 
 **Capability:** AI Features
+**Milestone:** v1.1.0+ — Post-Production
 **Status:** Not Done
 **GitHub Issue:** #183
 
@@ -14,7 +15,7 @@ As a real estate agent, I want the AI qualification result to be displayed clear
 
 ## Notes
 
-This story specifies the display format of qualification results. The AI call and storage are owned by US-090; this story owns the visual presentation: colour coding, score rendering, lead-list badge, and the unqualified state.
+This story specifies the display format of qualification results. The AI call and storage are owned by #136; this story owns the visual presentation: colour coding, score rendering, lead-list badge, and the unqualified state.
 
 **Third-party testability:** All scenarios here operate on *already-stored* qualification data and do not call a live AI provider. BDD and unit tests can seed a qualification result directly via the repository layer without going through the AI service. No `@live_ai` tagging is needed for this story.
 
@@ -32,7 +33,7 @@ This story specifies the display format of qualification results. The AI call an
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/ai.feature`.
 
 ```gherkin
-@us066
+@story_113
 Scenario: Qualified lead shows colour-coded score, status, reasoning, and date
   Given a lead has been qualified with score 78 and status "Hot"
   When the user views the lead's detail view
@@ -41,20 +42,20 @@ Scenario: Qualified lead shows colour-coded score, status, reasoning, and date
   And the reasoning is displayed as readable text
   And the qualification date is shown
 
-@us066
+@story_113
 Scenario: Unqualified lead shows "Not yet qualified" and a prompt
   Given a lead has never been qualified by AI
   When the user views the lead's detail view
   Then the qualification panel shows "Not yet qualified"
   And a "Qualify with AI" button is present in the panel
 
-@us066
+@story_113
 Scenario: Qualified lead shows a Re-qualify button
   Given a lead has already been qualified by AI
   When the user views the lead's detail view
   Then a "Re-qualify" button is present in the qualification panel
 
-@us066
+@story_113
 Scenario: Lead list shows AI status badges for qualified leads
   Given lead "Alice Smith" is qualified as "Hot" and lead "Bob Jones" is qualified as "Cold"
   And lead "Carol White" has not been qualified
@@ -66,7 +67,7 @@ Scenario: Lead list shows AI status badges for qualified leads
 
 ## Manual Tests
 
-**Story:** [US-091 — View AI Qualification Results](../docs/023-view-ai-qualification-results.md)
+**Story:** [#22 — View AI Qualification Results](../docs/023-view-ai-qualification-results.md)
 
 ### Qualification panel shows score, colour-coded status, reasoning, and date
 1. Qualify a lead and view its detail page
@@ -83,7 +84,7 @@ Scenario: Lead list shows AI status badges for qualified leads
 ### Qualified lead shows Re-qualify button
 1. Open any qualified lead's detail view
 2. Confirm a "Re-qualify" button is visible in the qualification panel
-3. Confirm the button triggers a new AI call (covered in US-090 tests)
+3. Confirm the button triggers a new AI call (covered in #136 tests)
 
 ### Lead list shows AI status badges
 1. Qualify several leads with different statuses

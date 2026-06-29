@@ -1,6 +1,7 @@
-# US-199 — Save AI Lead Summary to Lead Record
+# 203 - Save AI Lead Summary To Lead Record
 
 **Capability:** ai
+**Milestone:** v1.1.0+ — Post-Production
 **Status:** Not Done
 **GitHub Issue:** #203
 **Priority:** Post-MVP
@@ -22,20 +23,20 @@ As an agent, I want to save an AI-generated lead summary to the lead record, so 
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/ai.feature`.
 
 ```gherkin
-@us189
+@story_98
 Scenario: User saves a generated summary and it appears in the lead detail
   Given a lead summary has been generated
   When the user clicks "Save Summary"
   Then the summary is stored in the lead record
   And a read-only panel shows the summary text and the date it was saved
 
-@us189
+@story_98
 Scenario: Lead detail shows a prompt when no summary has been saved
   Given a lead has no saved summary
   When the user views the lead detail
   Then the summary panel shows a prompt to generate and save one
 
-@us189
+@story_98
 Scenario: Saving a new summary replaces the previous one
   Given a saved summary exists from a previous session
   When the user generates and saves a new summary
@@ -44,7 +45,7 @@ Scenario: Saving a new summary replaces the previous one
 ```
 
 ## Manual Tests
-**Story:** [US-188 — Save AI Lead Summary to Lead Record](../docs/187-save-ai-lead-summary.md)
+**Story:** [#196 — Save AI Lead Summary to Lead Record](../docs/187-save-ai-lead-summary.md)
 
 ### Saved summary appears in the lead detail with the save date
 1. Generate a lead summary and click "Save Summary"

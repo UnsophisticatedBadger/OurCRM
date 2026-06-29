@@ -1,6 +1,7 @@
-# US-077 — Mark Showing as Completed
+# 124 - Mark Showing As Completed
 
 **Capability:** Calendar & Showings
+**Milestone:** v0.8.0 — Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #124
 
@@ -17,7 +18,7 @@ As a real estate agent, I want to mark a showing as completed and record the buy
 
 Valid outcome values: Very Interested / Interested / Neutral / Not Interested / Want to Make Offer.
 
-A completed showing is excluded from the Upcoming Showings view and instead appears in a Past Showings view (a companion view to US-062, accessible from the same Calendar section) showing its outcome and notes.
+A completed showing is excluded from the Upcoming Showings view and instead appears in a Past Showings view (a companion view to #78, accessible from the same Calendar section) showing its outcome and notes.
 
 ## Acceptance Criteria
 
@@ -33,7 +34,7 @@ A completed showing is excluded from the Upcoming Showings view and instead appe
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/calendar.feature`.
 
 ```gherkin
-@us058
+@story_107
 Scenario: User marks a past showing as completed with an outcome
   Given a showing scheduled for yesterday exists
   When the user opens that showing's detail view and clicks "Mark as Completed"
@@ -42,19 +43,19 @@ Scenario: User marks a past showing as completed with an outcome
   Then the showing status is "Completed"
   And it no longer appears in the Upcoming Showings view
 
-@us058
+@story_107
 Scenario: Completed showing appears in Past Showings with outcome and notes
   Given a showing has been completed with outcome "Very Interested" and note "Ready to make an offer"
   When the user opens the Past Showings view
   Then the showing is listed with outcome "Very Interested" and note "Ready to make an offer"
 
-@us058
+@story_107
 Scenario: User tries to complete a future showing and is blocked
   Given a showing scheduled for tomorrow exists
   When the user tries to mark it as completed
   Then an error explains the showing has not yet occurred and the showing remains incomplete
 
-@us058
+@story_107
 Scenario: User edits the outcome of a completed showing
   Given a completed showing has outcome "Neutral"
   When the user opens it, changes the outcome to "Very Interested", and saves
@@ -63,7 +64,7 @@ Scenario: User edits the outcome of a completed showing
 
 ## Manual Tests
 
-**Story:** [US-063 — Mark Showing as Completed](../docs/033-mark-showing-completed.md)
+**Story:** [#79 — Mark Showing as Completed](../docs/033-mark-showing-completed.md)
 
 ### User completes a past showing and records an outcome
 1. Create a showing for yesterday (or wait until a scheduled showing has passed)

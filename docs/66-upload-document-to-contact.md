@@ -1,6 +1,7 @@
-# US-038 — Upload Document to Contact
+# 66 - Upload Document To Contact
 
 **Capability:** Contacts
+**Milestone:** v0.5.0 — MVP
 **Status:** Not Done
 **GitHub Issue:** #66
 
@@ -14,7 +15,7 @@ As a real estate agent, I want to upload documents to a contact's record so that
 
 ## Notes
 
-Documents are stored in the encrypted database alongside other contact data. The size limit (50 MB per file) is higher than the email attachment limit (25 MB in US-079) because documents are stored locally rather than sent through a mail server.
+Documents are stored in the encrypted database alongside other contact data. The size limit (50 MB per file) is higher than the email attachment limit (25 MB in #126) because documents are stored locally rather than sent through a mail server.
 
 ## Acceptance Criteria
 
@@ -23,7 +24,7 @@ Documents are stored in the encrypted database alongside other contact data. The
 3. Each uploaded document is stored with its filename, file type, file size, upload date, optional document type (Contract / Disclosure / Photo / Other), and optional description
 4. Files over 50 MB are rejected with a size-limit error; the remaining selected files are still uploaded
 5. Files with executable extensions (.exe, .bat, .sh, .cmd) are rejected with a type-restriction error
-6. Successfully uploaded documents appear immediately in the contact's documents list (US-027)
+6. Successfully uploaded documents appear immediately in the contact's documents list (#55)
 7. Documents persist across application restarts
 
 ## BDD Scenarios
@@ -31,31 +32,31 @@ Documents are stored in the encrypted database alongside other contact data. The
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/contacts.feature`.
 
 ```gherkin
-@us090
+@story_136
 Scenario: User uploads a document and it appears in the contact's documents list
   Given the user is viewing contact "Alice Smith"
   When the user clicks "Upload Document" and selects "contract.pdf" (200 KB)
   Then "contract.pdf" appears in Alice Smith's documents list with its filename, type, size, and today's date
 
-@us090
+@story_136
 Scenario: File over 50 MB is rejected
   Given the user is viewing a contact's detail page
   When the user selects a file of 60 MB via the file picker
   Then a size-limit error is shown and the file is not stored
 
-@us090
+@story_136
 Scenario: Executable file type is rejected
   Given the user is viewing a contact's detail page
   When the user selects a file named "setup.exe" via the file picker
   Then a type-restriction error is shown and the file is not stored
 
-@us090
+@story_136
 Scenario: Document with type and description is saved with that metadata
   Given the user uploads "disclosure.pdf" to a contact and sets type "Disclosure" and description "Seller disclosure form"
   When the upload completes
   Then the document appears with type "Disclosure" and description "Seller disclosure form"
 
-@us090
+@story_136
 Scenario: Uploaded documents persist after application restart
   Given "contract.pdf" has been uploaded to contact "Alice Smith"
   When the user restarts the application and opens Alice Smith's contact
@@ -64,7 +65,7 @@ Scenario: Uploaded documents persist after application restart
 
 ## Manual Tests
 
-**Story:** [US-026 — Upload Document to Contact](../docs/026-upload-document-to-contact.md)
+**Story:** [#54 — Upload Document to Contact](../docs/026-upload-document-to-contact.md)
 
 ### Upload button is present and opens a file picker
 1. Open any contact's detail view

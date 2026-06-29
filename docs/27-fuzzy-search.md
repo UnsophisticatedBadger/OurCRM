@@ -1,6 +1,7 @@
-# US-146 — Fuzzy Search
+# 27 - Fuzzy Search
 
 **Capability:** shell
+**Milestone:** v0.2.0 — Secure Shell
 **Status:** Not Done
 **GitHub Issue:** #27
 **Priority:** Post-MVP
@@ -26,32 +27,32 @@ As an agent, I want search to find records even when I misspell a name or term, 
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/shell.feature`.
 
 ```gherkin
-@us154
+@story_35
 Scenario: Search with a one-character typo still finds the contact
   Given a contact named "Johnson" exists
   When the user searches for "Jonson"
   Then "Johnson" appears in the results
   And the result is labelled as a fuzzy match
 
-@us154
+@story_35
 Scenario: Phonetically similar name finds the matching contact
   Given a contact named "Smith" exists
   When the user searches for "Smyth"
   Then "Smith" appears in the results
 
-@us154
+@story_35
 Scenario: Exact matches are ranked above fuzzy matches
   Given contacts named "Johnson" and "Jonson" both exist
   When the user searches for "Johnson"
   Then "Johnson" (exact match) appears before "Jonson" (fuzzy match) in the results
 
-@us154
+@story_35
 Scenario: Fuzzy search can be disabled in Settings
   Given the user has disabled fuzzy search in Settings → Search
   When the user searches for "Jonson"
   Then "Johnson" does not appear in the results
 
-@us154
+@story_35
 Scenario: Threshold set to Strict requires a closer match
   Given the fuzzy threshold is set to "Strict"
   When the user searches for a term with 2 character differences from a contact's name
@@ -59,7 +60,7 @@ Scenario: Threshold set to Strict requires a closer match
 ```
 
 ## Manual Tests
-**Story:** [US-135 — Fuzzy Search](../docs/128-fuzzy-search.md)
+**Story:** [#137 — Fuzzy Search](../docs/128-fuzzy-search.md)
 
 ### One-character typo still finds the contact
 1. Create a contact named "Johnson"

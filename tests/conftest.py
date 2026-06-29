@@ -10,7 +10,7 @@ from tests._keyring import InMemoryKeyring
 
 def pytest_configure(config: pytest.Config) -> None:
     for n in range(1, 300):
-        config.addinivalue_line("markers", f"us-{n:03d}: User Story {n:03d}")
+        config.addinivalue_line("markers", f"story_{n}: Story #{n}")
 
 
 __all__ = ["InMemoryKeyring"]

@@ -1,6 +1,7 @@
-# US-051 — Mark Lead as Converted
+# 75 - Mark Lead As Converted
 
 **Capability:** Leads
+**Milestone:** v0.5.0 — MVP
 **Status:** Not Done
 **GitHub Issue:** #75
 
@@ -26,32 +27,32 @@ As a real estate agent, I want to mark a lead as converted when they become a cl
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/leads.feature`.
 
 ```gherkin
-@us037
+@story_65
 Scenario: User marks a lead as converted and it moves to Closed
   Given the user is viewing a lead that has not been converted
   When the user clicks "Mark as Converted" and confirms
   Then the lead's pipeline stage is "Closed"
   And a success notification is shown
 
-@us037
+@story_65
 Scenario: Conversion date is recorded on the lead
   Given the user converts a lead today
   When the user opens that lead's details
   Then the conversion date matches today's date
 
-@us037
+@story_65
 Scenario: Converted lead is visually distinct in the list
   Given a lead has been marked as converted
   When the user views the lead list
   Then the converted lead has a green indicator distinguishing it from active leads
 
-@us037
+@story_65
 Scenario: User cancels the conversion dialog and the lead is unchanged
   Given the user is viewing a lead
   When the user clicks "Mark as Converted" then cancels the dialog
   Then the lead's stage is unchanged and no conversion date is set
 
-@us037
+@story_65
 Scenario: Reverting a converted lead requires extra confirmation
   Given a lead has been marked as converted
   When the user changes its stage to "Contacted"
@@ -60,7 +61,7 @@ Scenario: Reverting a converted lead requires extra confirmation
 
 ## Manual Tests
 
-**Story:** [US-039 — Mark Lead as Converted](../docs/047-mark-lead-as-converted.md)
+**Story:** [#67 — Mark Lead as Converted](../docs/047-mark-lead-as-converted.md)
 
 ### User sees the Mark as Converted button in lead details
 1. Open any active (non-converted) lead

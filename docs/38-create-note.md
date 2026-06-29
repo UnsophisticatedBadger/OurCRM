@@ -1,6 +1,7 @@
-# US-157 — Create a Standalone Note
+# 38 - Create A Standalone Note
 
 **Capability:** App Shell
+**Milestone:** v0.2.0 — Secure Shell
 **Status:** Not Done
 **GitHub Issue:** #38
 
@@ -16,7 +17,7 @@ As a real estate agent, I want to create a standalone note so that I can capture
 
 **Capability decision:** The canonical capability list has no "notes" group. Standalone notes are an app-level feature with no natural home in contacts, leads, or any other domain capability. Assigned to `shell` pending a decision on whether a dedicated `notes` capability should be added — raise this if the notes feature grows beyond create/view/search.
 
-**Distinction from entity notes:** US-021 (Add Notes to Contact) attaches notes to a specific contact record. This story covers a general-purpose Notes section for information that has no specific contact, lead, or property to attach to — market observations, personal reminders, general procedures, and so on.
+**Distinction from entity notes:** #48 (Add Notes to Contact) attaches notes to a specific contact record. This story covers a general-purpose Notes section for information that has no specific contact, lead, or property to attach to — market observations, personal reminders, general procedures, and so on.
 
 Optional entity links are supported: a standalone note can be linked to a contact, lead, or property for cross-reference, but the note always lives in the Notes section regardless of that link.
 
@@ -34,25 +35,25 @@ Optional entity links are supported: a standalone note can be linked to a contac
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/shell.feature`.
 
 ```gherkin
-@us089
+@story_135
 Scenario: User creates a standalone note and it appears in the Notes section
   Given the user is in the Notes section
   When the user clicks "New Note", enters title "Market observation" and content "Prices rising in north district", and saves
   Then the note "Market observation" appears in the Notes section list
 
-@us089
+@story_135
 Scenario: Submitting a note form without a title shows a validation error
   Given the note creation form is open
   When the user leaves the title empty and clicks Save
   Then a validation error is shown and no note is created
 
-@us089
+@story_135
 Scenario: Note with an optional entity link is saved correctly
   Given the user creates a note titled "Reminder" linked to contact "Alice Smith"
   When the user saves the note
   Then the note "Reminder" appears in the Notes section with a link to "Alice Smith"
 
-@us089
+@story_135
 Scenario: Created note persists after application restart
   Given the user has created a note titled "Procedure reminder"
   When the user restarts the application and opens the Notes section
@@ -61,7 +62,7 @@ Scenario: Created note persists after application restart
 
 ## Manual Tests
 
-**Story:** [US-146 — Create a Standalone Note](../docs/146-create-note.md)
+**Story:** [#27 — Create a Standalone Note](../docs/146-create-note.md)
 
 ### Notes section is accessible from navigation
 1. Log in to the application

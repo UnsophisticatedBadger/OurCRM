@@ -1,6 +1,7 @@
-# US-137 — Advanced Notification Preferences
+# 168 - Advanced Notification Preferences
 
 **Capability:** Notifications
+**Milestone:** v1.0.0 — Production
 **Status:** Not Done
 **GitHub Issue:** #168
 **Priority:** Should Have (deferrable to post-MVP)
@@ -15,9 +16,9 @@ As a real estate agent, I want fine-grained control over how and when I receive 
 
 ## Notes
 
-This story extends US-095's basic per-event-type on/off toggles with three additional layers of control: channel selection per event type, quiet hours, and notification sounds.
+This story extends #178's basic per-event-type on/off toggles with three additional layers of control: channel selection per event type, quiet hours, and notification sounds.
 
-**Per-channel selection** extends each event-type row from US-095 with a secondary control: a selector for Desktop only / In-App only / Both. The on/off toggle from US-095 remains the primary gate — if the type is off, channel selection is irrelevant. Default for all types is Both.
+**Per-channel selection** extends each event-type row from #178 with a secondary control: a selector for Desktop only / In-App only / Both. The on/off toggle from #178 remains the primary gate — if the type is off, channel selection is irrelevant. Default for all types is Both.
 
 **Quiet hours** suppress interruptive delivery (desktop notifications and sound) during a configured time window. In-app notifications are still generated and stored in the notification centre during quiet hours — they appear when the user next opens the app. No notifications are lost; only the interruption is suppressed.
 
@@ -25,8 +26,8 @@ This story extends US-095's basic per-event-type on/off toggles with three addit
 
 ## Acceptance Criteria
 
-1. The Notifications section in Settings (US-095) gains a channel selector for each event type: Desktop only / In-App only / Both; the default is Both
-2. The channel selector is only enabled when the event type's on/off toggle (US-095) is on; it is greyed out when the event type is off
+1. The Notifications section in Settings (#178) gains a channel selector for each event type: Desktop only / In-App only / Both; the default is Both
+2. The channel selector is only enabled when the event type's on/off toggle (#178) is on; it is greyed out when the event type is off
 3. When channel is set to Desktop only, the event fires a desktop notification but no in-app toast; the event is still recorded in the notification centre
 4. When channel is set to In-App only, the event fires an in-app toast and centre entry but no desktop notification
 5. A Quiet Hours toggle is available in the Notifications section with a start time and end time (24-hour clock)
@@ -41,13 +42,13 @@ This story extends US-095's basic per-event-type on/off toggles with three addit
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/notifications.feature`.
 
 ```gherkin
-@us119
+@story_83
 Scenario: Channel selector defaults to Both for each event type
-  Given US-095 preferences are configured with all event types on
-  When the user opens the Notifications section after US-126 is implemented
+  Given #178 preferences are configured with all event types on
+  When the user opens the Notifications section after #23 is implemented
   Then each event type row shows a channel selector set to "Both"
 
-@us119
+@story_83
 Scenario: Setting channel to Desktop only suppresses the in-app toast for that event
   Given the New Lead event type is set to "Desktop only"
   When a new lead is saved
@@ -55,52 +56,52 @@ Scenario: Setting channel to Desktop only suppresses the in-app toast for that e
   And no in-app toast appears
   And the event is recorded in the notification centre
 
-@us119
+@story_83
 Scenario: Setting channel to In-App only suppresses the desktop notification for that event
   Given the Task Reminder event type is set to "In-App only"
   When a task reminder fires
   Then an in-app toast appears
   And no desktop notification fires
 
-@us119
+@story_83
 Scenario: Channel selector is greyed out when the event type toggle is off
   Given the Showing Reminder event type toggle is off
   When the user views the Notifications section
   Then the channel selector for Showing Reminder is disabled and cannot be changed
 
-@us119
+@story_83
 Scenario: Desktop notifications and sound are suppressed during quiet hours
   Given quiet hours are set from 22:00 to 08:00 and the current time is 23:00
   When a new lead is saved
   Then no desktop notification fires and no sound plays
   And the event is recorded in the notification centre
 
-@us119
+@story_83
 Scenario: In-app notifications are still generated during quiet hours
   Given quiet hours are active
   When a new lead is saved
   Then the notification centre gains a new entry for the lead
   And the bell badge increments
 
-@us119
+@story_83
 Scenario: Notifications resume after quiet hours end
   Given quiet hours were active and have just ended
   When a new lead is saved
   Then a desktop notification fires normally
 
-@us119
+@story_83
 Scenario: Notification sound toggle on plays a sound with each desktop notification
   Given the notification sound toggle is on
   When a desktop notification fires
   Then a short system sound plays
 
-@us119
+@story_83
 Scenario: Notification sound toggle off suppresses the sound
   Given the notification sound toggle is off
   When a desktop notification fires
   Then no sound plays and the visual notification still appears
 
-@us119
+@story_83
 Scenario: Send Test Notification fires a sample through all active channels
   Given the user has Desktop and In-App channels active for at least one event type
   When the user clicks "Send Test Notification"
@@ -110,7 +111,7 @@ Scenario: Send Test Notification fires a sample through all active channels
 
 ## Manual Tests
 
-**Story:** [US-126 — Advanced Notification Preferences](../docs/085-notification-preferences-and-settings.md)
+**Story:** [#23 — Advanced Notification Preferences](../docs/085-notification-preferences-and-settings.md)
 
 ### Channel selectors appear alongside existing toggles
 1. Open Settings → Notifications

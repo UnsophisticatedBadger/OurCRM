@@ -1,6 +1,7 @@
-﻿# US-012 — Configure General Settings
+﻿# #12 — Configure General Settings
 
 **Capability:** App Shell
+**Milestone:** v0.2.0 — Secure Shell
 **Status:** Not Done
 **GitHub Issue:** #12
 

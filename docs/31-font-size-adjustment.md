@@ -1,6 +1,7 @@
-# US-150 — Font Size Adjustment
+# 31 - Font Size Adjustment
 
 **Capability:** shell
+**Milestone:** v0.2.0 — Secure Shell
 **Status:** Not Done
 **GitHub Issue:** #31
 **Priority:** Post-MVP
@@ -23,31 +24,31 @@ As an agent, I want to adjust the application's font size, so that I can read te
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/shell.feature`.
 
 ```gherkin
-@us158
+@story_39
 Scenario: User changes font size to Large and all text scales up
   Given the user opens Settings → General → Appearance → Font Size
   When the user selects "Large" and saves
   Then text throughout the application is visibly larger than the Medium default
 
-@us158
+@story_39
 Scenario: Live preview updates before saving
   Given the user opens the Font Size setting
   When the user clicks a size option without saving
   Then the preview text in the Settings panel updates to reflect the selected size
 
-@us158
+@story_39
 Scenario: Font size persists after app restart
   Given "Large" font size has been saved
   When the user restarts the app
   Then text is still displayed at Large size
 
-@us158
+@story_39
 Scenario: Layouts adapt with no text clipping at Extra Large
   Given the user sets font size to "Extra Large" and saves
   When the user navigates through the main views
   Then no text is clipped, truncated without ellipsis, or overlapping adjacent elements
 
-@us158
+@story_39
 Scenario: Reset to Default restores Medium size
   Given "Extra Large" font size is active
   When the user clicks "Reset to Default" and saves
@@ -55,7 +56,7 @@ Scenario: Reset to Default restores Medium size
 ```
 
 ## Manual Tests
-**Story:** [US-139 — Font Size Adjustment](../docs/111-font-size-adjustment.md)
+**Story:** [#170 — Font Size Adjustment](../docs/111-font-size-adjustment.md)
 
 ### All text scales when font size is changed
 1. Open Settings → General → Appearance → Font Size

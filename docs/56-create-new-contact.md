@@ -1,6 +1,7 @@
-# US-028 — Create a New Contact
+# 56 - Create A New Contact
 
 **Capability:** Contacts
+**Milestone:** v0.5.0 — MVP
 **Status:** Not Done
 **GitHub Issue:** #56
 
@@ -27,7 +28,7 @@ As a real estate agent, I want to create a new contact with basic information, s
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/contacts.feature`.
 
 ```gherkin
-@us020
+@story_47
 Scenario: User creates a contact with a name and sees it in the list
   Given the user is in the Contacts section
   When the user clicks "New Contact"
@@ -35,26 +36,26 @@ Scenario: User creates a contact with a name and sees it in the list
   And clicks Save
   Then the contact list shows "Jane Smith"
 
-@us020
+@story_47
 Scenario: User submits the new contact form with no name and sees an error
   Given the new contact form is open
   When the user leaves both name fields empty and clicks Save
   Then the error "Name is required" is shown
   And the form stays open
 
-@us020
+@story_47
 Scenario: User enters an invalid email and sees a validation error
   Given the new contact form is open
   When the user enters "notanemail" in the email field and clicks Save
   Then an inline email format error is shown
 
-@us020
+@story_47
 Scenario: User cancels the new contact form and no contact is created
   Given the new contact form is open and the user has entered data
   When the user clicks Cancel
   Then the form closes and the contact does not appear in the contact list
 
-@us020
+@story_47
 Scenario: Contact created in one session is visible after restart
   Given the user has created a contact "Jane Smith"
   When the application is restarted and the user opens the Contacts section
@@ -63,7 +64,7 @@ Scenario: Contact created in one session is visible after restart
 
 ## Manual Tests
 
-**Story:** [US-016 — Create a New Contact](../docs/016-create-new-contact.md)
+**Story:** [#43 — Create a New Contact](../docs/016-create-new-contact.md)
 
 ### User opens the new contact form
 1. Navigate to the Contacts section

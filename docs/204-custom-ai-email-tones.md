@@ -1,6 +1,7 @@
-# US-200 — Custom AI Email Tones
+# 204 - Custom AI Email Tones
 
 **Capability:** ai
+**Milestone:** v1.1.0+ — Post-Production
 **Status:** Not Done
 **GitHub Issue:** #204
 **Priority:** Post-MVP
@@ -23,32 +24,32 @@ As an agent, I want to define custom tone labels for AI email drafting, so that 
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/ai.feature`.
 
 ```gherkin
-@us190
+@story_99
 Scenario: User creates a custom tone and it appears in the tone selector
   Given the user adds a custom tone named "Luxury" with description "Upscale and aspirational language"
   When the user opens "Draft with AI" in the compose form
   Then "Luxury" appears in the tone selector alongside the built-in tones
 
-@us190
+@story_99
 Scenario: Draft generated with a custom tone uses the style description
   Given a custom tone "Luxury" exists with description "Upscale and aspirational language"
   When the user selects "Luxury" and generates a draft
   Then the generated email reflects an upscale tone
 
-@us190
+@story_99
 Scenario: Deleting the active tone reverts the selector to Professional
   Given the user has "Luxury" selected in an open draft panel
   When the user deletes the "Luxury" tone from Settings
   Then the tone selector in the open draft reverts to "Professional"
 
-@us190
+@story_99
 Scenario: Built-in tones cannot be deleted
   Given the user views Settings → AI → Email Tones
   Then the built-in tones (Professional, Friendly, Urgent) have no delete option
 ```
 
 ## Manual Tests
-**Story:** [US-189 — Custom AI Email Tones](../docs/189-custom-ai-email-tones.md)
+**Story:** [#98 — Custom AI Email Tones](../docs/189-custom-ai-email-tones.md)
 
 ### Custom tone appears in the tone selector when drafting
 1. Go to Settings → AI → Email Tones and add a custom tone

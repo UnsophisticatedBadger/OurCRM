@@ -1,6 +1,7 @@
-# US-094 — Use Email Templates
+# 177 - Use Email Templates
 
 **Capability:** Email
+**Milestone:** v1.1.0+ — Post-Production
 **Status:** Not Done
 **GitHub Issue:** #177
 
@@ -26,21 +27,21 @@ As a real estate agent, I want to select a pre-built email template when composi
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/email.feature`.
 
 ```gherkin
-@us071
+@story_118
 Scenario: User selects a template and the compose form is populated
   Given the email compose form is open
   When the user clicks "Use Template" and selects "Follow-up After Showing"
   Then the subject field is populated with the template's subject line
   And the body field is populated with the template's body text
 
-@us071
+@story_118
 Scenario: Variable substitution replaces placeholders with contact data
   Given the compose form is open for contact "Alice Smith"
   And the "Follow-up After Showing" template contains {{contact_name}}
   When the user applies the template
   Then the body shows "Alice Smith" where {{contact_name}} appeared
 
-@us071
+@story_118
 Scenario: Unresolvable variable is replaced with empty string and a warning is shown
   Given the compose form is open with no property linked
   And the "Just Listed" template contains {{property_address}}
@@ -48,7 +49,7 @@ Scenario: Unresolvable variable is replaced with empty string and a warning is s
   Then {{property_address}} is replaced with an empty string in the body
   And a warning lists "property_address" as unresolved
 
-@us071
+@story_118
 Scenario: User edits the body after applying a template and the edits are preserved
   Given a template has been applied to the compose form
   When the user modifies the body text
@@ -58,7 +59,7 @@ Scenario: User edits the body after applying a template and the edits are preser
 
 ## Manual Tests
 
-**Story:** [US-080 — Use Email Templates](../docs/080-use-email-templates.md)
+**Story:** [#127 — Use Email Templates](../docs/080-use-email-templates.md)
 
 ### Template selection populates subject and body
 1. Open the email compose form

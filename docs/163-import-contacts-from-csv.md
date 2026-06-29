@@ -1,6 +1,7 @@
-# US-112 — Import Contacts from CSV
+# 163 - Import Contacts From CSV
 
 **Capability:** Import & Export
+**Milestone:** v1.0.0 — Production
 **Status:** Not Done
 **GitHub Issue:** #163
 
@@ -19,9 +20,9 @@ Unlike vCard, CSV files have no standard column names. A field mapping step is r
 
 Comma (`,`) is the assumed delimiter. Tab and semicolon delimiters are deferred. Files are expected to be UTF-8 encoded; non-UTF-8 files may produce garbled text in imported field values.
 
-Save/reuse field mappings is handled by US-129.
+Save/reuse field mappings is handled by #26.
 
-Duplicate detection is handled by the logic defined in US-100.
+Duplicate detection is handled by the logic defined in #183.
 
 ## Acceptance Criteria
 
@@ -31,7 +32,7 @@ Duplicate detection is handled by the logic defined in US-100.
 4. A preview panel below the mapping shows how the first five rows will look as contact records given the current mapping
 5. Clicking "Import" creates a contact record for each valid CSV row using the mapped fields
 6. Rows with an invalid email format are skipped; their row numbers are listed in the post-import summary
-7. Contacts matching an existing contact's email or phone are routed through the duplicate resolution step from US-100
+7. Contacts matching an existing contact's email or phone are routed through the duplicate resolution step from #183
 8. After import, a summary shows how many contacts were added, how many were skipped or updated as duplicates, and how many rows were skipped due to validation errors
 9. Cancelling at any point before clicking "Import" leaves existing contacts unchanged
 
@@ -40,31 +41,31 @@ Duplicate detection is handled by the logic defined in US-100.
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/import_export.feature`.
 
 ```gherkin
-@us111
+@story_162
 Scenario: Field mapping panel shows CSV headers and sample values
   Given a CSV file with headers "Full Name", "Email Address", "Mobile" and one data row
   When the user selects the file in the import dialog
   Then a mapping panel shows each header alongside its sample value and a dropdown defaulting to "Skip"
 
-@us111
+@story_162
 Scenario: Importing with a complete mapping creates contacts for each row
   Given a CSV with 5 rows mapped to first name, last name, and email
   When the user clicks "Import"
   Then 5 contact records are created with the correct field values
 
-@us111
+@story_162
 Scenario: Rows with invalid email format are skipped and reported
   Given a CSV where row 3 has "not-an-email" in the email column
   When the user imports the file
   Then rows 1, 2, 4, and 5 are imported and row 3 is listed in the summary as skipped due to invalid email
 
-@us111
+@story_162
 Scenario: Preview shows mapped data from the first five rows
   Given a CSV file with a mapping applied
   When the user views the preview panel
   Then the first five rows are shown as they will appear as contact records
 
-@us111
+@story_162
 Scenario: Import summary is shown after completion
   Given a CSV with 20 rows, 3 invalid, and 2 duplicates (skipped)
   When the user imports the file
@@ -73,7 +74,7 @@ Scenario: Import summary is shown after completion
 
 ## Manual Tests
 
-**Story:** [US-102 — Import Contacts from CSV](../docs/102-import-contacts-from-csv.md)
+**Story:** [#153 — Import Contacts from CSV](../docs/102-import-contacts-from-csv.md)
 
 ### Field mapping panel appears with correct data
 1. Open Import & Export → Import from CSV and select a CSV file
@@ -90,9 +91,9 @@ Scenario: Import summary is shown after completion
 2. Import the file
 3. Confirm the invalid row is not imported and its row number appears in the summary
 
-### Duplicate contacts route to US-100
+### Duplicate contacts route to #183
 1. Include in the CSV a row whose email matches an existing contact
-2. Confirm the duplicate resolution dialog from US-100 appears
+2. Confirm the duplicate resolution dialog from #183 appears
 
 ### Post-import summary is accurate
 1. Import a file with a mix of new contacts, duplicates, and invalid rows

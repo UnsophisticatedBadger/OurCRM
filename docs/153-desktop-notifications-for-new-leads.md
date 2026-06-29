@@ -1,6 +1,7 @@
-# US-102 — Desktop Notifications for New Leads
+# 153 - Desktop Notifications For New Leads
 
 **Capability:** Notifications
+**Milestone:** v1.0.0 — Production
 **Status:** Not Done
 **GitHub Issue:** #153
 
@@ -16,12 +17,12 @@ As a real estate agent, I want to receive a desktop notification when a new lead
 
 Desktop notifications use the OS notification system (Windows Action Center, macOS Notification Center). The OS may request permission the first time a notification is sent — this is OS-controlled behaviour outside the app's scope to test automatically; cover it in the manual tests only.
 
-Notification preferences (enable/disable per event type) are handled by US-095.
+Notification preferences (enable/disable per event type) are handled by #178.
 
 ## Acceptance Criteria
 
-1. When a new lead is saved (US-034), a desktop notification fires with title "New Lead: [Name]" and body showing the lead source or "Manually added" if no source is set
-2. When a bulk lead import completes (US-101, US-102, US-103), a single summary notification fires with title "N Leads Imported" and body "View the Leads section to see the new records"; the count reflects only the leads successfully added
+1. When a new lead is saved (#62), a desktop notification fires with title "New Lead: [Name]" and body showing the lead source or "Manually added" if no source is set
+2. When a bulk lead import completes (#184, #153, #154), a single summary notification fires with title "N Leads Imported" and body "View the Leads section to see the new records"; the count reflects only the leads successfully added
 3. Clicking any lead notification brings OurCRM to the foreground and navigates to that lead's detail view; clicking an import-summary notification navigates to the Leads list
 4. Notifications fire even when OurCRM is minimised or in the background
 5. If new-lead notifications are disabled in notification preferences, no notification fires for either individual creation or bulk import
@@ -31,37 +32,37 @@ Notification preferences (enable/disable per event type) are handled by US-095.
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/notifications.feature`.
 
 ```gherkin
-@us097
+@story_180
 Scenario: Creating a new lead triggers a desktop notification with the lead's name and source
   Given notification preferences allow new-lead notifications
   When the user saves a new lead named "John Doe" with source "Website"
   Then a desktop notification fires with title "New Lead: John Doe" and body "From Website"
 
-@us097
+@story_180
 Scenario: Manually added lead shows "Manually added" as the source in the notification
   Given notification preferences allow new-lead notifications
   When the user saves a new lead named "Jane Smith" with no source set
   Then a desktop notification fires with title "New Lead: Jane Smith" and body "Manually added"
 
-@us097
+@story_180
 Scenario: Bulk import completion fires a single summary notification
   Given notification preferences allow new-lead notifications
   When a CSV import completes and adds 8 leads successfully
   Then a single desktop notification fires with title "8 Leads Imported" and body "View the Leads section to see the new records"
 
-@us097
+@story_180
 Scenario: Clicking the notification navigates to the new lead
   Given a desktop notification for "New Lead: John Doe" has fired
   When the user clicks the notification
   Then OurCRM comes to the foreground and John Doe's lead detail view is shown
 
-@us097
+@story_180
 Scenario: Clicking the import summary notification navigates to the Leads list
   Given a desktop notification "8 Leads Imported" has fired
   When the user clicks the notification
   Then OurCRM comes to the foreground and the Leads list is shown
 
-@us097
+@story_180
 Scenario: No notification fires when new-lead notifications are disabled
   Given new-lead notifications are disabled in notification preferences
   When the user saves a new lead
@@ -70,7 +71,7 @@ Scenario: No notification fires when new-lead notifications are disabled
 
 ## Manual Tests
 
-**Story:** [US-093 — Desktop Notifications for New Leads](../docs/093-desktop-notifications-for-new-leads.md)
+**Story:** [#176 — Desktop Notifications for New Leads](../docs/093-desktop-notifications-for-new-leads.md)
 
 ### Notification fires when a new lead is created
 1. Ensure new-lead notifications are enabled in preferences

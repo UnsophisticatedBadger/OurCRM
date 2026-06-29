@@ -1,6 +1,7 @@
-# US-158 — View Notes List
+# 39 - View Notes List
 
 **Capability:** App Shell
+**Milestone:** v0.2.0 — Secure Shell
 **Status:** Not Done
 **GitHub Issue:** #39
 
@@ -18,33 +19,33 @@ As a real estate agent, I want to view a list of all my standalone notes so that
 2. Notes are sorted by creation date, newest first, by default; an alternative sort by title (A–Z) is available
 3. Clicking a note row opens the note detail view showing the full content
 4. When no notes exist, the section shows "No notes yet" with a "New Note" button
-5. Notes list reflects notes created in US-146 without requiring a page reload
+5. Notes list reflects notes created in #27 without requiring a page reload
 
 ## BDD Scenarios
 
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/shell.feature`.
 
 ```gherkin
-@us108
+@story_159
 Scenario: Notes list shows title, date, content preview, and linked entity for each note
   Given notes "Market update" (content "Prices rising…", linked to no entity) and "Alice reminder" (content "Call re: contract", linked to contact "Alice Smith") exist
   When the user opens the Notes section
   Then "Market update" is listed with a preview "Prices rising…" and no linked entity
   And "Alice reminder" is listed with a preview "Call re: contract" and linked to "Alice Smith"
 
-@us108
+@story_159
 Scenario: Notes are sorted newest first by default
   Given notes created at different times exist
   When the user opens the Notes section
   Then the most recently created note appears at the top
 
-@us108
+@story_159
 Scenario: User can sort notes alphabetically by title
   Given multiple notes with different titles exist
   When the user selects the "Title A–Z" sort option
   Then notes are listed in alphabetical order by title
 
-@us108
+@story_159
 Scenario: Empty state appears when no notes have been created
   Given no notes exist
   When the user opens the Notes section
@@ -53,7 +54,7 @@ Scenario: Empty state appears when no notes have been created
 
 ## Manual Tests
 
-**Story:** [US-147 — View Notes List](../docs/147-view-notes-list.md)
+**Story:** [#28 — View Notes List](../docs/147-view-notes-list.md)
 
 ### Notes list shows correct columns
 1. Create two notes — one linked to a contact, one standalone

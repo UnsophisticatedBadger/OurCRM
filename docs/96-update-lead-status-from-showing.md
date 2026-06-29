@@ -1,6 +1,7 @@
-# US-163 — Update Lead Status from Showing Outcome
+# 96 - Update Lead Status From Showing Outcome
 
 **Capability:** leads
+**Milestone:** v0.5.0 — MVP
 **Status:** Not Done
 **GitHub Issue:** #96
 **Priority:** Post-MVP
@@ -22,25 +23,25 @@ As an agent, I want the option to update a linked lead's status when I mark a sh
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/leads.feature`.
 
 ```gherkin
-@us196
+@story_200
 Scenario: Completing a showing with "Interested" outcome offers to set lead status to Hot
   Given a showing is linked to a lead
   When the user marks the showing completed with outcome "Interested"
   Then the completion form shows a pre-checked option "Update lead status to Hot"
 
-@us196
+@story_200
 Scenario: Lead status is updated when the checkbox is confirmed
   Given the "Update lead status to Hot" option is checked
   When the user confirms the showing completion
   Then the linked lead's status is changed to Hot
 
-@us196
+@story_200
 Scenario: Lead status is not changed when the checkbox is unchecked
   Given the "Update lead status to Hot" option is unchecked
   When the user confirms the showing completion
   Then the linked lead's status is unchanged
 
-@us196
+@story_200
 Scenario: No status update option is shown when the showing has no linked lead
   Given a showing is not linked to any lead
   When the user marks the showing completed
@@ -48,7 +49,7 @@ Scenario: No status update option is shown when the showing has no linked lead
 ```
 
 ## Manual Tests
-**Story:** [US-152 — Update Lead Status from Showing Outcome](../docs/185-update-lead-status-from-showing.md)
+**Story:** [#33 — Update Lead Status from Showing Outcome](../docs/185-update-lead-status-from-showing.md)
 
 ### Lead status update is offered after completing a showing
 1. Complete a showing linked to a lead, selecting "Interested" as the outcome

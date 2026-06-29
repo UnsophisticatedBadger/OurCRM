@@ -1,6 +1,7 @@
-# US-024 — View HAR Listing Details
+# 52 - View HAR Listing Details
 
 **Capability:** MLS Integration
+**Milestone:** v0.5.0 — MVP
 **Status:** Not Done
 **GitHub Issue:** #52
 
@@ -20,7 +21,7 @@ As a real estate agent, I want to view the full details of a specific HAR listin
 4. The full property description is displayed as readable text
 5. Features and amenities from the HAR API response are shown as a list
 6. Days on market is calculated from the listing date (today minus listing date, in whole days) and labelled "N days on market"
-7. An "Import as Property" button is present and triggers the import flow defined in US-087
+7. An "Import as Property" button is present and triggers the import flow defined in #133
 8. A "Schedule Showing" button is present and navigates to the showing creation form with the listing address pre-filled
 9. A Back button returns to the listings list, preserving the previous scroll position and any active search criteria
 
@@ -29,31 +30,31 @@ As a real estate agent, I want to view the full details of a specific HAR listin
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/mls.feature`.
 
 ```gherkin
-@us104
+@story_155
 Scenario: Clicking a listing row opens the detail view with all MLS fields
   Given a cached listing with MLS#77001, address "456 Pine Ave", price $320,000, 3 beds, 2 baths, 1,800 sqft, listed 24 days ago
   When the user clicks the MLS#77001 listing row
   Then the detail view shows address "456 Pine Ave", price $320,000, 3 beds, 2 baths, 1,800 sqft, and "24 days on market"
 
-@us104
+@story_155
 Scenario: Detail view shows a thumbnail strip when photos are available
   Given a cached listing has 5 photo URLs provided by the HAR API
   When the user views that listing's detail
   Then 5 photo thumbnails are displayed in a horizontal strip
 
-@us104
+@story_155
 Scenario: Detail view shows no-photos message when a listing has no photos
   Given a cached listing has no photo URLs
   When the user views that listing's detail
   Then the photos section shows "No photos available"
 
-@us104
+@story_155
 Scenario: Import as Property button starts the import flow
   Given the user is viewing a HAR listing's detail
   When the user clicks "Import as Property"
-  Then the import flow defined in US-087 begins for that listing
+  Then the import flow defined in #133 begins for that listing
 
-@us104
+@story_155
 Scenario: Back button returns to the listings list at the same scroll position
   Given the user scrolled to listing row 15 and opened its detail view
   When the user clicks Back
@@ -62,7 +63,7 @@ Scenario: Back button returns to the listings list at the same scroll position
 
 ## Manual Tests
 
-**Story:** [US-088 — View HAR Listing Details](../docs/088-view-har-listing-details.md)
+**Story:** [#134 — View HAR Listing Details](../docs/088-view-har-listing-details.md)
 
 ### All MLS fields are displayed
 1. Fetch listings and click any listing row
@@ -84,7 +85,7 @@ Scenario: Back button returns to the listings list at the same scroll position
 
 ### Import as Property
 1. View a listing's detail and click "Import as Property"
-2. Confirm the import flow starts (per US-087 — a success confirmation appears)
+2. Confirm the import flow starts (per #133 — a success confirmation appears)
 
 ### Schedule Showing
 1. View a listing's detail and click "Schedule Showing"

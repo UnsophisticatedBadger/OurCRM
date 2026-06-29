@@ -1,6 +1,7 @@
-# US-074 — Create a Calendar Event
+# 121 - Create A Calendar Event
 
 **Capability:** Calendar & Showings
+**Milestone:** v0.8.0 — Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #121
 
@@ -26,7 +27,7 @@ As a real estate agent, I want to create calendar events for showings, meetings,
 > The following persistence scenario is not yet implemented.
 
 ```gherkin
-@us076
+@story_123
 Scenario: Calendar event survives an application restart
   Given the application is open and authenticated
   And the user creates an event titled "Showing - 123 Main St" on tomorrow at 2:00 PM
@@ -36,7 +37,7 @@ Scenario: Calendar event survives an application restart
 
 ## Manual Tests
 
-**Story:** [US-060 — Create a Calendar Event](../docs/030-create-calendar-event.md)
+**Story:** [#109 — Create a Calendar Event](../docs/030-create-calendar-event.md)
 
 ### User creates an event and it appears in the calendar
 1. Open the app and authenticate

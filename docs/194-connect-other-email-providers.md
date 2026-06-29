@@ -1,6 +1,7 @@
-# US-186 — Connect Other Email Providers via IMAP
+# 194 - Connect Other Email Providers Via IMAP
 
 **Capability:** email
+**Milestone:** v1.1.0+ — Post-Production
 **Status:** Not Done
 **GitHub Issue:** #194
 **Priority:** Post-MVP
@@ -16,35 +17,35 @@ As an agent, I want to connect email providers beyond Gmail and Outlook using IM
 1. Settings → Email → Add Account includes an "Other (IMAP)" option
 2. User enters IMAP connection details: server hostname, port, username, and password; the password is stored in the OS keyring
 3. OurCRM tests the connection before saving; an error is shown if it fails
-4. After connecting, the IMAP account participates in inbox sync per US-170 behaviour (known-contact emails only)
-5. Outbound email from IMAP accounts uses the SMTP settings already configured in US-078
+4. After connecting, the IMAP account participates in inbox sync per #144 behaviour (known-contact emails only)
+5. Outbound email from IMAP accounts uses the SMTP settings already configured in #125
 6. The IMAP connection can be disconnected from Settings; disconnecting stops inbox sync for that account
 
 ## BDD Scenarios
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/email.feature`.
 
 ```gherkin
-@us187
+@story_195
 Scenario: User connects an IMAP account and it appears in Settings
   Given the user opens Settings → Email → Add Account → Other (IMAP)
   When the user enters valid IMAP credentials and clicks "Connect"
   Then the connection is tested successfully
   And the IMAP account appears in Settings → Email
 
-@us187
+@story_195
 Scenario: Invalid IMAP credentials show a connection error
   Given the user enters incorrect IMAP credentials
   When the user clicks "Connect"
   Then an error message is shown
   And no account is saved
 
-@us187
+@story_195
 Scenario: Inbox sync works for the IMAP account
   Given an IMAP account is connected
   When an email arrives from a known contact's address
   Then the email appears in that contact's email history tab
 
-@us187
+@story_195
 Scenario: Disconnecting the IMAP account stops inbox sync
   Given an IMAP account is connected and syncing
   When the user disconnects it from Settings
@@ -52,7 +53,7 @@ Scenario: Disconnecting the IMAP account stops inbox sync
 ```
 
 ## Manual Tests
-**Story:** [US-175 — Connect Other Email Providers via IMAP](../docs/175-connect-other-email-providers.md)
+**Story:** [#149 — Connect Other Email Providers via IMAP](../docs/175-connect-other-email-providers.md)
 
 ### User connects an IMAP account and it appears in Settings
 1. Go to Settings → Email → Add Account → Other (IMAP)

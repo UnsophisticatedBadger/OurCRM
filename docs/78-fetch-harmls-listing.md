@@ -1,6 +1,7 @@
-# US-062 — Fetch HAR MLS Listings
+# 78 - Fetch HAR MLS Listings
 
 **Capability:** MLS Integration
+**Milestone:** v0.5.0 — MVP
 **Status:** Not Done
 **GitHub Issue:** #78
 
@@ -35,33 +36,33 @@ Fetched listings are cached locally. The cache is keyed by the fetch criteria an
 
 ```gherkin
 @live_mls
-@us101
+@story_184
 Scenario: Fetching with no criteria returns active listings from HAR
   Given valid HAR credentials are configured
   When the user clicks "Fetch Listings" with no criteria entered
   Then a list of active HAR listings is displayed, each showing MLS number, address, price, bedrooms, bathrooms, and square footage
 
 @live_mls
-@us101
+@story_184
 Scenario: Fetching with city and price criteria returns filtered results
   Given valid HAR credentials are configured
   When the user enters city "Houston", min price $300,000, max price $500,000 and clicks "Fetch Listings"
   Then only listings in Houston between $300,000 and $500,000 are displayed
 
-@us101
+@story_184
 Scenario: No credentials configured shows a setup prompt
   Given HAR credentials have not been configured
   When the user opens the MLS section
   Then the message "Configure HAR credentials in Settings before fetching" is shown with a link to Settings
 
-@us101
+@story_184
 Scenario: Cached listings are displayed after restart
   Given listings were fetched and cached before the last restart
   When the user opens the MLS section after restarting the application
   Then the previously fetched listings are shown with the original "Last fetched" timestamp
 
 @live_mls
-@us101
+@story_184
 Scenario: Invalid credentials show an authentication error
   Given invalid HAR credentials are configured
   When the user clicks "Fetch Listings"
@@ -70,7 +71,7 @@ Scenario: Invalid credentials show an authentication error
 
 ## Manual Tests
 
-**Story:** [US-085 — Fetch HAR MLS Listings](../docs/085-fetch-harmls-listing.md)
+**Story:** [#131 — Fetch HAR MLS Listings](../docs/085-fetch-harmls-listing.md)
 
 ### No credentials shows setup prompt
 1. Open the MLS section without configuring credentials

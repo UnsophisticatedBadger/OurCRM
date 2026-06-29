@@ -1,6 +1,7 @@
-# US-127 — In-App Help
+# 24 - In-App Help
 
 **Capability:** App Shell
+**Milestone:** v0.2.0 — Secure Shell
 **Status:** Not Done
 **GitHub Issue:** #24
 

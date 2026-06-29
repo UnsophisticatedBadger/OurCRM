@@ -1,6 +1,7 @@
-# US-053 — Track Conversion Rate
+# 77 - Track Conversion Rate
 
 **Capability:** Leads
+**Milestone:** v0.5.0 — MVP
 **Status:** Not Done
 **GitHub Issue:** #77
 
@@ -26,31 +27,31 @@ As a real estate agent, I want to see my lead conversion rate, so that I can mea
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/leads.feature`.
 
 ```gherkin
-@us039
+@story_67
 Scenario: Conversion rate is calculated correctly
   Given 10 leads exist and 3 have been converted
   When the user views the Leads section
   Then the summary bar shows "10 leads total — 3 converted (30%)"
 
-@us039
+@story_67
 Scenario: Filtering by This Month shows only this month's figures
   Given 2 leads were converted this month and 3 were converted last year
   When the user selects "This Month" in the summary bar filter
   Then the summary bar shows 2 converted with the corresponding rate
 
-@us039
+@story_67
 Scenario: Per-source breakdown shows each source's conversion rate
   Given 4 Zillow leads exist with 2 converted, and 6 Referral leads exist with 3 converted
   When the user views the per-source breakdown
   Then Zillow shows 50% and Referral shows 50%
 
-@us039
+@story_67
 Scenario: Summary bar updates immediately after a conversion
   Given the user is viewing the Leads section with 9 leads and 2 converted (22%)
   When the user converts a third lead
   Then the summary bar immediately shows "10 leads total — 3 converted (30%)"
 
-@us039
+@story_67
 Scenario: Summary bar shows zero gracefully with no conversions
   Given leads exist but none have been converted
   When the user views the Leads section
@@ -59,7 +60,7 @@ Scenario: Summary bar shows zero gracefully with no conversions
 
 ## Manual Tests
 
-**Story:** [US-041 — Track Conversion Rate](../docs/047-track-conversion-rate.md)
+**Story:** [#69 — Track Conversion Rate](../docs/047-track-conversion-rate.md)
 
 ### Summary bar shows correct totals and rate
 1. Create 10 leads and convert 3

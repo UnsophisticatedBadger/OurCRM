@@ -1,6 +1,7 @@
-# US-175 — Detect Overlapping Showings
+# 149 - Detect Overlapping Showings
 
 **Capability:** calendar
+**Milestone:** v0.8.0 — Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #149
 **Priority:** Post-MVP
@@ -21,19 +22,19 @@ As an agent, I want a warning when I schedule a showing that overlaps with an ex
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/calendar.feature`.
 
 ```gherkin
-@us195
+@story_199
 Scenario: Overlapping showing triggers a warning dialog
   Given a showing for "123 Main St" is scheduled from 2:00 PM to 3:00 PM today
   When the user saves a new showing from 2:30 PM to 3:30 PM today
   Then a warning dialog lists "123 Main St (2:00 PM – 3:00 PM)" as a conflict
 
-@us195
+@story_199
 Scenario: User proceeds past the overlap warning and the showing is saved
   Given an overlap warning is shown
   When the user clicks "Save Anyway"
   Then the new showing is saved
 
-@us195
+@story_199
 Scenario: Non-overlapping showing saves without a warning
   Given a showing exists from 2:00 PM to 3:00 PM today
   When the user saves a new showing from 3:00 PM to 4:00 PM today
@@ -41,7 +42,7 @@ Scenario: Non-overlapping showing saves without a warning
 ```
 
 ## Manual Tests
-**Story:** [US-164 — Detect Overlapping Showings](../docs/142-detect-overlapping-showings.md)
+**Story:** [#97 — Detect Overlapping Showings](../docs/142-detect-overlapping-showings.md)
 
 ### Overlap warning is shown for a conflicting time
 1. Schedule a showing from 2:00 PM to 3:00 PM

@@ -1,6 +1,7 @@
-# US-083 — View Task List
+# 129 - View Task List
 
 **Capability:** Tasks
+**Milestone:** v0.8.0 — Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #129
 
@@ -17,7 +18,7 @@ As a real estate agent, I want to view a list of all my tasks so that I can see 
 1. The Tasks section displays all tasks with title, due date, priority badge, and status on each row
 2. Priority badges are color-coded: Urgent = red, High = orange, Medium = yellow, Low = blue
 3. Tasks whose due date has passed and that are not yet complete are marked as overdue with a distinct visual treatment
-4. Each task row has a checkbox that can be clicked to mark the task complete (behavior defined in US-070)
+4. Each task row has a checkbox that can be clicked to mark the task complete (behavior defined in #117)
 5. The list can be sorted by due date (soonest first by default) or by priority (Urgent first)
 6. A filter control lets the user view All, Active only, or Completed only tasks
 7. When no tasks exist, the section shows "No tasks yet" with a "New Task" button
@@ -27,31 +28,31 @@ As a real estate agent, I want to view a list of all my tasks so that I can see 
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/tasks.feature`.
 
 ```gherkin
-@us081
+@story_21
 Scenario: Task list shows title, due date, and priority badge for each task
   Given tasks "Call Alice" (High, due tomorrow) and "Review contract" (Low, due next week) exist
   When the user opens the Tasks section
   Then both tasks are listed with their titles, due dates, and priority badges
 
-@us081
+@story_21
 Scenario: Priority badges are color-coded by level
   Given tasks with Urgent, High, Medium, and Low priorities exist
   When the user views the task list
   Then the Urgent badge is red, High is orange, Medium is yellow, and Low is blue
 
-@us081
+@story_21
 Scenario: Overdue incomplete tasks are visually flagged
   Given an incomplete task has a due date in the past
   When the user views the task list
   Then that task is visually marked as overdue
 
-@us081
+@story_21
 Scenario: Active filter hides completed tasks
   Given one active task and one completed task exist
   When the user selects the "Active" filter
   Then only the active task is shown
 
-@us081
+@story_21
 Scenario: Empty state appears when no tasks have been created
   Given no tasks exist
   When the user opens the Tasks section
@@ -60,7 +61,7 @@ Scenario: Empty state appears when no tasks have been created
 
 ## Manual Tests
 
-**Story:** [US-069 — View Task List](../docs/107-view-task-list.md)
+**Story:** [#116 — View Task List](../docs/107-view-task-list.md)
 
 ### Task list shows all expected columns
 1. Create tasks with varying priorities and due dates

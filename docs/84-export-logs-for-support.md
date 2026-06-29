@@ -1,6 +1,7 @@
-# US-120 — Export Logs for Support
+# 84 - Export Logs For Support
 
 **Capability:** Infrastructure
+**Milestone:** v0.5.0 — MVP
 **Status:** Not Done
 **GitHub Issue:** #84
 
@@ -18,7 +19,7 @@ The export is a diagnostic package intended to be emailed or attached to a bug r
 
 ## Acceptance Criteria
 
-1. "Export Logs for Support" is accessible from Help → Export Logs for Support and from the error log viewer (US-106)
+1. "Export Logs for Support" is accessible from Help → Export Logs for Support and from the error log viewer (#157)
 2. The export includes: all Error and Warning log entries from the last 30 days, plus a system information file containing OS name and version, app version, and approximate available memory
 3. The exported file is a ZIP archive; the default filename is `ourcrm_logs_YYYY-MM-DD.zip`; an OS save dialog opens defaulting to the user's Documents folder
 4. A privacy notice is shown before the export proceeds: "This file contains application error logs and system information. It does not include your contacts, notes, or any personal data."
@@ -30,26 +31,26 @@ The export is a diagnostic package intended to be emailed or attached to a bug r
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/infrastructure.feature`.
 
 ```gherkin
-@us126
+@story_23
 Scenario: Export logs for support saves a ZIP containing logs and system info
   Given the application has Error and Warning log entries
   When the user selects Help > Export Logs for Support and confirms the save dialog
   Then a ZIP file is saved containing the log entries and a system information file
 
-@us126
+@story_23
 Scenario: Privacy notice is shown before the export dialog proceeds
   Given the user opens Help > Export Logs for Support
   When the dialog opens
   Then a privacy notice is visible stating the file does not include personal contact data
 
-@us126
+@story_23
 Scenario: Export with an empty log still produces a valid ZIP
   Given the application log is empty
   When the user exports logs for support
   Then a ZIP file is saved containing at least the system information file
   And no error is shown
 
-@us126
+@story_23
 Scenario: Success message shows file path and an Open Folder button
   Given the user has just completed an export
   Then a success message shows the saved file path and its size
@@ -58,7 +59,7 @@ Scenario: Success message shows file path and an Open Folder button
 
 ## Manual Tests
 
-**Story:** [US-110 — Export Logs for Support](../docs/085-export-logs-for-support.md)
+**Story:** [#161 — Export Logs for Support](../docs/085-export-logs-for-support.md)
 
 ### Export saves a ZIP to the Documents folder by default
 1. Open Help → Export Logs for Support
@@ -78,7 +79,7 @@ Scenario: Success message shows file path and an Open Folder button
 2. Click "Open Folder" and confirm the OS file manager opens with the ZIP file visible
 
 ### Export succeeds when the log is empty
-1. Clear all logs (US-109) and run an export
+1. Clear all logs (#160) and run an export
 2. Confirm no error is thrown and a ZIP file is created
 3. Open the ZIP and confirm it contains at least the system information file
 

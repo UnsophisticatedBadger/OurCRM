@@ -1,6 +1,7 @@
-# US-091 — Dashboard Recent Activity Widget
+# 22 - Dashboard Recent Activity Widget
 
 **Capability:** shell
+**Milestone:** v0.2.0 — Secure Shell
 **Status:** Not Done
 **GitHub Issue:** #22
 **Priority:** Must Have
@@ -24,25 +25,25 @@ As an agent, I want to see a feed of recent changes on the dashboard, so that I 
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/shell.feature`.
 
 ```gherkin
-@us172
+@story_146
 Scenario: Widget shows a recently completed task
   Given a task "Call back John" was completed today
   When the user views the dashboard
   Then the Recent Activity widget shows "Task completed: Call back John" with a timestamp
 
-@us172
+@story_146
 Scenario: Widget shows a recently added contact
   Given a contact "Jane Smith" was added today
   When the user views the dashboard
   Then the Recent Activity widget shows "Contact added: Jane Smith" with a timestamp
 
-@us172
+@story_146
 Scenario: Widget shows empty state when no activity exists
   Given no contacts or tasks exist
   When the user views the dashboard
   Then the Recent Activity widget shows "No recent activity"
 
-@us172
+@story_146
 Scenario: Widget refreshes when the main window regains focus
   Given the Recent Activity widget is visible on the dashboard
   When a new contact is added and the main window regains focus
@@ -50,7 +51,7 @@ Scenario: Widget refreshes when the main window regains focus
 ```
 
 ## Manual Tests
-**Story:** [US-077 — Dashboard Recent Activity Widget](../docs/077-dashboard-recent-activity-widget.md)
+**Story:** [#124 — Dashboard Recent Activity Widget](../docs/077-dashboard-recent-activity-widget.md)
 
 ### Widget shows recent tasks and contacts
 1. Create a contact and complete a task

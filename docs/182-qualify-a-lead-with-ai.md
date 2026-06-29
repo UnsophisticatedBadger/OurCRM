@@ -1,6 +1,7 @@
-# US-099 — Qualify a Lead with AI
+# 182 - Qualify A Lead With AI
 
 **Capability:** AI Features
+**Milestone:** v1.1.0+ — Post-Production
 **Status:** Not Done
 **GitHub Issue:** #182
 
@@ -25,7 +26,7 @@ AI qualification sends the lead's stored data (budget, timeline, notes, current 
 2. Clicking the button submits the lead's data to the configured AI provider and shows a progress indicator during analysis
 3. When analysis completes, the lead's qualification panel shows: a score (integer 0–100), a status (Hot / Warm / Cold), and the AI's reasoning as readable text
 4. The qualification result (score, status, reasoning, and timestamp) is saved with the lead and persists across application restarts
-5. A lead can be re-qualified at any time; the new result replaces the current displayed result and the previous result is added to qualification history (US-122)
+5. A lead can be re-qualified at any time; the new result replaces the current displayed result and the previous result is added to qualification history (#86)
 6. If the AI provider is unreachable or returns an error, a clear error message is shown and the lead's existing qualification is unchanged
 7. When the AI provider is set to None, the "Qualify with AI" button is not shown on any lead
 
@@ -34,7 +35,7 @@ AI qualification sends the lead's stored data (budget, timeline, notes, current 
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/ai.feature`.
 
 ```gherkin
-@us065
+@story_112
 Scenario: User qualifies a lead and receives a structured result
   Given a lead "Alice Smith" exists with notes "Pre-approved, actively looking"
   And an AI provider is configured
@@ -42,20 +43,20 @@ Scenario: User qualifies a lead and receives a structured result
   Then a progress indicator is shown during analysis
   And when complete, the qualification panel shows a score (0–100), a status (Hot / Warm / Cold), reasoning text, and a qualification timestamp
 
-@us065
+@story_112
 Scenario: Qualification result persists after the application restarts
   Given a lead has been qualified with score 78, status "Hot", and reasoning "Pre-approved buyer"
   When the user restarts the application and opens that lead's detail view
   Then the score "78", status "Hot", reasoning, and qualification timestamp are still displayed
 
-@us065
+@story_112
 Scenario: Re-qualifying a lead updates the result
   Given a lead has a qualification result with score 40
   And additional notes have been added to the lead
   When the user clicks "Qualify with AI" again and the AI returns score 72
   Then the displayed score is "72" and the qualification timestamp is updated
 
-@us065
+@story_112
 Scenario: AI provider error leaves the existing qualification unchanged
   Given a lead has a qualification score of 60
   And the AI provider is unreachable
@@ -63,7 +64,7 @@ Scenario: AI provider error leaves the existing qualification unchanged
   Then a clear error message is shown
   And the lead's qualification score remains "60"
 
-@us065
+@story_112
 Scenario: Qualify with AI button is hidden when AI is disabled
   Given the AI provider is set to "None" in AI settings
   When the user opens any lead's detail view
@@ -72,7 +73,7 @@ Scenario: Qualify with AI button is hidden when AI is disabled
 
 ## Manual Tests
 
-**Story:** [US-090 — Qualify a Lead with AI](../docs/026-qualify-a-lead-with-ai.md)
+**Story:** [#136 — Qualify a Lead with AI](../docs/026-qualify-a-lead-with-ai.md)
 
 ### User qualifies a lead and receives a structured result
 1. Configure an AI provider in Settings → AI (Ollama or OpenAI)

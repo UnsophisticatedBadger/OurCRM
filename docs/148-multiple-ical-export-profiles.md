@@ -1,6 +1,7 @@
-# US-174 — Manage Multiple iCal Export Profiles
+# 148 - Manage Multiple ICal Export Profiles
 
 **Capability:** calendar
+**Milestone:** v0.8.0 — Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #148
 **Priority:** Post-MVP
@@ -22,20 +23,20 @@ As an agent, I want to maintain multiple iCal export files with different event-
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/calendar.feature`.
 
 ```gherkin
-@us182
+@story_190
 Scenario: User creates a second iCal export profile with a different filter
   Given one iCal export profile already exists
   When the user adds a profile named "Clients" with only "Showings" checked
   Then a second .ics file named "ourcrm-Clients.ics" is created in the chosen folder
   And it contains only showings
 
-@us182
+@story_190
 Scenario: All active profiles update when an event changes
   Given two active iCal export profiles exist
   When the user creates a new calendar event
   Then both .ics files are updated to include the new event (subject to each profile's filter)
 
-@us182
+@story_190
 Scenario: Deleting a profile removes its .ics file
   Given a profile named "Clients" exists with a corresponding .ics file
   When the user deletes the "Clients" profile
@@ -44,7 +45,7 @@ Scenario: Deleting a profile removes its .ics file
 ```
 
 ## Manual Tests
-**Story:** [US-163 — Manage Multiple iCal Export Profiles](../docs/163-multiple-ical-export-profiles.md)
+**Story:** [#96 — Manage Multiple iCal Export Profiles](../docs/163-multiple-ical-export-profiles.md)
 
 ### User creates a second profile with a different event-type filter
 1. Click "Add Profile," name it "Clients," select a folder, and check only "Showings"

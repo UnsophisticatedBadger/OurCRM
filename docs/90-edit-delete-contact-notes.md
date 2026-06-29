@@ -1,6 +1,7 @@
-# US-131 — Edit and Delete Contact Notes
+# 90 - Edit And Delete Contact Notes
 
 **Capability:** contacts
+**Milestone:** v0.5.0 — MVP
 **Status:** Not Done
 **GitHub Issue:** #90
 **Priority:** Should Have
@@ -22,20 +23,20 @@ As an agent, I want to edit and delete notes I have added to a contact, so that 
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/contacts.feature`.
 
 ```gherkin
-@us199
+@story_203
 Scenario: User edits a contact note and the change is saved
   Given a contact has a note "Meeting at 10am"
   When the user edits it to "Meeting at 11am" and saves
   Then the note displays "Meeting at 11am"
   And an edited timestamp is shown alongside the original created timestamp
 
-@us199
+@story_203
 Scenario: User deletes a contact note after confirming
   Given a contact has a note "Old information"
   When the user clicks Delete and confirms
   Then the note is permanently removed from the contact's notes list
 
-@us199
+@story_203
 Scenario: Cancelling the delete prompt leaves the note unchanged
   Given a contact has a note "Keep this"
   When the user clicks Delete and then cancels the confirmation prompt
@@ -43,7 +44,7 @@ Scenario: Cancelling the delete prompt leaves the note unchanged
 ```
 
 ## Manual Tests
-**Story:** [US-120 — Edit and Delete Contact Notes](../docs/120-edit-delete-contact-notes.md)
+**Story:** [#84 — Edit and Delete Contact Notes](../docs/120-edit-delete-contact-notes.md)
 
 ### Editing a note updates its content
 1. Click Edit on a contact note and change the text

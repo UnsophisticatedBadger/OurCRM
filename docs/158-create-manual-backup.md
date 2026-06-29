@@ -1,6 +1,7 @@
-# US-107 — Create Manual Backup
+# 158 - Create Manual Backup
 
 **Capability:** Backup & Recovery
+**Milestone:** v1.0.0 — Production
 **Status:** Not Done
 **GitHub Issue:** #158
 
@@ -32,26 +33,26 @@ The backup file is an encrypted copy of the entire OurCRM database. Encryption i
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/backup.feature`.
 
 ```gherkin
-@us105
+@story_156
 Scenario: User creates a backup and receives a success confirmation
   Given the Backup section is open in Settings
   When the user clicks "Create Backup" and selects a writable save location
   Then a backup file is created at the selected path
   And a success message is shown with the file path and size
 
-@us105
+@story_156
 Scenario: File save dialog has a date-stamped default filename
   Given the Backup section is open in Settings
   When the user clicks "Create Backup"
   Then the OS file save dialog opens with a default filename matching the pattern "ourcrm_YYYY-MM-DD_HHMMSS.backup"
 
-@us105
+@story_156
 Scenario: Cancelling the file save dialog takes no action
   Given the Backup section is open in Settings
   When the user clicks "Create Backup" and then cancels the file save dialog
   Then no backup file is created and the user is returned to the Backup section
 
-@us105
+@story_156
 Scenario: Unwritable save location shows a clear error message
   Given the Backup section is open in Settings
   When the user selects a read-only location in the file save dialog
@@ -60,7 +61,7 @@ Scenario: Unwritable save location shows a clear error message
 
 ## Manual Tests
 
-**Story:** [US-098 — Create Manual Backup](../docs/007-create-manual-backup.md)
+**Story:** [#181 — Create Manual Backup](../docs/007-create-manual-backup.md)
 
 ### Backup section is accessible
 1. Open Settings and navigate to Backup

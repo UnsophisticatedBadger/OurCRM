@@ -1,6 +1,7 @@
-# US-069 — Add Transaction Notes
+# 116 - Add Transaction Notes
 
 **Capability:** Transactions
+**Milestone:** v0.8.0 — Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #116
 
@@ -24,25 +25,25 @@ As a real estate agent, I want to add notes to a transaction, so that I can keep
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/transactions.feature`.
 
 ```gherkin
-@us052
+@story_76
 Scenario: User adds a note and sees it in the transaction details
   Given the user is viewing a transaction with no notes
   When the user clicks "Add Note", types "Buyer requested closing date change", and saves
   Then "Buyer requested closing date change" appears in the transaction details
 
-@us052
+@story_76
 Scenario: Saving an empty note shows an error
   Given the "Add Note" input is open
   When the user clicks Save without entering any text
   Then an inline error is shown and no note is added
 
-@us052
+@story_76
 Scenario: Multiple notes appear newest-first with timestamps
   Given the user has added two notes to a transaction
   When the user views the transaction details
   Then both notes are shown with timestamps and the most recent appears first
 
-@us052
+@story_76
 Scenario: Notes persist after an application restart
   Given the user has added a note "Appraisal came in low" to a transaction
   When the application is restarted and the user opens that transaction
@@ -51,7 +52,7 @@ Scenario: Notes persist after an application restart
 
 ## Manual Tests
 
-**Story:** [US-055 — Add Transaction Notes](../docs/055-add-transaction-notes.md)
+**Story:** [#104 — Add Transaction Notes](../docs/055-add-transaction-notes.md)
 
 ### User adds a note and sees it appear
 1. Open any transaction's details and click "Add Note"

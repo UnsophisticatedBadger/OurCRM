@@ -1,6 +1,7 @@
-# US-129 — Warn Before Discarding Unsaved Changes
+# 26 - Warn Before Discarding Unsaved Changes
 
 **Capability:** shell
+**Milestone:** v0.2.0 — Secure Shell
 **Status:** Not Done
 **GitHub Issue:** #26
 **Priority:** Should Have
@@ -46,7 +47,7 @@ Scenario: No dialog is shown when there are no unsaved changes
 ```
 
 ## Manual Tests
-**Story:** [US-118 — Warn Before Discarding Unsaved Changes](../docs/118-warn-unsaved-changes.md)
+**Story:** [#82 — Warn Before Discarding Unsaved Changes](../docs/118-warn-unsaved-changes.md)
 
 ### Navigating away with unsaved changes shows a warning
 1. Open a contact and edit the name field without saving

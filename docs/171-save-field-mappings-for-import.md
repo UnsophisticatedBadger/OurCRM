@@ -1,6 +1,7 @@
-# US-140 — Save Field Mappings for Import
+# 171 - Save Field Mappings For Import
 
 **Capability:** Import & Export
+**Milestone:** v1.0.0 — Production
 **Status:** Not Done
 **GitHub Issue:** #171
 **Priority:** Should Have (deferrable to post-MVP)
@@ -32,32 +33,32 @@ Saved mappings are keyed to the set of column headers in the source file. Loadin
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/import_export.feature`.
 
 ```gherkin
-@us136
+@story_138
 Scenario: User saves a field mapping after completing column assignments
   Given the user has completed column mapping in a CSV import
   When the user clicks "Save Mapping" and names it "Zillow Weekly"
   Then "Zillow Weekly" is available in the Load Mapping list for future imports
 
-@us136
+@story_138
 Scenario: Loading a saved mapping pre-fills column assignments
   Given a saved mapping "Zillow Weekly" exists
   When the user starts a new CSV import and selects "Zillow Weekly" from Load Mapping
   Then the column-to-field dropdowns are pre-filled according to the saved mapping
 
-@us136
+@story_138
 Scenario: Unrecognised columns default to Skip when loading a mapping
   Given a saved mapping "Zillow Weekly" exists
   And the new import file has a column "LeadScore" not present in the saved mapping
   When the user loads "Zillow Weekly"
   Then "LeadScore" defaults to "Skip"
 
-@us136
+@story_138
 Scenario: Duplicate mapping name is rejected
   Given a saved mapping named "Monthly Import" exists
   When the user tries to save another mapping with the name "Monthly Import"
   Then an error is shown and the duplicate is not saved
 
-@us136
+@story_138
 Scenario: Saved mappings persist after application restart
   Given the user has saved a mapping named "Zillow Weekly"
   When the user restarts the application and starts a CSV import
@@ -66,10 +67,10 @@ Scenario: Saved mappings persist after application restart
 
 ## Manual Tests
 
-**Story:** [US-129 — Save Field Mappings for Import](../docs/129-save-field-mappings-for-import.md)
+**Story:** [#26 — Save Field Mappings for Import](../docs/129-save-field-mappings-for-import.md)
 
 ### Saving a field mapping
-1. Start a CSV import (US-102) and complete the column mapping step
+1. Start a CSV import (#153) and complete the column mapping step
 2. Click "Save Mapping" and enter a name
 3. Confirm the name appears in the Load Mapping list
 

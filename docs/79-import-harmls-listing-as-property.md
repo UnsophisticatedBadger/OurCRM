@@ -1,6 +1,7 @@
-# US-063 — Import HAR Listing as Property
+# 79 - Import HAR Listing As Property
 
 **Capability:** MLS Integration
+**Milestone:** v0.5.0 — MVP
 **Status:** Not Done
 **GitHub Issue:** #79
 
@@ -15,13 +16,13 @@ As a real estate agent, I want to import a HAR listing into my Properties so tha
 
 ## Notes
 
-Import is available from two entry points: the listing row in the fetched/searched listings view and the listing detail view (US-088). Both trigger the same operation.
+Import is available from two entry points: the listing row in the fetched/searched listings view and the listing detail view (#134). Both trigger the same operation.
 
 The MLS number is stored on the imported property record as a non-editable reference field so the source can always be traced. All other fields are editable after import.
 
 ## Acceptance Criteria
 
-1. An "Import as Property" action is available on each HAR listing row and in the listing detail view (US-088)
+1. An "Import as Property" action is available on each HAR listing row and in the listing detail view (#134)
 2. Triggering it creates a property record pre-populated from HAR data: address, price, bedrooms, bathrooms, square footage, property type, and MLS number
 3. The imported property is labelled "MLS Import" in the Properties list and its detail view, with the MLS number displayed as a read-only field
 4. If a property with the same MLS number already exists, the user is warned and offered two options: Update the existing property with the latest HAR data, or Cancel
@@ -33,27 +34,27 @@ The MLS number is stored on the imported property record as a non-editable refer
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/mls.feature`.
 
 ```gherkin
-@us103
+@story_154
 Scenario: Importing a HAR listing creates a property with MLS data pre-filled
   Given HAR listing MLS#12345 with address "123 Oak St", price $450,000, 3 beds, 2 baths is in the listings view
   When the user clicks "Import as Property" on that listing
   Then a property record is created with address "123 Oak St", price $450,000, 3 beds, 2 baths, and MLS number 12345
   And the property appears in the Properties section labelled "MLS Import"
 
-@us103
+@story_154
 Scenario: Importing a duplicate MLS number warns the user
   Given a property with MLS#12345 already exists in the database
   When the user clicks "Import as Property" on a HAR listing with MLS#12345
   Then a warning is shown: "A property with MLS#12345 already exists"
   And the user is offered "Update existing" or "Cancel"
 
-@us103
+@story_154
 Scenario: Choosing Update overwrites the existing property with fresh HAR data
   Given the duplicate warning is shown for MLS#12345
   When the user clicks "Update existing"
   Then the existing property record is updated with the current HAR listing data
 
-@us103
+@story_154
 Scenario: Imported property is editable after import
   Given a property has been imported from HAR listing MLS#12345
   When the user opens the property and changes the price
@@ -62,7 +63,7 @@ Scenario: Imported property is editable after import
 
 ## Manual Tests
 
-**Story:** [US-087 — Import HAR Listing as Property](../docs/087-import-harmls-listing-as-property.md)
+**Story:** [#133 — Import HAR Listing as Property](../docs/087-import-harmls-listing-as-property.md)
 
 ### Import from the listing row
 1. Fetch or search HAR listings
@@ -72,7 +73,7 @@ Scenario: Imported property is editable after import
 5. Confirm the property is labelled "MLS Import"
 
 ### Import from the listing detail view
-1. Open a HAR listing's detail view (US-088)
+1. Open a HAR listing's detail view (#134)
 2. Click "Import as Property"
 3. Confirm the same result as above
 

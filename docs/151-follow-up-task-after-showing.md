@@ -1,6 +1,7 @@
-# US-177 — Create Follow-Up Task After Completing a Showing
+# 151 - Create Follow-Up Task After Completing A Showing
 
 **Capability:** tasks
+**Milestone:** v0.8.0 — Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #151
 **Priority:** Post-MVP
@@ -23,19 +24,19 @@ As an agent, I want to be prompted to create a follow-up task when I complete a 
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/tasks.feature`.
 
 ```gherkin
-@us197
+@story_201
 Scenario: Follow-up task prompt appears after completing a showing
   Given a showing linked to a contact is marked completed
   When the user confirms the completion
   Then a prompt asks "Create a follow-up task?"
 
-@us197
+@story_201
 Scenario: Choosing Yes opens a pre-filled task form
   Given the follow-up task prompt is shown
   When the user clicks "Yes"
   Then the task form opens with title "Follow up: [property address]" and due date set to the next business day
 
-@us197
+@story_201
 Scenario: Choosing No dismisses the prompt without creating a task
   Given the follow-up task prompt is shown
   When the user clicks "No"
@@ -43,7 +44,7 @@ Scenario: Choosing No dismisses the prompt without creating a task
 ```
 
 ## Manual Tests
-**Story:** [US-166 — Create Follow-Up Task After Completing a Showing](../docs/166-follow-up-task-after-showing.md)
+**Story:** [#140 — Create Follow-Up Task After Completing a Showing](../docs/166-follow-up-task-after-showing.md)
 
 ### Follow-up task prompt appears after showing completion
 1. Complete a showing linked to a contact

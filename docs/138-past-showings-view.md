@@ -1,6 +1,7 @@
-# US-136 — Past Showings View
+# 138 - Past Showings View
 
 **Capability:** calendar
+**Milestone:** v0.8.0 — Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #138
 **Priority:** Should Have
@@ -21,19 +22,19 @@ As an agent, I want to see a list of completed showings with their outcomes and 
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/calendar.feature`.
 
 ```gherkin
-@us194
+@story_198
 Scenario: Completed showing appears in Past Showings tab
   Given a showing for "123 Main St" was marked completed with outcome "Interested"
   When the user opens the Past Showings tab
   Then the showing appears with the property address, completion date, and outcome
 
-@us194
+@story_198
 Scenario: Past Showings list is ordered newest first
   Given two showings were completed on different dates
   When the user opens the Past Showings tab
   Then the more recently completed showing appears first
 
-@us194
+@story_198
 Scenario: Filter by outcome shows only matching showings
   Given completed showings with outcomes "Interested" and "Not Interested" both exist
   When the user filters by "Interested"
@@ -41,7 +42,7 @@ Scenario: Filter by outcome shows only matching showings
 ```
 
 ## Manual Tests
-**Story:** [US-125 — Past Showings View](../docs/170-past-showings-view.md)
+**Story:** [#88 — Past Showings View](../docs/170-past-showings-view.md)
 
 ### Completed showing appears in the Past Showings tab
 1. Mark a showing as completed with an outcome

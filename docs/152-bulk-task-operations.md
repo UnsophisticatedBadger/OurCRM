@@ -1,6 +1,7 @@
-# US-178 — Bulk Task Operations
+# 152 - Bulk Task Operations
 
 **Capability:** tasks
+**Milestone:** v0.8.0 — Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #152
 **Priority:** Post-MVP
@@ -49,7 +50,7 @@ Scenario: Select All checkbox selects every visible task
 ```
 
 ## Manual Tests
-**Story:** [US-167 — Bulk Task Operations](../docs/117-bulk-task-operations.md)
+**Story:** [#141 — Bulk Task Operations](../docs/117-bulk-task-operations.md)
 
 ### Selecting tasks shows the bulk action toolbar
 1. Check the boxes for two tasks in the task list

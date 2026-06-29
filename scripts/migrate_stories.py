@@ -222,7 +222,9 @@ def sort_key(story: Story) -> tuple[int, int]:
 
 
 def gh(*args: str) -> str:
-    result = subprocess.run(["gh", *args], capture_output=True, text=True, check=True)
+    result = subprocess.run(
+        ["gh", *args], capture_output=True, text=True, encoding="utf-8", check=True
+    )
     return result.stdout.strip()
 
 

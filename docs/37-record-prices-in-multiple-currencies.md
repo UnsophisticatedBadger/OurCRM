@@ -1,6 +1,7 @@
-# US-156 — Record Prices in Multiple Currencies
+# 37 - Record Prices In Multiple Currencies
 
 **Capability:** shell
+**Milestone:** v0.2.0 — Secure Shell
 **Status:** Not Done
 **GitHub Issue:** #37
 **Priority:** Post-MVP
@@ -14,7 +15,7 @@ As an agent, I want to record prices and budgets in different currencies on indi
 ## Acceptance Criteria
 1. Budget fields on leads and price fields on properties and transactions include a currency selector (USD, EUR, GBP, CAD, AUD) alongside the numeric input; USD is the default
 2. Each record stores the currency together with the numeric value
-3. The currency and amount are displayed together wherever the field appears (e.g. "£450,000" or "€320,000"), formatted per US-141 conventions for that currency
+3. The currency and amount are displayed together wherever the field appears (e.g. "£450,000" or "€320,000"), formatted per #172 conventions for that currency
 4. The currency selector on a record can be changed at any time; only the display currency changes — the stored numeric value is not converted
 5. List views and filters that show or compare monetary values display each record's own currency symbol
 
@@ -22,19 +23,19 @@ As an agent, I want to record prices and budgets in different currencies on indi
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/shell.feature`.
 
 ```gherkin
-@us192
+@story_101
 Scenario: User records a lead budget in EUR and it is displayed with the euro symbol
   Given the user creates a lead and selects EUR as the budget currency
   When the user enters 350000 as the budget
   Then the lead's budget is displayed as "€350,000.00"
 
-@us192
+@story_101
 Scenario: Two leads with different currencies each display their own symbol in the list view
   Given one lead has a budget of $500,000 USD and another has £400,000 GBP
   When the user views the Leads list
   Then each lead shows its own currency symbol and amount
 
-@us192
+@story_101
 Scenario: Changing the currency on a record updates the symbol without altering the stored number
   Given a property is recorded at 500000 USD
   When the user changes the currency to EUR
@@ -43,7 +44,7 @@ Scenario: Changing the currency on a record updates the symbol without altering 
 ```
 
 ## Manual Tests
-**Story:** [US-145 — Record Prices in Multiple Currencies](../docs/145-record-prices-in-multiple-currencies.md)
+**Story:** [#94 — Record Prices in Multiple Currencies](../docs/145-record-prices-in-multiple-currencies.md)
 
 ### Budget recorded in EUR displays the euro symbol
 1. Create a new lead, select EUR from the currency selector, and enter 350000

@@ -1,6 +1,7 @@
-# US-076 — View Upcoming Showings
+# 123 - View Upcoming Showings
 
 **Capability:** Calendar & Showings
+**Milestone:** v0.8.0 — Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #123
 
@@ -27,37 +28,37 @@ As a real estate agent, I want to view all my upcoming showings in chronological
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/calendar.feature`.
 
 ```gherkin
-@us057
+@story_106
 Scenario: Showings appear sorted chronologically with the soonest first
   Given showings exist for tomorrow at 9:00 AM and tomorrow at 2:00 PM
   When the user opens the Upcoming Showings view
   Then the 9:00 AM showing appears above the 2:00 PM showing
 
-@us057
+@story_106
 Scenario: Past showings do not appear in the list
   Given a showing was scheduled for yesterday
   When the user opens the Upcoming Showings view
   Then that showing is not listed
 
-@us057
+@story_106
 Scenario: Showings are grouped by day with a date header
   Given showings exist for tomorrow and for next week
   When the user views upcoming showings
   Then tomorrow's showings are under one date header and next week's under another
 
-@us057
+@story_106
 Scenario: Today's group is labelled "Today"
   Given a showing is scheduled for today
   When the user views upcoming showings
   Then today's group header reads "Today"
 
-@us057
+@story_106
 Scenario: Empty state is shown when no upcoming showings exist
   Given no future showings are scheduled
   When the user opens the Upcoming Showings view
   Then a "No upcoming showings" message is displayed
 
-@us057
+@story_106
 Scenario: Time range filter limits the list to the selected window
   Given a showing scheduled for tomorrow and a showing scheduled in three weeks
   When the user selects "This Week" from the time range filter
@@ -66,7 +67,7 @@ Scenario: Time range filter limits the list to the selected window
 
 ## Manual Tests
 
-**Story:** [US-062 — View Upcoming Showings](../docs/032-view-upcoming-showings.md)
+**Story:** [#78 — View Upcoming Showings](../docs/032-view-upcoming-showings.md)
 
 ### Upcoming showings appear sorted and grouped by day
 1. Schedule three showings: two tomorrow at different times, one next week

@@ -1,6 +1,7 @@
-﻿# US-006 — Log In and Out
+﻿# #6 — Log In and Out
 
 **Capability:** Authentication & Security
+**Milestone:** v0.2.0 — Secure Shell
 **Status:** Not Done
 **GitHub Issue:** #6
 
@@ -30,62 +31,62 @@ As a real estate agent, I want to enter my master password to open OurCRM and lo
 
 ## BDD Scenarios
 
-> Auth service scenarios (@us011) are in `tests/bdd/features/authentication.feature`.
+> Auth service scenarios (@story_11) are in `tests/bdd/features/authentication.feature`.
 > The following wiring and logout scenarios are not yet implemented.
 
 ```gherkin
-@us011
+@story_11
 Scenario: Subsequent launch detects existing database and shows enter-password mode
   Given a database file already exists
   When the application starts
   Then the startup dialog is shown in enter-password mode
 
-@us011
+@story_11
 Scenario: Correct password opens the database and shows the main window
   Given a database file already exists
   And the startup dialog is open in enter-password mode
   When the user submits the correct existing password
   Then the main window is shown
 
-@us011
+@story_11
 Scenario: Wrong password shows an inline error and keeps the dialog open
   Given the startup dialog is open in enter-password mode
   When the user submits an incorrect password
   Then the startup dialog remains open
   And an inline error is shown in the dialog
 
-@us011
+@story_11
 Scenario: Closing the startup dialog exits the application
   Given the startup dialog is open in enter-password mode
   When the user closes the dialog
   Then the application exits without showing the main window
 
-@us011
+@story_11
 Scenario: Closing the main window persists the encrypted database
   Given the main window is open with an active encrypted database
   When the user closes the main window
   Then the encrypted database is closed and written to disk
 
-@us011
+@story_11
 Scenario: Logout via File menu shows login screen
   Given the main window is open and the user is logged in
   When I click File > Logout
   Then the login screen is shown
 
-@us011
+@story_11
 Scenario: Application remains open after logout
   Given the main window is open and the user is logged in
   When I click File > Logout
   Then the main window is still open
   And the login screen is shown
 
-@us011
+@story_11
 Scenario: Session is cleared after logout
   Given the main window is open and the user is logged in
   When I click File > Logout
   Then the auth service shows the user as logged out
 
-@us011
+@story_11
 Scenario: Can log back in after logout
   Given the main window is open and the user is logged in
   When I click File > Logout
@@ -96,7 +97,7 @@ Scenario: Can log back in after logout
 
 ## Manual Tests
 
-**Story:** [US-006 — Log In and Out](../docs/006-log-in-with-master-password.md)
+**Story:** [#6 — Log In and Out](../docs/006-log-in-with-master-password.md)
 
 ### User re-launches after setup and enters correct password
 1. Run `uv run ourcrm` (DB file exists from prior setup)

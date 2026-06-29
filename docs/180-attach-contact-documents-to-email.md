@@ -1,6 +1,7 @@
-# US-097 — Attach Contact Documents to Email
+# 180 - Attach Contact Documents To Email
 
 **Capability:** Email
+**Milestone:** v1.1.0+ — Post-Production
 **Status:** Not Done
 **GitHub Issue:** #180
 
@@ -15,7 +16,7 @@ As a real estate agent, I want to attach documents already linked to a contact d
 
 ## Notes
 
-Documents attached from the contact picker enter the same attachments list as files chosen from disk and are subject to the same size and type validation rules defined in US-079.
+Documents attached from the contact picker enter the same attachments list as files chosen from disk and are subject to the same size and type validation rules defined in #126.
 
 ## Acceptance Criteria
 
@@ -31,21 +32,21 @@ Documents attached from the contact picker enter the same attachments list as fi
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/email.feature`.
 
 ```gherkin
-@us075
+@story_122
 Scenario: User opens the document picker and sees the contact's linked documents
   Given contact "Alice Smith" has documents "contract.pdf" (200 KB) and "disclosure.pdf" (150 KB) linked
   And the email compose form is open addressed to Alice Smith
   When the user clicks "Attach from Contact's Documents"
   Then the picker lists "contract.pdf" and "disclosure.pdf" with their names, types, sizes, and dates added
 
-@us075
+@story_122
 Scenario: User selects a document and it is added to the email attachments list
   Given the document picker shows "contract.pdf" for contact "Alice Smith"
   When the user selects "contract.pdf" and clicks "Attach Selected"
   Then "contract.pdf" appears in the compose form's attachments list
   And the picker closes
 
-@us075
+@story_122
 Scenario: Contact with no linked documents shows an empty state
   Given contact "Bob Jones" has no linked documents
   And the email compose form is open addressed to Bob Jones
@@ -55,7 +56,7 @@ Scenario: Contact with no linked documents shows an empty state
 
 ## Manual Tests
 
-**Story:** [US-083 — Attach Contact Documents to Email](../docs/083-attach-contact-documents-to-email.md)
+**Story:** [#129 — Attach Contact Documents to Email](../docs/083-attach-contact-documents-to-email.md)
 
 ### Document picker lists the contact's linked documents
 1. Link at least two documents to a contact via the document management feature
@@ -73,7 +74,7 @@ Scenario: Contact with no linked documents shows an empty state
 
 ### Size and type validation applies to picked documents
 1. If a linked document exceeds 25 MB, attempt to attach it
-2. Confirm a size validation error is shown and the file is not added (same behaviour as US-079)
+2. Confirm a size validation error is shown and the file is not added (same behaviour as #126)
 
 ### Empty state when no documents are linked
 1. Open the compose form for a contact with no linked documents

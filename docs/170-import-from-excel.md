@@ -1,6 +1,7 @@
-# US-139 — Import Contacts from Excel
+# 170 - Import Contacts From Excel
 
 **Capability:** Import & Export
+**Milestone:** v1.0.0 — Production
 **Status:** Not Done
 **GitHub Issue:** #170
 **Priority:** Should Have (deferrable to post-MVP)
@@ -16,17 +17,17 @@ As a real estate agent, I want to import contacts from an Excel file so that I c
 
 ## Notes
 
-Excel import reuses the field mapping panel and preview flow from US-102. The only additions specific to this story are: `.xlsx` file validation, and a sheet-selection step when the workbook contains more than one sheet.
+Excel import reuses the field mapping panel and preview flow from #153. The only additions specific to this story are: `.xlsx` file validation, and a sheet-selection step when the workbook contains more than one sheet.
 
-The first row of the selected sheet is treated as column headers (same assumption as US-102's CSV import). Rows where every mapped field is blank are silently skipped.
+The first row of the selected sheet is treated as column headers (same assumption as #153's CSV import). Rows where every mapped field is blank are silently skipped.
 
 ## Acceptance Criteria
 
 1. "From Excel (.xlsx)" appears as an option in the Contacts import menu alongside the existing vCard and CSV options
 2. If the selected file is not a valid `.xlsx` document, an error is shown and the import does not proceed
 3. If the workbook contains more than one sheet, the user is prompted to select which sheet to import before the field mapping step; a workbook with only one sheet skips directly to field mapping
-4. The field mapping panel from US-102 is reused: each column header is shown alongside a sample cell value and a dropdown to map it to a CRM contact field (or "Skip")
-5. The preview (first 5 mapped rows), duplicate handling (US-100), and import summary flow are identical to US-102
+4. The field mapping panel from #153 is reused: each column header is shown alongside a sample cell value and a dropdown to map it to a CRM contact field (or "Skip")
+5. The preview (first 5 mapped rows), duplicate handling (#183), and import summary flow are identical to #153
 6. The import summary reports the number of contacts added and the number of rows skipped (blank rows)
 
 ## BDD Scenarios
@@ -34,30 +35,30 @@ The first row of the selected sheet is treated as column headers (same assumptio
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/import_export.feature`.
 
 ```gherkin
-@us135
+@story_137
 Scenario: Selecting a non-Excel file shows an error
   Given the user selects a file that is not a valid .xlsx document via the Excel import option
   Then an error is shown and the import does not proceed
 
-@us135
+@story_137
 Scenario: Multi-sheet workbook requires sheet selection
   Given the user selects an Excel file with sheets named "Contacts", "Archive", and "Notes"
   When the import dialog opens
   Then the user is prompted to choose which sheet to import before seeing the field mapping panel
 
-@us135
+@story_137
 Scenario: Single-sheet workbook skips the sheet selection step
   Given the user selects an Excel file with exactly one sheet
   When the import dialog opens
   Then the field mapping panel is shown immediately without a sheet selection step
 
-@us135
+@story_137
 Scenario: Field mapping and preview match the CSV import flow
   Given the user has selected a sheet with contact data
   When the field mapping panel is shown
-  Then the same mapping dropdowns and 5-row preview as US-102 are displayed
+  Then the same mapping dropdowns and 5-row preview as #153 are displayed
 
-@us135
+@story_137
 Scenario: Import summary reports contacts added and blank rows skipped
   Given an Excel sheet with 10 data rows where 2 rows have all mapped fields blank
   When the import completes
@@ -66,7 +67,7 @@ Scenario: Import summary reports contacts added and blank rows skipped
 
 ## Manual Tests
 
-**Story:** [US-128 — Import Contacts from Excel](../docs/128-import-from-excel.md)
+**Story:** [#25 — Import Contacts from Excel](../docs/128-import-from-excel.md)
 
 ### Excel import option appears in the import menu
 1. Open the Contacts section and find the Import menu
@@ -85,14 +86,14 @@ Scenario: Import summary reports contacts added and blank rows skipped
 1. Import an Excel file with only one sheet
 2. Confirm the field mapping panel appears immediately (no sheet selection step)
 
-### Field mapping and preview match US-102 behaviour
+### Field mapping and preview match #153 behaviour
 1. Map several columns to CRM fields
 2. Confirm the 5-row preview updates to reflect the mapping
 3. Confirm "Skip" is available for columns you don't want to import
 
-### Duplicate detection delegates to US-100
+### Duplicate detection delegates to #183
 1. Import an Excel file containing a contact whose email already exists in OurCRM
-2. Confirm the US-100 duplicate-resolution dialog appears before any records are written
+2. Confirm the #183 duplicate-resolution dialog appears before any records are written
 
 ### Import summary reports counts correctly
 1. Import a file that includes some entirely blank rows

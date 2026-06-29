@@ -1,6 +1,6 @@
 Feature: Infrastructure
 
-  @us-002
+  @story_2
   Scenario: Nuitka build command is correctly configured
     Given the build module is available
     When I retrieve the build arguments
@@ -10,7 +10,7 @@ Feature: Infrastructure
     And the entry point is the application main module
     And the Windows console window is suppressed
 
-  @us-002
+  @story_2
   Scenario: Semantic release is configured to version from conventional commits
     Given pyproject.toml is available
     When I read the semantic release configuration

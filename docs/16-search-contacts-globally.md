@@ -1,6 +1,7 @@
-# US-042 — Search Contacts Globally
+# 16 - Search Contacts Globally
 
 **Capability:** App Shell
+**Milestone:** v0.2.0 — Secure Shell
 **Status:** Not Done
 **GitHub Issue:** #16
 
@@ -14,7 +15,7 @@ As a real estate agent, I want to open a global search overlay from anywhere in 
 
 ## Notes
 
-US-030 establishes the global search infrastructure: the Ctrl+K overlay, keyboard navigation, and Escape-to-close behaviour. US-031 extends it to search leads, properties, and transactions. Any future search story builds on top of this one.
+#58 establishes the global search infrastructure: the Ctrl+K overlay, keyboard navigation, and Escape-to-close behaviour. #59 extends it to search leads, properties, and transactions. Any future search story builds on top of this one.
 
 ## Acceptance Criteria
 
@@ -30,21 +31,21 @@ US-030 establishes the global search infrastructure: the Ctrl+K overlay, keyboar
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/shell.feature`.
 
 ```gherkin
-@us060
+@story_109
 Scenario: User opens global search from the Leads section and sees the focused input
   Given the user is viewing the Leads section
   When the user presses Ctrl+K
   Then the global search overlay opens
   And the search text input is focused
 
-@us060
+@story_109
 Scenario: User types a contact name and sees matching results
   Given a contact "Alice Smith" exists
   And the global search overlay is open
   When the user types "Alice"
   Then "Alice Smith" appears in the results
 
-@us060
+@story_109
 Scenario: User navigates to a result with arrow keys and opens it with Enter
   Given the global search overlay shows results for "Alice"
   When the user presses the down arrow key to highlight "Alice Smith"
@@ -52,14 +53,14 @@ Scenario: User navigates to a result with arrow keys and opens it with Enter
   Then Alice Smith's contact detail view opens
   And the overlay closes
 
-@us060
+@story_109
 Scenario: User presses Escape and returns to the previous view
   Given the user opened the global search overlay from the Properties section
   When the user presses Escape
   Then the overlay closes
   And the Properties section is visible
 
-@us060
+@story_109
 Scenario: User searches for a term with no matching contacts
   Given the global search overlay is open
   When the user types "zzznomatch"
@@ -68,7 +69,7 @@ Scenario: User searches for a term with no matching contacts
 
 ## Manual Tests
 
-**Story:** [US-030 — Search Contacts Globally](../docs/030-search-contacts-globally.md)
+**Story:** [#58 — Search Contacts Globally](../docs/030-search-contacts-globally.md)
 
 ### User opens global search from different sections and sees the focused input
 1. Navigate to the Leads section

@@ -1,6 +1,7 @@
-# US-101 — Override AI Qualification
+# 184 - Override AI Qualification
 
 **Capability:** AI Features
+**Milestone:** v1.1.0+ — Post-Production
 **Status:** Not Done
 **GitHub Issue:** #184
 
@@ -14,7 +15,7 @@ As a real estate agent, I want to override the AI's qualification with my own st
 
 ## Notes
 
-The override does not delete the AI's result — it records the agent's chosen status alongside the AI's original score and reasoning. Both remain visible in the qualification panel, clearly labelled. The override is added as an event to the qualification history (US-122).
+The override does not delete the AI's result — it records the agent's chosen status alongside the AI's original score and reasoning. Both remain visible in the qualification panel, clearly labelled. The override is added as an event to the qualification history (#86).
 
 **Third-party testability:** All scenarios here operate on stored qualification data and do not invoke a live AI provider. Seed the initial AI qualification result via the repository layer in test setup rather than calling the real AI service.
 
@@ -23,7 +24,7 @@ The override does not delete the AI's result — it records the agent's chosen s
 1. On any lead that has been AI-qualified, the qualification panel includes an "Override" action that lets the agent choose a status (Hot / Warm / Cold) and optionally add a note
 2. After saving an override, the lead displays the agent-chosen status as the active status, with a "Manual override" label
 3. The AI's original score and reasoning remain visible in the qualification panel, shown in a secondary "AI assessment" section
-4. The override (agent status, notes, timestamp) is recorded as an event in the lead's qualification history (US-122)
+4. The override (agent status, notes, timestamp) is recorded as an event in the lead's qualification history (#86)
 5. A lead can be re-qualified by AI after an override; the new AI result becomes the active assessment and the override is recorded in history
 
 ## BDD Scenarios
@@ -31,20 +32,20 @@ The override does not delete the AI's result — it records the agent's chosen s
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/ai.feature`.
 
 ```gherkin
-@us067
+@story_114
 Scenario: Agent overrides an AI qualification and the new status is shown with a manual label
   Given a lead has been AI-qualified with status "Cold"
   When the agent clicks "Override", selects status "Hot", adds note "Met personally — very motivated", and saves
   Then the lead displays status "Hot" with a "Manual override" label
   And the AI's original "Cold" assessment is still visible in the secondary "AI assessment" section
 
-@us067
+@story_114
 Scenario: AI original assessment remains accessible after an override
   Given a lead has been overridden to "Hot" with the AI's original score of 28
   When the user views the lead's qualification panel
   Then the AI's score "28" and its reasoning are shown in the "AI assessment" section
 
-@us067
+@story_114
 Scenario: Override is recorded in the qualification history
   Given a lead was AI-qualified as "Cold" at 10:00 AM
   When the agent overrides it to "Hot" at 11:00 AM with note "Very motivated buyer"
@@ -52,7 +53,7 @@ Scenario: Override is recorded in the qualification history
   Then the 11:00 AM override event shows status "Hot" and note "Very motivated buyer"
   And the 10:00 AM AI event is also present showing status "Cold"
 
-@us067
+@story_114
 Scenario: Re-qualifying after an override makes the new AI result the active assessment
   Given a lead has been overridden to "Hot" by the agent
   When the agent clicks "Re-qualify" and the AI returns status "Warm"
@@ -62,7 +63,7 @@ Scenario: Re-qualifying after an override makes the new AI result the active ass
 
 ## Manual Tests
 
-**Story:** [US-092 — Override AI Qualification](../docs/028-override-ai-qualification.md)
+**Story:** [#175 — Override AI Qualification](../docs/028-override-ai-qualification.md)
 
 ### Agent overrides an AI qualification and the override is labelled clearly
 1. Qualify a lead with AI and note its status (e.g., "Cold")
@@ -79,7 +80,7 @@ Scenario: Re-qualifying after an override makes the new AI result the active ass
 
 ### Override appears in qualification history
 1. Qualify a lead, then override it
-2. Open the qualification history (US-122)
+2. Open the qualification history (#86)
 3. Confirm the override event appears with the agent's chosen status and notes
 4. Confirm the original AI qualification event is also present
 

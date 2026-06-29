@@ -1,4 +1,4 @@
-﻿# US-022 — Configure HAR MLS Credentials
+﻿# #49 — Configure HAR MLS Credentials
 
 **Capability:** mls
 **Milestone:** v0.5.0 — MVP
@@ -17,7 +17,7 @@ As a real estate agent, I want to configure my HAR MLS credentials in OurCRM so 
 
 **Third-party testability:** The "Test Connection" button makes a live call to the HAR MLS OAuth endpoint. Tag those scenarios `@live_mls` so CI skips them. Unit tests for credential saving and loading use a stubbed HTTP client — they assert that the correct client ID is stored and that the secret is stored in the OS keyring (never in the config file), not that the live API accepts them.
 
-Client secret is stored in the OS keyring and displayed only as a placeholder ("••••••••") after saving — identical pattern to SMTP password (US-078) and OpenAI API key (US-089).
+Client secret is stored in the OS keyring and displayed only as a placeholder ("••••••••") after saving — identical pattern to SMTP password (#125) and OpenAI API key (#135).
 
 ## Acceptance Criteria
 
@@ -34,7 +34,7 @@ Client secret is stored in the OS keyring and displayed only as a placeholder ("
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/mls.feature`.
 
 ```gherkin
-@us-022
+@story_49
 Scenario: Saving credentials stores client ID in config and secret in OS keyring
   Given the MLS settings section is open
   When the user enters client ID "my-client-id" and client secret "my-secret" and saves
@@ -42,27 +42,27 @@ Scenario: Saving credentials stores client ID in config and secret in OS keyring
   And the OS keyring holds the secret for the MLS credential key
   And the Client Secret field displays "••••••••"
 
-@us-022
+@story_49
 Scenario: Empty client ID or secret is rejected
   Given the MLS settings section is open
   When the user saves with the client ID field empty
   Then a validation error is shown and nothing is stored
 
-@us-022
+@story_49
 Scenario: Saved credentials persist after application restart
   Given HAR credentials have been saved
   When the user restarts the application and opens MLS settings
   Then the client ID is shown and the secret field displays "••••••••"
 
 @live_mls
-@us-022
+@story_49
 Scenario: Test Connection succeeds with valid credentials
   Given valid HAR client ID and secret have been saved
   When the user clicks "Test Connection"
   Then the status indicator shows "Connected"
 
 @live_mls
-@us-022
+@story_49
 Scenario: Test Connection shows an error with invalid credentials
   Given an invalid HAR client secret has been saved
   When the user clicks "Test Connection"
@@ -71,7 +71,7 @@ Scenario: Test Connection shows an error with invalid credentials
 
 ## Manual Tests
 
-**Story:** [US-022 — Configure HAR MLS Credentials](../../docs/022-configure-harmls-credentials.md)
+**Story:** [#49 — Configure HAR MLS Credentials](../../docs/022-configure-harmls-credentials.md)
 
 ### MLS settings section is accessible
 1. Open Settings and navigate to MLS

@@ -1,6 +1,7 @@
-# US-154 — Resizable and Adaptive Window Layout
+# 35 - Resizable And Adaptive Window Layout
 
 **Capability:** shell
+**Milestone:** v0.2.0 — Secure Shell
 **Status:** Not Done
 **GitHub Issue:** #35
 **Priority:** Post-MVP
@@ -23,25 +24,25 @@ As an agent, I want the OurCRM window to remain usable when resized smaller or l
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/shell.feature`.
 
 ```gherkin
-@us165
+@story_139
 Scenario: Window cannot be resized below the minimum size
   When the user drags the window edge to make it smaller than 800 × 600 px
   Then the window stops resizing at 800 × 600 px
 
-@us165
+@story_139
 Scenario: Sidebar collapses to icon-only at minimum window width
   Given the window is at minimum width
   When the user views the sidebar
   Then only icons are visible, not text labels
   And hovering an icon shows the section name as a tooltip
 
-@us165
+@story_139
 Scenario: No horizontal scrollbar appears at minimum window width
   Given the window is at 800 px wide
   When the user navigates to the Contacts list
   Then no horizontal scrollbar is present on the content area
 
-@us165
+@story_139
 Scenario: Window size and sidebar state are restored on next launch
   Given the user resizes the window to 1200 × 800 px and collapses the sidebar
   When the user closes and relaunches the app
@@ -49,7 +50,7 @@ Scenario: Window size and sidebar state are restored on next launch
 ```
 
 ## Manual Tests
-**Story:** [US-143 — Resizable and Adaptive Window Layout](../docs/143-mobile-responsive-ui.md)
+**Story:** [#92 — Resizable and Adaptive Window Layout](../docs/143-mobile-responsive-ui.md)
 
 ### Window cannot shrink below 800 × 600 px
 1. Drag the window edge to make it as small as possible

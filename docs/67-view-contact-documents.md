@@ -1,6 +1,7 @@
-# US-039 — View Contact Documents
+# 67 - View Contact Documents
 
 **Capability:** Contacts
+**Milestone:** v0.5.0 — MVP
 **Status:** Not Done
 **GitHub Issue:** #67
 
@@ -18,7 +19,7 @@ As a real estate agent, I want to view all documents associated with a contact s
 2. Each row shows: filename, file type icon, file size, upload date, and document type (Contract / Disclosure / Photo / Other) if set
 3. Documents are sorted by upload date, newest first, by default
 4. A document type filter lets the user narrow the list to one type (All / Contract / Disclosure / Photo / Other)
-5. Clicking a document row triggers a download (US-028)
+5. Clicking a document row triggers a download (#56)
 6. When a contact has no documents, the section shows "No documents yet" with an "Upload Document" button
 
 ## BDD Scenarios
@@ -26,25 +27,25 @@ As a real estate agent, I want to view all documents associated with a contact s
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/contacts.feature`.
 
 ```gherkin
-@us091
+@story_22
 Scenario: Documents section lists all uploaded documents for a contact
   Given contact "Alice Smith" has documents "contract.pdf" (Contract, 200 KB) and "photo.jpg" (Photo, 1.2 MB)
   When the user opens Alice Smith's contact detail view
   Then the Documents section lists "contract.pdf" and "photo.jpg" with their filenames, type icons, sizes, upload dates, and document types
 
-@us091
+@story_22
 Scenario: Documents are sorted newest first by default
   Given two documents were uploaded to a contact at different times
   When the user views the Documents section
   Then the most recently uploaded document appears first
 
-@us091
+@story_22
 Scenario: Document type filter shows only documents of the selected type
   Given a contact has a "Contract" document and a "Photo" document
   When the user selects the "Photo" filter
   Then only the "Photo" document is shown
 
-@us091
+@story_22
 Scenario: Empty state appears when a contact has no documents
   Given contact "Bob Jones" has no uploaded documents
   When the user opens Bob Jones's contact detail view
@@ -53,7 +54,7 @@ Scenario: Empty state appears when a contact has no documents
 
 ## Manual Tests
 
-**Story:** [US-027 — View Contact Documents](../docs/023-view-contact-documents.md)
+**Story:** [#55 — View Contact Documents](../docs/023-view-contact-documents.md)
 
 ### Documents section shows all uploaded documents
 1. Upload two documents (one Contract, one Photo) to a contact
@@ -73,7 +74,7 @@ Scenario: Empty state appears when a contact has no documents
 
 ### Clicking a document row initiates download
 1. Click any document row in the Documents section
-2. Confirm the OS save dialog appears (per US-028)
+2. Confirm the OS save dialog appears (per #56)
 
 ### Empty state for a contact with no documents
 1. Open a contact that has no uploaded documents

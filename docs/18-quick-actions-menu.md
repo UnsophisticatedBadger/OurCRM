@@ -1,6 +1,7 @@
-# US-044 — Quick Actions in Global Search
+# 18 - Quick Actions In Global Search
 
 **Capability:** App Shell
+**Milestone:** v0.2.0 — Secure Shell
 **Status:** Not Done
 **GitHub Issue:** #18
 
@@ -26,40 +27,40 @@ As a real estate agent, I want to type action commands into the global search to
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/shell.feature`.
 
 ```gherkin
-@us062
+@story_78
 Scenario: Typing "new" shows creation quick actions
   Given the global search overlay is open
   When the user types "new"
   Then quick action suggestions appear: "New Contact", "New Lead", "New Property", "New Transaction", "New Showing"
 
-@us062
+@story_78
 Scenario: Selecting "New Contact" opens the contact creation form
   Given the global search overlay shows the "New Contact" quick action
   When the user selects "New Contact"
   Then the new contact creation form opens
   And the overlay closes
 
-@us062
+@story_78
 Scenario: Typing "leads" shows a navigation quick action
   Given the global search overlay is open
   When the user types "leads"
   Then a "Go to Leads" quick action appears
 
-@us062
+@story_78
 Scenario: Selecting a navigation action takes the user to that section
   Given the global search overlay shows "Go to Properties"
   When the user selects "Go to Properties"
   Then the Properties section opens
   And the overlay closes
 
-@us062
+@story_78
 Scenario: Typing "settings" shows the Open Settings action
   Given the global search overlay is open
   When the user types "settings"
   Then an "Open Settings" quick action appears
   And selecting it opens the Settings window
 
-@us062
+@story_78
 Scenario: Quick actions and record results appear together with actions separated visually
   Given a contact "Alice Smith" exists
   And the user types "new" in the global search
@@ -69,7 +70,7 @@ Scenario: Quick actions and record results appear together with actions separate
 
 ## Manual Tests
 
-**Story:** [US-032 — Quick Actions in Global Search](../docs/032-quick-actions-menu.md)
+**Story:** [#60 — Quick Actions in Global Search](../docs/032-quick-actions-menu.md)
 
 ### Creation quick actions appear when typing "new" or "create"
 1. Open global search (Ctrl+K)

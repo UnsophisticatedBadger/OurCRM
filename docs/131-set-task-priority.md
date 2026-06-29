@@ -1,6 +1,7 @@
-# US-085 — Change Task Priority
+# 131 - Change Task Priority
 
 **Capability:** Tasks
+**Milestone:** v0.8.0 — Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #131
 
@@ -25,13 +26,13 @@ As a real estate agent, I want to change the priority of an existing task so tha
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/tasks.feature`.
 
 ```gherkin
-@us083
+@story_129
 Scenario: User changes task priority from the detail view and the list badge updates
   Given a task "Send documents" exists with priority Medium
   When the user opens the task detail view, changes priority to Urgent, and saves
   Then "Send documents" shows the Urgent (red) priority badge in the task list
 
-@us083
+@story_129
 Scenario: Updated priority persists after application restart
   Given a task's priority has been changed to High
   When the user restarts the application
@@ -40,7 +41,7 @@ Scenario: Updated priority persists after application restart
 
 ## Manual Tests
 
-**Story:** [US-071 — Change Task Priority](../docs/080-set-task-priority.md)
+**Story:** [#118 — Change Task Priority](../docs/080-set-task-priority.md)
 
 ### Priority can be changed from the detail view
 1. Open a task with priority Medium

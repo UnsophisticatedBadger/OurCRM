@@ -1,6 +1,7 @@
-﻿# US-014 — Home Dashboard
+﻿# #14 — Home Dashboard
 
 **Capability:** App Shell
+**Milestone:** v0.2.0 — Secure Shell
 **Status:** Not Done
 **GitHub Issue:** #14
 
@@ -15,7 +16,7 @@ As a real estate agent, I want to see a dashboard when I open the app, so that I
 ## Acceptance Criteria
 
 1. Dashboard is the default section shown immediately after login
-2. The dashboard page provides three named layout regions — stats, today's schedule, and quick actions — each populated by its own widget story (US-042, US-059, US-015)
+2. The dashboard page provides three named layout regions — stats, today's schedule, and quick actions — each populated by its own widget story (#16, #108, #15)
 
 ## Note
 

@@ -1,6 +1,7 @@
-# US-113 — Import Leads from CSV
+# 164 - Import Leads From CSV
 
 **Capability:** Import & Export
+**Milestone:** v1.0.0 — Production
 **Status:** Not Done
 **GitHub Issue:** #164
 
@@ -21,7 +22,7 @@ As a real estate agent, I want to import leads from a CSV file so that I can mig
 4. Available lead fields for mapping include: first name, last name, email, phone, status, source, budget minimum, budget maximum, timeline, property type, desired location, and notes
 5. A preview panel shows how the first five rows will appear as lead records given the current mapping
 6. Clicking "Import" creates a lead record for each row; rows missing both email and first name are skipped
-7. If an incoming lead's email matches an existing lead's email, a duplicate resolution dialog appears (same Skip / Update / Create New options as US-100, applied to leads)
+7. If an incoming lead's email matches an existing lead's email, a duplicate resolution dialog appears (same Skip / Update / Create New options as #183, applied to leads)
 8. Rows with an unrecognised status value are imported with status "New" and flagged in the post-import summary
 9. After import, a summary shows how many leads were added, updated, skipped as duplicates, and skipped due to missing required fields
 10. Cancelling at any point before clicking "Import" leaves existing leads unchanged
@@ -31,32 +32,32 @@ As a real estate agent, I want to import leads from a CSV file so that I can mig
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/import_export.feature`.
 
 ```gherkin
-@us113
+@story_164
 Scenario: Field mapping panel shows lead-specific fields in the dropdowns
   Given a CSV file with columns "Name", "Budget", "Status"
   When the user selects the file in the lead import dialog
   Then the mapping dropdowns include lead-specific options: status, budget minimum, budget maximum, source, timeline
 
-@us113
+@story_164
 Scenario: Importing with a complete mapping creates lead records
   Given a CSV with 4 rows mapped to first name, email, and status
   When the user clicks "Import"
   Then 4 lead records are created with the correct field values
 
-@us113
+@story_164
 Scenario: Unrecognised status value defaults to New and is flagged in summary
   Given a CSV row has status value "Maybe"
   When the user imports the file
   Then the lead is created with status "New"
   And the summary notes "1 row: unknown status defaulted to New"
 
-@us113
+@story_164
 Scenario: Rows missing both email and first name are skipped
   Given a CSV row has no email and no first name
   When the user imports the file
   Then that row is skipped and counted in the summary as "missing required fields"
 
-@us113
+@story_164
 Scenario: Duplicate lead email triggers resolution dialog
   Given a lead with email "buyer@example.com" already exists
   And the CSV contains a row with email "buyer@example.com"
@@ -66,7 +67,7 @@ Scenario: Duplicate lead email triggers resolution dialog
 
 ## Manual Tests
 
-**Story:** [US-103 — Import Leads from CSV](../docs/087-import-leads-from-csv.md)
+**Story:** [#154 — Import Leads from CSV](../docs/087-import-leads-from-csv.md)
 
 ### Lead-specific fields appear in mapping dropdowns
 1. Open Import & Export → Import Leads from CSV and select a CSV file

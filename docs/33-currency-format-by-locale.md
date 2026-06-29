@@ -1,6 +1,7 @@
-# US-152 — Currency Format by Locale
+# 33 - Currency Format By Locale
 
 **Capability:** shell
+**Milestone:** v0.2.0 — Secure Shell
 **Status:** Not Done
 **GitHub Issue:** #33
 **Priority:** Post-MVP
@@ -12,7 +13,7 @@ As an agent, I want monetary values to be formatted according to my locale, so t
 - #171 — Additional Language Support
 
 ## Acceptance Criteria
-1. All monetary values throughout the app (budgets, property prices, transaction amounts) are formatted using the currency convention for the locale selected in US-140
+1. All monetary values throughout the app (budgets, property prices, transaction amounts) are formatted using the currency convention for the locale selected in #171
 2. The formatting covers symbol position, decimal separator, and thousands separator (e.g. US: $1,000.00; Spain: 1.000,00 €)
 3. Settings → General → Currency allows the user to override the locale-derived currency with an explicit choice (USD, EUR, GBP, CAD, AUD); symbol and separators update to match
 4. The override applies to all monetary display in the app; data is stored in the original numeric form
@@ -22,25 +23,25 @@ As an agent, I want monetary values to be formatted according to my locale, so t
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/shell.feature`.
 
 ```gherkin
-@us160
+@story_41
 Scenario: Currency format follows US locale
   Given the locale is set to English (US)
   When the user views a lead's budget of 1000000
   Then it is displayed as "$1,000,000.00"
 
-@us160
+@story_41
 Scenario: Currency format follows Spanish locale
   Given the locale is set to Español (Spain)
   When the user views a lead's budget of 1000000
   Then it is displayed as "1.000.000,00 €"
 
-@us160
+@story_41
 Scenario: User overrides locale currency to GBP and all monetary values update
   Given the locale is English (US) but the user selects GBP as the currency override
   When the user views any monetary value
   Then it is formatted as "£1,000.00"
 
-@us160
+@story_41
 Scenario: Currency format persists after app restart
   Given GBP is set as the currency override
   When the user restarts the app
@@ -48,7 +49,7 @@ Scenario: Currency format persists after app restart
 ```
 
 ## Manual Tests
-**Story:** [US-141 — Currency Format by Locale](../docs/141-currency-format-by-locale.md)
+**Story:** [#172 — Currency Format by Locale](../docs/141-currency-format-by-locale.md)
 
 ### Monetary values use the US locale format
 1. Set the locale to English (US)

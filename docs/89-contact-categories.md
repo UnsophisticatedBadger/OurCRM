@@ -1,6 +1,7 @@
-# US-130 — Contact Categories
+# 89 - Contact Categories
 
 **Capability:** Contacts
+**Milestone:** v0.5.0 — MVP
 **Status:** Not Done
 **GitHub Issue:** #89
 **Priority:** Should Have (deferrable to post-MVP)
@@ -16,64 +17,64 @@ As a real estate agent, I want to assign each contact to a category so that I ca
 
 ## Notes
 
-Categories are a distinct field from tags (US-022). Tags are flexible many-per-contact labels; a category is a single structured classification per contact. A contact may have many tags and one category (or none).
+Categories are a distinct field from tags (#49). Tags are flexible many-per-contact labels; a category is a single structured classification per contact. A contact may have many tags and one category (or none).
 
 Default categories are pre-seeded on a fresh install and can be renamed or deleted like any other category.
 
 ## Acceptance Criteria
 
-1. A "Category" dropdown field is available on the Create Contact (US-016) and Edit Contact (US-019) forms; the field is optional and defaults to no selection
+1. A "Category" dropdown field is available on the Create Contact (#43) and Edit Contact (#46) forms; the field is optional and defaults to no selection
 2. The following default categories are pre-seeded on a fresh install: Past Client, Current Client, Prospect, Vendor, Referral Partner, Other
 3. A "Manage Categories" action in the Contacts section opens a panel where users can create new categories (name only) and see all existing categories
 4. Any category can be renamed; the new name is reflected immediately on all contacts assigned to that category
 5. Any category can be deleted; if contacts are assigned to it, a confirmation prompt asks to move affected contacts to "Other" or cancel; if no contacts are assigned, deletion proceeds without a prompt
 6. A contact's category is shown in the contact detail view and as a column in the contact list
-7. The contact list supports filtering by category (single selection); a category filter can be combined with an active tag filter (US-023) to narrow results further
+7. The contact list supports filtering by category (single selection); a category filter can be combined with an active tag filter (#51) to narrow results further
 
 ## BDD Scenarios
 
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/contacts.feature`.
 
 ```gherkin
-@us130
+@story_89
 Scenario: New contact can be assigned a category
   Given the Create Contact form is open
   When the user selects "Prospect" from the Category dropdown and saves
   Then the contact is created with category "Prospect"
   And "Prospect" is shown in the contact detail view
 
-@us130
+@story_89
 Scenario: Category is visible as a column in the contact list
   Given contacts exist with different categories
   When the user views the contact list
   Then a Category column is shown and each contact displays its assigned category
 
-@us130
+@story_89
 Scenario: Filtering by category shows only matching contacts
   Given contacts exist with categories "Prospect" and "Past Client"
   When the user filters by "Prospect"
   Then only contacts with category "Prospect" are shown in the list
 
-@us130
+@story_89
 Scenario: Creating a new category makes it available on contact forms
   Given the user opens Manage Categories and creates a category "Investor"
   When the user opens the Create Contact form
   Then "Investor" is available in the Category dropdown
 
-@us130
+@story_89
 Scenario: Renaming a category updates all assigned contacts
   Given 3 contacts are assigned category "Prospect"
   When the user renames "Prospect" to "Active Lead"
   Then all 3 contacts show "Active Lead" as their category
 
-@us130
+@story_89
 Scenario: Deleting a category with assigned contacts requires confirmation
   Given contacts are assigned to category "Vendor"
   When the user deletes "Vendor"
   Then a confirmation prompt asks whether to move those contacts to "Other" or cancel
   And choosing "Move to Other" updates those contacts and removes the category
 
-@us130
+@story_89
 Scenario: Deleting a category with no assigned contacts needs no confirmation
   Given a category "Archived" has no contacts assigned
   When the user deletes "Archived"
@@ -82,7 +83,7 @@ Scenario: Deleting a category with no assigned contacts needs no confirmation
 
 ## Manual Tests
 
-**Story:** [US-119 — Contact Categories](../docs/119-contact-categories.md)
+**Story:** [#83 — Contact Categories](../docs/119-contact-categories.md)
 
 ### Default categories are available on a fresh install
 1. On a fresh install, open the Create Contact form

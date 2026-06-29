@@ -1,6 +1,7 @@
-# US-030 — View Contact Details
+# 58 - View Contact Details
 
 **Capability:** Contacts
+**Milestone:** v0.5.0 — MVP
 **Status:** Not Done
 **GitHub Issue:** #58
 
@@ -24,25 +25,25 @@ As a real estate agent, I want to open a contact and see all their information o
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/contacts.feature`.
 
 ```gherkin
-@us022
+@story_49
 Scenario: User opens a contact and sees all stored fields
   Given a contact "Jane Smith" exists with email "jane@example.com" and phone "555-1234"
   When the user double-clicks "Jane Smith" in the contact list
   Then the details view shows "jane@example.com" and "555-1234"
 
-@us022
+@story_49
 Scenario: User sees "Not provided" for empty optional fields
   Given a contact "Bob Carter" exists with only a name
   When the user opens the details for "Bob Carter"
   Then empty optional fields show "Not provided"
 
-@us022
+@story_49
 Scenario: User navigates to the next contact
   Given the user is viewing details for "Alice Brown" with "Bob Carter" next in list order
   When the user clicks Next
   Then the details for "Bob Carter" are shown
 
-@us022
+@story_49
 Scenario: User returns to the list and the same contact is still selected
   Given the user is viewing the details for "Alice Brown"
   When the user clicks Back to List
@@ -51,7 +52,7 @@ Scenario: User returns to the list and the same contact is still selected
 
 ## Manual Tests
 
-**Story:** [US-018 — View Contact Details](../docs/012-view-contact-details.md)
+**Story:** [#45 — View Contact Details](../docs/012-view-contact-details.md)
 
 ### User opens a contact and sees all their data
 1. Create a contact with all fields filled

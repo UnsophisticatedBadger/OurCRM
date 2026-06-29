@@ -1,6 +1,7 @@
-# US-159 — Search Notes
+# 40 - Search Notes
 
 **Capability:** App Shell
+**Milestone:** v0.2.0 — Secure Shell
 **Status:** Not Done
 **GitHub Issue:** #40
 
@@ -24,25 +25,25 @@ As a real estate agent, I want to search through my notes by keyword so that I c
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/shell.feature`.
 
 ```gherkin
-@us109
+@story_160
 Scenario: Keyword in title matches and filters the list
   Given notes "Market update" and "Call Alice" exist
   When the user types "market" in the search field
   Then only "Market update" is shown
 
-@us109
+@story_160
 Scenario: Keyword in note content matches and filters the list
   Given a note "Procedure" exists with content "Always submit offer by fax"
   When the user types "fax" in the search field
   Then "Procedure" is shown
 
-@us109
+@story_160
 Scenario: Clearing the search restores the full list
   Given the search field contains "market" and one note is shown
   When the user clears the search field
   Then all notes are shown again
 
-@us109
+@story_160
 Scenario: No matching notes shows an empty-results message
   Given no note contains the word "rhinoceros"
   When the user types "rhinoceros" in the search field
@@ -51,7 +52,7 @@ Scenario: No matching notes shows an empty-results message
 
 ## Manual Tests
 
-**Story:** [US-148 — Search Notes](../docs/170-search-notes.md)
+**Story:** [#29 — Search Notes](../docs/170-search-notes.md)
 
 ### Search filters by title
 1. Create notes "Market observation" and "Client follow-up"

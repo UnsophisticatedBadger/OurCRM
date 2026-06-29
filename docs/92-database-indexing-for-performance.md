@@ -1,6 +1,7 @@
-# US-143 — Database Indexing for Performance
+# 92 - Database Indexing For Performance
 
 **Capability:** infrastructure
+**Milestone:** v0.5.0 — MVP
 **Status:** Not Done
 **GitHub Issue:** #92
 **Priority:** Post-MVP
@@ -23,19 +24,19 @@ As an agent, I want the app to remain responsive when I have thousands of record
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/infrastructure.feature`.
 
 ```gherkin
-@us167
+@story_141
 Scenario: Indexes are present after database initialisation
   Given a fresh database has been created
   When the user opens the app for the first time
   Then indexes exist on the contact name, email, lead status, and property address fields
 
-@us167
+@story_141
 Scenario: Indexes are preserved after a migration
   Given indexes exist on the database
   When a database migration is applied
   Then the indexes still exist after the migration completes
 
-@us167
+@story_141
 Scenario: Rebuild Indexes completes without altering records
   Given 100 contacts exist in the database
   When the user runs "Rebuild Indexes" from Settings → General → Maintenance
@@ -44,7 +45,7 @@ Scenario: Rebuild Indexes completes without altering records
 ```
 
 ## Manual Tests
-**Story:** [US-132 — Database Indexing for Performance](../docs/117-database-0indexing-for-performance.md)
+**Story:** [#91 — Database Indexing for Performance](../docs/117-database-0indexing-for-performance.md)
 
 ### Search returns quickly with a large dataset
 1. Import or create at least 5,000 contacts

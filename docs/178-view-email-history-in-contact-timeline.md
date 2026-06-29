@@ -1,6 +1,7 @@
-# US-095 — View Email History in Contact Timeline
+# 178 - View Email History In Contact Timeline
 
 **Capability:** Email
+**Milestone:** v1.1.0+ — Post-Production
 **Status:** Not Done
 **GitHub Issue:** #178
 
@@ -26,32 +27,32 @@ As a real estate agent, I want to see all emails sent to a contact in their deta
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/email.feature`.
 
 ```gherkin
-@us072
+@story_119
 Scenario: Sent email appears in the contact's email history
   Given the user has sent an email with subject "Showing follow-up" to contact "Alice Smith"
   When the user views Alice Smith's contact detail page
   Then "Showing follow-up" appears in the email history section with its sent timestamp
 
-@us072
+@story_119
 Scenario: Clicking an email row shows the full body and attachment list
   Given an email "Contract attached" with attachment "contract.pdf" appears in Alice Smith's history
   When the user clicks that row
   Then the full email body and the filename "contract.pdf" are displayed
 
-@us072
+@story_119
 Scenario: Failed email is labelled with the error and a Retry action
   Given an email failed to send due to an SMTP error
   When the user views the email history for that contact
   Then the email is labelled "Failed" with the error reason
   And a "Retry" action is available
 
-@us072
+@story_119
 Scenario: Retry re-opens the compose form with the original content
   Given a failed email with subject "Offer submitted" is shown in history
   When the user clicks "Retry"
   Then the compose form opens pre-filled with subject "Offer submitted" and the original body
 
-@us072
+@story_119
 Scenario: Contact with no emails shows an empty state
   Given no emails have been sent to contact "Bob Jones"
   When the user views Bob Jones's email history section
@@ -60,7 +61,7 @@ Scenario: Contact with no emails shows an empty state
 
 ## Manual Tests
 
-**Story:** [US-081 — View Email History in Contact Timeline](../docs/081-view-email-history-in-contact-timeline.md)
+**Story:** [#21 — View Email History in Contact Timeline](../docs/081-view-email-history-in-contact-timeline.md)
 
 ### Sent emails appear in the history section sorted newest first
 1. Send three emails to a contact at different times

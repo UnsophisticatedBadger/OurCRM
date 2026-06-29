@@ -1,6 +1,7 @@
-# US-046 — Create a New Lead
+# 70 - Create A New Lead
 
 **Capability:** Leads
+**Milestone:** v0.5.0 — MVP
 **Status:** Not Done
 **GitHub Issue:** #70
 
@@ -28,31 +29,31 @@ As a real estate agent, I want to create a new lead with their details and prefe
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/leads.feature`.
 
 ```gherkin
-@us030
+@story_58
 Scenario: User creates a lead and sees it in the lead list
   Given the user is in the Leads section
   When the user clicks "New Lead", fills in name "Sara Lee" and status "Hot", and clicks Save
   Then the lead list shows "Sara Lee" with status "Hot"
 
-@us030
+@story_58
 Scenario: User submits the lead form with no name and sees an error
   Given the new lead form is open
   When the user leaves the name empty and clicks Save
   Then an error is shown and the form stays open
 
-@us030
+@story_58
 Scenario: User enters a min budget greater than max and sees an error
   Given the new lead form is open
   When the user enters min budget 500000 and max budget 300000 and clicks Save
   Then "Minimum budget cannot be greater than maximum budget" is shown
 
-@us030
+@story_58
 Scenario: Creating a lead also creates a linked contact
   Given the user creates a lead "Sara Lee" with email "sara@example.com"
   When the user navigates to the Contacts section
   Then "Sara Lee" appears in the contact list
 
-@us030
+@story_58
 Scenario: Lead persists after an application restart
   Given the user has created a lead "Sara Lee"
   When the application is restarted and the user opens the Leads section
@@ -61,7 +62,7 @@ Scenario: Lead persists after an application restart
 
 ## Manual Tests
 
-**Story:** [US-034 — Create a New Lead](../docs/034-create-new-lead.md)
+**Story:** [#62 — Create a New Lead](../docs/034-create-new-lead.md)
 
 ### User opens the new lead form and sees all fields
 1. Navigate to the Leads section and click "New Lead"

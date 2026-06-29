@@ -1,6 +1,7 @@
-# US-088 — View Today's Tasks
+# 134 - View Today's Tasks
 
 **Capability:** Tasks
+**Milestone:** v0.8.0 — Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #134
 
@@ -26,25 +27,25 @@ As a real estate agent, I want to see all my tasks due today so that I can plan 
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/tasks.feature`.
 
 ```gherkin
-@us086
+@story_132
 Scenario: Today filter shows tasks due today and overdue tasks from prior days
   Given an incomplete task due today and an incomplete task due yesterday exist
   When the user selects the "Today" filter
   Then both tasks are shown, with the overdue task appearing first
 
-@us086
+@story_132
 Scenario: Progress summary counts today's completed tasks
   Given 3 tasks are due today and 1 has been marked complete
   When the user selects the "Today" filter
   Then the summary reads "1 of 3 tasks complete today"
 
-@us086
+@story_132
 Scenario: New Task from Today view pre-fills today's date
   Given the Today filter is active
   When the user clicks "New Task"
   Then the task creation form opens with today's date pre-filled in the due date field
 
-@us086
+@story_132
 Scenario: Empty state when no tasks are due today or overdue
   Given no incomplete tasks have a due date of today or earlier
   When the user selects the "Today" filter
@@ -53,7 +54,7 @@ Scenario: Empty state when no tasks are due today or overdue
 
 ## Manual Tests
 
-**Story:** [US-074 — View Today's Tasks](../docs/074-view-todays-tasks.md)
+**Story:** [#121 — View Today's Tasks](../docs/074-view-todays-tasks.md)
 
 ### Today filter shows today's tasks and overdue tasks
 1. Create one task due today and one task due yesterday (both incomplete)

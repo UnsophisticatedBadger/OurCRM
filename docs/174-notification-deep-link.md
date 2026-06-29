@@ -1,6 +1,7 @@
-# US-202 — Navigate from Notification to Related Record
+# 174 - Navigate From Notification To Related Record
 
 **Capability:** notifications
+**Milestone:** v1.0.0 — Production
 **Status:** Not Done
 **GitHub Issue:** #174
 **Priority:** Post-MVP
@@ -43,7 +44,7 @@ Scenario: Clicking a notification when the app is closed launches the app and na
 ```
 
 ## Manual Tests
-**Story:** [US-191 — Navigate from Notification to Related Record](../docs/191-notification-deep-link.md)
+**Story:** [#100 — Navigate from Notification to Related Record](../docs/191-notification-deep-link.md)
 
 ### Clicking a notification opens the related record
 1. Trigger a new lead notification

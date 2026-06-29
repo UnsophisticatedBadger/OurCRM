@@ -1,6 +1,7 @@
-# US-116 — View Error Logs
+# 80 - View Error Logs
 
 **Capability:** Infrastructure
+**Milestone:** v0.5.0 — MVP
 **Status:** Not Done
 **GitHub Issue:** #80
 
@@ -26,39 +27,39 @@ As a user or support technician, I want to view the application's error log so t
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/infrastructure.feature`.
 
 ```gherkin
-@us122
+@story_86
 Scenario: Error log viewer shows all log entries
   Given the application has produced Error, Warning, Info, and Debug log entries
   When the user opens Help > Error Logs
   Then the error log viewer opens listing all entries newest-first
   And each entry shows its timestamp, level badge, and one-line message
 
-@us122
+@story_86
 Scenario: Clicking an entry expands its full detail
   Given the error log viewer is open and contains an Error entry
   When the user clicks that entry
   Then the entry expands to show the full stack trace and context
 
-@us122
+@story_86
 Scenario: Level filter shows only entries of the selected level
   Given the error log viewer contains both Error and Warning entries
   When the user clicks "Errors" in the filter bar
   Then only Error-level entries are shown
   And the filter bar highlights "Errors"
 
-@us122
+@story_86
 Scenario: Search filters entries by message text
   Given the error log viewer is open
   When the user types "database" in the search box
   Then only entries whose message contains "database" (case-insensitive) are shown
 
-@us122
+@story_86
 Scenario: Clear All Filters restores the unfiltered view
   Given the user has a level filter and a search term active
   When the user clicks "Clear All Filters"
   Then all entries are shown and the search box is cleared
 
-@us122
+@story_86
 Scenario: Empty state shown when log contains no entries
   Given the application log is empty
   When the user opens the error log viewer
@@ -67,7 +68,7 @@ Scenario: Empty state shown when log contains no entries
 
 ## Manual Tests
 
-**Story:** [US-106 — View Error Logs](../docs/106-view-error-logs.md)
+**Story:** [#157 — View Error Logs](../docs/106-view-error-logs.md)
 
 ### Error log viewer is accessible
 1. Open Help → Error Logs
@@ -91,7 +92,7 @@ Scenario: Empty state shown when log contains no entries
 3. Clear the search box and confirm all entries return
 
 ### Empty state is shown when no entries remain
-1. Clear all logs (US-109) and reopen the viewer
+1. Clear all logs (#160) and reopen the viewer
 2. Confirm the "No log entries to display" message appears with no entries listed
 
 ## Test Locations

@@ -1,6 +1,7 @@
-# US-060 — Add Photos to a Property
+# 109 - Add Photos To A Property
 
 **Capability:** Properties
+**Milestone:** v0.8.0 — Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #109
 
@@ -27,31 +28,31 @@ As a real estate agent, I want to attach photos to a property listing, so that I
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/properties.feature`.
 
 ```gherkin
-@us045
+@story_19
 Scenario: User adds a photo and sees it in the property gallery
   Given the user is viewing a property with no photos
   When the user clicks "Add Photos" and selects a valid image file
   Then the photo appears in the property's gallery
 
-@us045
+@story_19
 Scenario: User adds multiple photos in one session and all appear in the gallery
   Given the user is viewing a property
   When the user selects three image files in one file picker session
   Then all three photos appear in the gallery
 
-@us045
+@story_19
 Scenario: Selecting a non-image file shows an error and nothing is uploaded
   Given the user is viewing a property
   When the user selects a .pdf file via "Add Photos"
   Then an inline error is shown and the gallery is unchanged
 
-@us045
+@story_19
 Scenario: User deletes a photo and it is removed from the gallery
   Given a property has two photos
   When the user right-clicks the first photo and selects "Delete" then confirms
   Then only one photo remains in the gallery
 
-@us045
+@story_19
 Scenario: Photos persist after an application restart
   Given a property has two photos
   When the application is restarted and the user opens that property
@@ -60,7 +61,7 @@ Scenario: Photos persist after an application restart
 
 ## Manual Tests
 
-**Story:** [US-048 — Add Photos to a Property](../docs/048-add-photos-to-property.md)
+**Story:** [#72 — Add Photos to a Property](../docs/048-add-photos-to-property.md)
 
 ### User adds a single photo via the file picker
 1. Open any property's details and click "Add Photos"

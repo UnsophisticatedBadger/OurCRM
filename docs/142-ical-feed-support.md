@@ -1,6 +1,7 @@
-# US-168 — Export Calendar as iCal File
+# 142 - Export Calendar As ICal File
 
 **Capability:** calendar
+**Milestone:** v0.8.0 — Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #142
 **Priority:** Post-MVP
@@ -27,40 +28,40 @@ OurCRM is a standalone desktop app with no cloud backend. A subscribable HTTP en
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/calendar.feature`.
 
 ```gherkin
-@us145
+@story_94
 Scenario: User enables iCal export and the file is created at the chosen path
   Given the user is in Settings → Calendar → iCal Export
   When the user enables iCal export and selects a destination folder
   Then OurCRM writes "ourcrm-calendar.ics" to that folder
   And the file path is shown in Settings
 
-@us145
+@story_94
 Scenario: Creating a new event updates the .ics file
   Given iCal export is enabled
   When the user creates a new calendar event
   Then the .ics file is updated to include the new event
 
-@us145
+@story_94
 Scenario: Editing an event updates the .ics file
   Given iCal export is enabled
   And a calendar event exists in the .ics file
   When the user edits the event in OurCRM
   Then the updated event details appear in the .ics file
 
-@us145
+@story_94
 Scenario: Deleting an event removes it from the .ics file
   Given iCal export is enabled
   And a calendar event exists in the .ics file
   When the user deletes the event
   Then the event is no longer present in the .ics file
 
-@us145
+@story_94
 Scenario: User changes the export folder
   Given iCal export is enabled with a current folder
   When the user selects a new export folder in Settings
   Then OurCRM writes the .ics file to the new location on the next update
 
-@us145
+@story_94
 Scenario: User disables iCal export and the file stops updating
   Given iCal export is enabled
   When the user disables iCal export in Settings
@@ -68,7 +69,7 @@ Scenario: User disables iCal export and the file stops updating
 ```
 
 ## Manual Tests
-**Story:** [US-157 — Export Calendar as iCal File](../docs/138-ical-feed-support.md)
+**Story:** [#38 — Export Calendar as iCal File](../docs/138-ical-feed-support.md)
 
 ### User enables iCal export and the file is created
 1. Go to Settings → Calendar → iCal Export

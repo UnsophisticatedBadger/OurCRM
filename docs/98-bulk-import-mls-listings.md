@@ -1,6 +1,7 @@
-# US-189 — Bulk Import MLS Listings as Properties
+# 98 - Bulk Import MLS Listings As Properties
 
 **Capability:** mls
+**Milestone:** v0.5.0 — MVP
 **Status:** Not Done
 **GitHub Issue:** #98
 **Priority:** Post-MVP
@@ -22,19 +23,19 @@ As an agent, I want to select multiple MLS listings and import them all as prope
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/mls.feature`.
 
 ```gherkin
-@us202
+@story_174
 Scenario: Selecting multiple listings enables the Import Selected button
   Given the MLS listings view shows fetched results
   When the user checks the boxes for three listings
   Then the "Import Selected" button is visible
 
-@us202
+@story_174
 Scenario: Bulk import creates a property for each selected listing
   Given three listings are selected and none are already imported
   When the user confirms the bulk import
   Then three new properties are created
 
-@us202
+@story_174
 Scenario: Already-imported listings are skipped in bulk import
   Given two listings are selected and one was previously imported
   When the user confirms the bulk import
@@ -42,7 +43,7 @@ Scenario: Already-imported listings are skipped in bulk import
 ```
 
 ## Manual Tests
-**Story:** [US-178 — Bulk Import MLS Listings as Properties](../docs/159-bulk-import-mls-listings.md)
+**Story:** [#152 — Bulk Import MLS Listings as Properties](../docs/159-bulk-import-mls-listings.md)
 
 ### Selecting listings and importing them
 1. Select three listings using the checkboxes

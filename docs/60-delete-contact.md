@@ -1,6 +1,7 @@
-# US-032 — Delete a Contact
+# 60 - Delete A Contact
 
 **Capability:** Contacts
+**Milestone:** v0.5.0 — MVP
 **Status:** Not Done
 **GitHub Issue:** #60
 
@@ -26,19 +27,19 @@ As a real estate agent, I want to delete a contact I no longer work with, so tha
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/contacts.feature`.
 
 ```gherkin
-@us024
+@story_52
 Scenario: User deletes a contact and it is removed from the list
   Given the user is viewing the details for "Jane Smith"
   When the user clicks Delete and confirms
   Then "Jane Smith" no longer appears in the contact list
 
-@us024
+@story_52
 Scenario: User cancels deletion and the contact remains
   Given the delete confirmation dialog is open for "Jane Smith"
   When the user clicks Cancel
   Then "Jane Smith" is still in the contact list
 
-@us024
+@story_52
 Scenario: Deleted contact does not reappear after restart
   Given the user has deleted "Jane Smith"
   When the application is restarted and the user opens the Contacts section
@@ -47,7 +48,7 @@ Scenario: Deleted contact does not reappear after restart
 
 ## Manual Tests
 
-**Story:** [US-020 — Delete a Contact](../docs/020-delete-contact.md)
+**Story:** [#47 — Delete a Contact](../docs/020-delete-contact.md)
 
 ### User deletes a contact via the details view
 1. Open any contact's details

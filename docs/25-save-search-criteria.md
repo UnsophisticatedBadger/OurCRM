@@ -1,6 +1,7 @@
-# US-128 — Save Search Criteria
+# 25 - Save Search Criteria
 
 **Capability:** App Shell
+**Milestone:** v0.2.0 — Secure Shell
 **Status:** Not Done
 **GitHub Issue:** #25
 **Priority:** Should Have (deferrable to post-MVP)
@@ -27,31 +28,31 @@ As a real estate agent, I want to save frequently used search filters under a na
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/shell.feature`.
 
 ```gherkin
-@us132
+@story_91
 Scenario: User saves current contact filter as a named search
   Given the contacts list is filtered by tag "VIP" and search text "Smith"
   When the user clicks "Save Search" and names it "VIP Smiths"
   Then "VIP Smiths" appears in the Saved Searches list
 
-@us132
+@story_91
 Scenario: Applying a saved search restores its criteria
   Given a saved search "Hot Buyers" exists with its stored filter criteria
   When the user clicks "Hot Buyers" in the Saved Searches list
   Then the contacts list updates to show only contacts matching the saved criteria
 
-@us132
+@story_91
 Scenario: Duplicate saved search name is rejected
   Given a saved search named "My Filter" already exists
   When the user tries to save another search with the name "My Filter"
   Then an error is shown and the duplicate is not saved
 
-@us132
+@story_91
 Scenario: Deleting a saved search removes it from the list
   Given a saved search "Old Filter" exists
   When the user deletes "Old Filter" and confirms
   Then "Old Filter" no longer appears in the Saved Searches list
 
-@us132
+@story_91
 Scenario: Saved searches persist after application restart
   Given the user has saved a search named "Weekly Prospects"
   When the user restarts the application and opens the Contacts section
@@ -60,7 +61,7 @@ Scenario: Saved searches persist after application restart
 
 ## Manual Tests
 
-**Story:** [US-117 — Save Search Criteria](../docs/117-save-search-criteria.md)
+**Story:** [#81 — Save Search Criteria](../docs/117-save-search-criteria.md)
 
 ### Saving a search with active filters
 1. In the Contacts section, apply a search term and one or more tag filters

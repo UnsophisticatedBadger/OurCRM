@@ -1,6 +1,7 @@
-# US-105 — Notification for Showing Reminders
+# 156 - Notification For Showing Reminders
 
 **Capability:** Notifications
+**Milestone:** v1.0.0 — Production
 **Status:** Not Done
 **GitHub Issue:** #156
 
@@ -17,77 +18,77 @@ As a real estate agent, I want to receive a reminder notification before a sched
 
 ## Notes
 
-The reminder fires a configurable time before the showing (default: 1 hour). The default reminder lead time is set in US-095 (Notification Preferences → Showing Reminder setting).
+The reminder fires a configurable time before the showing (default: 1 hour). The default reminder lead time is set in #178 (Notification Preferences → Showing Reminder setting).
 
 **Timing while app is running:** a background timer checks every minute. When the current time reaches the scheduled reminder time, the notification fires.
 
 **App closed at reminder time:** the reminder fires on the next application startup if the reminder time has passed but the showing has not yet occurred. Reminders for showings already in the past (showing time has passed) are silently discarded on startup.
 
-Cancelling a showing (US-066) must cancel any pending reminder for that showing. Editing a showing's date or time (US-065) must reschedule the reminder to the new time.
+Cancelling a showing (#113) must cancel any pending reminder for that showing. Editing a showing's date or time (#112) must reschedule the reminder to the new time.
 
-Notification content and delivery channels (desktop, in-app) respect the user's Showing Reminder toggle in US-095.
+Notification content and delivery channels (desktop, in-app) respect the user's Showing Reminder toggle in #178.
 
 ## Acceptance Criteria
 
-1. When a showing is saved (create or edit), a reminder is scheduled for `showing_time − reminder_lead_time` where `reminder_lead_time` is the value configured in US-095 (default: 1 hour)
+1. When a showing is saved (create or edit), a reminder is scheduled for `showing_time − reminder_lead_time` where `reminder_lead_time` is the value configured in #178 (default: 1 hour)
 2. When the reminder fires, an in-app notification appears with the title "Showing in [N] minutes: [Property Address]" and the body showing the contact name and showing time; clicking it navigates to the showing detail
-3. If desktop notifications are enabled (US-093 pattern), a desktop notification is also shown with the same content
-4. When a showing is cancelled (US-066), any pending reminder for that showing is removed
-5. When a showing's date or time is edited (US-065), the existing reminder is cancelled and a new one is scheduled based on the updated time
+3. If desktop notifications are enabled (#176 pattern), a desktop notification is also shown with the same content
+4. When a showing is cancelled (#113), any pending reminder for that showing is removed
+5. When a showing's date or time is edited (#112), the existing reminder is cancelled and a new one is scheduled based on the updated time
 6. If the application is not running when the reminder time passes, the reminder fires as an in-app notification on the next application startup, provided the showing has not already occurred
-7. If the Showing Reminder toggle is off in notification preferences (US-095), no reminder fires for any showing
+7. If the Showing Reminder toggle is off in notification preferences (#178), no reminder fires for any showing
 
 ## BDD Scenarios
 
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/notifications.feature`.
 
 ```gherkin
-@us118
+@story_82
 Scenario: Saving a showing schedules a reminder at the configured lead time before it
   Given the showing reminder lead time is set to 60 minutes in preferences
   And a showing is saved for 2026-07-01 at 14:00
   When the showing is saved
   Then a reminder is scheduled for 2026-07-01 at 13:00
 
-@us118
+@story_82
 Scenario: Reminder fires an in-app notification with property address and contact name
   Given a reminder is due now for a showing at "789 Elm St" with contact "Bob Jones" at 14:00
   When the reminder fires
   Then an in-app notification appears with title "Showing in 60 minutes: 789 Elm St" and body "Bob Jones — 14:00"
 
-@us118
+@story_82
 Scenario: Clicking the reminder notification navigates to the showing detail
   Given the reminder notification for a showing is visible
   When the user clicks it
   Then the showing detail view for that showing is displayed
 
-@us118
+@story_82
 Scenario: Cancelling a showing removes its pending reminder
   Given a showing has a pending reminder scheduled
   When the showing is cancelled
   Then the pending reminder is removed and does not fire
 
-@us118
+@story_82
 Scenario: Editing a showing's time reschedules the reminder
   Given a showing at 14:00 has a reminder scheduled for 13:00
   When the showing is rescheduled to 16:00
   Then the old reminder is removed
   And a new reminder is scheduled for 15:00
 
-@us118
+@story_82
 Scenario: Reminder fires on app startup when the app was closed at reminder time
   Given a showing reminder was due at 13:00 while the app was closed
   And the showing is scheduled for 14:00 and has not yet occurred
   When the user opens the app at 13:05
   Then the reminder fires immediately as an in-app notification
 
-@us118
+@story_82
 Scenario: Reminder for a past showing is silently discarded on startup
   Given a showing reminder was due at 13:00 for a showing at 14:00 yesterday
   When the user opens the app today
   Then no reminder notification fires for that showing
 
-@us118
+@story_82
 Scenario: Showing Reminder toggle off suppresses all showing reminders
   Given the Showing Reminder notification toggle is disabled in preferences
   When a showing is saved
@@ -96,7 +97,7 @@ Scenario: Showing Reminder toggle off suppresses all showing reminders
 
 ## Manual Tests
 
-**Story:** [US-096 — Notification for Showing Reminders](../docs/096-notification-for-showing-reminders.md)
+**Story:** [#179 — Notification for Showing Reminders](../docs/096-notification-for-showing-reminders.md)
 
 ### Reminder fires at the right time
 1. Confirm the preference is set to 60 minutes

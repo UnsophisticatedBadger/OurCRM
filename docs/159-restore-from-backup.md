@@ -1,6 +1,7 @@
-# US-108 — Restore from Backup
+# 159 - Restore From Backup
 
 **Capability:** Backup & Recovery
+**Milestone:** v1.0.0 — Production
 **Status:** Not Done
 **GitHub Issue:** #159
 
@@ -36,39 +37,39 @@ After a successful restore, the application restarts automatically to reload all
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/backup.feature`.
 
 ```gherkin
-@us106
+@story_157
 Scenario: Selecting a valid backup shows a confirmation dialog before restoring
   Given the Backup section is open
   When the user clicks "Restore from Backup" and selects a valid OurCRM backup file
   Then a confirmation dialog is shown stating that current data will be replaced and this cannot be undone
 
-@us106
+@story_157
 Scenario: Selecting an invalid file shows an error and takes no action
   Given the Backup section is open
   When the user selects a file that is not a valid OurCRM backup
   Then an error is shown: "This file is not a valid OurCRM backup"
   And no data is changed
 
-@us106
+@story_157
 Scenario: Confirming a restore replaces all current data and restarts the app
   Given a valid backup file has been selected and the confirmation dialog is shown
   When the user clicks "Restore"
   Then the current database is replaced with the backup contents
   And the application restarts automatically
 
-@us106
+@story_157
 Scenario: Pre-restore backup option is checked by default in the confirmation dialog
   Given a valid backup file has been selected
   When the confirmation dialog opens
   Then the "Save a backup of current data before restoring" checkbox is checked
 
-@us106
+@story_157
 Scenario: A failed restore leaves the existing database intact
   Given a restore begins but fails mid-way (e.g., disk write error)
   Then the existing database is unchanged
   And an error message describes the failure
 
-@us106
+@story_157
 Scenario: Cancelling the confirmation dialog takes no action
   Given the confirmation dialog is shown for a valid backup
   When the user clicks "Cancel"
@@ -77,14 +78,14 @@ Scenario: Cancelling the confirmation dialog takes no action
 
 ## Manual Tests
 
-**Story:** [US-099 — Restore from Backup](../docs/095-restore-from-backup.md)
+**Story:** [#182 — Restore from Backup](../docs/095-restore-from-backup.md)
 
 ### Restore section is accessible
 1. Open Settings and navigate to Backup
 2. Confirm a "Restore from Backup" button is present
 
 ### Restore from a valid backup
-1. Create a backup (US-098), add some new data, then click "Restore from Backup"
+1. Create a backup (#181), add some new data, then click "Restore from Backup"
 2. Select the backup file
 3. Confirm a confirmation dialog appears with a clear warning that current data will be replaced
 4. Confirm the "Save a backup of current data before restoring" checkbox is checked by default

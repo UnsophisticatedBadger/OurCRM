@@ -1,6 +1,7 @@
-# US-135 — Edit and Delete Transaction Notes
+# 137 - Edit And Delete Transaction Notes
 
 **Capability:** transactions
+**Milestone:** v0.8.0 — Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #137
 **Priority:** Should Have
@@ -22,20 +23,20 @@ As an agent, I want to edit and delete notes on a transaction, so that I can cor
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/transactions.feature`.
 
 ```gherkin
-@us200
+@story_204
 Scenario: User edits a transaction note and the change is saved
   Given a transaction has a note "Waiting for lender approval"
   When the user edits it to "Lender approved" and saves
   Then the note displays "Lender approved"
   And an edited timestamp is shown alongside the original created timestamp
 
-@us200
+@story_204
 Scenario: User deletes a transaction note after confirming
   Given a transaction has a note "Stale information"
   When the user clicks Delete and confirms
   Then the note is permanently removed from the transaction's notes list
 
-@us200
+@story_204
 Scenario: Cancelling delete preserves the note
   Given a transaction has a note "Important detail"
   When the user clicks Delete and then cancels
@@ -43,7 +44,7 @@ Scenario: Cancelling delete preserves the note
 ```
 
 ## Manual Tests
-**Story:** [US-124 — Edit and Delete Transaction Notes](../docs/124-edit-delete-transaction-notes.md)
+**Story:** [#87 — Edit and Delete Transaction Notes](../docs/124-edit-delete-transaction-notes.md)
 
 ### Editing a transaction note updates its content
 1. Click Edit on a transaction note and change the text

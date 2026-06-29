@@ -1,4 +1,4 @@
-# US-018 — Log Call Outcome
+# 45 - Log Call Outcome
 
 **Capability:** contacts
 **Milestone:** v0.5.0 — MVP

@@ -1,6 +1,7 @@
-# US-081 — Dashboard Today's Schedule Widget
+# 21 - Dashboard Today's Schedule Widget
 
 **Capability:** shell
+**Milestone:** v0.2.0 — Secure Shell
 **Status:** Not Done
 **GitHub Issue:** #21
 **Priority:** Must Have
@@ -24,7 +25,7 @@ As an agent, I want to see today's calendar events and showings on the dashboard
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/shell.feature`.
 
 ```gherkin
-@us171
+@story_145
 Scenario: Widget shows today's events and showings in time order
   Given a calendar event exists for today at 10:00 AM titled "Team Meeting"
   And a showing exists for today at 2:00 PM for "123 Main St"
@@ -32,13 +33,13 @@ Scenario: Widget shows today's events and showings in time order
   Then the Today's Schedule widget shows "Team Meeting" at 10:00 AM
   And the "123 Main St" showing appears below it at 2:00 PM
 
-@us171
+@story_145
 Scenario: Widget shows empty state when no events are scheduled today
   Given no calendar events or showings exist for today
   When the user views the dashboard
   Then the Today's Schedule widget shows "No events scheduled for today"
 
-@us171
+@story_145
 Scenario: Clicking an event in the widget navigates to the Calendar section
   Given a calendar event exists for today
   When the user clicks the event in the Today's Schedule widget
@@ -46,7 +47,7 @@ Scenario: Clicking an event in the widget navigates to the Calendar section
 ```
 
 ## Manual Tests
-**Story:** [US-067 — Dashboard Today's Schedule Widget](../docs/067-dashboard-todays-schedule-widget.md)
+**Story:** [#114 — Dashboard Today's Schedule Widget](../docs/067-dashboard-todays-schedule-widget.md)
 
 ### Widget shows today's events in time order
 1. Create a calendar event for today at 10:00 AM and a showing at 2:00 PM

@@ -1,6 +1,7 @@
-# US-068 — Record Closing Date
+# 115 - Record Closing Date
 
 **Capability:** Transactions
+**Milestone:** v0.8.0 — Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #115
 
@@ -26,32 +27,32 @@ As a real estate agent, I want to record the actual closing date when a deal clo
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/transactions.feature`.
 
 ```gherkin
-@us051
+@story_75
 Scenario: User records the closing date and the transaction moves to Closed
   Given the user is viewing a transaction in "Under Contract" status
   When the user clicks "Record Closing Date", enters today's date, and confirms
   Then the transaction status is "Closed"
   And the actual closing date is shown in the details
 
-@us051
+@story_75
 Scenario: Entering a closing date before the contract date shows a validation error
   Given a transaction has contract date 2026-07-01
   When the user enters actual closing date 2026-06-15 in the Record Closing Date form
   Then "Closing date must be on or after contract date" is shown
 
-@us051
+@story_75
 Scenario: Commission amount is confirmed when closing date is recorded
   Given a transaction has sale price 500000 and commission 3%
   When the user records the closing date
   Then the form shows "$500,000 × 3% = $15,000" as the confirmed commission
 
-@us051
+@story_75
 Scenario: Days from contract to close is calculated and shown
   Given a transaction has contract date 2026-06-01 and actual closing date 2026-07-15
   When the user opens the transaction details
   Then "44 days from contract to close" is shown
 
-@us051
+@story_75
 Scenario: Record Closing Date button is not shown on already-closed transactions
   Given a transaction is in "Closed" status
   When the user views its details
@@ -60,7 +61,7 @@ Scenario: Record Closing Date button is not shown on already-closed transactions
 
 ## Manual Tests
 
-**Story:** [US-054 — Record Closing Date](../docs/057-record-closing-date.md)
+**Story:** [#20 — Record Closing Date](../docs/057-record-closing-date.md)
 
 ### Record Closing Date button visible on active transactions
 1. Open any Under Contract or Pending transaction

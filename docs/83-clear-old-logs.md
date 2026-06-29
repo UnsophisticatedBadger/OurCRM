@@ -1,6 +1,7 @@
-# US-119 — Clear Old Logs
+# 83 - Clear Old Logs
 
 **Capability:** Infrastructure
+**Milestone:** v0.5.0 — MVP
 **Status:** Not Done
 **GitHub Issue:** #83
 
@@ -14,7 +15,7 @@ As a user, I want to clear old log entries so that I can free up disk space and 
 
 ## Acceptance Criteria
 
-1. A "Clear Logs" button is accessible from the error log viewer (US-106)
+1. A "Clear Logs" button is accessible from the error log viewer (#157)
 2. The clearing dialog shows current log storage stats: total entry count and approximate file size
 3. The user can clear by age: "Older than 30 days", "Older than 90 days", or "Older than 1 year"
 4. The user can clear all log entries
@@ -27,33 +28,33 @@ As a user, I want to clear old log entries so that I can free up disk space and 
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/infrastructure.feature`.
 
 ```gherkin
-@us125
+@story_88
 Scenario: Clear Logs button opens the clearing dialog
   Given the error log viewer is open
   When the user clicks "Clear Logs"
   Then the clearing dialog opens showing the current entry count and approximate file size
 
-@us125
+@story_88
 Scenario: Preview shows what will be deleted before clearing
   Given the clearing dialog is open and 200 entries are older than 30 days
   When the user selects "Older than 30 days"
   Then the preview shows "200 entries will be deleted"
 
-@us125
+@story_88
 Scenario: Confirmation is required before entries are deleted
   Given the user has selected a clearing criteria and seen the preview
   When the user clicks "Clear"
   Then a confirmation dialog appears before any deletion occurs
   And clicking Cancel leaves all entries intact
 
-@us125
+@story_88
 Scenario: Clear all requires an explicit cannot-be-undone warning
   Given the clearing dialog is open
   When the user selects "Clear all log entries"
   And clicks "Clear"
   Then the confirmation text reads "This will permanently delete all log entries and cannot be undone"
 
-@us125
+@story_88
 Scenario: Log viewer shows remaining entries after a partial clear
   Given 50 log entries exist and 30 are older than 90 days
   When the user clears entries older than 90 days and confirms
@@ -62,7 +63,7 @@ Scenario: Log viewer shows remaining entries after a partial clear
 
 ## Manual Tests
 
-**Story:** [US-109 — Clear Old Logs](../docs/170-clear-old-logs.md)
+**Story:** [#160 — Clear Old Logs](../docs/170-clear-old-logs.md)
 
 ### Clear Logs is accessible from the log viewer
 1. Open Help → Error Logs

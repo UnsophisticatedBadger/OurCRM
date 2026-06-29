@@ -1,6 +1,7 @@
-# US-187 — HTML Rich-Text Email Composing
+# 195 - HTML Rich-Text Email Composing
 
 **Capability:** email
+**Milestone:** v1.1.0+ — Post-Production
 **Status:** Not Done
 **GitHub Issue:** #195
 **Priority:** Post-MVP
@@ -16,31 +17,31 @@ As an agent, I want to compose emails with basic rich-text formatting, so that I
 2. Formatted content is sent as HTML email with a plain-text fallback
 3. Pasting rich text from an external source (e.g. a web page) preserves bold, italic, and links; other formatting is stripped
 4. The user can switch between Rich Text and Plain Text modes; switching to Plain Text strips all formatting after a confirmation prompt
-5. Email templates (US-080) support rich text when edited in Rich Text mode
+5. Email templates (#127) support rich text when edited in Rich Text mode
 
 ## BDD Scenarios
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/email.feature`.
 
 ```gherkin
-@us204
+@story_103
 Scenario: Bold formatting is applied and preserved in the compose form
   Given the user is composing an email
   When the user types "Hello" and applies Bold formatting
   Then "Hello" appears bold in the compose form
 
-@us204
+@story_103
 Scenario: Email is sent as HTML with a plain-text fallback
   Given the compose form contains bold text
   When the user sends the email
   Then the sent email has a text/html part and a text/plain fallback part
 
-@us204
+@story_103
 Scenario: Switching to Plain Text mode strips formatting after confirmation
   Given the compose form contains bold and italic text
   When the user switches to Plain Text mode and confirms the warning
   Then the text is preserved but all formatting is removed
 
-@us204 @live_email
+@story_103 @live_email
 Scenario: Rich-text email is received with formatting intact by a real email client
   Given a real SMTP account is configured
   When the user sends an email with bold text and a bullet list
@@ -48,7 +49,7 @@ Scenario: Rich-text email is received with formatting intact by a real email cli
 ```
 
 ## Manual Tests
-**Story:** [US-176 — HTML Rich-Text Email Composing](../docs/176-html-rich-text-email.md)
+**Story:** [#150 — HTML Rich-Text Email Composing](../docs/176-html-rich-text-email.md)
 
 ### Formatting toolbar applies styles correctly
 1. Type text in the compose form

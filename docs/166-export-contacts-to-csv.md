@@ -1,6 +1,7 @@
-# US-115 — Export Contacts to CSV
+# 166 - Export Contacts To CSV
 
 **Capability:** Import & Export
+**Milestone:** v1.0.0 — Production
 **Status:** Not Done
 **GitHub Issue:** #166
 
@@ -14,7 +15,7 @@ As a real estate agent, I want to export my contacts to a CSV file so that I can
 
 ## Acceptance Criteria
 
-1. The Contacts section's "Export" action includes an "Export to CSV" option alongside "Export to vCard" (US-104)
+1. The Contacts section's "Export" action includes an "Export to CSV" option alongside "Export to vCard" (#155)
 2. "Export Filtered" is disabled when no search or tag filter is active
 3. Selecting an export option opens an OS file save dialog with a default filename `contacts_YYYY-MM-DD.csv` and the user's Documents folder as the default location
 4. After the user confirms, a UTF-8 CSV file is written with a header row and one data row per exported contact
@@ -28,43 +29,43 @@ As a real estate agent, I want to export my contacts to a CSV file so that I can
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/import_export.feature`.
 
 ```gherkin
-@us115
+@story_166
 Scenario: Export All creates a CSV file with a header row and one row per contact
   Given 4 contacts exist in OurCRM
   When the user clicks "Export All" and saves the file as CSV
   Then the resulting file has 5 rows: 1 header row and 4 data rows
 
-@us115
+@story_166
 Scenario: Export Filtered creates a CSV with only the contacts matching the active filter
   Given 10 contacts exist and a tag filter is active showing 3 contacts
   When the user clicks "Export Filtered" and saves the file
   Then the resulting CSV contains 3 data rows matching the filtered contacts
 
-@us115
+@story_166
 Scenario: CSV header row uses the correct column names in the correct order
   Given any contacts exist
   When the user exports to CSV
   Then the first row of the file is: First Name,Last Name,Email,Phone,Address,Organisation,Job Title,Notes,Tags,Created Date
 
-@us115
+@story_166
 Scenario: Tags are serialised as a semicolon-separated list in the Tags column
   Given a contact has tags "Buyer" and "VIP"
   When the contact is exported to CSV
   Then the Tags column for that row contains "Buyer;VIP"
 
-@us115
+@story_166
 Scenario: Fields containing commas are properly quoted
   Given a contact has the address "123 Main St, Suite 4"
   When the contact is exported to CSV
   Then the address field is enclosed in quotes so the comma does not break the column structure
 
-@us115
+@story_166
 Scenario: Success message shows the contact count and file path
   Given the user has exported 6 contacts
   When the export completes
   Then a message is shown: "6 contacts exported to [file path]"
 
-@us115
+@story_166
 Scenario: Cancelling the save dialog takes no action
   Given the user clicks "Export to CSV" but then cancels the file save dialog
   Then no file is created and the user remains in the Contacts section
@@ -72,7 +73,7 @@ Scenario: Cancelling the save dialog takes no action
 
 ## Manual Tests
 
-**Story:** [US-105 — Export Contacts to CSV](../docs/105-export-contacts-to-csv.md)
+**Story:** [#156 — Export Contacts to CSV](../docs/105-export-contacts-to-csv.md)
 
 ### Export All produces a complete file
 1. Ensure several contacts exist

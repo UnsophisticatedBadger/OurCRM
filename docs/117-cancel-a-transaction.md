@@ -1,6 +1,7 @@
-# US-070 — Cancel a Transaction
+# 117 - Cancel A Transaction
 
 **Capability:** Transactions
+**Milestone:** v0.8.0 — Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #117
 
@@ -27,32 +28,32 @@ As a real estate agent, I want to cancel a transaction when a deal falls through
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/transactions.feature`.
 
 ```gherkin
-@us053
+@story_77
 Scenario: User cancels a transaction and sees the status change to Cancelled
   Given the user is viewing an Under Contract transaction
   When the user clicks "Cancel Transaction", selects reason "Financing", and confirms
   Then the transaction status is "Cancelled"
   And the cancellation date is shown in the details
 
-@us053
+@story_77
 Scenario: Cancellation reason is required
   Given the cancellation dialog is open
   When the user clicks Confirm without selecting a reason
   Then an inline error is shown and the transaction is not cancelled
 
-@us053
+@story_77
 Scenario: User dismisses the cancellation dialog and the transaction is unchanged
   Given the cancellation dialog is open
   When the user closes the dialog without confirming
   Then the transaction status is unchanged
 
-@us053
+@story_77
 Scenario: Cancellation details are visible in the transaction after cancellation
   Given the user cancels a transaction with reason "Inspection" and note "Roof damage found"
   When the user views the transaction details
   Then the reason "Inspection" and note "Roof damage found" are shown alongside the cancellation date
 
-@us053
+@story_77
 Scenario: Cancel button is not shown for Closed transactions
   Given a transaction is in "Closed" status
   When the user views its details
@@ -61,7 +62,7 @@ Scenario: Cancel button is not shown for Closed transactions
 
 ## Manual Tests
 
-**Story:** [US-056 — Cancel a Transaction](../docs/061-cancel-a-transaction.md)
+**Story:** [#105 — Cancel a Transaction](../docs/061-cancel-a-transaction.md)
 
 ### Cancel Transaction button visible on active transactions
 1. Open any Under Contract or Pending transaction

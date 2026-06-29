@@ -1,6 +1,7 @@
-# US-092 — Configure Email Settings
+# 175 - Configure Email Settings
 
 **Capability:** Email
+**Milestone:** v1.1.0+ — Post-Production
 **Status:** Not Done
 **GitHub Issue:** #175
 
@@ -15,7 +16,7 @@ As a real estate agent, I want to configure my SMTP settings in the Settings win
 
 ## Notes
 
-US-078 is a prerequisite for US-079 (Send Email). The SMTP password follows the same OS-keyring pattern as US-089 (AI Settings): stored securely, never written to the config file, displayed as a placeholder after saving.
+#125 is a prerequisite for #126 (Send Email). The SMTP password follows the same OS-keyring pattern as #135 (AI Settings): stored securely, never written to the config file, displayed as a placeholder after saving.
 
 **Third-party testability:** The "Send Test Email" scenario requires a live SMTP server and cannot run reliably in CI. Tag those scenarios `@live_email` and skip them by default. Cover the SMTP-client connection logic with unit tests that stub the SMTP transport layer.
 
@@ -33,14 +34,14 @@ US-078 is a prerequisite for US-079 (Send Email). The SMTP password follows the 
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/email.feature`.
 
 ```gherkin
-@us073
+@story_120
 Scenario: User opens Settings and finds the Email section
   Given the Settings window is open
   When the user selects the "Email" category
   Then fields for SMTP host, port, username, masked password, and a TLS/SSL toggle are shown
   And a "Send Test Email" button is present
 
-@us073
+@story_120
 Scenario: User saves SMTP settings and password is stored in the OS keyring
   Given the Email settings page is open
   When the user enters host "smtp.gmail.com", port "587", username "agent@example.com", a password, and enables TLS
@@ -48,26 +49,26 @@ Scenario: User saves SMTP settings and password is stored in the OS keyring
   Then the settings are saved
   And the password field shows a placeholder instead of the password text
 
-@us073
+@story_120
 Scenario: Saving with a required field empty is rejected
   Given the Email settings page is open with no SMTP host entered
   When the user clicks Save
   Then a validation error indicates that SMTP host is required
 
-@us073
+@story_120
 Scenario: Email settings persist after the application restarts
   Given valid SMTP settings have been saved
   When the user restarts the application and opens Email settings
   Then the host, port, username, and TLS setting are still populated
   And the password field shows a placeholder indicating a stored password
 
-@us073 @live_email
+@story_120 @live_email
 Scenario: Send Test Email succeeds with valid settings
   Given valid SMTP settings are configured and saved
   When the user clicks "Send Test Email"
   Then a test message is sent and a success confirmation is displayed
 
-@us073 @live_email
+@story_120 @live_email
 Scenario: Send Test Email shows a clear error with invalid credentials
   Given SMTP settings are configured with an incorrect password
   When the user clicks "Send Test Email"
@@ -76,7 +77,7 @@ Scenario: Send Test Email shows a clear error with invalid credentials
 
 ## Manual Tests
 
-**Story:** [US-078 — Configure Email Settings](../docs/078-configure-email-settings.md)
+**Story:** [#125 — Configure Email Settings](../docs/078-configure-email-settings.md)
 
 ### Email section is accessible in Settings
 1. Open the Settings window and click the "Email" category

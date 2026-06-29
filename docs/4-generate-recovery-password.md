@@ -1,6 +1,7 @@
-﻿# US-004 — Set Up Recovery Password
+﻿# #4 — Set Up Recovery Password
 
 **Capability:** Authentication & Security
+**Milestone:** v0.2.0 — Secure Shell
 **Status:** Not Done
 **GitHub Issue:** #4
 

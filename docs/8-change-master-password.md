@@ -1,6 +1,7 @@
-﻿# US-008 — Change Master Password
+﻿# #8 — Change Master Password
 
 **Capability:** Authentication & Security
+**Milestone:** v0.2.0 — Secure Shell
 **Status:** Not Done
 **GitHub Issue:** #8
 
@@ -14,7 +15,7 @@ As a real estate agent, I want to change my master password so that I can update
 
 ## Notes
 
-`docs/127-change-master-password.md` appears to cover the same scope. US-008 is the canonical story; US-127 should be converted to a redirect stub when that batch is reached.
+`docs/127-change-master-password.md` appears to cover the same scope. #8 is the canonical story; #24 should be converted to a redirect stub when that batch is reached.
 
 Changing the master password requires re-encrypting the entire database under a key derived from the new password. This is a non-trivial, irreversible operation — the user is logged out immediately after so they must re-authenticate with the new password, confirming the re-encryption succeeded before continuing to use the app.
 
@@ -22,10 +23,10 @@ Re-encryption must be atomic: if the process fails mid-way (e.g., disk full), th
 
 ## Acceptance Criteria
 
-1. A "Change Master Password" option is accessible from the Security Settings screen (US-013)
+1. A "Change Master Password" option is accessible from the Security Settings screen (#13)
 2. The change form requires: current master password, new master password, and confirm new master password
 3. If the current password is wrong, an error is shown and the form stays open
-4. The new password must meet the same complexity rules as setup (US-003): minimum 12 characters
+4. The new password must meet the same complexity rules as setup (#3): minimum 12 characters
 5. If the new password and confirmation do not match, an error is shown and no change is made
 6. On success, the database is re-encrypted with a key derived from the new password, the user is logged out, and must log in again with the new password
 7. After the change, the old password is rejected at the login screen
@@ -35,31 +36,31 @@ Re-encryption must be atomic: if the process fails mid-way (e.g., disk full), th
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/authentication.feature`.
 
 ```gherkin
-@us095
+@story_178
 Scenario: Entering the wrong current password is rejected
   Given the Change Master Password form is open
   When the user enters an incorrect current password and clicks Continue
   Then an error is shown and the form stays open
 
-@us095
+@story_178
 Scenario: New password shorter than 12 characters is rejected
   Given the current password has been verified
   When the user enters a new password of 8 characters
   Then a validation error is shown and the password is not changed
 
-@us095
+@story_178
 Scenario: Mismatched new password and confirmation is rejected
   Given the current password has been verified
   When the user enters different values in the new password and confirmation fields
   Then an error "Passwords do not match" is shown and the password is not changed
 
-@us095
+@story_178
 Scenario: Successful password change logs the user out
   Given the user enters the correct current password and a valid matching new password
   When the user confirms the change
   Then the database is re-encrypted and the user is taken to the login screen
 
-@us095
+@story_178
 Scenario: New password works at login and old password does not
   Given the master password has been changed to "NewSecurePassword99!"
   When the user attempts to log in with the old password
@@ -70,7 +71,7 @@ Scenario: New password works at login and old password does not
 
 ## Manual Tests
 
-**Story:** [US-008 — Change Master Password](../docs/008-change-master-password.md)
+**Story:** [#8 — Change Master Password](../docs/008-change-master-password.md)
 
 ### Change Master Password is accessible from Security Settings
 1. Navigate to Settings → Security

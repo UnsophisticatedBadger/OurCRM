@@ -1,6 +1,7 @@
-# US-089 — Edit a Task
+# 135 - Edit A Task
 
 **Capability:** Tasks
+**Milestone:** v0.8.0 — Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #135
 
@@ -17,7 +18,7 @@ As a real estate agent, I want to edit a task's details when plans change so tha
 
 1. A task can be opened for editing from its detail view via an "Edit" button, or by double-clicking the task row in the list
 2. The edit form opens pre-populated with the task's current title, description, priority, due date, and linked entity
-3. All fields can be changed; the same validation applies as in US-068 (title is required)
+3. All fields can be changed; the same validation applies as in #115 (title is required)
 4. Clicking Cancel closes the form and leaves the task unchanged
 5. Saving a valid edit updates the task in the database; the task list reflects the new values immediately
 6. The updated task persists across application restarts
@@ -29,31 +30,31 @@ As a real estate agent, I want to edit a task's details when plans change so tha
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/tasks.feature`.
 
 ```gherkin
-@us087
+@story_133
 Scenario: Edit form opens pre-populated with the task's current data
   Given a task "Call Alice" exists with priority High and due date tomorrow
   When the user double-clicks "Call Alice" in the task list
   Then the edit form opens with title "Call Alice", priority High, and tomorrow's date pre-filled
 
-@us087
+@story_133
 Scenario: User updates the task title and the list reflects the change
   Given a task "Old title" is in the task list
   When the user opens the edit form, changes the title to "New title", and saves
   Then "New title" appears in the task list and "Old title" does not
 
-@us087
+@story_133
 Scenario: Saving with an empty title is rejected
   Given the task edit form is open
   When the user clears the title and clicks Save
   Then a validation error is shown and the task is not updated
 
-@us087
+@story_133
 Scenario: Cancelling discards all changes
   Given the task edit form is open with title changed to "Draft title"
   When the user clicks Cancel
   Then the task still shows its original title in the list
 
-@us087
+@story_133
 Scenario: Edited task persists after application restart
   Given a task has been edited and saved with the title "Updated task"
   When the user restarts the application
@@ -62,7 +63,7 @@ Scenario: Edited task persists after application restart
 
 ## Manual Tests
 
-**Story:** [US-075 — Edit a Task](../docs/075-edit-task.md)
+**Story:** [#122 — Edit a Task](../docs/075-edit-task.md)
 
 ### Edit form opens pre-populated
 1. Create a task with title, description, priority, and due date

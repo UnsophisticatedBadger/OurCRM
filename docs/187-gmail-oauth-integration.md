@@ -1,6 +1,7 @@
-# US-179 — Connect Gmail via OAuth
+# 187 - Connect Gmail Via OAuth
 
 **Capability:** email
+**Milestone:** v1.1.0+ — Post-Production
 **Status:** Not Done
 **GitHub Issue:** #187
 **Priority:** Post-MVP
@@ -17,7 +18,7 @@ As an agent, I want to connect my Gmail account via OAuth, so that I can send em
 2. After connecting, outbound emails are sent via Gmail instead of the configured SMTP server
 3. OAuth token is stored in the OS keyring; no password is stored
 4. Token is refreshed automatically before it expires
-5. User can disconnect Gmail; outbound email falls back to the SMTP server configured in US-078
+5. User can disconnect Gmail; outbound email falls back to the SMTP server configured in #125
 6. If the OAuth token is revoked externally, the user is prompted to reconnect before their next send attempt
 7. Gmail shows as connected / disconnected with the linked address visible in Settings
 
@@ -25,41 +26,41 @@ As an agent, I want to connect my Gmail account via OAuth, so that I can send em
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/email.feature`.
 
 ```gherkin
-@us146
+@story_27
 Scenario: User connects Gmail via OAuth and sends an email through Gmail
   Given the user is in Settings → Email → Gmail
   When the user clicks "Connect Gmail" and completes the Google OAuth flow
   Then Gmail shows as connected in Settings with the linked address
   And outbound emails are routed through Gmail
 
-@us146
+@story_27
 Scenario: OAuth token is stored in the OS keyring
   Given the user has connected Gmail via OAuth
   When the token is stored
   Then it is in the OS keyring
   And no password or token is written to the app's config files
 
-@us146
+@story_27
 Scenario: Expired token is refreshed automatically before sending
   Given Gmail is connected and the access token has expired
   When the user sends an email
   Then the token is refreshed automatically
   And the email is sent without prompting the user
 
-@us146
+@story_27
 Scenario: User disconnects Gmail
   Given Gmail is connected
   When the user clicks "Disconnect" in Settings → Email → Gmail
   Then Gmail shows as disconnected
   And subsequent outbound emails use the configured SMTP server
 
-@us146
+@story_27
 Scenario: Revoked token prompts reconnect before sending
   Given the Gmail OAuth token has been revoked externally
   When the user attempts to send an email
   Then a prompt appears to reconnect Gmail before the email is sent
 
-@us146 @live_google
+@story_27 @live_google
 Scenario: App completes real Google OAuth flow and obtains a send-capable token
   Given the user has a valid Google account
   When the user completes the OAuth flow in the browser
@@ -67,7 +68,7 @@ Scenario: App completes real Google OAuth flow and obtains a send-capable token
 ```
 
 ## Manual Tests
-**Story:** [US-168 — Connect Gmail via OAuth](../docs/144-gmail-oauth-integration.md)
+**Story:** [#142 — Connect Gmail via OAuth](../docs/144-gmail-oauth-integration.md)
 
 ### User connects Gmail and sees it show as connected
 1. Go to Settings → Email → Gmail

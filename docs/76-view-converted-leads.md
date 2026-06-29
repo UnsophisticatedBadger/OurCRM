@@ -1,6 +1,7 @@
-# US-052 — View Converted Leads
+# 76 - View Converted Leads
 
 **Capability:** Leads
+**Milestone:** v0.5.0 — MVP
 **Status:** Not Done
 **GitHub Issue:** #76
 
@@ -24,25 +25,25 @@ As a real estate agent, I want to view all my converted leads in one place, so t
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/leads.feature`.
 
 ```gherkin
-@us038
+@story_66
 Scenario: Applying the Converted filter shows only converted leads
   Given leads "Sara Lee" (converted) and "Bob Kim" (active) exist
   When the user selects "Converted" from the status filter
   Then only "Sara Lee" is shown in the list
 
-@us038
+@story_66
 Scenario: Converted leads are sorted by conversion date newest-first
   Given "Sara Lee" was converted yesterday and "Jane Park" was converted today
   When the user views converted leads
   Then "Jane Park" appears above "Sara Lee"
 
-@us038
+@story_66
 Scenario: Summary banner shows correct conversion counts
   Given 5 leads have been converted in total, 2 this month, 4 this year
   When the user views the converted leads list
   Then the banner shows "5 total · 2 this month · 4 this year"
 
-@us038
+@story_66
 Scenario: Double-clicking a converted lead opens its details
   Given the user is viewing the converted leads list
   When the user double-clicks "Sara Lee"
@@ -51,7 +52,7 @@ Scenario: Double-clicking a converted lead opens its details
 
 ## Manual Tests
 
-**Story:** [US-040 — View Converted Leads](../docs/040-view-converted-leads.md)
+**Story:** [#68 — View Converted Leads](../docs/040-view-converted-leads.md)
 
 ### User filters the lead list to show only converted leads
 1. Convert a few leads, leaving others active

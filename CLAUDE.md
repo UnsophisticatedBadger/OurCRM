@@ -131,11 +131,11 @@ Every story's `## Test Locations` table maps artifacts to exact paths:
 Every scenario is tagged with its story number so individual stories can be run in isolation:
 
 ```gherkin
-@us-003
+@story_3
 Scenario: User creates a password shorter than 12 characters and sees an error
 ```
 
-Run a single story's BDD: `uv run pytest -k "us-003"`
+Run a single story's BDD: `uv run pytest -m "story_3"`
 
 ### Manual test traceability
 Every manual test file begins with a story link so a tester can trace the test back to its requirement:

@@ -1,6 +1,7 @@
-# US-110 — Handle Duplicate Contacts During Import
+# 161 - Handle Duplicate Contacts During Import
 
 **Capability:** Import & Export
+**Milestone:** v1.0.0 — Production
 **Status:** Not Done
 **GitHub Issue:** #161
 
@@ -14,7 +15,7 @@ As a real estate agent, I want to choose how duplicate contacts are handled duri
 
 ## Notes
 
-This story defines the duplicate resolution step that US-101 (vCard import) and US-102 (CSV import) both invoke whenever at least one incoming contact matches an existing record.
+This story defines the duplicate resolution step that #184 (vCard import) and #153 (CSV import) both invoke whenever at least one incoming contact matches an existing record.
 
 **Detection criteria:** An incoming contact is a duplicate if its email address matches an existing contact's email address (primary check), or if its phone number matches an existing contact's primary phone number and no email is present (secondary check). Name-only matching is not used — it produces too many false positives.
 
@@ -31,14 +32,14 @@ The resolution policy is applied to all duplicates at once (blanket policy). Per
 5. When "Update existing" is chosen, only non-blank fields from the incoming record are written to the existing contact; blank incoming fields leave existing values intact
 6. When "Create new" is chosen, a new contact record is created even though a record with the same email or phone already exists
 7. Cancelling the resolution dialog cancels the entire import; no records are written
-8. The post-import summary from US-101/US-102 includes the duplicate count and which policy was applied
+8. The post-import summary from #184/#153 includes the duplicate count and which policy was applied
 
 ## BDD Scenarios
 
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/import_export.feature`.
 
 ```gherkin
-@us112
+@story_163
 Scenario: Duplicate resolution dialog appears when an import contains matching emails
   Given a contact with email "alice@example.com" exists in OurCRM
   And an import file contains a contact with the same email
@@ -46,14 +47,14 @@ Scenario: Duplicate resolution dialog appears when an import contains matching e
   Then the duplicate resolution dialog appears before any record is written
   And it states that 1 duplicate was found
 
-@us112
+@story_163
 Scenario: Skip duplicates keeps existing records unchanged
   Given the duplicate resolution dialog is shown for 2 duplicates
   When the user selects "Skip duplicates" and confirms
   Then the 2 existing contacts are unchanged
   And the import summary shows "2 duplicates skipped"
 
-@us112
+@story_163
 Scenario: Update existing writes non-blank incoming fields to the existing record
   Given an existing contact has name "Alice Smith", email "alice@example.com", and phone "(713) 555-0001"
   And the incoming duplicate has email "alice@example.com" and phone "(713) 555-9999" but no name
@@ -61,13 +62,13 @@ Scenario: Update existing writes non-blank incoming fields to the existing recor
   Then the existing contact's phone is updated to "(713) 555-9999"
   And the name remains "Alice Smith"
 
-@us112
+@story_163
 Scenario: Create new imports the duplicate as an additional contact record
   Given the duplicate resolution dialog is shown for 1 duplicate
   When the user selects "Create new" and confirms
   Then a new contact record is created alongside the existing one
 
-@us112
+@story_163
 Scenario: Cancelling the resolution dialog cancels the entire import
   Given the duplicate resolution dialog is shown
   When the user clicks Cancel
@@ -76,7 +77,7 @@ Scenario: Cancelling the resolution dialog cancels the entire import
 
 ## Manual Tests
 
-**Story:** [US-100 — Handle Duplicate Contacts During Import](../docs/084-handle-duplicate-contacts-during-import.md)
+**Story:** [#183 — Handle Duplicate Contacts During Import](../docs/084-handle-duplicate-contacts-during-import.md)
 
 ### Resolution dialog appears when duplicates are found
 1. Ensure a contact with email "test@example.com" exists

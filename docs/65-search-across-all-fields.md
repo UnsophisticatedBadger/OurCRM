@@ -1,6 +1,7 @@
-# US-037 — Search Contacts Across All Fields
+# 65 - Search Contacts Across All Fields
 
 **Capability:** Contacts
+**Milestone:** v0.5.0 — MVP
 **Status:** Not Done
 **GitHub Issue:** #65
 
@@ -16,35 +17,35 @@ As a real estate agent, I want the contact search to also look through notes, ta
 
 ## Acceptance Criteria
 
-1. The existing contact search (US-024) also matches against notes, tags, and address fields
+1. The existing contact search (#52) also matches against notes, tags, and address fields
 2. Name and email matches rank above notes and tag matches so the most direct results appear first
 3. Matching text is highlighted in the search results so users can see why each contact matched
-4. An empty search box shows all contacts (unchanged from US-024)
+4. An empty search box shows all contacts (unchanged from #52)
 
 ## BDD Scenarios
 
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/contacts.feature`.
 
 ```gherkin
-@us029
+@story_57
 Scenario: User finds a contact by searching note content
   Given "Jane Smith" has a note containing "conference"
   When the user searches for "conference"
   Then "Jane Smith" appears in results
 
-@us029
+@story_57
 Scenario: User finds contacts by searching a tag name
   Given "Bob Carter" has the tag "investor"
   When the user searches for "investor"
   Then "Bob Carter" appears in results
 
-@us029
+@story_57
 Scenario: User finds a contact by searching an address field
   Given a contact with city "Houston" exists
   When the user searches for "Houston"
   Then that contact appears in results
 
-@us029
+@story_57
 Scenario: Name matches rank above note matches
   Given "John Smith" exists and "Jane Doe" has a note mentioning "John"
   When the user searches for "John"
@@ -53,7 +54,7 @@ Scenario: Name matches rank above note matches
 
 ## Manual Tests
 
-**Story:** [US-025 — Search Contacts Across All Fields](../docs/025-search-across-all-fields.md)
+**Story:** [#53 — Search Contacts Across All Fields](../docs/025-search-across-all-fields.md)
 
 ### User finds a contact via a note keyword
 1. Add the note "Met at Houston conference" to a contact

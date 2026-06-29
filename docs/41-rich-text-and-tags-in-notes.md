@@ -1,6 +1,7 @@
-# US-160 — Rich Text and Tags in Notes
+# 41 - Rich Text And Tags In Notes
 
 **Capability:** shell
+**Milestone:** v0.2.0 — Secure Shell
 **Status:** Not Done
 **GitHub Issue:** #41
 **Priority:** Post-MVP
@@ -42,7 +43,7 @@ Scenario: Filtering notes by tag shows only matching notes
 ```
 
 ## Manual Tests
-**Story:** [US-149 — Rich Text and Tags in Notes](../docs/149-rich-text-and-tags-in-notes.md)
+**Story:** [#30 — Rich Text and Tags in Notes](../docs/149-rich-text-and-tags-in-notes.md)
 
 ### Bold and list formatting is preserved
 1. Create a note with bold text and a bulleted list

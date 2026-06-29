@@ -1,6 +1,7 @@
-# US-040 — Download Document
+# 68 - Download Document
 
 **Capability:** Contacts
+**Milestone:** v0.5.0 — MVP
 **Status:** Not Done
 **GitHub Issue:** #68
 
@@ -14,7 +15,7 @@ As a real estate agent, I want to download a contact's document to my computer s
 
 ## Acceptance Criteria
 
-1. Clicking a document row in the contact's Documents section (US-027) opens the OS save dialog with the original filename pre-filled
+1. Clicking a document row in the contact's Documents section (#55) opens the OS save dialog with the original filename pre-filled
 2. The user can choose the save location and confirm; the file is written to the chosen path
 3. The downloaded file is byte-for-byte identical to the uploaded file (no corruption)
 4. Cancelling the OS save dialog leaves no file on disk
@@ -24,19 +25,19 @@ As a real estate agent, I want to download a contact's document to my computer s
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/contacts.feature`.
 
 ```gherkin
-@us092
+@story_175
 Scenario: Clicking a document row opens the OS save dialog with the original filename
   Given contact "Alice Smith" has document "contract.pdf"
   When the user clicks "contract.pdf" in the Documents section
   Then the OS save dialog opens with "contract.pdf" as the suggested filename
 
-@us092
+@story_175
 Scenario: Confirming the save dialog writes the file to the chosen location
   Given the OS save dialog is open for "contract.pdf"
   When the user confirms a save location
   Then the file is saved at that location and its contents match the original upload
 
-@us092
+@story_175
 Scenario: Cancelling the save dialog writes no file
   Given the OS save dialog is open for "contract.pdf"
   When the user clicks Cancel in the save dialog
@@ -45,7 +46,7 @@ Scenario: Cancelling the save dialog writes no file
 
 ## Manual Tests
 
-**Story:** [US-028 — Download Document](../docs/028-download-document.md)
+**Story:** [#56 — Download Document](../docs/028-download-document.md)
 
 ### Save dialog opens with the original filename
 1. Upload a file named "purchase_agreement.pdf" to a contact

@@ -1,6 +1,7 @@
-# US-056 — View Property List
+# 105 - View Property List
 
 **Capability:** Properties
+**Milestone:** v0.8.0 — Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #105
 
@@ -27,33 +28,33 @@ As a real estate agent, I want to see all my property listings in a sortable, fi
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/properties.feature`.
 
 ```gherkin
-@us041
+@story_69
 Scenario: User with properties sees them in the Properties section
   Given properties "123 Oak St" (Active) and "456 Elm Ave" (Sold) exist
   When the user opens the Properties section
   Then the list shows "123 Oak St" and "456 Elm Ave"
   And "123 Oak St" appears before "456 Elm Ave" (Active sorted first)
 
-@us041
+@story_69
 Scenario: Status column is color-coded
   Given properties with Active, Pending, Sold, and Withdrawn statuses exist
   When the user views the property list
   Then the Active indicator is green, Pending is yellow, Sold is grey, and Withdrawn is red
 
-@us041
+@story_69
 Scenario: User with no properties sees an empty state
   Given no properties exist
   When the user opens the Properties section
   Then "No properties yet" is shown
   And a "Create Your First Property" button is visible
 
-@us041
+@story_69
 Scenario: User filters the list to show only Active properties
   Given properties with Active and Sold statuses exist
   When the user selects the "Active" status filter
   Then only Active properties are shown in the list
 
-@us041
+@story_69
 Scenario: Status filter is preserved after navigating away and back
   Given the user has the "Active" filter active
   When the user navigates to Contacts and returns to Properties
@@ -62,7 +63,7 @@ Scenario: Status filter is preserved after navigating away and back
 
 ## Manual Tests
 
-**Story:** [US-044 — View Property List](../docs/047-view-property-list.md)
+**Story:** [#18 — View Property List](../docs/047-view-property-list.md)
 
 ### User sees all properties with correct columns
 1. Create properties with varied data (address, type, beds, baths, price, status)

@@ -1,4 +1,4 @@
-﻿# US-001 — CI Pipeline
+﻿# #1 — CI Pipeline
 
 **Capability:** infrastructure
 **Milestone:** v0.1.0 — Foundation

@@ -1,6 +1,7 @@
-# US-166 — Sync with Google Calendar
+# 140 - Sync With Google Calendar
 
 **Capability:** calendar
+**Milestone:** v0.8.0 — Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #140
 **Priority:** Post-MVP
@@ -28,40 +29,40 @@ As an agent, I want to sync my OurCRM calendar with Google Calendar, so that I c
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/calendar.feature`.
 
 ```gherkin
-@us143
+@story_92
 Scenario: User connects Google Calendar via OAuth
   Given the user is in Settings → Calendar
   When the user clicks "Connect Google Calendar" and completes the OAuth flow
   Then Google Calendar shows as connected in Settings
   And a success confirmation is shown
 
-@us143
+@story_92
 Scenario: New OurCRM event is pushed to Google Calendar after sync
   Given Google Calendar is connected
   When the user creates a new event in OurCRM
   Then the event is pushed to the user's Google Calendar
 
-@us143
+@story_92
 Scenario: New Google Calendar event appears in OurCRM after sync
   Given Google Calendar is connected
   When a new event is created in Google Calendar
   Then the event appears in OurCRM on the next sync
 
-@us143
+@story_92
 Scenario: Editing a synced event in OurCRM updates Google Calendar
   Given Google Calendar is connected
   And a synced event exists in both systems
   When the user edits the event in OurCRM
   Then the updated details are reflected in Google Calendar
 
-@us143
+@story_92
 Scenario: Deleting a synced event in OurCRM removes it from Google Calendar
   Given Google Calendar is connected
   And a synced event exists in both systems
   When the user deletes the event in OurCRM
   Then the event is removed from Google Calendar
 
-@us143
+@story_92
 Scenario: User disconnects Google Calendar
   Given Google Calendar is connected
   When the user clicks "Disconnect" in Settings
@@ -70,7 +71,7 @@ Scenario: User disconnects Google Calendar
   And new OurCRM events are no longer pushed to Google Calendar
   And existing synced events remain in OurCRM
 
-@us143 @live_google
+@story_92 @live_google
 Scenario: App authenticates with Google OAuth and retrieves the calendar list
   Given the user has a valid Google account
   When the user completes the OAuth flow
@@ -78,7 +79,7 @@ Scenario: App authenticates with Google OAuth and retrieves the calendar list
 ```
 
 ## Manual Tests
-**Story:** [US-155 — Sync with Google Calendar](../docs/155-google-calendar-integration.md)
+**Story:** [#36 — Sync with Google Calendar](../docs/155-google-calendar-integration.md)
 
 ### User connects Google Calendar and sees it show as connected
 1. Go to Settings → Calendar → Google Calendar

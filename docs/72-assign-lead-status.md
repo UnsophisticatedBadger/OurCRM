@@ -1,6 +1,7 @@
-# US-048 — Edit a Lead
+# 72 - Edit A Lead
 
 **Capability:** Leads
+**Milestone:** v0.5.0 — MVP
 **Status:** Not Done
 **GitHub Issue:** #72
 
@@ -15,7 +16,7 @@ As a real estate agent, I want to edit a lead's information at any time, so that
 ## Acceptance Criteria
 
 1. The Edit button on the lead details view opens an edit form pre-populated with all of the lead's current data
-2. All fields can be changed; validation rules match the create form (US-034) — name and status are required; if both budget fields are filled, min must not exceed max
+2. All fields can be changed; validation rules match the create form (#62) — name and status are required; if both budget fields are filled, min must not exceed max
 3. The source dropdown has the same predefined options as the create form; selecting "Other" shows a free-text field for a custom source
 4. Saving updates the lead, returns to the details view with the new values shown immediately, and reflects the changes in the lead list row
 5. Lead status can also be changed directly from the lead list via right-click > Change Status without opening the full edit form
@@ -27,44 +28,44 @@ As a real estate agent, I want to edit a lead's information at any time, so that
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/leads.feature`.
 
 ```gherkin
-@us032
+@story_60
 Scenario: User edits a lead's status and sees the update in list and details
   Given the user is viewing a lead with status "Warm"
   When the user clicks Edit, changes the status to "Hot", and clicks Save
   Then the details view shows status "Hot"
   And the lead list row also shows "Hot"
 
-@us032
+@story_60
 Scenario: User edits a lead's budget and sees the formatted range
   Given the user is editing a lead
   When the user sets min budget to 300000 and max budget to 500000 and saves
   Then the details view shows "$300,000 – $500,000"
 
-@us032
+@story_60
 Scenario: Saving with min budget greater than max shows an error
   Given the user is editing a lead's budget
   When the user enters min 500000 and max 300000 and clicks Save
   Then "Minimum budget cannot be greater than maximum budget" is shown and the form stays open
 
-@us032
+@story_60
 Scenario: User selects Other as source and enters a custom value
   Given the user is editing a lead
   When the user selects "Other" from the source dropdown, types "Real Estate Expo", and saves
   Then the details view shows source "Real Estate Expo"
 
-@us032
+@story_60
 Scenario: User cancels an edit and the original data is unchanged
   Given the user is editing a lead with status "Cold"
   When the user changes the status to "Hot" and clicks Cancel
   Then the details view still shows status "Cold"
 
-@us032
+@story_60
 Scenario: User changes status directly from the lead list
   Given the user is viewing the lead list
   When the user right-clicks a lead and selects "Change Status" then "Cold"
   Then the lead's status in the list updates to "Cold" immediately
 
-@us032
+@story_60
 Scenario: All edits persist after an application restart
   Given the user has set a lead's status to "Hot" and budget to 400000–600000
   When the application is restarted and the user opens that lead
@@ -73,7 +74,7 @@ Scenario: All edits persist after an application restart
 
 ## Manual Tests
 
-**Story:** [US-036 — Edit a Lead](../docs/038-assign-lead-status.md)
+**Story:** [#64 — Edit a Lead](../docs/038-assign-lead-status.md)
 
 ### User opens the edit form and sees all fields pre-populated
 1. Open any lead's details and click Edit

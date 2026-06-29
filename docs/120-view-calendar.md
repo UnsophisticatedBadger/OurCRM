@@ -1,6 +1,7 @@
-# US-073 — View Calendar
+# 120 - View Calendar
 
 **Capability:** Calendar & Showings
+**Milestone:** v0.8.0 — Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #120
 

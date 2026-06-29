@@ -1,6 +1,7 @@
-# US-171 — Choose Which Calendar to Sync
+# 145 - Choose Which Calendar To Sync
 
 **Capability:** calendar
+**Milestone:** v0.8.0 — Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #145
 **Priority:** Post-MVP
@@ -23,7 +24,7 @@ As an agent, I want to choose which Google Calendar or Outlook calendar folder t
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/calendar.feature`.
 
 ```gherkin
-@us179
+@story_187
 Scenario: User selects a non-primary Google calendar to sync
   Given Google Calendar is connected
   And the user has multiple Google calendars
@@ -31,14 +32,14 @@ Scenario: User selects a non-primary Google calendar to sync
   Then only events from the "Work" calendar are synced
   And events from other Google calendars are not pulled into OurCRM
 
-@us179
+@story_187
 Scenario: User changes the selected calendar and the change takes effect on next sync
   Given Google Calendar is connected and syncing the "Personal" calendar
   When the user changes the selection to "Work"
   And a sync runs
   Then new events come from the "Work" calendar only
 
-@us179
+@story_187
 Scenario: Previously synced events are not removed when the calendar selection changes
   Given OurCRM has synced events from the "Personal" calendar
   When the user changes the selection to "Work"
@@ -46,7 +47,7 @@ Scenario: Previously synced events are not removed when the calendar selection c
 ```
 
 ## Manual Tests
-**Story:** [US-160 — Choose Which Calendar to Sync](../docs/141-choose-which-calendar-to-sync.md)
+**Story:** [#41 — Choose Which Calendar to Sync](../docs/141-choose-which-calendar-to-sync.md)
 
 ### User selects a non-primary calendar and only its events sync
 1. Connect Google Calendar with multiple calendars available

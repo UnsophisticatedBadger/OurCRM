@@ -1,6 +1,7 @@
-# US-148 — Advanced Search Filters
+# 29 - Advanced Search Filters
 
 **Capability:** shell
+**Milestone:** v0.2.0 — Secure Shell
 **Status:** Not Done
 **GitHub Issue:** #29
 **Priority:** Post-MVP
@@ -20,37 +21,37 @@ As an agent, I want to filter search results by date ranges, numeric ranges, and
 5. Filters for any user-defined custom fields are available when custom fields have been defined on a record type
 6. Multiple filters can be active simultaneously; all filters are applied with AND logic
 7. A "Clear All Filters" button removes all active filters and shows unfiltered results
-8. Active filter combinations can be saved as a named saved search (per US-117) from the Filters panel
+8. Active filter combinations can be saved as a named saved search (per #81) from the Filters panel
 
 ## BDD Scenarios
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/shell.feature`.
 
 ```gherkin
-@us156
+@story_37
 Scenario: Absolute date range filter returns only records created in that range
   Given contacts were created both inside and outside of January
   When the user sets a "Created" date filter to 1 Jan – 31 Jan
   Then only contacts created in January are shown
 
-@us156
+@story_37
 Scenario: Relative date preset "Last 30 days" returns recent records
   Given contacts were created 10 days ago and 60 days ago
   When the user selects the "Last 30 days" date preset
   Then only the contact created 10 days ago is shown
 
-@us156
+@story_37
 Scenario: Numeric budget range filter on leads
   Given leads exist with budgets of $200k, $400k, and $600k
   When the user sets a budget filter of $300k–$500k
   Then only the $400k lead is shown
 
-@us156
+@story_37
 Scenario: Multiple active filters are combined with AND logic
   Given leads with "Hot" status exist at various budget levels
   When the user sets status = "Hot" and budget = "$300k–$500k"
   Then only Hot leads within the budget range are shown
 
-@us156
+@story_37
 Scenario: Clear All Filters removes all active filters
   Given two filters are active
   When the user clicks "Clear All Filters"
@@ -58,7 +59,7 @@ Scenario: Clear All Filters removes all active filters
 ```
 
 ## Manual Tests
-**Story:** [US-137 — Advanced Search Filters](../docs/137-search-filters.md)
+**Story:** [#168 — Advanced Search Filters](../docs/137-search-filters.md)
 
 ### Absolute date range filter shows only matching records
 1. Set the "Created" date filter to a specific date range

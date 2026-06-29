@@ -1,4 +1,4 @@
-# US-002 — Automated Release Pipeline
+# 2 - Automated Release Pipeline
 
 **Capability:** infrastructure
 **Milestone:** v0.1.0 — Foundation
@@ -19,7 +19,7 @@ As a developer, I want version numbers managed automatically and a Windows execu
 2. On every push to main, `python-semantic-release` determines whether a new version is warranted; if so, it updates `pyproject.toml`, commits the bump, creates a `v*.*.*` tag, and pushes both
 3. A new version tag triggers a Windows build using `scripts/build.py` as the driver
 4. A GitHub Release is created automatically using the tag name with the tag in the release notes
-5. The Windows build is packaged as `ourcrm-windows.zip` (containing an `ourcrm/` folder with `ourcrm.exe` and all runtime dependencies) and attached to the release as the sole Windows download asset; this is the interim packaging format until US-022 (Windows Installer) ships at v0.5.0
+5. The Windows build is packaged as `ourcrm-windows.zip` (containing an `ourcrm/` folder with `ourcrm.exe` and all runtime dependencies) and attached to the release as the sole Windows download asset; this is the interim packaging format until #49 (Windows Installer) ships at v0.5.0
 6. If no commits warrant a version bump, no tag is created and no build runs
 7. A build failure prevents the release from being published
 8. A `README.md` exists at the project root covering: what OurCRM is, who it is for, dev environment setup, how to run tests and linters, and a link to the wiki roadmap

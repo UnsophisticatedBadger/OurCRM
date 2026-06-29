@@ -1,6 +1,7 @@
-# US-050 — View Sales Pipeline
+# 74 - View Sales Pipeline
 
 **Capability:** Leads
+**Milestone:** v0.5.0 — MVP
 **Status:** Not Done
 **GitHub Issue:** #74
 
@@ -27,31 +28,31 @@ As a real estate agent, I want to see all my leads in a kanban board organised b
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/leads.feature`.
 
 ```gherkin
-@us036
+@story_64
 Scenario: User switches to pipeline view and sees all stage columns
   Given leads exist in various pipeline stages
   When the user clicks the "Pipeline" toggle in the Leads section
   Then a kanban board is shown with all eight stage columns in order
 
-@us036
+@story_64
 Scenario: Column header shows the correct lead count
   Given three leads are in the "Contacted" stage
   When the user views the pipeline
   Then the "Contacted" column header shows a count of 3
 
-@us036
+@story_64
 Scenario: Empty column shows a No leads placeholder
   Given no leads are in the "Offer Made" stage
   When the user views the pipeline
   Then the "Offer Made" column shows "No leads" instead of being empty or hidden
 
-@us036
+@story_64
 Scenario: User clicks a lead card and opens its details
   Given the user is viewing the pipeline
   When the user clicks the card for lead "Sara Lee"
   Then the lead details view opens for "Sara Lee"
 
-@us036
+@story_64
 Scenario: User drags a lead card to another column and the stage updates
   Given lead "Bob Kim" is in the "New Lead" column
   When the user drags "Bob Kim"'s card to the "Contacted" column
@@ -61,7 +62,7 @@ Scenario: User drags a lead card to another column and the stage updates
 
 ## Manual Tests
 
-**Story:** [US-038 — View Sales Pipeline](../docs/038-view-sales-pipeline.md)
+**Story:** [#66 — View Sales Pipeline](../docs/038-view-sales-pipeline.md)
 
 ### User switches between list view and pipeline view
 1. Navigate to the Leads section (list view by default)

@@ -1,6 +1,7 @@
-# US-118 — Configure Log Level
+# 82 - Configure Log Level
 
 **Capability:** Infrastructure
+**Milestone:** v0.5.0 — MVP
 **Status:** Not Done
 **GitHub Issue:** #82
 
@@ -14,7 +15,7 @@ As a user troubleshooting an issue, I want to control how verbose the applicatio
 
 ## Notes
 
-The log level controls what is written to the log file; the viewer (US-106) displays what has been written. The default level is Warning, which keeps logs small in normal use. Debug can produce large files quickly — a warning is shown when it is selected.
+The log level controls what is written to the log file; the viewer (#157) displays what has been written. The default level is Warning, which keeps logs small in normal use. Debug can produce large files quickly — a warning is shown when it is selected.
 
 ## Acceptance Criteria
 
@@ -30,25 +31,25 @@ The log level controls what is written to the log file; the viewer (US-106) disp
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/infrastructure.feature`.
 
 ```gherkin
-@us124
+@story_87
 Scenario: Log level configuration is accessible from Settings
   Given the user opens Settings > Advanced > Log Level
   Then the current log level is shown
   And preset buttons Quiet, Normal, Verbose, and Debug are visible
 
-@us124
+@story_87
 Scenario: Changing the log level takes effect immediately
   Given the current log level is Warning
   When the user selects Info and saves
   Then Info-level messages are written to the log without restarting the application
 
-@us124
+@story_87
 Scenario: Log level persists across application restarts
   Given the user has set the log level to Info
   When the user restarts the application
   Then Settings > Advanced > Log Level still shows Info as the active level
 
-@us124
+@story_87
 Scenario: Selecting Debug shows a warning about large log files
   Given the log level configuration page is open
   When the user clicks the Debug preset
@@ -57,7 +58,7 @@ Scenario: Selecting Debug shows a warning about large log files
 
 ## Manual Tests
 
-**Story:** [US-108 — Configure Log Level](../docs/108-configure-log-level.md)
+**Story:** [#159 — Configure Log Level](../docs/108-configure-log-level.md)
 
 ### Log level setting is accessible and defaults to Warning
 1. Open Settings → Advanced → Log Level
@@ -68,7 +69,7 @@ Scenario: Selecting Debug shows a warning about large log files
 ### Changing the level takes effect immediately
 1. Set the level to Info
 2. Perform any action in the app (e.g., open a contact)
-3. Open Help → Error Logs (US-106)
+3. Open Help → Error Logs (#157)
 4. Confirm Info-level entries appear without having restarted the app
 
 ### Debug level shows a warning

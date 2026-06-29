@@ -1,6 +1,7 @@
-# US-090 — Delete a Task
+# 136 - Delete A Task
 
 **Capability:** Tasks
+**Milestone:** v0.8.0 — Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #136
 
@@ -28,32 +29,32 @@ As a real estate agent, I want to delete tasks that are no longer relevant so th
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/tasks.feature`.
 
 ```gherkin
-@us088
+@story_134
 Scenario: Clicking Delete shows a confirmation dialog with the task title
   Given a task "Follow up with Bob" is in the task list
   When the user clicks "Delete" on that task
   Then a confirmation dialog appears showing "Follow up with Bob"
   And the dialog includes the text "This action cannot be undone"
 
-@us088
+@story_134
 Scenario: Confirming deletion removes the task from the list
   Given the delete confirmation dialog is open for "Follow up with Bob"
   When the user confirms the deletion
   Then "Follow up with Bob" is no longer visible in the task list
 
-@us088
+@story_134
 Scenario: Cancelling deletion leaves the task unchanged
   Given the delete confirmation dialog is open for "Follow up with Bob"
   When the user clicks Cancel
   Then "Follow up with Bob" is still visible in the task list
 
-@us088
+@story_134
 Scenario: Deleting a task cancels its scheduled reminder
   Given a task has a reminder scheduled for 1 minute from now
   When the user deletes the task and confirms
   Then no reminder notification fires after 1 minute
 
-@us088
+@story_134
 Scenario: Deleted task is absent after application restart
   Given the user has deleted a task titled "Cancelled appointment"
   When the user restarts the application and views the task list
@@ -62,7 +63,7 @@ Scenario: Deleted task is absent after application restart
 
 ## Manual Tests
 
-**Story:** [US-076 — Delete a Task](../docs/030-delete-task.md)
+**Story:** [#123 — Delete a Task](../docs/030-delete-task.md)
 
 ### Delete action is reachable from detail view and context menu
 1. Open a task's detail view and confirm a "Delete" button is present

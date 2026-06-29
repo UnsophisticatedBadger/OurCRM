@@ -1,6 +1,7 @@
-# US-066 — View Transaction Details
+# 113 - View Transaction Details
 
 **Capability:** Transactions
+**Milestone:** v0.8.0 — Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #113
 
@@ -25,25 +26,25 @@ As a real estate agent, I want to open a transaction and see all its information
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/transactions.feature`.
 
 ```gherkin
-@us049
+@story_73
 Scenario: User double-clicks a transaction and sees all its details
   Given a transaction exists with all fields filled
   When the user double-clicks it in the transaction list
   Then the details view opens showing all of the transaction's data
 
-@us049
+@story_73
 Scenario: User clicks the linked property and opens its details
   Given a transaction is linked to property "123 Oak St"
   When the user opens the transaction details and clicks "123 Oak St"
   Then the property details view opens for "123 Oak St"
 
-@us049
+@story_73
 Scenario: Commission breakdown is shown when price and percentage are recorded
   Given a transaction has sale price 500000 and commission 3%
   When the user opens the transaction details
   Then "$500,000 × 3% = $15,000" is shown
 
-@us049
+@story_73
 Scenario: User presses Escape and returns to the transaction list
   Given the user is viewing a transaction's details
   When the user presses Escape
@@ -52,7 +53,7 @@ Scenario: User presses Escape and returns to the transaction list
 
 ## Manual Tests
 
-**Story:** [US-052 — View Transaction Details](../docs/055-view-transaction-details.md)
+**Story:** [#76 — View Transaction Details](../docs/055-view-transaction-details.md)
 
 ### User opens transaction details from the list
 1. Double-click a transaction in the list

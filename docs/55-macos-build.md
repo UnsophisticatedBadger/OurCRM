@@ -1,4 +1,4 @@
-# US-027 — macOS Build on Tag
+# 55 - MacOS Build On Tag
 
 **Capability:** infrastructure
 **Milestone:** v0.5.0 — MVP

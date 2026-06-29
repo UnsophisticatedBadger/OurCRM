@@ -1,6 +1,7 @@
-# US-176 — Drag-and-Drop Event Rescheduling
+# 150 - Drag-and-Drop Event Rescheduling
 
 **Capability:** calendar
+**Milestone:** v0.8.0 — Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #150
 **Priority:** Post-MVP
@@ -16,26 +17,26 @@ As an agent, I want to drag a calendar event to a new time slot to reschedule it
 2. Dragging an event across a day boundary moves it to the new date and time
 3. While dragging, the event's original slot shows a placeholder and the event preview follows the cursor
 4. Releasing the event in a new slot saves the new time immediately without opening the edit form
-5. The same overlap detection from US-164 applies; if the drag would create an overlap, a warning is shown after the drop
+5. The same overlap detection from #97 applies; if the drag would create an overlap, a warning is shown after the drop
 6. Drag-and-drop is not available in the Month view; events must be edited via the form in that view
 
 ## BDD Scenarios
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/calendar.feature`.
 
 ```gherkin
-@us198
+@story_202
 Scenario: Dragging an event to a new time slot reschedules it
   Given a calendar event "Team Meeting" is at 10:00 AM on Monday in the Week view
   When the user drags it to 2:00 PM on Monday
   Then the event is rescheduled to 2:00 PM and the change is saved
 
-@us198
+@story_202
 Scenario: Dragging across a day boundary changes the event date
   Given a calendar event is on Monday in the Week view
   When the user drags it to Tuesday's column
   Then the event's date is updated to Tuesday at the dropped time
 
-@us198
+@story_202
 Scenario: Overlap warning is shown after a conflicting drag
   Given a showing exists at 2:00 PM on Monday
   When the user drags another event to 2:00 PM on Monday
@@ -43,7 +44,7 @@ Scenario: Overlap warning is shown after a conflicting drag
 ```
 
 ## Manual Tests
-**Story:** [US-165 — Drag-and-Drop Event Rescheduling](../docs/143-drag-drop-event-rescheduling.md)
+**Story:** [#139 — Drag-and-Drop Event Rescheduling](../docs/143-drag-drop-event-rescheduling.md)
 
 ### Dragging an event reschedules it
 1. Open the Week view

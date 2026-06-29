@@ -1,6 +1,7 @@
-# US-138 — View Backup History
+# 169 - View Backup History
 
 **Capability:** Backup & Recovery
+**Milestone:** v1.0.0 — Production
 **Status:** Not Done
 **GitHub Issue:** #169
 **Priority:** Should Have (deferrable to post-MVP)
@@ -19,7 +20,7 @@ As a real estate agent, I want to see a list of backups I have created so that I
 1. The Backup section displays a "Backup History" list below the Create and Restore actions
 2. Each row shows the filename, creation date and time, and file size
 3. Rows are ordered newest first
-4. Each row has a "Restore" button that triggers the restore flow from US-099 for that file
+4. Each row has a "Restore" button that triggers the restore flow from #182 for that file
 5. Each row has a "Show in Folder" button that opens the OS file manager with the backup file selected
 6. If a tracked backup file no longer exists at its recorded path, the row displays a "File not found" indicator and the Restore and Show in Folder buttons are disabled
 7. When no backups have been created yet, the section shows "No backups yet" with a prompt to create one
@@ -29,33 +30,33 @@ As a real estate agent, I want to see a list of backups I have created so that I
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/backup.feature`.
 
 ```gherkin
-@us107
+@story_158
 Scenario: Backup history lists all previously created backups newest first
   Given three backups were created on Jan 1, Jan 5, and Jan 10
   When the user views the Backup section
   Then the history list shows the Jan 10 backup first, then Jan 5, then Jan 1
   And each row shows the filename, creation date, and file size
 
-@us107
+@story_158
 Scenario: Restore button in history triggers the restore flow for that backup
   Given the backup history shows a row for "ourcrm_2024-01-10_090000.backup"
   When the user clicks "Restore" on that row
-  Then the restore flow from US-099 begins using that file
+  Then the restore flow from #182 begins using that file
 
-@us107
+@story_158
 Scenario: Show in Folder opens the file manager with the backup file selected
   Given the backup history shows a row for a backup that still exists
   When the user clicks "Show in Folder" on that row
   Then the OS file manager opens with the backup file selected
 
-@us107
+@story_158
 Scenario: Missing file shows a File not found indicator with disabled actions
   Given a tracked backup file has been deleted externally
   When the user views the backup history
   Then the row for that backup shows "File not found"
   And the Restore and Show in Folder buttons on that row are disabled
 
-@us107
+@story_158
 Scenario: Empty state is shown before any backups are created
   Given no backups have been created
   When the user views the Backup section
@@ -64,7 +65,7 @@ Scenario: Empty state is shown before any backups are created
 
 ## Manual Tests
 
-**Story:** [US-127 — View Backup History](../docs/127-view-backup-history.md)
+**Story:** [#24 — View Backup History](../docs/127-view-backup-history.md)
 
 ### History list is shown in the Backup section
 1. Create two or three backups at different times
@@ -74,7 +75,7 @@ Scenario: Empty state is shown before any backups are created
 
 ### Restore from history
 1. In the backup history, click "Restore" on an older backup row
-2. Confirm the restore confirmation dialog from US-099 opens for that file
+2. Confirm the restore confirmation dialog from #182 opens for that file
 3. Complete the restore and confirm it uses the selected backup
 
 ### Show in Folder

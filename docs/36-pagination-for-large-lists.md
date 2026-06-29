@@ -1,6 +1,7 @@
-# US-155 — Pagination for Large Lists
+# 36 - Pagination For Large Lists
 
 **Capability:** shell
+**Milestone:** v0.2.0 — Secure Shell
 **Status:** Not Done
 **GitHub Issue:** #36
 **Priority:** Post-MVP
@@ -24,14 +25,14 @@ As an agent, I want large record lists to be displayed in pages, so that the app
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/shell.feature`.
 
 ```gherkin
-@us168
+@story_142
 Scenario: Contact list is paginated when there are more records than the page size
   Given 250 contacts exist and the page size is 100
   When the user opens the Contacts list
   Then the first 100 contacts are shown
   And pagination controls show "Page 1 of 3 — 250 records"
 
-@us168
+@story_142
 Scenario: Next and Previous buttons navigate between pages
   Given the user is on page 1 of the Contacts list
   When the user clicks "Next"
@@ -39,19 +40,19 @@ Scenario: Next and Previous buttons navigate between pages
   When the user clicks "Previous"
   Then page 1 is displayed again
 
-@us168
+@story_142
 Scenario: Jumping to a specific page navigates directly there
   Given the Contacts list has 5 pages
   When the user enters "4" in the page number field
   Then page 4 is displayed
 
-@us168
+@story_142
 Scenario: Active filters are preserved when changing pages
   Given a status filter is applied to the Leads list showing results across 3 pages
   When the user navigates to page 2
   Then the status filter is still active and only filtered records are shown
 
-@us168
+@story_142
 Scenario: Page size change applies immediately
   Given the user changes the page size from 100 to 25 in Settings
   When the user views the Contacts list
@@ -59,7 +60,7 @@ Scenario: Page size change applies immediately
 ```
 
 ## Manual Tests
-**Story:** [US-144 — Pagination for Large Lists](../docs/144-pagination-for-large-lists.md)
+**Story:** [#93 — Pagination for Large Lists](../docs/144-pagination-for-large-lists.md)
 
 ### Contacts list shows pagination controls with many records
 1. Ensure more than 100 contacts exist

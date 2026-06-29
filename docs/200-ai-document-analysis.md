@@ -1,6 +1,7 @@
-# US-196 — Analyse Document with AI
+# 200 - Analyse Document With AI
 
 **Capability:** ai
+**Milestone:** v1.1.0+ — Post-Production
 **Status:** Not Done
 **GitHub Issue:** #200
 **Priority:** Post-MVP
@@ -30,33 +31,33 @@ As an agent, I want to use AI to analyse uploaded contracts and disclosures, so 
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/ai.feature`.
 
 ```gherkin
-@us152
+@story_33
 Scenario: User analyses a document and sees structured extraction results
   Given AI is configured
   And a PDF document is uploaded to a contact
   When the user clicks "Analyse with AI"
   Then a structured panel shows extracted dates, amounts, parties, and contingencies
 
-@us152
+@story_33
 Scenario: Confidence indicator is shown for each extracted field
   Given an analysis has completed
   When the user views the extraction panel
   Then each field shows a High, Medium, or Low confidence indicator
 
-@us152
+@story_33
 Scenario: Scanned PDF is processed via OCR before analysis
   Given a scanned PDF is uploaded
   When the user clicks "Analyse with AI"
   Then OCR is applied and the analysis proceeds on the extracted text
 
-@us152
+@story_33
 Scenario: "Analyse with AI" is disabled when AI is not configured
   Given AI is not configured
   When the user views the document list
   Then the "Analyse with AI" button is disabled
   And hovering shows a tooltip directing the user to Settings → AI
 
-@us152 @live_ai
+@story_33 @live_ai
 Scenario: Real AI provider extracts key dates and amounts from a contract PDF
   Given a real AI provider is configured
   And a contract PDF with known dates and amounts is uploaded
@@ -65,7 +66,7 @@ Scenario: Real AI provider extracts key dates and amounts from a contract PDF
 ```
 
 ## Manual Tests
-**Story:** [US-185 — Analyse Document with AI](../docs/185-ai-document-analysis.md)
+**Story:** [#193 — Analyse Document with AI](../docs/185-ai-document-analysis.md)
 
 ### User analyses a contract and sees structured results
 1. Upload a contract PDF to a contact

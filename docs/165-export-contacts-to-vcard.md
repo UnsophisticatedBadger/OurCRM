@@ -1,6 +1,7 @@
-# US-114 — Export Contacts to vCard
+# 165 - Export Contacts To VCard
 
 **Capability:** Import & Export
+**Milestone:** v1.0.0 — Production
 **Status:** Not Done
 **GitHub Issue:** #165
 
@@ -27,31 +28,31 @@ As a real estate agent, I want to export my contacts to a vCard (.vcf) file so t
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/import_export.feature`.
 
 ```gherkin
-@us114
+@story_165
 Scenario: Export All creates a vCard file containing every contact
   Given 5 contacts exist in OurCRM
   When the user clicks "Export All" and saves the file
   Then a .vcf file is created containing 5 vCard entries
 
-@us114
+@story_165
 Scenario: Export Filtered creates a vCard file with only the filtered contacts
   Given 10 contacts exist and a tag filter is active showing 3 contacts
   When the user clicks "Export Filtered" and saves the file
   Then the .vcf file contains 3 vCard entries matching the filtered contacts
 
-@us114
+@story_165
 Scenario: Exported vCard includes all mapped contact fields
   Given a contact has name "Bob Jones", email "bob@example.com", phone "(713) 555-1234", and tags "Buyer", "VIP"
   When the contact is exported to vCard
   Then the resulting vCard entry contains FN, EMAIL, TEL, and CATEGORIES:Buyer,VIP
 
-@us114
+@story_165
 Scenario: Success message shows contact count and file path
   Given the user has exported 8 contacts
   When the export completes
   Then a message is shown: "8 contacts exported to [file path]"
 
-@us114
+@story_165
 Scenario: Cancelling the save dialog takes no action
   Given the user clicks "Export All" but then cancels the file save dialog
   Then no file is created and the user remains in the Contacts section
@@ -59,7 +60,7 @@ Scenario: Cancelling the save dialog takes no action
 
 ## Manual Tests
 
-**Story:** [US-104 — Export Contacts to vCard](../docs/088-export-contacts-to-vcard.md)
+**Story:** [#155 — Export Contacts to vCard](../docs/088-export-contacts-to-vcard.md)
 
 ### Export All creates a complete file
 1. Ensure several contacts exist

@@ -1,6 +1,7 @@
-# US-117 — Report Bug with Error Logs
+# 81 - Report Bug With Error Logs
 
 **Capability:** Infrastructure
+**Milestone:** v0.5.0 — MVP
 **Status:** Not Done
 **GitHub Issue:** #81
 
@@ -22,10 +23,10 @@ Privacy boundary: no contact records, notes content, or personally identifiable 
 
 1. Help → Report a Bug opens the bug report dialog from any screen in the app
 2. The form has required fields: Category (Crash / Performance / UI / Data Loss / Feature Not Working / Other), Title, Description; and optional fields: Steps to Reproduce, Email address for follow-up
-3. The dialog automatically attaches the 20 most recent error log entries from US-106, shown in a collapsible "Diagnostic Logs" section; the user can remove individual entries before submitting
+3. The dialog automatically attaches the 20 most recent error log entries from #157, shown in a collapsible "Diagnostic Logs" section; the user can remove individual entries before submitting
 4. System information is automatically collected and shown in a collapsible section: OS version, app version, approximate memory usage; no contact data is included
 5. A privacy notice is visible in the dialog before submission, stating what data will be sent
-6. Clicking "Report Bug" on an error log entry in US-106 opens the dialog with that entry pre-selected in the Diagnostic Logs section
+6. Clicking "Report Bug" on an error log entry in #157 opens the dialog with that entry pre-selected in the Diagnostic Logs section
 7. On successful submission the dialog shows a confirmation message with a report ID that the user can copy
 
 ## BDD Scenarios
@@ -33,7 +34,7 @@ Privacy boundary: no contact records, notes content, or personally identifiable 
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/infrastructure.feature`.
 
 ```gherkin
-@us123
+@story_167
 Scenario: Bug report dialog opens from Help menu
   Given the user is on any screen in the application
   When the user selects Help > Report a Bug
@@ -41,27 +42,27 @@ Scenario: Bug report dialog opens from Help menu
   And the Diagnostic Logs section contains the most recent log entries
   And a collapsible System Information section is visible
 
-@us123
+@story_167
 Scenario: Required fields are validated before submitting
   Given the bug report dialog is open
   When the user clicks Submit without filling Category, Title, and Description
   Then the empty required fields are highlighted
   And the report is not submitted
 
-@us123
+@story_167
 Scenario: Privacy notice is visible in the dialog
   Given the bug report dialog is open
   When the user views the dialog
   Then a privacy notice is shown stating what data will be sent
 
-@us123
+@story_167
 Scenario: Opening from an error log entry pre-selects that entry
   Given the error log viewer is open and shows an Error entry
   When the user clicks "Report Bug" on that entry
   Then the bug report dialog opens
   And that entry is pre-selected in the Diagnostic Logs section
 
-@us123
+@story_167
 Scenario: Successful submission shows a confirmation with a report ID
   Given the bug report dialog is filled with Category, Title, and Description
   When the user submits the report
@@ -71,7 +72,7 @@ Scenario: Successful submission shows a confirmation with a report ID
 
 ## Manual Tests
 
-**Story:** [US-107 — Report Bug with Error Logs](../docs/107-report-bug-with-error-logs.md)
+**Story:** [#158 — Report Bug with Error Logs](../docs/107-report-bug-with-error-logs.md)
 
 ### Bug report dialog opens from Help menu
 1. From any screen, open Help → Report a Bug

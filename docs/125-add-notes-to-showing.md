@@ -1,6 +1,7 @@
-# US-078 — Add Notes to a Showing
+# 125 - Add Notes To A Showing
 
 **Capability:** Calendar & Showings
+**Milestone:** v0.8.0 — Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #125
 
@@ -19,32 +20,32 @@ As a real estate agent, I want to add timestamped notes to a showing at any time
 3. Each saved note is stored with the timestamp of when it was created
 4. All notes for a showing are displayed in chronological order (oldest first) in its detail view
 5. Notes persist across application restarts
-6. The optional notes field on the showing creation form (US-061) is treated as the showing's first note and appears at the top of the notes list
+6. The optional notes field on the showing creation form (#110) is treated as the showing's first note and appears at the top of the notes list
 
 ## BDD Scenarios
 
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/calendar.feature`.
 
 ```gherkin
-@us059
+@story_108
 Scenario: User adds a note to an upcoming showing and it appears in the detail view
   Given a showing scheduled for tomorrow exists
   When the user opens the showing's detail view and adds the note "Bring pre-approval letter"
   Then "Bring pre-approval letter" is displayed in the showing's notes section with a timestamp
 
-@us059
+@story_108
 Scenario: User submits an empty note and sees a validation error
   Given a showing's detail view is open
   When the user submits an empty note
   Then a validation error is shown and no note is saved
 
-@us059
+@story_108
 Scenario: Multiple notes appear in chronological order
   Given a showing with a note added at 9:00 AM and another added at 10:00 AM
   When the user views the showing's details
   Then the 9:00 AM note appears above the 10:00 AM note
 
-@us059
+@story_108
 Scenario: Notes persist after the application restarts
   Given a note "Buyer very excited about the garden" was added to a showing
   When the user restarts the application and reopens the showing
@@ -53,7 +54,7 @@ Scenario: Notes persist after the application restarts
 
 ## Manual Tests
 
-**Story:** [US-064 — Add Notes to a Showing](../docs/064-add-notes-to-showing.md)
+**Story:** [#111 — Add Notes to a Showing](../docs/064-add-notes-to-showing.md)
 
 ### User adds a note to an upcoming showing
 1. Open any upcoming showing's detail view

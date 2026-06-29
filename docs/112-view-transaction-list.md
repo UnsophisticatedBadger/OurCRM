@@ -1,6 +1,7 @@
-# US-065 — View Transaction List
+# 112 - View Transaction List
 
 **Capability:** Transactions
+**Milestone:** v0.8.0 — Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #112
 
@@ -28,32 +29,32 @@ As a real estate agent, I want to see all my transactions in a sortable, filtera
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/transactions.feature`.
 
 ```gherkin
-@us048
+@story_72
 Scenario: User with transactions sees them in the Transactions section
   Given transactions "123 Oak St Sale" (Under Contract) and "456 Elm Ave Lease" (Closed) exist
   When the user opens the Transactions section
   Then the list shows both transactions
 
-@us048
+@story_72
 Scenario: Status column is color-coded
   Given transactions with Under Contract, Pending, Closed, and Cancelled statuses exist
   When the user views the transaction list
   Then Under Contract is yellow, Pending is orange, Closed is green, and Cancelled is grey
 
-@us048
+@story_72
 Scenario: Transactions closing within 7 days show a warning indicator
   Given a transaction has a closing date 3 days from today
   When the user views the transaction list
   Then that transaction row shows a warning indicator
 
-@us048
+@story_72
 Scenario: User with no transactions sees an empty state
   Given no transactions exist
   When the user opens the Transactions section
   Then "No transactions yet" is shown
   And a "Create Your First Transaction" button is visible
 
-@us048
+@story_72
 Scenario: Status filter is preserved after navigating away and back
   Given the user has the "Under Contract" filter active
   When the user navigates to Contacts and returns to Transactions
@@ -62,7 +63,7 @@ Scenario: Status filter is preserved after navigating away and back
 
 ## Manual Tests
 
-**Story:** [US-051 — View Transaction List](../docs/057-view-transaction-list.md)
+**Story:** [#75 — View Transaction List](../docs/057-view-transaction-list.md)
 
 ### User sees all transactions with correct columns
 1. Create transactions with varied data

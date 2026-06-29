@@ -1,6 +1,7 @@
-# US-164 — Save Search Criteria for Leads and Properties
+# 97 - Save Search Criteria For Leads And Properties
 
 **Capability:** leads
+**Milestone:** v0.5.0 — MVP
 **Status:** Not Done
 **GitHub Issue:** #97
 **Priority:** Post-MVP
@@ -15,7 +16,7 @@ As an agent, I want to save my frequently used search and filter combinations in
 
 ## Notes
 
-Saved searches in Leads and Properties follow the same name-and-recall model as US-117 (Contacts). Each section maintains its own separate list of saved searches.
+Saved searches in Leads and Properties follow the same name-and-recall model as #81 (Contacts). Each section maintains its own separate list of saved searches.
 
 ## Acceptance Criteria
 1. After applying any search or filter criteria in the Leads section, a "Save Search" button is available; the same applies in the Properties section
@@ -50,7 +51,7 @@ Scenario: User saves a property filter and recalls it
 ```
 
 ## Manual Tests
-**Story:** [US-153 — Save Search Criteria for Leads and Properties](../docs/153-save-search-criteria-for-leads-and-properties.md)
+**Story:** [#34 — Save Search Criteria for Leads and Properties](../docs/153-save-search-criteria-for-leads-and-properties.md)
 
 ### Saving and recalling a lead search
 1. Apply a filter in the Leads section (e.g., Status = Hot, Source = Referral)

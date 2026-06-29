@@ -1,6 +1,7 @@
-# US-193 — Draft Email with AI
+# 197 - Draft Email With AI
 
 **Capability:** ai
+**Milestone:** v1.1.0+ — Post-Production
 **Status:** Not Done
 **GitHub Issue:** #197
 **Priority:** Post-MVP
@@ -27,41 +28,41 @@ As an agent, I want to generate an AI-drafted email from the compose form, so th
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/ai.feature`.
 
 ```gherkin
-@us149
+@story_30
 Scenario: User generates an email draft with AI
   Given AI is configured
   And the user has the email compose form open
   When the user clicks "Draft with AI", enters a purpose, selects "Professional" tone, and clicks "Generate"
   Then an email body and suggested subject line are shown in the preview panel
 
-@us149
+@story_30
 Scenario: Draft addresses the selected recipient by first name
   Given AI is configured
   And a contact named "Maria" is selected as the recipient
   When the user generates a draft
   Then the greeting in the draft uses "Maria"
 
-@us149
+@story_30
 Scenario: User regenerates to get a different draft
   Given a draft has been generated
   When the user clicks "Regenerate"
   Then a new draft body is returned with different wording
 
-@us149
+@story_30
 Scenario: User inserts the draft into the compose form
   Given a draft has been generated and the user is satisfied
   When the user clicks "Use This Draft"
   Then the draft body replaces the compose form body
   And the suggested subject line replaces the subject field
 
-@us149
+@story_30
 Scenario: "Draft with AI" button is disabled when AI is not configured
   Given AI is not configured
   When the user opens the email compose form
   Then the "Draft with AI" button is disabled
   And hovering shows a tooltip directing the user to Settings → AI
 
-@us149 @live_ai
+@story_30 @live_ai
 Scenario: User generates a draft using a real AI provider
   Given a real AI provider is configured (Ollama or OpenAI)
   When the user generates a draft with purpose "follow up after showing" and "Professional" tone
@@ -69,7 +70,7 @@ Scenario: User generates a draft using a real AI provider
 ```
 
 ## Manual Tests
-**Story:** [US-182 — Draft Email with AI](../docs/163-ai-email-drafting.md)
+**Story:** [#190 — Draft Email with AI](../docs/163-ai-email-drafting.md)
 
 ### User generates an email draft and uses it
 1. Open the email compose form with a recipient selected

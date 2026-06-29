@@ -1,6 +1,7 @@
-# US-145 — Roll Back a Failed Update
+# 94 - Roll Back A Failed Update
 
 **Capability:** infrastructure
+**Milestone:** v0.5.0 — MVP
 **Status:** Not Done
 **GitHub Issue:** #94
 **Priority:** Post-MVP
@@ -13,7 +14,7 @@ As a user, I want the app to restore the previous version if an update fails to 
 - #181 — Create a Backup
 
 ## Acceptance Criteria
-1. If the installer exits with an error during a manual or auto update, the pre-update backup created in US-113 AC #6 is used to restore the previous version automatically
+1. If the installer exits with an error during a manual or auto update, the pre-update backup created in #164 AC #6 is used to restore the previous version automatically
 2. After rollback, the user is shown a message explaining that the update failed and the previous version has been restored
 3. The app launches successfully at the previous version after rollback completes
 4. If the rollback itself fails, the user is shown the path to the backup file and step-by-step instructions to restore manually
@@ -22,7 +23,7 @@ As a user, I want the app to restore the previous version if an update fails to 
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/infrastructure.feature`.
 
 ```gherkin
-@us177
+@story_151
 Scenario: Failed installer triggers automatic rollback
   Given a pre-update backup exists
   And the update installer exits with an error
@@ -30,14 +31,14 @@ Scenario: Failed installer triggers automatic rollback
   Then the previous version is restored from the backup
   And the user is notified that the update failed and the previous version is running
 
-@us177
+@story_151
 Scenario: App launches successfully at the previous version after rollback
   Given a rollback has completed
   When the application starts
   Then the previous version number is shown
   And all data is intact
 
-@us177
+@story_151
 Scenario: User is shown manual recovery path if rollback itself fails
   Given a pre-update backup exists
   And both the installer and the rollback fail
@@ -46,7 +47,7 @@ Scenario: User is shown manual recovery path if rollback itself fails
 ```
 
 ## Manual Tests
-**Story:** [US-134 — Roll Back a Failed Update](../docs/116-roll-back-failed-update.md)
+**Story:** [#186 — Roll Back a Failed Update](../docs/116-roll-back-failed-update.md)
 
 ### Failed update triggers rollback and the previous version is restored
 1. Simulate an installer failure (e.g., corrupt package in a test build)

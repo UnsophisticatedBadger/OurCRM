@@ -1,6 +1,7 @@
-# US-035 — Filter Contacts by Tags
+# 63 - Filter Contacts By Tags
 
 **Capability:** Contacts
+**Milestone:** v0.5.0 — MVP
 **Status:** Not Done
 **GitHub Issue:** #63
 
@@ -27,32 +28,32 @@ As a real estate agent, I want to filter my contact list by tag, so that I can f
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/contacts.feature`.
 
 ```gherkin
-@us027
+@story_55
 Scenario: Tag filter panel shows all unique tags with counts
   Given contacts tagged "buyer" (3) and "seller" (2) exist
   When the user opens the Contacts section
   Then the filter panel shows "buyer (3)" and "seller (2)"
   And "All Contacts (5)" is shown at the top
 
-@us027
+@story_55
 Scenario: Clicking a tag shows only matching contacts
   Given the filter panel is visible
   When the user clicks the "buyer" tag
   Then only contacts tagged "buyer" are shown
   And "buyer" is visually highlighted in the filter panel
 
-@us027
+@story_55
 Scenario: Clicking All Contacts clears the filter
   Given the user has filtered by "buyer"
   When the user clicks "All Contacts"
   Then all contacts are shown and no tag is selected
 
-@us027
+@story_55
 Scenario: Empty filter result shows a helpful message
   Given the user filters by a tag that no current contacts carry
   Then "No contacts with this tag" is shown
 
-@us027
+@story_55
 Scenario: Active filter is preserved after navigating away and back
   Given the user has filtered by "buyer"
   When the user navigates to Leads and returns to Contacts
@@ -61,7 +62,7 @@ Scenario: Active filter is preserved after navigating away and back
 
 ## Manual Tests
 
-**Story:** [US-023 — Filter Contacts by Tags](../docs/023-filter-contacts-by-tags.md)
+**Story:** [#51 — Filter Contacts by Tags](../docs/023-filter-contacts-by-tags.md)
 
 ### User sees all tags listed with correct counts
 1. Create 3 contacts tagged "buyer" and 2 tagged "seller"

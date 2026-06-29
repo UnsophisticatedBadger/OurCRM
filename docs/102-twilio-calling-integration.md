@@ -1,7 +1,7 @@
-# US-203 — Twilio Calling Integration
+# 102 - Twilio Calling Integration
 
 **Capability:** telephony
-**Milestone:** Post-v1.0
+**Milestone:** v1.1.0+ — Post-Production
 **Status:** Not Started
 **GitHub Issue:** #102
 

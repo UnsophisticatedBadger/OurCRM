@@ -1,6 +1,7 @@
-# US-192 — Map View for MLS Listing
+# 101 - Map View For MLS Listing
 
 **Capability:** mls
+**Milestone:** v0.5.0 — MVP
 **Status:** Not Done
 **GitHub Issue:** #101
 **Priority:** Post-MVP
@@ -36,7 +37,7 @@ Scenario: Map tab shows a fallback message when the address cannot be geocoded
 ```
 
 ## Manual Tests
-**Story:** [US-181 — Map View for MLS Listing](../docs/181-map-view-for-listing.md)
+**Story:** [#189 — Map View for MLS Listing](../docs/181-map-view-for-listing.md)
 
 ### Map shows the listing location
 1. Open an MLS listing detail for a property with a valid address

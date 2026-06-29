@@ -1,6 +1,7 @@
-# US-190 — Re-Sync Property from MLS
+# 99 - Re-Sync Property From MLS
 
 **Capability:** mls
+**Milestone:** v0.5.0 — MVP
 **Status:** Not Done
 **GitHub Issue:** #99
 **Priority:** Post-MVP
@@ -23,26 +24,26 @@ As an agent, I want to refresh a property that was imported from MLS with the la
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/mls.feature`.
 
 ```gherkin
-@us203
+@story_102
 Scenario: Refresh from MLS updates the list price
   Given a property was imported from MLS with list price $500,000
   And the MLS listing now shows $490,000
   When the user clicks "Refresh from MLS"
   Then the property's list price is updated to $490,000
 
-@us203
+@story_102
 Scenario: Manually edited fields are not overwritten by refresh
   Given a property was imported from MLS and the agent edited the notes field
   When the user refreshes from MLS
   Then the notes field retains the agent's edits
 
-@us203
+@story_102
 Scenario: Refresh shows a message when the listing is no longer on MLS
   Given a property was imported from MLS but the listing has since been removed
   When the user clicks "Refresh from MLS"
   Then an informational message is shown and no property fields are changed
 
-@us203 @live_mls
+@story_102 @live_mls
 Scenario: Real MLS refresh updates a property from a live listing
   Given a property imported from a real MLS listing
   When the user clicks "Refresh from MLS"
@@ -50,7 +51,7 @@ Scenario: Real MLS refresh updates a property from a live listing
 ```
 
 ## Manual Tests
-**Story:** [US-179 — Re-Sync Property from MLS](../docs/179-resync-property-from-mls.md)
+**Story:** [#187 — Re-Sync Property from MLS](../docs/179-resync-property-from-mls.md)
 
 ### Refresh from MLS updates the list price
 1. Open a property that was imported from MLS

@@ -1,6 +1,7 @@
-# US-180 — Connect Outlook via OAuth
+# 188 - Connect Outlook Via OAuth
 
 **Capability:** email
+**Milestone:** v1.1.0+ — Post-Production
 **Status:** Not Done
 **GitHub Issue:** #188
 **Priority:** Post-MVP
@@ -18,7 +19,7 @@ As an agent, I want to connect my Outlook or Office 365 account via OAuth, so th
 3. After connecting, outbound emails are sent via the Microsoft Graph API instead of the configured SMTP server
 4. OAuth token is stored in the OS keyring; no password is stored
 5. Token is refreshed automatically before it expires
-6. User can disconnect Outlook; outbound email falls back to the SMTP server configured in US-078
+6. User can disconnect Outlook; outbound email falls back to the SMTP server configured in #125
 7. If the OAuth token is revoked externally, the user is prompted to reconnect before their next send attempt
 8. Outlook shows as connected / disconnected with the linked address visible in Settings
 
@@ -26,41 +27,41 @@ As an agent, I want to connect my Outlook or Office 365 account via OAuth, so th
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/email.feature`.
 
 ```gherkin
-@us147
+@story_28
 Scenario: User connects Outlook via OAuth and sends an email through Outlook
   Given the user is in Settings → Email → Outlook
   When the user clicks "Connect Outlook" and completes the Microsoft OAuth flow
   Then Outlook shows as connected in Settings with the linked address
   And outbound emails are routed through the Microsoft Graph API
 
-@us147
+@story_28
 Scenario: OAuth token is stored in the OS keyring
   Given the user has connected Outlook via OAuth
   When the token is stored
   Then it is in the OS keyring
   And no password or token is written to the app's config files
 
-@us147
+@story_28
 Scenario: Expired token is refreshed automatically before sending
   Given Outlook is connected and the access token has expired
   When the user sends an email
   Then the token is refreshed automatically
   And the email is sent without prompting the user
 
-@us147
+@story_28
 Scenario: User disconnects Outlook
   Given Outlook is connected
   When the user clicks "Disconnect" in Settings → Email → Outlook
   Then Outlook shows as disconnected
   And subsequent outbound emails use the configured SMTP server
 
-@us147
+@story_28
 Scenario: Revoked token prompts reconnect before sending
   Given the Outlook OAuth token has been revoked externally
   When the user attempts to send an email
   Then a prompt appears to reconnect Outlook before the email is sent
 
-@us147 @live_microsoft
+@story_28 @live_microsoft
 Scenario: App completes real Microsoft OAuth flow and obtains a send-capable token
   Given the user has a valid Microsoft account
   When the user completes the OAuth flow in the browser
@@ -68,7 +69,7 @@ Scenario: App completes real Microsoft OAuth flow and obtains a send-capable tok
 ```
 
 ## Manual Tests
-**Story:** [US-169 — Connect Outlook via OAuth](../docs/105-outlook-oauth-integration.md)
+**Story:** [#143 — Connect Outlook via OAuth](../docs/105-outlook-oauth-integration.md)
 
 ### User connects Outlook and sees it show as connected
 1. Go to Settings → Email → Outlook

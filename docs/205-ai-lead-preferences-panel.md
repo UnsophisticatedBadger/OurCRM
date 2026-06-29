@@ -1,6 +1,7 @@
-# US-201 — AI Lead Preferences Panel
+# 205 - AI Lead Preferences Panel
 
 **Capability:** ai
+**Milestone:** v1.1.0+ — Post-Production
 **Status:** Not Done
 **GitHub Issue:** #205
 **Priority:** Post-MVP
@@ -24,7 +25,7 @@ As an agent, I want the AI to extract and display a lead's stated preferences in
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/ai.feature`.
 
 ```gherkin
-@us191
+@story_100
 Scenario: User extracts preferences and they appear in the Preferences panel
   Given AI is configured
   And a lead has notes mentioning a budget and location preference
@@ -32,26 +33,26 @@ Scenario: User extracts preferences and they appear in the Preferences panel
   Then a Preferences panel appears in the lead detail
   And it shows the budget and location values extracted from the notes
 
-@us191
+@story_100
 Scenario: User edits an extracted preference item
   Given the Preferences panel shows a budget range of "$400k–$500k"
   When the user edits it to "$450k–$550k"
   Then the panel shows the updated value
 
-@us191
+@story_100
 Scenario: Re-extracting replaces the panel contents
   Given the Preferences panel has manually edited items
   When the user clicks "Re-extract"
   Then the panel is replaced with freshly extracted preferences from the latest notes
 
-@us191
+@story_100
 Scenario: "Extract Preferences" is disabled when AI is not configured
   Given AI is not configured
   When the user views a lead's detail
   Then the "Extract Preferences" button is disabled
   And hovering shows a tooltip directing the user to Settings → AI
 
-@us191 @live_ai
+@story_100 @live_ai
 Scenario: Real AI provider extracts structured preferences from lead notes
   Given a real AI provider is configured
   And a lead has notes containing budget, location, and property type mentions
@@ -60,7 +61,7 @@ Scenario: Real AI provider extracts structured preferences from lead notes
 ```
 
 ## Manual Tests
-**Story:** [US-190 — AI Lead Preferences Panel](../docs/190-ai-lead-preferences-panel.md)
+**Story:** [#99 — AI Lead Preferences Panel](../docs/190-ai-lead-preferences-panel.md)
 
 ### Preferences are extracted and displayed in a structured panel
 1. Open a lead with notes mentioning budget, location, and property type

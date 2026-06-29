@@ -1,6 +1,7 @@
-# US-185 — View Emails from Unknown Contacts
+# 193 - View Emails From Unknown Contacts
 
 **Capability:** email
+**Milestone:** v1.1.0+ — Post-Production
 **Status:** Not Done
 **GitHub Issue:** #193
 **Priority:** Post-MVP
@@ -23,21 +24,21 @@ As an agent, I want to see inbound emails from senders not in my contacts, so th
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/email.feature`.
 
 ```gherkin
-@us186
+@story_194
 Scenario: Inbound email from unknown sender appears in Unknown Senders section
   Given inbox sync is enabled
   When an email arrives from an address not matching any contact
   Then it appears in the Email tab → Unknown Senders section
   And shows the sender address, subject, and received date
 
-@us186
+@story_194
 Scenario: User creates a contact from an unknown sender entry
   Given an unknown sender email is shown
   When the user clicks "Create Contact"
   Then the new contact form opens pre-filled with the sender's email address
   And after saving, the email is linked to the new contact and removed from Unknown Senders
 
-@us186
+@story_194
 Scenario: User dismisses an unknown sender email and it does not reappear
   Given an unknown sender email is shown
   When the user clicks "Dismiss"
@@ -46,7 +47,7 @@ Scenario: User dismisses an unknown sender email and it does not reappear
 ```
 
 ## Manual Tests
-**Story:** [US-174 — View Emails from Unknown Contacts](../docs/174-view-emails-from-unknown-contacts.md)
+**Story:** [#148 — View Emails from Unknown Contacts](../docs/174-view-emails-from-unknown-contacts.md)
 
 ### Inbound email from unknown sender appears in the Unknown Senders section
 1. With inbox sync enabled, receive an email from an address not in contacts

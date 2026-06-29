@@ -1,4 +1,4 @@
-# US-123 — PDF Manual Auto-generation
+# 167 - PDF Manual Auto-generation
 
 **Capability:** infrastructure
 **Milestone:** v1.0.0 — Production

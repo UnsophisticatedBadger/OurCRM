@@ -1,6 +1,7 @@
-# US-183 — Choose Folder for Sent Emails
+# 191 - Choose Folder For Sent Emails
 
 **Capability:** email
+**Milestone:** v1.1.0+ — Post-Production
 **Status:** Not Done
 **GitHub Issue:** #191
 **Priority:** Post-MVP
@@ -22,13 +23,13 @@ As an agent, I want to choose which Gmail label or Outlook folder OurCRM-sent em
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/email.feature`.
 
 ```gherkin
-@us184
+@story_192
 Scenario: Sent emails are filed in the Gmail Sent folder by default
   Given Gmail is connected
   When the user sends an email from OurCRM
   Then the email appears in the Gmail Sent folder
 
-@us184
+@story_192
 Scenario: User changes the Gmail label and subsequent emails are filed there
   Given Gmail is connected
   When the user selects "CRM Sent" from the "Sent emails label" dropdown
@@ -36,7 +37,7 @@ Scenario: User changes the Gmail label and subsequent emails are filed there
   Then the email appears under the "CRM Sent" label in Gmail
   And not in the standard Sent folder
 
-@us184
+@story_192
 Scenario: Changing the label does not move previously sent emails
   Given three emails were previously sent and filed in the Gmail Sent folder
   When the user changes the label to "CRM Sent"
@@ -44,7 +45,7 @@ Scenario: Changing the label does not move previously sent emails
 ```
 
 ## Manual Tests
-**Story:** [US-172 — Choose Folder for Sent Emails](../docs/077-choose-folder-for-sent-emails.md)
+**Story:** [#146 — Choose Folder for Sent Emails](../docs/077-choose-folder-for-sent-emails.md)
 
 ### Sent emails are filed in the default folder
 1. Connect Gmail and send an email from OurCRM

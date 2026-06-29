@@ -1,6 +1,7 @@
-# US-191 — MLS Listing Photo Lightbox
+# 100 - MLS Listing Photo Lightbox
 
 **Capability:** mls
+**Milestone:** v0.5.0 — MVP
 **Status:** Not Done
 **GitHub Issue:** #100
 **Priority:** Post-MVP
@@ -44,7 +45,7 @@ Scenario: Escape key closes the lightbox
 ```
 
 ## Manual Tests
-**Story:** [US-180 — MLS Listing Photo Lightbox](../docs/180-mls-listing-photo-lightbox.md)
+**Story:** [#188 — MLS Listing Photo Lightbox](../docs/180-mls-listing-photo-lightbox.md)
 
 ### Clicking a photo opens the lightbox
 1. Open an MLS listing detail with multiple photos
