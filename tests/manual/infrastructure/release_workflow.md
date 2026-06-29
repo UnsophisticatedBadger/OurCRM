@@ -1,38 +1,37 @@
 # Release Workflow — Manual Tests
 
-**Story:** [US-002 — Build Executable on Tag](../../../docs/002-build-executable-on-tag.md)
+**Story:** [US-002 — Automated Release Pipeline](../../../docs/002-build-executable-on-tag.md)
 
-## Pushing a version tag triggers the release workflow
+## feat commit on main triggers a new release
 
-1. Push a version tag: `git tag v0.1.0 && git push origin v0.1.0`
-2. Open GitHub Actions
-3. Verify the release workflow starts
-4. Verify matrix jobs run for windows-latest, macos-latest, and ubuntu-latest
+1. Merge a `feat:` commit to main (or push directly)
+2. Open GitHub Actions → Release workflow
+3. Verify the **version** job runs and creates a `v0.1.0` tag
+4. Verify the **build** job starts automatically after the version job
+5. Verify the **publish** job creates a GitHub Release named `v0.1.0`
+6. Verify the Windows executable is attached as a release asset
 
-## Non-version tags do not trigger the release workflow
+## fix commit on main triggers a patch bump only
 
-1. Push a tag that does not match `v*.*.*`: `git tag beta-1 && git push origin beta-1`
-2. Open GitHub Actions
-3. Verify the release workflow does NOT appear in the run list
+1. After a prior release exists (e.g. `v0.1.0`), push a `fix:` commit to main
+2. Verify the version job bumps to `v0.1.1` (patch), not `v0.2.0`
 
-## GitHub Release is created with all three platform assets
+## Non-bumping commit produces no release
 
-1. Wait for all matrix jobs to complete successfully
-2. Navigate to the Releases page on GitHub
-3. Verify a release named `v0.1.0` exists
-4. Verify Windows `.exe`, macOS `.app` bundle, and Linux executable are attached as assets
-5. Verify release notes include the tag name and commit SHA
+1. Push a `chore:` or `ci:` commit to main (no `feat:` or `fix:`)
+2. Verify the version job runs but creates no new tag
+3. Verify the build and publish jobs do not run
 
 ## Build failure prevents the release from being published
 
-1. Introduce a build error and push a new version tag
-2. Verify the failing matrix job blocks the release creation step
-3. Verify no GitHub Release is created for that tag
-4. Revert the error
+1. Introduce a build error and push a `feat:` commit to main
+2. Verify the version job creates the tag
+3. Verify the build job fails
+4. Verify the publish job does not run and no GitHub Release is created
+5. Revert the error
 
-## Executables run on their native platforms
+## Windows executable runs correctly
 
-1. Download the Windows executable from the release and run it on Windows
-2. Download the macOS bundle and run it on macOS
-3. Download the Linux executable and run it on Linux
-4. On each platform: verify the window appears with "OurCRM" in the title and shuts down cleanly
+1. Download the Windows executable from the GitHub Release
+2. Run it on Windows
+3. Verify the window appears with "OurCRM" in the title and shuts down cleanly

@@ -1,7 +1,7 @@
 ﻿# US-001 — CI Pipeline
 
 **Capability:** infrastructure
-**Status:** Not Done
+**Status:** Done
 
 ## User Story
 As a developer, I want automated checks to run on every push and pull request, so that code quality is enforced consistently without manual intervention.

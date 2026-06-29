@@ -1,6 +1,6 @@
 [project]
 name = "ourcrm"
-version = "0.1.0"
+version = "0.0.0"
 description = "A desktop CRM for real estate agents."
 readme = "README.md"
 requires-python = ">=3.14"
@@ -33,6 +33,7 @@ dev = [
     "pytest-bdd>=8.1",
     "pytest-cov>=7.1",
     "pytest-qt>=4.5.0",
+    "python-semantic-release>=9.0",
     "ruff>=0.9",
 ]
 
@@ -126,6 +127,21 @@ exclude_lines = [
 ]
 
 # ---------------------------------------------------------------------------
+# python-semantic-release — automated versioning from conventional commits
+# ---------------------------------------------------------------------------
+[tool.semantic_release]
+version_toml = ["pyproject.toml:project.version"]
+tag_format = "v{version}"
+commit_parser = "angular"
+
+[tool.semantic_release.commit_parser_options]
+minor_tags = ["feat"]
+patch_tags = ["fix", "perf", "refactor"]
+
+[tool.semantic_release.publish]
+upload_to_vcs_release = false
+
+# ---------------------------------------------------------------------------
 # ourcrm — project-level configuration
 # ---------------------------------------------------------------------------
 [tool.ourcrm]
@@ -140,6 +156,7 @@ capabilities = [
     "transactions",
     "email",
     "mls",
+    "telephony",
     "ai",
     "notifications",
     "backup",

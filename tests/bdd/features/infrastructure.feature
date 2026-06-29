@@ -9,3 +9,13 @@ Feature: Infrastructure
     And the output directory is dist
     And the entry point is the application main module
     And the Windows console window is suppressed
+
+  @us-002
+  Scenario: Semantic release is configured to version from conventional commits
+    Given pyproject.toml is available
+    When I read the semantic release configuration
+    Then the version source is pyproject.toml
+    And the tag format uses the v prefix
+    And feat commits trigger a minor version bump
+    And fix commits trigger a patch version bump
+    And release artifact upload is handled by the release workflow

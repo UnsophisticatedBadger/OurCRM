@@ -1,89 +1,46 @@
-﻿# Manual Tests: Dashboard
+# Dashboard — Manual Tests
 
-## Home Dashboard — US-014
+**Story:** [US-018 — Dashboard](../../../docs/018-dashboard.md)
 
-### Test 1: Dashboard is default view
+## Dashboard is the first screen shown after login
 
-1. Log in to OurCRM
-2. Verify the dashboard appears
-3. Verify it's the first thing you see
-4. Verify navigation shows "Dashboard" as selected
+1. Log in with the master password
+2. Verify the dashboard is displayed immediately — no additional navigation required
 
-### Test 2: Test today's schedule
+## Due callbacks appear in the Call Back Today section
 
-1. Create some events for today
-2. View the dashboard
-3. Verify they appear in Today's Schedule
-4. Verify times and locations are shown
-5. Click on an event
-6. Verify it opens the event details
+1. Add a contact with a callback timeframe that is due today or overdue
+2. Log in or return to the dashboard
+3. Verify the contact appears in the "Call Back Today" section
+4. Verify contacts are sorted by how overdue they are — most overdue first
 
-### Test 3: Test overdue tasks
+## New contacts appear in the New to Call section
 
-1. Create some overdue tasks
-2. View the dashboard
-3. Verify they appear in Overdue Tasks
-4. Verify they're prominently displayed
-5. Click on a task
-6. Verify it opens the task
+1. Add a contact to the call list without logging an outcome
+2. Return to the dashboard
+3. Verify the contact appears in the "New to Call" section
+4. Verify contacts are sorted by date added — most recent first
 
-### Test 4: Test key metrics
+## Contact details are visible on the dashboard
 
-1. Create leads, properties, etc.
-2. View the dashboard
-3. Verify the metrics are shown
-4. Verify the numbers are accurate
-5. Manually count to verify
+1. Open the dashboard
+2. Verify each contact in both sections shows name, phone number, and property address
 
-### Test 5: Test recent activity
+## Call button appears on dashboard contacts when calling is configured
 
-1. Perform various actions (create lead, update contact, etc.)
-2. View the dashboard
-3. Verify the activities appear
-4. Verify timestamps are shown
-5. Verify it's in chronological order
-
-### Test 6: Test quick actions
-
-1. View the dashboard
-2. Click "New Contact"
-3. Verify the form opens
-4. Test other quick actions
-5. Verify they all work
-
-### Test 7: Test navigation from dashboard
-
-1. Click on a task in the widget
-2. Verify it navigates to Tasks
-3. Verify the task is selected
-4. Test with other items
-
-### Test 8: Test performance
-
-1. Create lots of data
+1. Configure Google Voice in Settings
 2. Open the dashboard
-3. Measure load time
-4. Verify it's under 3 seconds
-5. Verify all widgets load
+3. Verify each contact shows a Call button
 
-### Test 9: Test on all platforms
+## Call count updates after logging an outcome
 
-1. Test on Windows
-2. Verify it works
-3. Test on macOS
-4. Verify it works
-5. Test on Linux
-6. Verify it works
-7. Document any platform-specific issues
+1. Open the dashboard and note the calls-logged-today count
+2. Open a contact from the dashboard and log a call outcome
+3. Return to the dashboard
+4. Verify the count has increased by one
 
----
+## Clicking a contact opens their detail view
 
-## Dashboard Stats Widget — US-042
-
-No additional manual tests beyond automated BDD scenarios. The BDD scenarios cover visibility of the four stat tiles and zero-state display. Downstream manual testing of accurate counts will occur when the corresponding CRM slices (Contacts, Leads, Properties, Tasks) are implemented.
-
----
-
-## Dashboard Quick Actions Navigation — US-015
-
-No additional manual tests beyond automated BDD scenarios. The BDD scenarios cover all four quick action buttons (New Contact, New Lead, New Property, New Task) and their navigation targets. The automated tests verify the navigation callback is invoked correctly without direct MainWindow imports.
+1. Click a contact on the dashboard
+2. Verify the contact detail view opens
+3. Verify the outcome can be logged from that view

@@ -2,18 +2,59 @@ name: Release
 
 on:
   push:
-    tags:
-      - "v*.*.*"
+    branches:
+      - main
 
 jobs:
-  build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [windows-latest, macos-latest, ubuntu-latest]
+  version:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+    outputs:
+      released: ${{ steps.version.outputs.released }}
+      tag: ${{ steps.version.outputs.tag }}
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+
+      - uses: astral-sh/setup-uv@v4
+        with:
+          enable-cache: true
+
+      - run: uv sync
+
+      - id: version
+        shell: bash
+        run: |
+          BEFORE=$(git tag --list "v*" --sort=-version:refname 2>/dev/null | head -1)
+          uv run semantic-release version --push
+          AFTER=$(git tag --list "v*" --sort=-version:refname 2>/dev/null | head -1)
+          if [ "${BEFORE}" != "${AFTER}" ] && [ -n "${AFTER}" ]; then
+            echo "released=true"  >> "$GITHUB_OUTPUT"
+            echo "tag=${AFTER}"   >> "$GITHUB_OUTPUT"
+          else
+            echo "released=false" >> "$GITHUB_OUTPUT"
+            echo "tag="           >> "$GITHUB_OUTPUT"
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build:
+    needs: version
+    if: needs.version.outputs.released == 'true'
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.version.outputs.tag }}
 
       - uses: actions/setup-python@v5
         with:
@@ -29,11 +70,11 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: ourcrm-${{ matrix.os }}
+          name: ourcrm-windows
           path: dist/
 
-  release:
-    needs: build
+  publish:
+    needs: [version, build]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -45,8 +86,9 @@ jobs:
 
       - uses: softprops/action-gh-release@v2
         with:
-          name: ${{ github.ref_name }}
-          body: |
-            **Tag:** ${{ github.ref_name }}
-            **Commit:** ${{ github.sha }}
+          tag_name: ${{ needs.version.outputs.tag }}
+          name: ${{ needs.version.outputs.tag }}
+          body: "**Tag:** ${{ needs.version.outputs.tag }}"
           files: artifacts/**/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

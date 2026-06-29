@@ -53,6 +53,7 @@ tests/
 3. **Capability isolation.** Imports flow inward: capabilities may import from `core/`, never from each other.
 4. **Dependency injection.** Dependencies are injected, never instantiated internally. Services receive their dependencies via constructor injection. The DI container lives in `core/`.
 5. **BDD first.** Write the `.feature` file before the implementation.
+6. **Offline first, integrations optional.** The core app must function with no internet connection and no external accounts configured. Integrations (MLS, Google Voice, Twilio, email, AI) are optional add-on modules that plug in when the user configures credentials. The DI container treats every integration service as `Optional[T]` and injects it only when configuration is present. UI elements tied to an integration appear only when that integration is active; they never block core workflows when absent.
 
 ## Canonical Capabilities
 
@@ -70,6 +71,7 @@ Every story belongs to exactly one capability group. The canonical list is defin
 | Transactions | `transactions` | transaction tracking |
 | Email | `email` | email integration |
 | MLS Integration | `mls` | HAR MLS integration |
+| Telephony | `telephony` | Google Voice click-to-call, Twilio calling |
 | AI Features | `ai` | AI features |
 | Notifications | `notifications` | desktop and in-app notifications |
 | Backup & Recovery | `backup` | backup and recovery |
