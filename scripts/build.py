@@ -12,7 +12,8 @@ def get_nuitka_args() -> list[str]:
         f"--output-dir={ROOT / 'dist'}",
     ]
     if sys.platform == "win32":
-        args.append("--windows-disable-console")
+        args.append("--windows-console-mode=disable")
+        args.append("--assume-yes-for-downloads")
     args.append(str(ROOT / "src" / "ourcrm" / "main.py"))
     return args
 

@@ -51,7 +51,7 @@ def entry_point_is_main(build_args: list[str]) -> None:
 @then("the Windows console window is suppressed")
 def console_suppressed(build_args: list[str]) -> None:
     if sys.platform == "win32":
-        assert "--windows-disable-console" in build_args
+        assert "--windows-console-mode=disable" in build_args
 
 
 # ── US-002: Semantic release configuration ────────────────────────────────────

@@ -25,4 +25,9 @@ def test_entry_point_is_main_module() -> None:
 
 def test_console_window_is_suppressed_on_windows() -> None:
     if sys.platform == "win32":
-        assert "--windows-disable-console" in get_nuitka_args()
+        assert "--windows-console-mode=disable" in get_nuitka_args()
+
+
+def test_downloads_are_accepted_noninteractively_on_windows() -> None:
+    if sys.platform == "win32":
+        assert "--assume-yes-for-downloads" in get_nuitka_args()
