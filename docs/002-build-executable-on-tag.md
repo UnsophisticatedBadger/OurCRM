@@ -1,7 +1,7 @@
 # US-002 — Automated Release Pipeline
 
 **Capability:** infrastructure
-**Status:** Not Done
+**Status:** Done
 
 ## User Story
 
@@ -34,7 +34,7 @@ As a developer, I want version numbers managed automatically and a Windows execu
 
 ## Definition of Done
 
-- [ ] BDD scenarios pass
-- [ ] `ruff`, `mypy --strict` clean
-- [ ] Push a `feat:` commit to main; confirm semantic-release creates `v0.1.0`, the build job runs, and `ourcrm-windows.zip` is attached to the GitHub Release
-- [ ] Manual verification: download zip, extract, run `ourcrm.exe`, confirm window appears and shuts down cleanly (see `tests/manual/infrastructure/release_workflow.md`)
+- [x] BDD scenarios pass
+- [x] `ruff`, `mypy --strict` clean
+- [x] Push a `feat:` commit to main; confirm semantic-release creates `v0.1.0`, the build job runs, and `ourcrm-windows.zip` is attached to the GitHub Release
+- [x] Manual verification: download zip, extract, run `ourcrm.exe`, confirm window appears and shuts down cleanly (see `tests/manual/infrastructure/release_workflow.md`)
