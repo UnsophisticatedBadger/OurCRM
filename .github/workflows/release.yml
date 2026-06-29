@@ -71,7 +71,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: ourcrm-windows
-          path: dist/
+          path: dist/ourcrm-windows.zip
 
   publish:
     needs: [version, build]

@@ -9,7 +9,7 @@
 3. Verify the **version** job runs and creates a `v0.1.0` tag
 4. Verify the **build** job starts automatically after the version job
 5. Verify the **publish** job creates a GitHub Release named `v0.1.0`
-6. Verify the Windows executable is attached as a release asset
+6. Verify `ourcrm-windows.zip` is attached as the sole Windows release asset
 
 ## fix commit on main triggers a patch bump only
 
@@ -30,8 +30,9 @@
 4. Verify the publish job does not run and no GitHub Release is created
 5. Revert the error
 
-## Windows executable runs correctly
+## Windows zip downloads and runs correctly
 
-1. Download the Windows executable from the GitHub Release
-2. Run it on Windows
-3. Verify the window appears with "OurCRM" in the title and shuts down cleanly
+1. Download `ourcrm-windows.zip` from the GitHub Release
+2. Extract the zip — you should see an `ourcrm/` folder
+3. Open the `ourcrm/` folder and run `ourcrm.exe`
+4. Verify the window appears with "OurCRM" in the title and shuts down cleanly
