@@ -28,31 +28,31 @@ As a real estate agent, I want to view a list of all my tasks so that I can see 
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/tasks.feature`.
 
 ```gherkin
-@story_21
+@story_129
 Scenario: Task list shows title, due date, and priority badge for each task
   Given tasks "Call Alice" (High, due tomorrow) and "Review contract" (Low, due next week) exist
   When the user opens the Tasks section
   Then both tasks are listed with their titles, due dates, and priority badges
 
-@story_21
+@story_129
 Scenario: Priority badges are color-coded by level
   Given tasks with Urgent, High, Medium, and Low priorities exist
   When the user views the task list
   Then the Urgent badge is red, High is orange, Medium is yellow, and Low is blue
 
-@story_21
+@story_129
 Scenario: Overdue incomplete tasks are visually flagged
   Given an incomplete task has a due date in the past
   When the user views the task list
   Then that task is visually marked as overdue
 
-@story_21
+@story_129
 Scenario: Active filter hides completed tasks
   Given one active task and one completed task exist
   When the user selects the "Active" filter
   Then only the active task is shown
 
-@story_21
+@story_129
 Scenario: Empty state appears when no tasks have been created
   Given no tasks exist
   When the user opens the Tasks section

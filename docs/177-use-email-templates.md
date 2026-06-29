@@ -27,21 +27,21 @@ As a real estate agent, I want to select a pre-built email template when composi
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/email.feature`.
 
 ```gherkin
-@story_118
+@story_177
 Scenario: User selects a template and the compose form is populated
   Given the email compose form is open
   When the user clicks "Use Template" and selects "Follow-up After Showing"
   Then the subject field is populated with the template's subject line
   And the body field is populated with the template's body text
 
-@story_118
+@story_177
 Scenario: Variable substitution replaces placeholders with contact data
   Given the compose form is open for contact "Alice Smith"
   And the "Follow-up After Showing" template contains {{contact_name}}
   When the user applies the template
   Then the body shows "Alice Smith" where {{contact_name}} appeared
 
-@story_118
+@story_177
 Scenario: Unresolvable variable is replaced with empty string and a warning is shown
   Given the compose form is open with no property linked
   And the "Just Listed" template contains {{property_address}}
@@ -49,7 +49,7 @@ Scenario: Unresolvable variable is replaced with empty string and a warning is s
   Then {{property_address}} is replaced with an empty string in the body
   And a warning lists "property_address" as unresolved
 
-@story_118
+@story_177
 Scenario: User edits the body after applying a template and the edits are preserved
   Given a template has been applied to the compose form
   When the user modifies the body text

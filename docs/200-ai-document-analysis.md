@@ -31,33 +31,33 @@ As an agent, I want to use AI to analyse uploaded contracts and disclosures, so 
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/ai.feature`.
 
 ```gherkin
-@story_33
+@story_200
 Scenario: User analyses a document and sees structured extraction results
   Given AI is configured
   And a PDF document is uploaded to a contact
   When the user clicks "Analyse with AI"
   Then a structured panel shows extracted dates, amounts, parties, and contingencies
 
-@story_33
+@story_200
 Scenario: Confidence indicator is shown for each extracted field
   Given an analysis has completed
   When the user views the extraction panel
   Then each field shows a High, Medium, or Low confidence indicator
 
-@story_33
+@story_200
 Scenario: Scanned PDF is processed via OCR before analysis
   Given a scanned PDF is uploaded
   When the user clicks "Analyse with AI"
   Then OCR is applied and the analysis proceeds on the extracted text
 
-@story_33
+@story_200
 Scenario: "Analyse with AI" is disabled when AI is not configured
   Given AI is not configured
   When the user views the document list
   Then the "Analyse with AI" button is disabled
   And hovering shows a tooltip directing the user to Settings → AI
 
-@story_33 @live_ai
+@story_200 @live_ai
 Scenario: Real AI provider extracts key dates and amounts from a contract PDF
   Given a real AI provider is configured
   And a contract PDF with known dates and amounts is uploaded

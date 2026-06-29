@@ -26,25 +26,25 @@ As a real estate agent, I want to add timestamped notes to a contact, so that I 
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/contacts.feature`.
 
 ```gherkin
-@story_53
+@story_61
 Scenario: User adds a note and it appears in the contact details
   Given the user is viewing the details for "Jane Smith"
   When the user clicks "Add Note", types "Prefers email", and clicks Save
   Then "Prefers email" is shown in the contact details with a timestamp
 
-@story_53
+@story_61
 Scenario: User submits an empty note and sees an error
   Given the "Add Note" input is open on "Jane Smith"
   When the user clicks Save without entering any text
   Then an error is shown and no note is saved
 
-@story_53
+@story_61
 Scenario: Multiple notes are shown newest first
   Given the user has added "Note A" then "Note B" to "Jane Smith"
   When the user views the contact details
   Then "Note B" appears above "Note A"
 
-@story_53
+@story_61
 Scenario: Notes persist after an application restart
   Given the user has added the note "Follow up in June" to "Jane Smith"
   When the application is restarted and the user opens "Jane Smith"

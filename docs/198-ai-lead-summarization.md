@@ -26,41 +26,41 @@ As an agent, I want to generate an AI summary of a lead's history, so that I can
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/ai.feature`.
 
 ```gherkin
-@story_31
+@story_198
 Scenario: User generates a brief AI summary for a lead
   Given AI is configured
   And a lead exists with notes, sent emails, and a scheduled showing
   When the user clicks "Generate Summary" and selects "Brief"
   Then a 2–3 sentence summary appears in the lead detail view
 
-@story_31
+@story_198
 Scenario: User generates a full AI summary for a lead
   Given AI is configured
   And a lead exists with notes, sent emails, and a scheduled showing
   When the user clicks "Generate Summary" and selects "Full"
   Then a full-paragraph summary appears in the lead detail view
 
-@story_31
+@story_198
 Scenario: Refreshing the summary picks up newly added notes
   Given a summary has already been generated for a lead
   And a new note has been added to the lead since the last generation
   When the user clicks "Refresh Summary"
   Then the new note is reflected in the refreshed summary
 
-@story_31
+@story_198
 Scenario: User copies the summary to clipboard
   Given a summary has been generated
   When the user clicks "Copy to Clipboard"
   Then the plain-text summary is on the clipboard
 
-@story_31
+@story_198
 Scenario: "Generate Summary" button is disabled when AI is not configured
   Given AI is not configured
   When the user views a lead's detail
   Then the "Generate Summary" button is disabled
   And hovering shows a tooltip directing the user to Settings → AI
 
-@story_31 @live_ai
+@story_198 @live_ai
 Scenario: User generates a summary using a real AI provider
   Given a real AI provider is configured
   And a lead has at least one note and one sent email

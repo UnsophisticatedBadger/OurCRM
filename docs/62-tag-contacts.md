@@ -27,31 +27,31 @@ As a real estate agent, I want to add tags like "buyer" or "investor" to contact
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/contacts.feature`.
 
 ```gherkin
-@story_54
+@story_62
 Scenario: User adds a tag and it appears as a badge on the contact
   Given the user is viewing the details for "Jane Smith"
   When the user types "buyer" in the tag input and presses Enter
   Then a "buyer" badge is shown on the contact
 
-@story_54
+@story_62
 Scenario: User removes a tag
   Given "Jane Smith" has the tag "buyer"
   When the user clicks the X on the "buyer" badge
   Then the "buyer" badge is no longer shown
 
-@story_54
+@story_62
 Scenario: Adding a duplicate tag is prevented
   Given "Jane Smith" already has the tag "buyer"
   When the user types "buyer" in the tag input and presses Enter
   Then an error is shown and no duplicate badge is added
 
-@story_54
+@story_62
 Scenario: Existing tags appear as autocomplete suggestions
   Given another contact has the tag "investor"
   When the user types "inv" in the tag input on "Jane Smith"
   Then "investor" appears as a suggestion
 
-@story_54
+@story_62
 Scenario: Tags persist after an application restart
   Given "Jane Smith" has the tag "buyer"
   When the application is restarted and the user opens "Jane Smith"

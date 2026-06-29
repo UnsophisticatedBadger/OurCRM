@@ -31,25 +31,25 @@ The log level controls what is written to the log file; the viewer (#157) displa
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/infrastructure.feature`.
 
 ```gherkin
-@story_87
+@story_82
 Scenario: Log level configuration is accessible from Settings
   Given the user opens Settings > Advanced > Log Level
   Then the current log level is shown
   And preset buttons Quiet, Normal, Verbose, and Debug are visible
 
-@story_87
+@story_82
 Scenario: Changing the log level takes effect immediately
   Given the current log level is Warning
   When the user selects Info and saves
   Then Info-level messages are written to the log without restarting the application
 
-@story_87
+@story_82
 Scenario: Log level persists across application restarts
   Given the user has set the log level to Info
   When the user restarts the application
   Then Settings > Advanced > Log Level still shows Info as the active level
 
-@story_87
+@story_82
 Scenario: Selecting Debug shows a warning about large log files
   Given the log level configuration page is open
   When the user clicks the Debug preset

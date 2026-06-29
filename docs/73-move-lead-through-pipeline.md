@@ -27,31 +27,31 @@ As a real estate agent, I want to move a lead through pipeline stages as our rel
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/leads.feature`.
 
 ```gherkin
-@story_63
+@story_73
 Scenario: User advances a lead to the next pipeline stage
   Given the user is viewing a lead in the "New Lead" stage
   When the user changes the stage to "Contacted" and saves
   Then the lead details show the stage "Contacted"
 
-@story_63
+@story_73
 Scenario: User marks a lead as Lost and provides a reason
   Given the user is viewing a lead
   When the user changes the stage to "Lost" and enters reason "Chose another agent"
   Then the lead details show stage "Lost" and reason "Chose another agent"
 
-@story_63
+@story_73
 Scenario: User moves a lead backward in the pipeline
   Given the user is viewing a lead in the "Qualified" stage
   When the user changes the stage to "Contacted" and saves
   Then the lead details show the stage "Contacted"
 
-@story_63
+@story_73
 Scenario: Pipeline stage is visible in the lead list
   Given a lead "Sara Lee" exists with stage "Showing Scheduled"
   When the user views the lead list
   Then the row for "Sara Lee" shows stage "Showing Scheduled"
 
-@story_63
+@story_73
 Scenario: Stage change persists after an application restart
   Given the user has set a lead's stage to "Offer Made"
   When the application is restarted and the user opens that lead

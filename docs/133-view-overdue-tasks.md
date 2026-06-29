@@ -26,31 +26,31 @@ As a real estate agent, I want to quickly see all my overdue tasks so that I can
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/tasks.feature`.
 
 ```gherkin
-@story_131
+@story_133
 Scenario: Overdue filter shows only incomplete tasks with past due dates
   Given tasks "Old follow-up" (due 3 days ago, incomplete) and "Future call" (due tomorrow) exist
   When the user selects the "Overdue" filter
   Then only "Old follow-up" is shown
 
-@story_131
+@story_133
 Scenario: Overdue header shows the count of overdue tasks
   Given 3 incomplete tasks have past due dates
   When the user selects the "Overdue" filter
   Then the header reads "3 overdue tasks"
 
-@story_131
+@story_133
 Scenario: Overdue tasks are sorted with most overdue first
   Given tasks overdue by 1 day and 5 days exist
   When the user selects the "Overdue" filter
   Then the task overdue by 5 days appears before the task overdue by 1 day
 
-@story_131
+@story_133
 Scenario: Task detail view shows how long the task has been overdue
   Given a task was due 4 days ago and is incomplete
   When the user opens that task's detail view
   Then the detail view shows "Overdue by 4 days"
 
-@story_131
+@story_133
 Scenario: Empty state when no tasks are overdue
   Given all tasks are either complete or have future due dates
   When the user selects the "Overdue" filter

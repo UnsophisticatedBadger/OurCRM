@@ -39,61 +39,61 @@ The full attachment capability (multi-file, size and type validation) from #128 
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/email.feature`.
 
 ```gherkin
-@story_117
+@story_176
 Scenario: User opens the compose form and recipient is pre-filled
   Given a contact "Alice Smith" with email "alice@example.com" exists
   When the user clicks "Send Email" on Alice Smith's detail view
   Then the compose form opens with "alice@example.com" in the recipient field
 
-@story_117
+@story_176
 Scenario: User cannot send without a subject
   Given the compose form is open with a recipient and body but no subject
   When the user clicks Send
   Then a validation error is shown and the email is not sent
 
-@story_117
+@story_176
 Scenario: Sent email is logged in the contact's email history
   Given the user has sent an email with subject "Showing follow-up" to "Alice Smith"
   When the user views Alice Smith's contact detail page
   Then "Showing follow-up" appears in the email history section with a timestamp
 
-@story_117
+@story_176
 Scenario: User attaches files and they appear in the attachments list
   Given the compose form is open
   When the user attaches "contract.pdf" (2 MB) and "photo.jpg" (1 MB)
   Then both files appear in the attachments list showing their filenames and sizes
 
-@story_117
+@story_176
 Scenario: User removes an attachment before sending
   Given the compose form has "contract.pdf" attached
   When the user clicks the remove action next to "contract.pdf"
   Then "contract.pdf" is removed from the attachments list
 
-@story_117
+@story_176
 Scenario: Attaching a file over 25 MB is rejected
   Given the compose form is open
   When the user tries to attach a 30 MB file
   Then a validation error is shown and the file is not added to the attachments list
 
-@story_117
+@story_176
 Scenario: Attaching an executable file is rejected
   Given the compose form is open
   When the user tries to attach "setup.exe"
   Then a security warning is shown and the file is not attached
 
-@story_117
+@story_176
 Scenario: Email is not configured — user is directed to Settings
   Given no SMTP settings have been configured
   When the user clicks "Send Email" on a contact's detail view
   Then a message is shown directing the user to configure email in Settings → Email
 
-@story_117 @live_email
+@story_176 @live_email
 Scenario: User sends an email successfully via SMTP
   Given the compose form has a valid recipient, subject, body, and SMTP is configured
   When the user clicks Send
   Then a success confirmation is shown and the form closes
 
-@story_117 @live_email
+@story_176 @live_email
 Scenario: SMTP error keeps the form open for retry
   Given the compose form has a complete email ready to send
   And the SMTP server is unreachable

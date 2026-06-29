@@ -27,41 +27,41 @@ As an agent, I want to connect my Outlook or Office 365 account via OAuth, so th
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/email.feature`.
 
 ```gherkin
-@story_28
+@story_188
 Scenario: User connects Outlook via OAuth and sends an email through Outlook
   Given the user is in Settings → Email → Outlook
   When the user clicks "Connect Outlook" and completes the Microsoft OAuth flow
   Then Outlook shows as connected in Settings with the linked address
   And outbound emails are routed through the Microsoft Graph API
 
-@story_28
+@story_188
 Scenario: OAuth token is stored in the OS keyring
   Given the user has connected Outlook via OAuth
   When the token is stored
   Then it is in the OS keyring
   And no password or token is written to the app's config files
 
-@story_28
+@story_188
 Scenario: Expired token is refreshed automatically before sending
   Given Outlook is connected and the access token has expired
   When the user sends an email
   Then the token is refreshed automatically
   And the email is sent without prompting the user
 
-@story_28
+@story_188
 Scenario: User disconnects Outlook
   Given Outlook is connected
   When the user clicks "Disconnect" in Settings → Email → Outlook
   Then Outlook shows as disconnected
   And subsequent outbound emails use the configured SMTP server
 
-@story_28
+@story_188
 Scenario: Revoked token prompts reconnect before sending
   Given the Outlook OAuth token has been revoked externally
   When the user attempts to send an email
   Then a prompt appears to reconnect Outlook before the email is sent
 
-@story_28 @live_microsoft
+@story_188 @live_microsoft
 Scenario: App completes real Microsoft OAuth flow and obtains a send-capable token
   Given the user has a valid Microsoft account
   When the user completes the OAuth flow in the browser

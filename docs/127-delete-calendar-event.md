@@ -26,26 +26,26 @@ As a real estate agent, I want to delete a cancelled or unnecessary calendar eve
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/calendar.feature`.
 
 ```gherkin
-@story_126
+@story_127
 Scenario: Clicking Delete shows a confirmation dialog with event details
   Given a calendar event "Showing - 123 Oak St" exists on tomorrow at 2:00 PM
   When the user clicks "Delete" on that event
   Then a confirmation dialog appears showing "Showing - 123 Oak St" and the date and time
   And the dialog includes the text "This action cannot be undone"
 
-@story_126
+@story_127
 Scenario: Confirming deletion removes the event from the calendar
   Given the delete confirmation dialog is open for "Showing - 123 Oak St"
   When the user confirms the deletion
   Then "Showing - 123 Oak St" is no longer visible in the calendar
 
-@story_126
+@story_127
 Scenario: Cancelling deletion leaves the event unchanged
   Given the delete confirmation dialog is open for "Showing - 123 Oak St"
   When the user clicks Cancel
   Then "Showing - 123 Oak St" is still visible in the calendar
 
-@story_126
+@story_127
 Scenario: Deleted event is absent after the application restarts
   Given the user has deleted a calendar event titled "Old Appointment"
   When the user restarts the application and views the calendar

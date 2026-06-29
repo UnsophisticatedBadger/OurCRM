@@ -32,46 +32,46 @@ In-app notifications are distinct from desktop notifications: desktop notificati
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/notifications.feature`.
 
 ```gherkin
-@story_181
+@story_154
 Scenario: A notifiable event triggers a toast notification that auto-dismisses
   Given the user is actively using OurCRM
   When a new lead "Jane Smith" is created
   Then a toast notification appears with title "New Lead: Jane Smith"
   And the toast disappears after 5 seconds without user interaction
 
-@story_181
+@story_154
 Scenario: Bell icon badge shows unread count
   Given two notifications have fired and not been read
   When the user looks at the navigation bar
   Then the bell icon shows a badge with the number 2
 
-@story_181
+@story_154
 Scenario: Clicking the bell opens the notification centre
   Given unread notifications exist
   When the user clicks the bell icon
   Then the notification centre opens listing all notifications newest first
 
-@story_181
+@story_154
 Scenario: Clicking a notification navigates to the related record
   Given the notification centre is open and contains a notification for lead "Jane Smith"
   When the user clicks that notification
   Then the lead detail view for Jane Smith is shown
   And the notification is marked as read
 
-@story_181
+@story_154
 Scenario: Mark all as read clears the badge
   Given 3 unread notifications exist and the bell shows badge "3"
   When the user clicks "Mark all as read" in the notification centre
   Then the badge is removed from the bell icon
 
-@story_181
+@story_154
 Scenario: Deleting an unread notification decrements the badge count
   Given 3 unread notifications exist and the bell shows badge "3"
   When the user clicks ✕ on one unread notification
   Then that notification is permanently removed from the list
   And the badge count decreases to 2
 
-@story_181
+@story_154
 Scenario: Deleting a read notification does not change the badge count
   Given 1 unread and 1 read notification exist with badge showing "1"
   When the user clicks ✕ on the read notification

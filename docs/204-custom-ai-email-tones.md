@@ -24,25 +24,25 @@ As an agent, I want to define custom tone labels for AI email drafting, so that 
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/ai.feature`.
 
 ```gherkin
-@story_99
+@story_204
 Scenario: User creates a custom tone and it appears in the tone selector
   Given the user adds a custom tone named "Luxury" with description "Upscale and aspirational language"
   When the user opens "Draft with AI" in the compose form
   Then "Luxury" appears in the tone selector alongside the built-in tones
 
-@story_99
+@story_204
 Scenario: Draft generated with a custom tone uses the style description
   Given a custom tone "Luxury" exists with description "Upscale and aspirational language"
   When the user selects "Luxury" and generates a draft
   Then the generated email reflects an upscale tone
 
-@story_99
+@story_204
 Scenario: Deleting the active tone reverts the selector to Professional
   Given the user has "Luxury" selected in an open draft panel
   When the user deletes the "Luxury" tone from Settings
   Then the tone selector in the open draft reverts to "Professional"
 
-@story_99
+@story_204
 Scenario: Built-in tones cannot be deleted
   Given the user views Settings → AI → Email Tones
   Then the built-in tones (Professional, Friendly, Urgent) have no delete option

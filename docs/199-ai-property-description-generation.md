@@ -27,33 +27,33 @@ As an agent, I want to generate a property listing description using AI, so that
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/ai.feature`.
 
 ```gherkin
-@story_32
+@story_199
 Scenario: User generates a property description with a selected tone and length
   Given AI is configured
   And a property exists with beds, baths, sqft, and features filled in
   When the user selects "Luxury" tone and "Standard" length and clicks "Generate Description"
   Then a description appears in the preview panel
 
-@story_32
+@story_199
 Scenario: User regenerates to get a different description
   Given a description has been generated
   When the user clicks "Regenerate"
   Then a new description with different wording is shown in the preview panel
 
-@story_32
+@story_199
 Scenario: User inserts the description into the property form
   Given a description has been generated
   When the user clicks "Use This Description"
   Then the description field in the property form is populated with the generated text
 
-@story_32
+@story_199
 Scenario: "Generate Description" is disabled when AI is not configured
   Given AI is not configured
   When the user opens the property create or edit form
   Then the "Generate Description" button is disabled
   And hovering shows a tooltip directing the user to Settings → AI
 
-@story_32 @live_ai
+@story_199 @live_ai
 Scenario: Real AI provider generates a description from property details
   Given a real AI provider is configured
   And a property has beds, baths, sqft, and at least one feature

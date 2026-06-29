@@ -24,19 +24,19 @@ As an agent, I want the app to remain responsive when I have thousands of record
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/infrastructure.feature`.
 
 ```gherkin
-@story_141
+@story_92
 Scenario: Indexes are present after database initialisation
   Given a fresh database has been created
   When the user opens the app for the first time
   Then indexes exist on the contact name, email, lead status, and property address fields
 
-@story_141
+@story_92
 Scenario: Indexes are preserved after a migration
   Given indexes exist on the database
   When a database migration is applied
   Then the indexes still exist after the migration completes
 
-@story_141
+@story_92
 Scenario: Rebuild Indexes completes without altering records
   Given 100 contacts exist in the database
   When the user runs "Rebuild Indexes" from Settings → General → Maintenance

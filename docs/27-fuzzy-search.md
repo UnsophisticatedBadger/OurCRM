@@ -27,32 +27,32 @@ As an agent, I want search to find records even when I misspell a name or term, 
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/shell.feature`.
 
 ```gherkin
-@story_35
+@story_27
 Scenario: Search with a one-character typo still finds the contact
   Given a contact named "Johnson" exists
   When the user searches for "Jonson"
   Then "Johnson" appears in the results
   And the result is labelled as a fuzzy match
 
-@story_35
+@story_27
 Scenario: Phonetically similar name finds the matching contact
   Given a contact named "Smith" exists
   When the user searches for "Smyth"
   Then "Smith" appears in the results
 
-@story_35
+@story_27
 Scenario: Exact matches are ranked above fuzzy matches
   Given contacts named "Johnson" and "Jonson" both exist
   When the user searches for "Johnson"
   Then "Johnson" (exact match) appears before "Jonson" (fuzzy match) in the results
 
-@story_35
+@story_27
 Scenario: Fuzzy search can be disabled in Settings
   Given the user has disabled fuzzy search in Settings → Search
   When the user searches for "Jonson"
   Then "Johnson" does not appear in the results
 
-@story_35
+@story_27
 Scenario: Threshold set to Strict requires a closer match
   Given the fuzzy threshold is set to "Strict"
   When the user searches for a term with 2 character differences from a contact's name

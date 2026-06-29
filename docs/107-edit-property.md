@@ -27,26 +27,26 @@ As a real estate agent, I want to edit a property's information at any time, so 
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/properties.feature`.
 
 ```gherkin
-@story_17
+@story_107
 Scenario: User opens the edit form and sees all fields pre-populated
   Given the user is viewing a property with listing price 450000
   When the user clicks Edit
   Then the edit form opens with the price field showing 450000
 
-@story_17
+@story_107
 Scenario: User edits the listing price and sees it updated in details and list
   Given the user is editing a property with price 450000
   When the user changes the price to 425000 and clicks Save
   Then the details view shows "$425,000"
   And the property list row also shows "$425,000"
 
-@story_17
+@story_107
 Scenario: Saving with the address cleared shows a validation error
   Given the user is editing a property
   When the user clears the street address and clicks Save
   Then an inline error is shown and the form stays open
 
-@story_17
+@story_107
 Scenario: User cancels an edit and the original data is unchanged
   Given the user is editing a property with price 450000
   When the user changes the price to 300000 and clicks Cancel

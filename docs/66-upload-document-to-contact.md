@@ -32,31 +32,31 @@ Documents are stored in the encrypted database alongside other contact data. The
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/contacts.feature`.
 
 ```gherkin
-@story_136
+@story_66
 Scenario: User uploads a document and it appears in the contact's documents list
   Given the user is viewing contact "Alice Smith"
   When the user clicks "Upload Document" and selects "contract.pdf" (200 KB)
   Then "contract.pdf" appears in Alice Smith's documents list with its filename, type, size, and today's date
 
-@story_136
+@story_66
 Scenario: File over 50 MB is rejected
   Given the user is viewing a contact's detail page
   When the user selects a file of 60 MB via the file picker
   Then a size-limit error is shown and the file is not stored
 
-@story_136
+@story_66
 Scenario: Executable file type is rejected
   Given the user is viewing a contact's detail page
   When the user selects a file named "setup.exe" via the file picker
   Then a type-restriction error is shown and the file is not stored
 
-@story_136
+@story_66
 Scenario: Document with type and description is saved with that metadata
   Given the user uploads "disclosure.pdf" to a contact and sets type "Disclosure" and description "Seller disclosure form"
   When the upload completes
   Then the document appears with type "Disclosure" and description "Seller disclosure form"
 
-@story_136
+@story_66
 Scenario: Uploaded documents persist after application restart
   Given "contract.pdf" has been uploaded to contact "Alice Smith"
   When the user restarts the application and opens Alice Smith's contact

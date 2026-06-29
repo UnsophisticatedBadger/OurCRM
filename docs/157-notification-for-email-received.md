@@ -36,7 +36,7 @@ Live email receipt requires an active email account connection. BDD scenarios th
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/notifications.feature`.
 
 ```gherkin
-@story_84 @live_email
+@story_157 @live_email
 Scenario: New email from a known contact triggers a notification
   Given an email account is configured in Settings
   And a contact "Jane Smith" exists with email "jane@example.com"
@@ -44,7 +44,7 @@ Scenario: New email from a known contact triggers a notification
   When an email from "jane@example.com" with subject "Re: Property Visit" arrives
   Then a notification fires with title "New Email from Jane Smith" and body "Re: Property Visit"
 
-@story_84 @live_email
+@story_157 @live_email
 Scenario: New email from an unknown sender shows the sender address as title
   Given an email account is configured
   And Email Received notifications are enabled
@@ -52,13 +52,13 @@ Scenario: New email from an unknown sender shows the sender address as title
   And "unknown@example.com" does not match any contact
   Then a notification fires with title "unknown@example.com" and body "Enquiry"
 
-@story_84 @live_email
+@story_157 @live_email
 Scenario: Clicking the notification for a known contact opens email history
   Given a notification "New Email from Jane Smith" has fired
   When the user clicks the notification
   Then OurCRM comes to the foreground and Jane Smith's email history is shown
 
-@story_84 @live_email
+@story_157 @live_email
 Scenario: No notification fires when Email Received preference is disabled
   Given Email Received notifications are disabled in notification preferences
   When a new email arrives from a known contact

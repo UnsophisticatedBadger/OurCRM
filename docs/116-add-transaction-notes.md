@@ -25,25 +25,25 @@ As a real estate agent, I want to add notes to a transaction, so that I can keep
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/transactions.feature`.
 
 ```gherkin
-@story_76
+@story_116
 Scenario: User adds a note and sees it in the transaction details
   Given the user is viewing a transaction with no notes
   When the user clicks "Add Note", types "Buyer requested closing date change", and saves
   Then "Buyer requested closing date change" appears in the transaction details
 
-@story_76
+@story_116
 Scenario: Saving an empty note shows an error
   Given the "Add Note" input is open
   When the user clicks Save without entering any text
   Then an inline error is shown and no note is added
 
-@story_76
+@story_116
 Scenario: Multiple notes appear newest-first with timestamps
   Given the user has added two notes to a transaction
   When the user views the transaction details
   Then both notes are shown with timestamps and the most recent appears first
 
-@story_76
+@story_116
 Scenario: Notes persist after an application restart
   Given the user has added a note "Appraisal came in low" to a transaction
   When the application is restarted and the user opens that transaction

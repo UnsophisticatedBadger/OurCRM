@@ -27,19 +27,19 @@ As a real estate agent, I want to edit a contact's information, so that I can ke
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/contacts.feature`.
 
 ```gherkin
-@story_51
+@story_59
 Scenario: User edits a contact's phone and the new value appears in the details view
   Given the user is viewing the details for "Jane Smith" with phone "555-0000"
   When the user clicks Edit, changes the phone to "555-9999", and clicks Save
   Then the details view shows the phone "555-9999"
 
-@story_51
+@story_59
 Scenario: User cancels an edit and the original data is unchanged
   Given the edit form is open for "Jane Smith" with email "old@example.com"
   When the user changes the email to "new@example.com" and clicks Cancel
   Then the details view still shows "old@example.com"
 
-@story_51
+@story_59
 Scenario: Edited data persists after an application restart
   Given the user has edited "Jane Smith" phone to "555-9999" and saved
   When the application is restarted and the user opens "Jane Smith"

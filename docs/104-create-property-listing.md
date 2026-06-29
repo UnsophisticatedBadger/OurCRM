@@ -30,32 +30,32 @@ As a real estate agent, I want to create a new property listing with its details
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/properties.feature`.
 
 ```gherkin
-@story_68
+@story_104
 Scenario: User creates a property and sees it in the property list
   Given the user is in the Properties section
   When the user clicks "New Property", fills in address "123 Oak St" and price 450000, and clicks Save
   Then the property list shows "123 Oak St" with listing price "$450,000"
 
-@story_68
+@story_104
 Scenario: User submits the form with no street address and sees an error
   Given the new property form is open
   When the user leaves the street address empty and clicks Save
   Then an inline error is shown and the form stays open
 
-@story_68
+@story_104
 Scenario: User enters a negative listing price and sees a validation error
   Given the new property form is open
   When the user enters listing price -100 and clicks Save
   Then "Listing price must be greater than zero" is shown
 
-@story_68
+@story_104
 Scenario: User links a seller contact and the link appears in property details
   Given a contact "Jane Smith" exists
   And the new property form is open
   When the user selects "Jane Smith" in the seller field and saves the property
   Then opening the property details shows "Jane Smith" as the linked seller
 
-@story_68
+@story_104
 Scenario: Property persists after an application restart
   Given the user has created a property "123 Oak St"
   When the application is restarted and the user opens the Properties section

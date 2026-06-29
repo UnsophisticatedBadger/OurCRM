@@ -23,25 +23,25 @@ As an agent, I want the option to update a linked lead's status when I mark a sh
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/leads.feature`.
 
 ```gherkin
-@story_200
+@story_96
 Scenario: Completing a showing with "Interested" outcome offers to set lead status to Hot
   Given a showing is linked to a lead
   When the user marks the showing completed with outcome "Interested"
   Then the completion form shows a pre-checked option "Update lead status to Hot"
 
-@story_200
+@story_96
 Scenario: Lead status is updated when the checkbox is confirmed
   Given the "Update lead status to Hot" option is checked
   When the user confirms the showing completion
   Then the linked lead's status is changed to Hot
 
-@story_200
+@story_96
 Scenario: Lead status is not changed when the checkbox is unchecked
   Given the "Update lead status to Hot" option is unchecked
   When the user confirms the showing completion
   Then the linked lead's status is unchanged
 
-@story_200
+@story_96
 Scenario: No status update option is shown when the showing has no linked lead
   Given a showing is not linked to any lead
   When the user marks the showing completed

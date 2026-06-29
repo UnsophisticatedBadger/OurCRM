@@ -1,75 +1,74 @@
 #!/usr/bin/env python3
-"""One-time fix: convert bare @NNN BDD tags to @story_NNN.
+"""Fix BDD scenario tags in story docs to match each story's GitHub issue number.
 
-Numeric-only pytest marks are not valid Python identifiers and cause
-PytestUnknownMarkWarning. This script converts them to the @story_NNN
-format without making any GitHub API calls.
+During the story migration, story numbers changed. This script updates every
+@story_OLD and @usNNN tag in each doc to @story_CORRECT based on the
+**GitHub Issue:** #N field in that doc.
+
+Safe to re-run — files that are already correct are not written.
 
 Usage:
-    uv run python scripts/fix_bdd_tags.py
+    uv run python scripts/fix_bdd_tags.py           # dry-run (preview only)
+    uv run python scripts/fix_bdd_tags.py --apply   # write changes
 """
 
 import re
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).parent.parent
 DOCS = ROOT / "docs"
-TESTS_BDD = ROOT / "tests" / "bdd"
-CLAUDE_MD = ROOT / "CLAUDE.md"
-
-# Matches a bare @NNN tag — digits only after @, not already prefixed with story_
-BARE_TAG = re.compile(r"@(\d+)\b")
 
 
-def fix_bare_tags(content: str) -> str:
-    return BARE_TAG.sub(lambda m: f"@story_{m.group(1)}", content)
-
-
-def process(path: Path) -> bool:
-    content = path.read_text(encoding="utf-8")
-    updated = fix_bare_tags(content)
-    if updated != content:
-        path.write_text(updated, encoding="utf-8")
-        return True
-    return False
+def fix_content(content: str, issue_num: str) -> str:
+    correct = f"@story_{issue_num}"
+    content = re.sub(r"@story_\d+", correct, content)
+    content = re.sub(r"@us_?\d+", correct, content)
+    return content
 
 
 def main() -> None:
-    changed = 0
+    apply = "--apply" in sys.argv
 
-    print("Fixing story docs...")
-    for path in sorted(DOCS.glob("*.md")):
-        if process(path):
-            print(f"  ✓ {path.name}")
-            changed += 1
+    paths = sorted(p for p in DOCS.glob("*.md") if re.match(r"^\d+", p.name))
+    changed: list[tuple[str, list[str]]] = []
 
-    bdd_files = sorted(
-        list(TESTS_BDD.glob("features/*.feature")) + list(TESTS_BDD.glob("test_*.py"))
-    )
-    if bdd_files:
-        print("\nFixing BDD files...")
-        for path in bdd_files:
-            if process(path):
-                print(f"  ✓ {path.relative_to(ROOT)}")
-                changed += 1
+    for path in paths:
+        content = path.read_text(encoding="utf-8-sig")
 
-    print("\nFixing CLAUDE.md...")
-    content = CLAUDE_MD.read_text(encoding="utf-8")
-    updated = fix_bare_tags(content)
-    # Also update the pytest command example
-    updated = re.sub(
-        r'`uv run pytest -m "(\d+)"`',
-        lambda m: f'`uv run pytest -m "story_{m.group(1)}"`',
-        updated,
-    )
-    if updated != content:
-        CLAUDE_MD.write_text(updated, encoding="utf-8")
-        print("  ✓ CLAUDE.md")
-        changed += 1
-    else:
-        print("  ~ CLAUDE.md (unchanged)")
+        if re.search(r"^\*\*Status:\*\*\s+Done", content, re.MULTILINE):
+            continue
 
-    print(f"\nDone. {changed} file(s) updated.")
+        issue_m = re.search(r"^\*\*GitHub Issue:\*\* #(\d+)", content, re.MULTILINE)
+        if not issue_m:
+            continue
+
+        issue_num = issue_m.group(1)
+        new_content = fix_content(content, issue_num)
+
+        if new_content == content:
+            continue
+
+        wrong = sorted(
+            {*re.findall(r"@story_(\d+)", content), *re.findall(r"@us_?\d+", content)}
+            - {f"story_{issue_num}"}
+        )
+        changed.append((path.name, wrong))
+
+        if apply:
+            path.write_text(new_content, encoding="utf-8")
+
+    if not changed:
+        print("All BDD tags are correct.")
+        return
+
+    verb = "Fixed" if apply else "Would fix"
+    for name, old_tags in changed:
+        print(f"  {verb}: {name}  [{', '.join(old_tags)}]")
+
+    print(f"\n{verb} {len(changed)} files.")
+    if not apply:
+        print("\nRe-run with --apply to write changes.")
 
 
 if __name__ == "__main__":

@@ -24,20 +24,20 @@ As an agent, I want sent and received emails on the same subject to be grouped i
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/email.feature`.
 
 ```gherkin
-@story_193
+@story_192
 Scenario: Sent and received emails on the same subject are grouped into a thread
   Given a sent email and a received reply share the same subject
   When the user views the contact timeline
   Then both emails appear as a single thread entry
   And the thread entry shows the subject and message count
 
-@story_193
+@story_192
 Scenario: Clicking a thread entry expands to show all messages
   Given a thread with three messages exists in the contact timeline
   When the user clicks the thread entry
   Then all three messages are shown in chronological order with sender and timestamp
 
-@story_193
+@story_192
 Scenario: New message added to a thread updates the count badge
   Given an expanded thread has two messages
   When a new reply arrives on the same thread

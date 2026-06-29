@@ -34,14 +34,14 @@ As a real estate agent, I want to configure my SMTP settings in the Settings win
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/email.feature`.
 
 ```gherkin
-@story_120
+@story_175
 Scenario: User opens Settings and finds the Email section
   Given the Settings window is open
   When the user selects the "Email" category
   Then fields for SMTP host, port, username, masked password, and a TLS/SSL toggle are shown
   And a "Send Test Email" button is present
 
-@story_120
+@story_175
 Scenario: User saves SMTP settings and password is stored in the OS keyring
   Given the Email settings page is open
   When the user enters host "smtp.gmail.com", port "587", username "agent@example.com", a password, and enables TLS
@@ -49,26 +49,26 @@ Scenario: User saves SMTP settings and password is stored in the OS keyring
   Then the settings are saved
   And the password field shows a placeholder instead of the password text
 
-@story_120
+@story_175
 Scenario: Saving with a required field empty is rejected
   Given the Email settings page is open with no SMTP host entered
   When the user clicks Save
   Then a validation error indicates that SMTP host is required
 
-@story_120
+@story_175
 Scenario: Email settings persist after the application restarts
   Given valid SMTP settings have been saved
   When the user restarts the application and opens Email settings
   Then the host, port, username, and TLS setting are still populated
   And the password field shows a placeholder indicating a stored password
 
-@story_120 @live_email
+@story_175 @live_email
 Scenario: Send Test Email succeeds with valid settings
   Given valid SMTP settings are configured and saved
   When the user clicks "Send Test Email"
   Then a test message is sent and a success confirmation is displayed
 
-@story_120 @live_email
+@story_175 @live_email
 Scenario: Send Test Email shows a clear error with invalid credentials
   Given SMTP settings are configured with an incorrect password
   When the user clicks "Send Test Email"

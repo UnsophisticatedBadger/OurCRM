@@ -27,19 +27,19 @@ As a real estate agent, I want to delete a contact I no longer work with, so tha
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/contacts.feature`.
 
 ```gherkin
-@story_52
+@story_60
 Scenario: User deletes a contact and it is removed from the list
   Given the user is viewing the details for "Jane Smith"
   When the user clicks Delete and confirms
   Then "Jane Smith" no longer appears in the contact list
 
-@story_52
+@story_60
 Scenario: User cancels deletion and the contact remains
   Given the delete confirmation dialog is open for "Jane Smith"
   When the user clicks Cancel
   Then "Jane Smith" is still in the contact list
 
-@story_52
+@story_60
 Scenario: Deleted contact does not reappear after restart
   Given the user has deleted "Jane Smith"
   When the application is restarted and the user opens the Contacts section

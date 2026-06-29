@@ -25,25 +25,25 @@ As a real estate agent, I want to open a property and see all its information in
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/properties.feature`.
 
 ```gherkin
-@story_16
+@story_106
 Scenario: User double-clicks a property and sees all its details
   Given a property "123 Oak St" exists with all fields filled
   When the user double-clicks "123 Oak St" in the property list
   Then the details view opens showing all of the property's data
 
-@story_16
+@story_106
 Scenario: Empty optional fields show Not provided
   Given a property "123 Oak St" exists with no MLS number or description
   When the user opens its details
   Then the MLS number and description fields show "Not provided"
 
-@story_16
+@story_106
 Scenario: User presses Escape and returns to the property list
   Given the user is viewing a property's details
   When the user presses Escape
   Then the property list is shown
 
-@story_16
+@story_106
 Scenario: User clicks the seller contact link and opens the contact details
   Given property "123 Oak St" has seller "Jane Smith" linked
   When the user opens the property details and clicks "Jane Smith"

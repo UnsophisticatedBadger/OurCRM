@@ -24,31 +24,31 @@ As an agent, I want to adjust the application's font size, so that I can read te
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/shell.feature`.
 
 ```gherkin
-@story_39
+@story_31
 Scenario: User changes font size to Large and all text scales up
   Given the user opens Settings → General → Appearance → Font Size
   When the user selects "Large" and saves
   Then text throughout the application is visibly larger than the Medium default
 
-@story_39
+@story_31
 Scenario: Live preview updates before saving
   Given the user opens the Font Size setting
   When the user clicks a size option without saving
   Then the preview text in the Settings panel updates to reflect the selected size
 
-@story_39
+@story_31
 Scenario: Font size persists after app restart
   Given "Large" font size has been saved
   When the user restarts the app
   Then text is still displayed at Large size
 
-@story_39
+@story_31
 Scenario: Layouts adapt with no text clipping at Extra Large
   Given the user sets font size to "Extra Large" and saves
   When the user navigates through the main views
   Then no text is clipped, truncated without ellipsis, or overlapping adjacent elements
 
-@story_39
+@story_31
 Scenario: Reset to Default restores Medium size
   Given "Extra Large" font size is active
   When the user clicks "Reset to Default" and saves

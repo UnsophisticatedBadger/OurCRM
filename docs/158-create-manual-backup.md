@@ -33,26 +33,26 @@ The backup file is an encrypted copy of the entire OurCRM database. Encryption i
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/backup.feature`.
 
 ```gherkin
-@story_156
+@story_158
 Scenario: User creates a backup and receives a success confirmation
   Given the Backup section is open in Settings
   When the user clicks "Create Backup" and selects a writable save location
   Then a backup file is created at the selected path
   And a success message is shown with the file path and size
 
-@story_156
+@story_158
 Scenario: File save dialog has a date-stamped default filename
   Given the Backup section is open in Settings
   When the user clicks "Create Backup"
   Then the OS file save dialog opens with a default filename matching the pattern "ourcrm_YYYY-MM-DD_HHMMSS.backup"
 
-@story_156
+@story_158
 Scenario: Cancelling the file save dialog takes no action
   Given the Backup section is open in Settings
   When the user clicks "Create Backup" and then cancels the file save dialog
   Then no backup file is created and the user is returned to the Backup section
 
-@story_156
+@story_158
 Scenario: Unwritable save location shows a clear error message
   Given the Backup section is open in Settings
   When the user selects a read-only location in the file save dialog

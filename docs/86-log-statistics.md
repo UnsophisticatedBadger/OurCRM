@@ -31,25 +31,25 @@ This story adds a lightweight statistics panel to the log viewer (#157). It surf
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/infrastructure.feature`.
 
 ```gherkin
-@story_171
+@story_86
 Scenario: Statistics button opens a summary panel in the log viewer
   Given the user is viewing the log viewer
   When the user clicks "Statistics"
   Then a statistics panel or dialog is shown
 
-@story_171
+@story_86
 Scenario: Panel shows entry counts broken down by log level
   Given the log folder contains entries at Error, Warning, Info, and Debug levels
   When the user opens the statistics panel
   Then the panel shows a count for each level that matches the actual log contents
 
-@story_171
+@story_86
 Scenario: Panel shows the top 5 most repeated error messages
   Given some error messages appear multiple times in the logs
   When the user opens the statistics panel
   Then up to 5 most-repeated error messages are listed with their occurrence counts, highest first
 
-@story_171
+@story_86
 Scenario: Panel shows total log storage in human-readable units
   Given the log folder contains one or more log files
   When the user opens the statistics panel

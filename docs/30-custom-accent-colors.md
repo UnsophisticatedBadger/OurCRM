@@ -24,30 +24,30 @@ As an agent, I want to choose a custom accent color for the application, so that
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/shell.feature`.
 
 ```gherkin
-@story_38
+@story_30
 Scenario: User selects a predefined accent color and it applies throughout the app
   Given the user opens Settings → General → Appearance → Accent Color
   When the user selects a predefined color and saves
   Then buttons and highlighted elements reflect the new accent color
 
-@story_38
+@story_30
 Scenario: Live preview is shown before saving
   Given the user opens the Accent Color section
   When the user clicks a color option without saving
   Then the preview in the Settings panel updates to show the selected color
 
-@story_38
+@story_30
 Scenario: Custom hex color is applied
   Given the user enters a valid hex color code in the custom color field and saves
   Then the accent color is applied throughout the app
 
-@story_38
+@story_30
 Scenario: Accent color persists after app restart
   Given a custom accent color has been saved
   When the user restarts the app
   Then the same accent color is applied
 
-@story_38
+@story_30
 Scenario: Reset to Default restores the original accent color
   Given a custom accent color is active
   When the user clicks "Reset to Default" and saves

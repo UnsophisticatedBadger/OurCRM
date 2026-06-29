@@ -19,6 +19,11 @@ uv run ruff check .                    # lint
 uv run ruff format .                   # format
 uv run mypy src/ tests/ scripts/       # type check
 uv run pre-commit run --all-files      # run all hooks
+
+# Story doc maintenance
+uv run python scripts/sync_issue_bodies.py     # sync story docs → GitHub issue bodies
+uv run python scripts/audit_story_sections.py  # audit story docs for missing sections/fields
+uv run python scripts/fix_bdd_tags.py --apply  # fix BDD @story_NNN tags after renumbering
 ```
 
 ## Project Layout
@@ -141,9 +146,9 @@ Run a single story's BDD: `uv run pytest -m "story_3"`
 Every manual test file begins with a story link so a tester can trace the test back to its requirement:
 
 ```markdown
-# Password Validation — Manual Tests
+# Password Creation — Manual Tests
 
-**Story:** [US-003 — Create Master Password](../../docs/003-create-master-password.md)
+**Story:** [#3 — Create Master Password](../../docs/3-create-master-password.md)
 ```
 
 ## Coverage Gates
@@ -163,7 +168,7 @@ Every change follows these steps in strict order. No step is skipped or compress
 - Answer questions → wait for explicit confirmation before proceeding
 
 ### Step 2 — BDD Red
-- Add scenarios to the capability `.feature` file (tagged `@us-NNN`)
+- Migrate the BDD scenarios from the story doc into the capability `.feature` file, tagging each `@story_NNN`
 - Write step definitions in the capability step-def file
 - Run them to confirm they all fail
 - Answer questions → wait for explicit confirmation before proceeding
@@ -196,5 +201,28 @@ Every change follows these steps in strict order. No step is skipped or compress
 
 ## User Stories
 All stories live in `docs/NNN-story-name.md`. Always read the relevant story before starting.
-Each story doc contains its own capability group, BDD scenarios, test locations, and Definition of Done.
-There are no separate slice files — grouping and scope live inside the story itself.
+
+### Story doc format
+H1: `# NNN - Title` (e.g. `# 3 - Create Master Password`)
+
+**Required header fields** (immediately after the H1):
+```
+**Capability:**    # exactly one canonical group from the table above
+**Milestone:**     # e.g. v0.2.0 — Secure Shell
+**Status:**        # Not Done | Done
+**GitHub Issue:**  # #NNN
+```
+
+**Required sections** (in this order):
+`## User Story` · `## Dependencies` · `## Acceptance Criteria` · `## Test Locations` · `## Definition of Done`
+
+BDD scenarios and manual test steps are **drafted inside the story doc** during planning. They are migrated to the actual test files at the start of work (Step 2 and the manual test file). The story doc is the source of truth for scope; grouping and DoD live inside it — there are no separate slice files.
+
+### GitHub Issues
+Every story has a corresponding GitHub Issue. The issue body mirrors the story doc — run `sync_issue_bodies.py` after any bulk doc edits to keep them in sync. New feature requests and bug reports use the structured forms in `.github/ISSUE_TEMPLATE/`.
+
+### Merging and closing stories
+When a story's entire scope is absorbed into another story: delete the story doc and close the GitHub Issue with a comment referencing the absorbing story.
+
+### Story readiness
+Before starting work, verify the story meets the Definition of Ready at `docs/definition-of-ready.md`. Stories are prioritised by milestone (v0.1.0 first), then by GitHub issue number within the milestone.

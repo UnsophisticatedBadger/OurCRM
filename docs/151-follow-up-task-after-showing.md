@@ -24,19 +24,19 @@ As an agent, I want to be prompted to create a follow-up task when I complete a 
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/tasks.feature`.
 
 ```gherkin
-@story_201
+@story_151
 Scenario: Follow-up task prompt appears after completing a showing
   Given a showing linked to a contact is marked completed
   When the user confirms the completion
   Then a prompt asks "Create a follow-up task?"
 
-@story_201
+@story_151
 Scenario: Choosing Yes opens a pre-filled task form
   Given the follow-up task prompt is shown
   When the user clicks "Yes"
   Then the task form opens with title "Follow up: [property address]" and due date set to the next business day
 
-@story_201
+@story_151
 Scenario: Choosing No dismisses the prompt without creating a task
   Given the follow-up task prompt is shown
   When the user clicks "No"

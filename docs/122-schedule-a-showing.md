@@ -30,7 +30,7 @@ As a real estate agent, I want to schedule a showing for a contact at a property
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/calendar.feature`.
 
 ```gherkin
-@story_105
+@story_122
 Scenario: User schedules a showing from the Calendar section
   Given a contact "Alice Smith" and property "123 Oak St" exist
   When the user opens "Schedule Showing" from the Calendar section
@@ -39,25 +39,25 @@ Scenario: User schedules a showing from the Calendar section
   Then the showing appears in the calendar on tomorrow's date at 10:00 AM
   And is labelled with "Alice Smith" and "123 Oak St"
 
-@story_105
+@story_122
 Scenario: User opens the showing form from a contact's detail view and contact is pre-populated
   Given a contact "Alice Smith" exists
   When the user clicks "Schedule Showing" from Alice Smith's detail view
   Then the contact field shows "Alice Smith"
 
-@story_105
+@story_122
 Scenario: User opens the showing form from a property's detail view and property is pre-populated
   Given a property "123 Oak St" exists
   When the user clicks "Schedule Showing" from the property's detail view
   Then the property field shows "123 Oak St"
 
-@story_105
+@story_122
 Scenario: User tries to save a showing with a past date and sees a validation error
   Given the showing form is open
   When the user enters yesterday's date and clicks Save
   Then a validation error is shown and the showing is not saved
 
-@story_105
+@story_122
 Scenario: User tries to save without a required field and sees a validation error
   Given the showing form is open with contact and date filled in but no property selected
   When the user clicks Save

@@ -34,27 +34,27 @@ The MLS number is stored on the imported property record as a non-editable refer
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/mls.feature`.
 
 ```gherkin
-@story_154
+@story_79
 Scenario: Importing a HAR listing creates a property with MLS data pre-filled
   Given HAR listing MLS#12345 with address "123 Oak St", price $450,000, 3 beds, 2 baths is in the listings view
   When the user clicks "Import as Property" on that listing
   Then a property record is created with address "123 Oak St", price $450,000, 3 beds, 2 baths, and MLS number 12345
   And the property appears in the Properties section labelled "MLS Import"
 
-@story_154
+@story_79
 Scenario: Importing a duplicate MLS number warns the user
   Given a property with MLS#12345 already exists in the database
   When the user clicks "Import as Property" on a HAR listing with MLS#12345
   Then a warning is shown: "A property with MLS#12345 already exists"
   And the user is offered "Update existing" or "Cancel"
 
-@story_154
+@story_79
 Scenario: Choosing Update overwrites the existing property with fresh HAR data
   Given the duplicate warning is shown for MLS#12345
   When the user clicks "Update existing"
   Then the existing property record is updated with the current HAR listing data
 
-@story_154
+@story_79
 Scenario: Imported property is editable after import
   Given a property has been imported from HAR listing MLS#12345
   When the user opens the property and changes the price

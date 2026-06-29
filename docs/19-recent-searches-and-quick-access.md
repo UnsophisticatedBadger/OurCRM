@@ -28,41 +28,41 @@ As a real estate agent, I want to see my recent search terms and recently viewed
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/shell.feature`.
 
 ```gherkin
-@story_79
+@story_19
 Scenario: Recent search terms appear when the overlay opens with an empty query
   Given the user previously searched for "Alice" and then "Bob"
   When the user opens global search with an empty query
   Then "Bob" appears first in the recent searches list
   And "Alice" appears below it
 
-@story_79
+@story_19
 Scenario: Clicking a recent search term runs that search
   Given the global search overlay is open and shows "Alice" in recent searches
   When the user clicks "Alice"
   Then the search input is populated with "Alice"
   And results for "Alice" are shown
 
-@story_79
+@story_19
 Scenario: Clearing recent searches removes all terms
   Given the global search overlay shows recent search terms
   When the user clicks "Clear recent searches"
   Then the recent searches list is empty
 
-@story_79
+@story_19
 Scenario: Recently viewed records appear below recent searches
   Given the user has viewed contact "Alice Smith" and property "123 Oak St" in that order
   When the user opens global search with an empty query
   Then "123 Oak St" appears first in recently viewed records
   And "Alice Smith" appears below it
 
-@story_79
+@story_19
 Scenario: Clicking a recently viewed record opens it
   Given the global search overlay shows "Alice Smith" in recently viewed records
   When the user clicks "Alice Smith"
   Then Alice Smith's contact detail view opens
   And the overlay closes
 
-@story_79
+@story_19
 Scenario: Recent list is capped at 10 entries
   Given the user has performed 12 different searches
   When the user opens global search with an empty query

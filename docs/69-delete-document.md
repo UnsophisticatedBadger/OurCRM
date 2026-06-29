@@ -26,26 +26,26 @@ As a real estate agent, I want to delete a document from a contact's record so t
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/contacts.feature`.
 
 ```gherkin
-@story_176
+@story_69
 Scenario: Clicking Delete shows a confirmation dialog with the filename
   Given contact "Alice Smith" has document "old_contract.pdf"
   When the user clicks "Delete" on "old_contract.pdf"
   Then a confirmation dialog appears showing "old_contract.pdf"
   And the dialog includes the text "This action cannot be undone"
 
-@story_176
+@story_69
 Scenario: Confirming deletion removes the document from the list
   Given the delete confirmation dialog is open for "old_contract.pdf"
   When the user confirms the deletion
   Then "old_contract.pdf" is no longer shown in Alice Smith's Documents section
 
-@story_176
+@story_69
 Scenario: Cancelling deletion leaves the document unchanged
   Given the delete confirmation dialog is open for "old_contract.pdf"
   When the user clicks Cancel
   Then "old_contract.pdf" is still shown in Alice Smith's Documents section
 
-@story_176
+@story_69
 Scenario: Deleted document is absent after application restart
   Given the user has deleted "old_contract.pdf" from contact "Alice Smith"
   When the user restarts the application and opens Alice Smith's contact

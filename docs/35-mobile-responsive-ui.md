@@ -24,25 +24,25 @@ As an agent, I want the OurCRM window to remain usable when resized smaller or l
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/shell.feature`.
 
 ```gherkin
-@story_139
+@story_35
 Scenario: Window cannot be resized below the minimum size
   When the user drags the window edge to make it smaller than 800 × 600 px
   Then the window stops resizing at 800 × 600 px
 
-@story_139
+@story_35
 Scenario: Sidebar collapses to icon-only at minimum window width
   Given the window is at minimum width
   When the user views the sidebar
   Then only icons are visible, not text labels
   And hovering an icon shows the section name as a tooltip
 
-@story_139
+@story_35
 Scenario: No horizontal scrollbar appears at minimum window width
   Given the window is at 800 px wide
   When the user navigates to the Contacts list
   Then no horizontal scrollbar is present on the content area
 
-@story_139
+@story_35
 Scenario: Window size and sidebar state are restored on next launch
   Given the user resizes the window to 1200 × 800 px and collapses the sidebar
   When the user closes and relaunches the app

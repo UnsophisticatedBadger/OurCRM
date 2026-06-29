@@ -26,36 +26,36 @@ As a real estate agent, I want to search my contacts by name, email, or phone as
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/contacts.feature`.
 
 ```gherkin
-@story_56
+@story_64
 Scenario: Typing in the search box filters the contact list
   Given contacts "John Smith" and "Jane Doe" exist
   When the user types "John" in the search box
   Then only "John Smith" is shown
 
-@story_56
+@story_64
 Scenario: Search is case-insensitive
   Given a contact "John Smith" exists
   When the user searches for "john"
   Then "John Smith" appears in results
 
-@story_56
+@story_64
 Scenario: Search supports partial matches
   Given a contact "Johnson" exists
   When the user searches for "John"
   Then "Johnson" appears in results
 
-@story_56
+@story_64
 Scenario: Searching by email finds the correct contact
   Given a contact with email "jane@example.com" exists
   When the user searches for "jane@example"
   Then that contact is shown in results
 
-@story_56
+@story_64
 Scenario: No results shows a helpful message
   When the user searches for "xyz123"
   Then "No contacts found" is shown
 
-@story_56
+@story_64
 Scenario: Clearing the search restores the full contact list
   Given the user has searched for "John"
   When the user clears the search box

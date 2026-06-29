@@ -27,25 +27,25 @@ As a real estate agent, I want to see all my tasks due today so that I can plan 
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/tasks.feature`.
 
 ```gherkin
-@story_132
+@story_134
 Scenario: Today filter shows tasks due today and overdue tasks from prior days
   Given an incomplete task due today and an incomplete task due yesterday exist
   When the user selects the "Today" filter
   Then both tasks are shown, with the overdue task appearing first
 
-@story_132
+@story_134
 Scenario: Progress summary counts today's completed tasks
   Given 3 tasks are due today and 1 has been marked complete
   When the user selects the "Today" filter
   Then the summary reads "1 of 3 tasks complete today"
 
-@story_132
+@story_134
 Scenario: New Task from Today view pre-fills today's date
   Given the Today filter is active
   When the user clicks "New Task"
   Then the task creation form opens with today's date pre-filled in the due date field
 
-@story_132
+@story_134
 Scenario: Empty state when no tasks are due today or overdue
   Given no incomplete tasks have a due date of today or earlier
   When the user selects the "Today" filter

@@ -25,27 +25,27 @@ As an agent, I want to connect email providers beyond Gmail and Outlook using IM
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/email.feature`.
 
 ```gherkin
-@story_195
+@story_194
 Scenario: User connects an IMAP account and it appears in Settings
   Given the user opens Settings → Email → Add Account → Other (IMAP)
   When the user enters valid IMAP credentials and clicks "Connect"
   Then the connection is tested successfully
   And the IMAP account appears in Settings → Email
 
-@story_195
+@story_194
 Scenario: Invalid IMAP credentials show a connection error
   Given the user enters incorrect IMAP credentials
   When the user clicks "Connect"
   Then an error message is shown
   And no account is saved
 
-@story_195
+@story_194
 Scenario: Inbox sync works for the IMAP account
   Given an IMAP account is connected
   When an email arrives from a known contact's address
   Then the email appears in that contact's email history tab
 
-@story_195
+@story_194
 Scenario: Disconnecting the IMAP account stops inbox sync
   Given an IMAP account is connected and syncing
   When the user disconnects it from Settings

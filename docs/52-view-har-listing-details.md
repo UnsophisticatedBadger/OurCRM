@@ -30,31 +30,31 @@ As a real estate agent, I want to view the full details of a specific HAR listin
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/mls.feature`.
 
 ```gherkin
-@story_155
+@story_52
 Scenario: Clicking a listing row opens the detail view with all MLS fields
   Given a cached listing with MLS#77001, address "456 Pine Ave", price $320,000, 3 beds, 2 baths, 1,800 sqft, listed 24 days ago
   When the user clicks the MLS#77001 listing row
   Then the detail view shows address "456 Pine Ave", price $320,000, 3 beds, 2 baths, 1,800 sqft, and "24 days on market"
 
-@story_155
+@story_52
 Scenario: Detail view shows a thumbnail strip when photos are available
   Given a cached listing has 5 photo URLs provided by the HAR API
   When the user views that listing's detail
   Then 5 photo thumbnails are displayed in a horizontal strip
 
-@story_155
+@story_52
 Scenario: Detail view shows no-photos message when a listing has no photos
   Given a cached listing has no photo URLs
   When the user views that listing's detail
   Then the photos section shows "No photos available"
 
-@story_155
+@story_52
 Scenario: Import as Property button starts the import flow
   Given the user is viewing a HAR listing's detail
   When the user clicks "Import as Property"
   Then the import flow defined in #133 begins for that listing
 
-@story_155
+@story_52
 Scenario: Back button returns to the listings list at the same scroll position
   Given the user scrolled to listing row 15 and opened its detail view
   When the user clicks Back

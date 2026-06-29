@@ -31,21 +31,21 @@ As a real estate agent, I want to open a global search overlay from anywhere in 
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/shell.feature`.
 
 ```gherkin
-@story_109
+@story_16
 Scenario: User opens global search from the Leads section and sees the focused input
   Given the user is viewing the Leads section
   When the user presses Ctrl+K
   Then the global search overlay opens
   And the search text input is focused
 
-@story_109
+@story_16
 Scenario: User types a contact name and sees matching results
   Given a contact "Alice Smith" exists
   And the global search overlay is open
   When the user types "Alice"
   Then "Alice Smith" appears in the results
 
-@story_109
+@story_16
 Scenario: User navigates to a result with arrow keys and opens it with Enter
   Given the global search overlay shows results for "Alice"
   When the user presses the down arrow key to highlight "Alice Smith"
@@ -53,14 +53,14 @@ Scenario: User navigates to a result with arrow keys and opens it with Enter
   Then Alice Smith's contact detail view opens
   And the overlay closes
 
-@story_109
+@story_16
 Scenario: User presses Escape and returns to the previous view
   Given the user opened the global search overlay from the Properties section
   When the user presses Escape
   Then the overlay closes
   And the Properties section is visible
 
-@story_109
+@story_16
 Scenario: User searches for a term with no matching contacts
   Given the global search overlay is open
   When the user types "zzznomatch"

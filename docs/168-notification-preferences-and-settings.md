@@ -42,13 +42,13 @@ This story extends #178's basic per-event-type on/off toggles with three additio
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/notifications.feature`.
 
 ```gherkin
-@story_83
+@story_168
 Scenario: Channel selector defaults to Both for each event type
   Given #178 preferences are configured with all event types on
   When the user opens the Notifications section after #23 is implemented
   Then each event type row shows a channel selector set to "Both"
 
-@story_83
+@story_168
 Scenario: Setting channel to Desktop only suppresses the in-app toast for that event
   Given the New Lead event type is set to "Desktop only"
   When a new lead is saved
@@ -56,52 +56,52 @@ Scenario: Setting channel to Desktop only suppresses the in-app toast for that e
   And no in-app toast appears
   And the event is recorded in the notification centre
 
-@story_83
+@story_168
 Scenario: Setting channel to In-App only suppresses the desktop notification for that event
   Given the Task Reminder event type is set to "In-App only"
   When a task reminder fires
   Then an in-app toast appears
   And no desktop notification fires
 
-@story_83
+@story_168
 Scenario: Channel selector is greyed out when the event type toggle is off
   Given the Showing Reminder event type toggle is off
   When the user views the Notifications section
   Then the channel selector for Showing Reminder is disabled and cannot be changed
 
-@story_83
+@story_168
 Scenario: Desktop notifications and sound are suppressed during quiet hours
   Given quiet hours are set from 22:00 to 08:00 and the current time is 23:00
   When a new lead is saved
   Then no desktop notification fires and no sound plays
   And the event is recorded in the notification centre
 
-@story_83
+@story_168
 Scenario: In-app notifications are still generated during quiet hours
   Given quiet hours are active
   When a new lead is saved
   Then the notification centre gains a new entry for the lead
   And the bell badge increments
 
-@story_83
+@story_168
 Scenario: Notifications resume after quiet hours end
   Given quiet hours were active and have just ended
   When a new lead is saved
   Then a desktop notification fires normally
 
-@story_83
+@story_168
 Scenario: Notification sound toggle on plays a sound with each desktop notification
   Given the notification sound toggle is on
   When a desktop notification fires
   Then a short system sound plays
 
-@story_83
+@story_168
 Scenario: Notification sound toggle off suppresses the sound
   Given the notification sound toggle is off
   When a desktop notification fires
   Then no sound plays and the visual notification still appears
 
-@story_83
+@story_168
 Scenario: Send Test Notification fires a sample through all active channels
   Given the user has Desktop and In-App channels active for at least one event type
   When the user clicks "Send Test Notification"

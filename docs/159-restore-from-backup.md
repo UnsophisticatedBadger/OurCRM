@@ -37,39 +37,39 @@ After a successful restore, the application restarts automatically to reload all
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/backup.feature`.
 
 ```gherkin
-@story_157
+@story_159
 Scenario: Selecting a valid backup shows a confirmation dialog before restoring
   Given the Backup section is open
   When the user clicks "Restore from Backup" and selects a valid OurCRM backup file
   Then a confirmation dialog is shown stating that current data will be replaced and this cannot be undone
 
-@story_157
+@story_159
 Scenario: Selecting an invalid file shows an error and takes no action
   Given the Backup section is open
   When the user selects a file that is not a valid OurCRM backup
   Then an error is shown: "This file is not a valid OurCRM backup"
   And no data is changed
 
-@story_157
+@story_159
 Scenario: Confirming a restore replaces all current data and restarts the app
   Given a valid backup file has been selected and the confirmation dialog is shown
   When the user clicks "Restore"
   Then the current database is replaced with the backup contents
   And the application restarts automatically
 
-@story_157
+@story_159
 Scenario: Pre-restore backup option is checked by default in the confirmation dialog
   Given a valid backup file has been selected
   When the confirmation dialog opens
   Then the "Save a backup of current data before restoring" checkbox is checked
 
-@story_157
+@story_159
 Scenario: A failed restore leaves the existing database intact
   Given a restore begins but fails mid-way (e.g., disk write error)
   Then the existing database is unchanged
   And an error message describes the failure
 
-@story_157
+@story_159
 Scenario: Cancelling the confirmation dialog takes no action
   Given the confirmation dialog is shown for a valid backup
   When the user clicks "Cancel"

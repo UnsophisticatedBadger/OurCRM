@@ -35,25 +35,25 @@ Optional entity links are supported: a standalone note can be linked to a contac
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/shell.feature`.
 
 ```gherkin
-@story_135
+@story_38
 Scenario: User creates a standalone note and it appears in the Notes section
   Given the user is in the Notes section
   When the user clicks "New Note", enters title "Market observation" and content "Prices rising in north district", and saves
   Then the note "Market observation" appears in the Notes section list
 
-@story_135
+@story_38
 Scenario: Submitting a note form without a title shows a validation error
   Given the note creation form is open
   When the user leaves the title empty and clicks Save
   Then a validation error is shown and no note is created
 
-@story_135
+@story_38
 Scenario: Note with an optional entity link is saved correctly
   Given the user creates a note titled "Reminder" linked to contact "Alice Smith"
   When the user saves the note
   Then the note "Reminder" appears in the Notes section with a link to "Alice Smith"
 
-@story_135
+@story_38
 Scenario: Created note persists after application restart
   Given the user has created a note titled "Procedure reminder"
   When the user restarts the application and opens the Notes section

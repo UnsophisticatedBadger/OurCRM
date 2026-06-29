@@ -24,12 +24,12 @@ As a user, I want updates to download and install automatically, so that I'm alw
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/infrastructure.feature`.
 
 ```gherkin
-@story_150
+@story_93
 Scenario: Auto-install is off by default
   Given the user opens Settings → General → Updates
   Then the "Automatically install updates" toggle is off
 
-@story_150
+@story_93
 Scenario: Update downloads and installs silently when auto-install is enabled
   Given "Automatically install updates" is enabled
   And a newer version is available
@@ -37,14 +37,14 @@ Scenario: Update downloads and installs silently when auto-install is enabled
   Then the update is downloaded and installed without prompting the user
   And a "Restart to finish updating" notification appears
 
-@story_150
+@story_93
 Scenario: User dismisses restart prompt and update applies on next restart
   Given an update has been silently installed
   And the user has dismissed the restart prompt
   When the user restarts the application
   Then the new version is running
 
-@story_150
+@story_93
 Scenario: Disabling auto-install reverts to manual update flow
   Given "Automatically install updates" is enabled
   When the user disables the toggle

@@ -1,4 +1,4 @@
-﻿# #9 — Password Recovery Flow
+# #9 — Password Recovery Flow
 
 **Capability:** Authentication & Security
 **Milestone:** v0.2.0 — Secure Shell
@@ -37,32 +37,32 @@ Recovery password verification is case-sensitive. An incorrect or case-mismatche
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/authentication.feature`.
 
 ```gherkin
-@story_179
+@story_9
 Scenario: Forgot Password link is visible on the login screen
   Given the user is at the login screen
   When the user looks at the login form
   Then a "Forgot Password?" link is visible
 
-@story_179
+@story_9
 Scenario: Wrong recovery password shows an error
   Given the recovery form is open
   When the user enters an incorrect recovery password and clicks Verify
   Then an error is shown and the form stays open
 
-@story_179
+@story_9
 Scenario: Correct recovery password allows setting a new master password
   Given the user enters the correct recovery password
   When the user clicks Verify
   Then a form to set a new master password is shown
 
-@story_179
+@story_9
 Scenario: Successful recovery logs the user in and generates a new recovery password
   Given the user has entered the correct recovery password and a valid new master password
   When the user confirms the new password
   Then the user is logged in automatically
   And a new recovery password is displayed and must be confirmed saved before proceeding
 
-@story_179
+@story_9
 Scenario: Old master password and old recovery password are invalidated after recovery
   Given the user has completed the recovery flow with a new master password
   When the user attempts to log in with the old master password

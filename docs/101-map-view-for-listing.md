@@ -23,13 +23,13 @@ As an agent, I want to see a map showing an MLS listing's location, so that I ca
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/mls.feature`.
 
 ```gherkin
-@us209
+@story_101
 Scenario: Map tab shows a pin at the listing's address
   Given an MLS listing detail is open for "123 Main St, Houston, TX"
   When the user opens the Map tab
   Then a map is shown centred on 123 Main St with a location pin
 
-@us209
+@story_101
 Scenario: Map tab shows a fallback message when the address cannot be geocoded
   Given an MLS listing has an address that cannot be geocoded
   When the user opens the Map tab

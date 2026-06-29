@@ -25,27 +25,27 @@ As an agent, I want calendar event times to be stored in UTC and displayed in my
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/calendar.feature`.
 
 ```gherkin
-@story_42
+@story_143
 Scenario: Event created at 2 PM local time displays as 2 PM in the same zone
   Given the user's OS time zone is UTC-5
   When the user creates an event at 2:00 PM
   Then the event is stored in UTC (7:00 PM UTC)
   And displayed as 2:00 PM in the calendar view
 
-@story_42
+@story_143
 Scenario: Travel mode override changes all displayed times
   Given the user's OS time zone is UTC-5
   And the user sets a travel mode override of UTC+1
   When the user views a calendar event stored at 7:00 PM UTC
   Then the event displays as 8:00 PM (UTC+1)
 
-@story_42
+@story_143
 Scenario: Event detail panel lets user view the time in a second time zone
   Given an event is displayed at 2:00 PM in the user's active zone
   When the user opens the event detail and selects "UTC+0" from the zone picker
   Then the panel shows the equivalent UTC+0 time alongside the local time
 
-@story_42
+@story_143
 Scenario: DST boundary is handled correctly
   Given an event is scheduled one hour before a DST transition
   When the user views the event after the transition has occurred

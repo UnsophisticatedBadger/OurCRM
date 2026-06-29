@@ -25,7 +25,7 @@ As an agent, I want to be notified when the same calendar event was edited in bo
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/calendar.feature`.
 
 ```gherkin
-@story_152
+@story_144
 Scenario: Conflict notification appears when the same event is edited in both systems
   Given Google Calendar is connected
   And an event was edited in OurCRM since the last sync
@@ -33,21 +33,21 @@ Scenario: Conflict notification appears when the same event is edited in both sy
   When the next sync runs
   Then a conflict notification appears showing both versions
 
-@story_152
+@story_144
 Scenario: User keeps the OurCRM version and it overwrites the external calendar
   Given a conflict notification is shown
   When the user selects "Keep OurCRM version"
   Then the OurCRM version is pushed to Google Calendar
   And the conflict does not reappear on the next sync
 
-@story_152
+@story_144
 Scenario: User keeps the external calendar version and it overwrites OurCRM
   Given a conflict notification is shown
   When the user selects "Keep Google Calendar version"
   Then the Google Calendar version updates the OurCRM event
   And the conflict does not reappear on the next sync
 
-@story_152
+@story_144
 Scenario: Multiple conflicts are shown as a queue
   Given three events were edited in both systems since the last sync
   When the next sync runs

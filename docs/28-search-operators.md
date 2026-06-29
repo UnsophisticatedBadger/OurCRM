@@ -27,37 +27,37 @@ As an agent, I want to use AND, OR, NOT, and phrase operators in search, so that
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/shell.feature`.
 
 ```gherkin
-@story_36
+@story_28
 Scenario: AND operator returns only records matching both terms
   Given contacts "John Smith" and "John Adams" exist
   When the user searches for "John AND Smith"
   Then only "John Smith" is returned
 
-@story_36
+@story_28
 Scenario: OR operator returns records matching either term
   Given contacts "John Smith" and "Jane Adams" exist
   When the user searches for "John OR Jane"
   Then both contacts are returned
 
-@story_36
+@story_28
 Scenario: NOT operator excludes matching records
   Given contacts "John Smith" and "John Adams" exist
   When the user searches for "John NOT Smith"
   Then "John Adams" is returned and "John Smith" is not
 
-@story_36
+@story_28
 Scenario: Quoted phrase matches exact phrase only
   Given a contact "John Smith" and a note containing "John Q Smith" exist
   When the user searches for "\"John Smith\""
   Then only the exact phrase "John Smith" is matched
 
-@story_36
+@story_28
 Scenario: Operators are case-insensitive
   Given contacts "John Smith" and "John Adams" exist
   When the user searches for "john and smith"
   Then only "John Smith" is returned
 
-@story_36
+@story_28
 Scenario: Search tips link opens operator documentation
   Given the user is in the search field
   When the user clicks "Search tips"

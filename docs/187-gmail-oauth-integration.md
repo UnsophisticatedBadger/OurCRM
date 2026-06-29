@@ -26,41 +26,41 @@ As an agent, I want to connect my Gmail account via OAuth, so that I can send em
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/email.feature`.
 
 ```gherkin
-@story_27
+@story_187
 Scenario: User connects Gmail via OAuth and sends an email through Gmail
   Given the user is in Settings → Email → Gmail
   When the user clicks "Connect Gmail" and completes the Google OAuth flow
   Then Gmail shows as connected in Settings with the linked address
   And outbound emails are routed through Gmail
 
-@story_27
+@story_187
 Scenario: OAuth token is stored in the OS keyring
   Given the user has connected Gmail via OAuth
   When the token is stored
   Then it is in the OS keyring
   And no password or token is written to the app's config files
 
-@story_27
+@story_187
 Scenario: Expired token is refreshed automatically before sending
   Given Gmail is connected and the access token has expired
   When the user sends an email
   Then the token is refreshed automatically
   And the email is sent without prompting the user
 
-@story_27
+@story_187
 Scenario: User disconnects Gmail
   Given Gmail is connected
   When the user clicks "Disconnect" in Settings → Email → Gmail
   Then Gmail shows as disconnected
   And subsequent outbound emails use the configured SMTP server
 
-@story_27
+@story_187
 Scenario: Revoked token prompts reconnect before sending
   Given the Gmail OAuth token has been revoked externally
   When the user attempts to send an email
   Then a prompt appears to reconnect Gmail before the email is sent
 
-@story_27 @live_google
+@story_187 @live_google
 Scenario: App completes real Google OAuth flow and obtains a send-capable token
   Given the user has a valid Google account
   When the user completes the OAuth flow in the browser

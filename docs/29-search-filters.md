@@ -27,31 +27,31 @@ As an agent, I want to filter search results by date ranges, numeric ranges, and
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/shell.feature`.
 
 ```gherkin
-@story_37
+@story_29
 Scenario: Absolute date range filter returns only records created in that range
   Given contacts were created both inside and outside of January
   When the user sets a "Created" date filter to 1 Jan – 31 Jan
   Then only contacts created in January are shown
 
-@story_37
+@story_29
 Scenario: Relative date preset "Last 30 days" returns recent records
   Given contacts were created 10 days ago and 60 days ago
   When the user selects the "Last 30 days" date preset
   Then only the contact created 10 days ago is shown
 
-@story_37
+@story_29
 Scenario: Numeric budget range filter on leads
   Given leads exist with budgets of $200k, $400k, and $600k
   When the user sets a budget filter of $300k–$500k
   Then only the $400k lead is shown
 
-@story_37
+@story_29
 Scenario: Multiple active filters are combined with AND logic
   Given leads with "Hot" status exist at various budget levels
   When the user sets status = "Hot" and budget = "$300k–$500k"
   Then only Hot leads within the budget range are shown
 
-@story_37
+@story_29
 Scenario: Clear All Filters removes all active filters
   Given two filters are active
   When the user clicks "Clear All Filters"

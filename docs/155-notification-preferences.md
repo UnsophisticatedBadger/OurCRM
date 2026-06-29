@@ -31,26 +31,26 @@ Preferences control both desktop and in-app notification delivery for each event
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/notifications.feature`.
 
 ```gherkin
-@story_182
+@story_155
 Scenario: Notification preferences section lists all event type toggles
   Given the Settings window is open
   When the user navigates to the Notifications section
   Then toggles for New Lead, Task Reminder, Showing Reminder, and Email Received are shown
   And all toggles are on by default
 
-@story_182
+@story_155
 Scenario: Disabling a notification type suppresses future notifications for that type
   Given New Lead notifications are enabled
   When the user turns off the New Lead toggle and saves a new lead
   Then no desktop or in-app notification fires for that lead
 
-@story_182
+@story_155
 Scenario: Re-enabling a notification type restores notifications for that type
   Given New Lead notifications are disabled
   When the user turns on the New Lead toggle and saves a new lead
   Then a notification fires for that lead
 
-@story_182
+@story_155
 Scenario: Notification preferences persist after application restart
   Given the user has turned off Task Reminder notifications
   When the user restarts the application and a task reminder fires

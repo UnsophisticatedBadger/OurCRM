@@ -28,37 +28,37 @@ As a real estate agent, I want to view all my upcoming showings in chronological
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/calendar.feature`.
 
 ```gherkin
-@story_106
+@story_123
 Scenario: Showings appear sorted chronologically with the soonest first
   Given showings exist for tomorrow at 9:00 AM and tomorrow at 2:00 PM
   When the user opens the Upcoming Showings view
   Then the 9:00 AM showing appears above the 2:00 PM showing
 
-@story_106
+@story_123
 Scenario: Past showings do not appear in the list
   Given a showing was scheduled for yesterday
   When the user opens the Upcoming Showings view
   Then that showing is not listed
 
-@story_106
+@story_123
 Scenario: Showings are grouped by day with a date header
   Given showings exist for tomorrow and for next week
   When the user views upcoming showings
   Then tomorrow's showings are under one date header and next week's under another
 
-@story_106
+@story_123
 Scenario: Today's group is labelled "Today"
   Given a showing is scheduled for today
   When the user views upcoming showings
   Then today's group header reads "Today"
 
-@story_106
+@story_123
 Scenario: Empty state is shown when no upcoming showings exist
   Given no future showings are scheduled
   When the user opens the Upcoming Showings view
   Then a "No upcoming showings" message is displayed
 
-@story_106
+@story_123
 Scenario: Time range filter limits the list to the selected window
   Given a showing scheduled for tomorrow and a showing scheduled in three weeks
   When the user selects "This Week" from the time range filter

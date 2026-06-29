@@ -25,31 +25,31 @@ As an agent, I want security-relevant events to be written to a persistent audit
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/authentication.feature`.
 
 ```gherkin
-@story_143
+@story_23
 Scenario: Failed login attempt is written to the security event log
   Given the database exists
   When the user enters an incorrect password at the login screen
   Then a failed login event is recorded in the security_events table with a failure reason
 
-@story_143
+@story_23
 Scenario: Successful login is written to the security event log
   Given the database exists
   When the user logs in with the correct password
   Then a successful login event is recorded in the security_events table
 
-@story_143
+@story_23
 Scenario: Password change is written to the security event log
   Given the user is logged in
   When the user changes their password
   Then a password change event is recorded in the security_events table
 
-@story_143
+@story_23
 Scenario: Recovery attempt is written to the security event log
   Given the user initiates recovery with an incorrect recovery password
   When the attempt fails
   Then a failed recovery event is recorded in the security_events table
 
-@story_143
+@story_23
 Scenario: Security events appear in the audit log view in reverse chronological order
   Given multiple security events have been recorded
   When the user opens the audit log view

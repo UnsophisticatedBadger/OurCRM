@@ -23,20 +23,20 @@ As an agent, I want to connect more than one Google or Outlook account, so that 
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/calendar.feature`.
 
 ```gherkin
-@story_188
+@story_146
 Scenario: User connects a second Google account and its events appear in OurCRM
   Given one Google Calendar account is already connected
   When the user connects a second Google account via OAuth
   Then both accounts are listed in Settings
   And events from both accounts appear in the OurCRM calendar view
 
-@story_188
+@story_146
 Scenario: Events from different accounts are colour-coded
   Given two Google Calendar accounts are connected
   When the user views the OurCRM calendar
   Then events from each account are shown in a distinct colour
 
-@story_188
+@story_146
 Scenario: Disconnecting one account removes only its events
   Given two Google Calendar accounts are connected with synced events
   When the user disconnects the second account

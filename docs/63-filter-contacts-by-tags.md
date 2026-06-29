@@ -28,32 +28,32 @@ As a real estate agent, I want to filter my contact list by tag, so that I can f
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/contacts.feature`.
 
 ```gherkin
-@story_55
+@story_63
 Scenario: Tag filter panel shows all unique tags with counts
   Given contacts tagged "buyer" (3) and "seller" (2) exist
   When the user opens the Contacts section
   Then the filter panel shows "buyer (3)" and "seller (2)"
   And "All Contacts (5)" is shown at the top
 
-@story_55
+@story_63
 Scenario: Clicking a tag shows only matching contacts
   Given the filter panel is visible
   When the user clicks the "buyer" tag
   Then only contacts tagged "buyer" are shown
   And "buyer" is visually highlighted in the filter panel
 
-@story_55
+@story_63
 Scenario: Clicking All Contacts clears the filter
   Given the user has filtered by "buyer"
   When the user clicks "All Contacts"
   Then all contacts are shown and no tag is selected
 
-@story_55
+@story_63
 Scenario: Empty filter result shows a helpful message
   Given the user filters by a tag that no current contacts carry
   Then "No contacts with this tag" is shown
 
-@story_55
+@story_63
 Scenario: Active filter is preserved after navigating away and back
   Given the user has filtered by "buyer"
   When the user navigates to Leads and returns to Contacts

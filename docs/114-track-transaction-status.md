@@ -26,32 +26,32 @@ As a real estate agent, I want to change a transaction's status to reflect where
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/transactions.feature`.
 
 ```gherkin
-@story_74
+@story_114
 Scenario: User changes status from Under Contract to Pending in the details view
   Given the user is viewing a transaction with status "Under Contract"
   When the user clicks the status field and selects "Pending"
   Then the details view shows status "Pending"
   And the transaction list row shows the orange Pending indicator
 
-@story_74
+@story_114
 Scenario: User right-clicks a transaction and changes its status from the list
   Given a transaction "123 Oak St Sale" with status "Under Contract" is in the list
   When the user right-clicks it and selects "Change Status" then "Pending"
   Then the row updates to "Pending" immediately without navigating away
 
-@story_74
+@story_114
 Scenario: Status change updates the row colour immediately
   Given a transaction with status "Under Contract" (yellow) is in the list
   When the user changes its status to "Pending" via right-click
   Then the row indicator changes to orange immediately
 
-@story_74
+@story_114
 Scenario: Selecting Closed from the status picker redirects to the closing date flow
   Given the user is changing a transaction's status
   When the user selects "Closed"
   Then the Record Closing Date dialog opens instead of applying the change directly
 
-@story_74
+@story_114
 Scenario: Status change persists after an application restart
   Given the user has changed a transaction's status to "Pending"
   When the application is restarted and the user opens the Transactions section

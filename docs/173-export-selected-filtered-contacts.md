@@ -36,30 +36,30 @@ As a real estate agent, I want to export only a selected subset of contacts so t
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/import_export.feature`.
 
 ```gherkin
-@story_169
+@story_173
 Scenario: Contact list shows checkboxes for selection
   Given the user is viewing the contact list
   When the user looks at the list
   Then each contact row has a checkbox and a header checkbox is present
 
-@story_169
+@story_173
 Scenario: Export Selected option appears when contacts are checked
   Given the user has checked 3 contacts in the contact list
   When the user opens the Export menu
   Then "Export Selected (3)" is available as an option
 
-@story_169
+@story_173
 Scenario: Export Filtered option appears when a filter is active
   Given the contact list is filtered by tag "VIP" showing 8 matching contacts
   When the user opens the Export menu
   Then "Export Filtered (8)" is available as an option
 
-@story_169
+@story_173
 Scenario: Confirmation step shows count before file dialog
   Given the user clicks "Export Selected (3)"
   Then a confirmation step is shown with "3 contacts will be exported" before the file dialog opens
 
-@story_169
+@story_173
 Scenario: Exported CSV contains only the selected contacts
   Given the user has selected 2 specific contacts and chooses Export Selected as CSV
   When the export completes

@@ -27,7 +27,7 @@ As a real estate agent, I want to see how many leads I have qualified with AI an
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/ai.feature`.
 
 ```gherkin
-@story_116
+@story_186
 Scenario: Statistics show correct totals after qualifying leads
   Given the agent has qualified 5 leads and manually overridden 2 of them
   When the user opens AI Usage statistics
@@ -35,14 +35,14 @@ Scenario: Statistics show correct totals after qualifying leads
   And "Manual overrides" shows "2"
   And "Override rate" shows "40%"
 
-@story_116
+@story_186
 Scenario: Time period selector filters the period metrics
   Given 3 leads were qualified this month and 4 were qualified last month (7 total)
   When the user selects "This Month" from the time period selector
   Then "Leads qualified this period" shows "3"
   And "Total leads qualified (all time)" still shows "7"
 
-@story_116
+@story_186
 Scenario: No usage yet shows appropriate empty state
   Given no leads have been qualified with AI
   When the user opens AI Usage statistics

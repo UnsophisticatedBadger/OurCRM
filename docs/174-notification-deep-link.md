@@ -23,20 +23,20 @@ As an agent, I want clicking a desktop notification to take me directly to the r
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/notifications.feature`.
 
 ```gherkin
-@us211
+@story_174
 Scenario: Clicking a new lead notification opens that lead's detail view
   Given OurCRM is open and a new lead notification appears
   When the user clicks the notification
   Then the app comes to the foreground
   And the lead's detail view is shown
 
-@us211
+@story_174
 Scenario: Clicking a task reminder notification opens that task's detail view
   Given a task reminder desktop notification appears
   When the user clicks the notification
   Then the task's detail view is shown in OurCRM
 
-@us211 @live_github
+@story_174 @live_github
 Scenario: Clicking a notification when the app is closed launches the app and navigates after login
   Given OurCRM is not running and a notification was generated before the app closed
   When the user clicks the notification in the OS notification centre

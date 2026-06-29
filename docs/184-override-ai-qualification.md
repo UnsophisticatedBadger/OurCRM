@@ -32,20 +32,20 @@ The override does not delete the AI's result — it records the agent's chosen s
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/ai.feature`.
 
 ```gherkin
-@story_114
+@story_184
 Scenario: Agent overrides an AI qualification and the new status is shown with a manual label
   Given a lead has been AI-qualified with status "Cold"
   When the agent clicks "Override", selects status "Hot", adds note "Met personally — very motivated", and saves
   Then the lead displays status "Hot" with a "Manual override" label
   And the AI's original "Cold" assessment is still visible in the secondary "AI assessment" section
 
-@story_114
+@story_184
 Scenario: AI original assessment remains accessible after an override
   Given a lead has been overridden to "Hot" with the AI's original score of 28
   When the user views the lead's qualification panel
   Then the AI's score "28" and its reasoning are shown in the "AI assessment" section
 
-@story_114
+@story_184
 Scenario: Override is recorded in the qualification history
   Given a lead was AI-qualified as "Cold" at 10:00 AM
   When the agent overrides it to "Hot" at 11:00 AM with note "Very motivated buyer"
@@ -53,7 +53,7 @@ Scenario: Override is recorded in the qualification history
   Then the 11:00 AM override event shows status "Hot" and note "Very motivated buyer"
   And the 10:00 AM AI event is also present showing status "Cold"
 
-@story_114
+@story_184
 Scenario: Re-qualifying after an override makes the new AI result the active assessment
   Given a lead has been overridden to "Hot" by the agent
   When the agent clicks "Re-qualify" and the AI returns status "Warm"

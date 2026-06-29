@@ -29,40 +29,40 @@ As an agent, I want to sync my OurCRM calendar with Google Calendar, so that I c
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/calendar.feature`.
 
 ```gherkin
-@story_92
+@story_140
 Scenario: User connects Google Calendar via OAuth
   Given the user is in Settings → Calendar
   When the user clicks "Connect Google Calendar" and completes the OAuth flow
   Then Google Calendar shows as connected in Settings
   And a success confirmation is shown
 
-@story_92
+@story_140
 Scenario: New OurCRM event is pushed to Google Calendar after sync
   Given Google Calendar is connected
   When the user creates a new event in OurCRM
   Then the event is pushed to the user's Google Calendar
 
-@story_92
+@story_140
 Scenario: New Google Calendar event appears in OurCRM after sync
   Given Google Calendar is connected
   When a new event is created in Google Calendar
   Then the event appears in OurCRM on the next sync
 
-@story_92
+@story_140
 Scenario: Editing a synced event in OurCRM updates Google Calendar
   Given Google Calendar is connected
   And a synced event exists in both systems
   When the user edits the event in OurCRM
   Then the updated details are reflected in Google Calendar
 
-@story_92
+@story_140
 Scenario: Deleting a synced event in OurCRM removes it from Google Calendar
   Given Google Calendar is connected
   And a synced event exists in both systems
   When the user deletes the event in OurCRM
   Then the event is removed from Google Calendar
 
-@story_92
+@story_140
 Scenario: User disconnects Google Calendar
   Given Google Calendar is connected
   When the user clicks "Disconnect" in Settings
@@ -71,7 +71,7 @@ Scenario: User disconnects Google Calendar
   And new OurCRM events are no longer pushed to Google Calendar
   And existing synced events remain in OurCRM
 
-@story_92 @live_google
+@story_140 @live_google
 Scenario: App authenticates with Google OAuth and retrieves the calendar list
   Given the user has a valid Google account
   When the user completes the OAuth flow

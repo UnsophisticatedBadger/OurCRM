@@ -24,26 +24,26 @@ As an agent, I want to refresh a property that was imported from MLS with the la
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/mls.feature`.
 
 ```gherkin
-@story_102
+@story_99
 Scenario: Refresh from MLS updates the list price
   Given a property was imported from MLS with list price $500,000
   And the MLS listing now shows $490,000
   When the user clicks "Refresh from MLS"
   Then the property's list price is updated to $490,000
 
-@story_102
+@story_99
 Scenario: Manually edited fields are not overwritten by refresh
   Given a property was imported from MLS and the agent edited the notes field
   When the user refreshes from MLS
   Then the notes field retains the agent's edits
 
-@story_102
+@story_99
 Scenario: Refresh shows a message when the listing is no longer on MLS
   Given a property was imported from MLS but the listing has since been removed
   When the user clicks "Refresh from MLS"
   Then an informational message is shown and no property fields are changed
 
-@story_102 @live_mls
+@story_99 @live_mls
 Scenario: Real MLS refresh updates a property from a live listing
   Given a property imported from a real MLS listing
   When the user clicks "Refresh from MLS"

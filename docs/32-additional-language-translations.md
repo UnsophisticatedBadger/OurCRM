@@ -26,31 +26,31 @@ As a non-English-speaking agent, I want to switch OurCRM to my preferred languag
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/shell.feature`.
 
 ```gherkin
-@story_40
+@story_32
 Scenario: User switches to Spanish and the UI is displayed in Spanish
   Given the user opens Settings → General → Language
   When the user selects "Español" and saves
   Then all visible UI labels and buttons are displayed in Spanish
 
-@story_40
+@story_32
 Scenario: Date format matches the selected locale
   Given the user has selected Spanish (Spain) as the language
   When a date is displayed in the app
   Then it uses the DD/MM/YYYY format
 
-@story_40
+@story_32
 Scenario: Missing translation falls back to English
   Given a UI string has no Spanish translation
   When the app renders that string with Spanish selected
   Then the English string is shown instead of a blank or raw key
 
-@story_40
+@story_32
 Scenario: Language persists after app restart
   Given the user has saved Spanish as the language
   When the user restarts the app
   Then the UI is still displayed in Spanish
 
-@story_40
+@story_32
 Scenario: Switching back to English restores English text
   Given Spanish is the active language
   When the user selects "English" and saves

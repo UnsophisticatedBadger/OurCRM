@@ -23,19 +23,19 @@ As an agent, I want to record prices and budgets in different currencies on indi
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/shell.feature`.
 
 ```gherkin
-@story_101
+@story_37
 Scenario: User records a lead budget in EUR and it is displayed with the euro symbol
   Given the user creates a lead and selects EUR as the budget currency
   When the user enters 350000 as the budget
   Then the lead's budget is displayed as "€350,000.00"
 
-@story_101
+@story_37
 Scenario: Two leads with different currencies each display their own symbol in the list view
   Given one lead has a budget of $500,000 USD and another has £400,000 GBP
   When the user views the Leads list
   Then each lead shows its own currency symbol and amount
 
-@story_101
+@story_37
 Scenario: Changing the currency on a record updates the symbol without altering the stored number
   Given a property is recorded at 500000 USD
   When the user changes the currency to EUR

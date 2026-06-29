@@ -36,33 +36,33 @@ Fetched listings are cached locally. The cache is keyed by the fetch criteria an
 
 ```gherkin
 @live_mls
-@story_184
+@story_78
 Scenario: Fetching with no criteria returns active listings from HAR
   Given valid HAR credentials are configured
   When the user clicks "Fetch Listings" with no criteria entered
   Then a list of active HAR listings is displayed, each showing MLS number, address, price, bedrooms, bathrooms, and square footage
 
 @live_mls
-@story_184
+@story_78
 Scenario: Fetching with city and price criteria returns filtered results
   Given valid HAR credentials are configured
   When the user enters city "Houston", min price $300,000, max price $500,000 and clicks "Fetch Listings"
   Then only listings in Houston between $300,000 and $500,000 are displayed
 
-@story_184
+@story_78
 Scenario: No credentials configured shows a setup prompt
   Given HAR credentials have not been configured
   When the user opens the MLS section
   Then the message "Configure HAR credentials in Settings before fetching" is shown with a link to Settings
 
-@story_184
+@story_78
 Scenario: Cached listings are displayed after restart
   Given listings were fetched and cached before the last restart
   When the user opens the MLS section after restarting the application
   Then the previously fetched listings are shown with the original "Last fetched" timestamp
 
 @live_mls
-@story_184
+@story_78
 Scenario: Invalid credentials show an authentication error
   Given invalid HAR credentials are configured
   When the user clicks "Fetch Listings"

@@ -27,7 +27,7 @@ As a real estate agent, I want to view a summary analytics report of my closed t
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/transactions.feature`.
 
 ```gherkin
-@story_104
+@story_119
 Scenario: User views report metrics for a period with closed transactions
   Given two closed transactions exist: "123 Oak St" at $400,000 with $12,000 commission and "456 Elm Ave" at $600,000 with $18,000 commission
   When the user opens the Closed Transactions Report
@@ -36,26 +36,26 @@ Scenario: User views report metrics for a period with closed transactions
   And transaction count shows "2"
   And average sale price shows "$500,000"
 
-@story_104
+@story_119
 Scenario: User changes the time period and all metrics update
   Given one transaction closed this year (commission $15,000) and one closed last year (commission $10,000)
   When the user selects "This Year" from the time period selector
   Then total commission shows "$15,000"
   And transaction count shows "1"
 
-@story_104
+@story_119
 Scenario: User sees the empty-period state when no transactions match
   Given no closed transactions exist in the current month
   When the user selects "This Month" from the time period selector
   Then the report shows "No closed transactions in this period"
 
-@story_104
+@story_119
 Scenario: Trend indicator shows improvement when this period exceeds the previous
   Given $20,000 total commission was earned last quarter and $30,000 this quarter
   When the user selects "This Quarter"
   Then the commission metric shows an upward trend indicator
 
-@story_104
+@story_119
 Scenario: Commission breakdown panel shows accurate figures
   Given two closed transactions with commissions $12,000 and $18,000 on volumes $400,000 and $600,000
   When the user views the commission breakdown panel

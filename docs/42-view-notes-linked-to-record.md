@@ -24,19 +24,19 @@ As an agent, I want to see notes that are linked to a contact, lead, or property
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/shell.feature`.
 
 ```gherkin
-@us207
+@story_42
 Scenario: A note linked to a contact appears on that contact's Notes tab
   Given the user creates a note linked to contact "Jane Smith"
   When the user opens Jane Smith's contact detail
   Then a Notes tab shows the linked note
 
-@us207
+@story_42
 Scenario: A note not linked to any record does not appear on any record's Notes tab
   Given the user creates a standalone note with no record link
   When the user opens any contact, lead, or property detail
   Then the note does not appear in any record's Notes tab
 
-@us207
+@story_42
 Scenario: Clicking a linked note opens it in the Notes section
   Given a note is visible in a contact's Notes tab
   When the user clicks the note

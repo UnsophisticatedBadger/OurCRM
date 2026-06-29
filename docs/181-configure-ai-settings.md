@@ -34,13 +34,13 @@ As a real estate agent, I want to configure my AI provider and model in the Sett
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/ai.feature`.
 
 ```gherkin
-@story_111
+@story_181
 Scenario: User opens Settings and finds the AI section
   Given the Settings window is open
   When the user selects the "AI" category
   Then provider options Ollama, OpenAI, and None are shown
 
-@story_111
+@story_181
 Scenario: User selects OpenAI, enters an API key, and saves
   Given the AI settings page is open
   When the user selects "OpenAI" as the provider
@@ -49,26 +49,26 @@ Scenario: User selects OpenAI, enters an API key, and saves
   Then the API key is stored in the OS keyring
   And the key field displays a placeholder instead of the key text
 
-@story_111
+@story_181
 Scenario: User clicks Test Connection with valid Ollama configuration and sees success
   Given the AI settings page has Ollama selected with host "localhost:11434"
   And an Ollama instance is running at that address
   When the user clicks "Test Connection"
   Then a success message is shown
 
-@story_111
+@story_181
 Scenario: User clicks Test Connection with an invalid API key and sees an error
   Given the AI settings page has OpenAI selected with an invalid API key
   When the user clicks "Test Connection"
   Then an error message is shown describing the failure
 
-@story_111
+@story_181
 Scenario: User selects None and AI features are disabled
   Given the AI settings page is open
   When the user selects "None" as the provider and saves
   Then AI-related actions are hidden or disabled throughout the application
 
-@story_111
+@story_181
 Scenario: AI settings persist after the application restarts
   Given the user configured OpenAI with a valid API key and saved
   When the user restarts the application and opens AI settings

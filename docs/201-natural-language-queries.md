@@ -27,33 +27,33 @@ As an agent, I want to search my data using natural language, so that I can find
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/ai.feature`.
 
 ```gherkin
-@story_34
+@story_201
 Scenario: Natural language date query returns records from the specified period
   Given AI is configured
   And contacts were added in the previous calendar month
   When the user types "contacts added last month" in the search overlay
   Then only contacts added in the previous calendar month are shown
 
-@story_34
+@story_201
 Scenario: Natural language status query returns matching leads
   Given AI is configured
   And leads with "Hot" status exist
   When the user types "hot leads" in the search overlay
   Then only Hot leads are shown under the Leads section
 
-@story_34
+@story_201
 Scenario: Results are grouped by entity type
   Given AI is configured
   When the user submits a broad natural language query
   Then results are grouped into Contacts, Leads, Properties, and Transactions sections
 
-@story_34
+@story_201
 Scenario: Natural language query falls back to keyword search when AI is not configured
   Given AI is not configured
   When the user types "hot leads from Zillow" in the search overlay
   Then a standard keyword search is performed with no error shown
 
-@story_34 @live_ai
+@story_201 @live_ai
 Scenario: Real AI provider parses a natural language query and returns filtered results
   Given a real AI provider is configured
   And at least one lead with "Hot" status exists

@@ -23,20 +23,20 @@ As an agent, I want to edit and delete notes on a transaction, so that I can cor
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/transactions.feature`.
 
 ```gherkin
-@story_204
+@story_137
 Scenario: User edits a transaction note and the change is saved
   Given a transaction has a note "Waiting for lender approval"
   When the user edits it to "Lender approved" and saves
   Then the note displays "Lender approved"
   And an edited timestamp is shown alongside the original created timestamp
 
-@story_204
+@story_137
 Scenario: User deletes a transaction note after confirming
   Given a transaction has a note "Stale information"
   When the user clicks Delete and confirms
   Then the note is permanently removed from the transaction's notes list
 
-@story_204
+@story_137
 Scenario: Cancelling delete preserves the note
   Given a transaction has a note "Important detail"
   When the user clicks Delete and then cancels

@@ -30,31 +30,31 @@ As a real estate agent, I want to edit a task's details when plans change so tha
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/tasks.feature`.
 
 ```gherkin
-@story_133
+@story_135
 Scenario: Edit form opens pre-populated with the task's current data
   Given a task "Call Alice" exists with priority High and due date tomorrow
   When the user double-clicks "Call Alice" in the task list
   Then the edit form opens with title "Call Alice", priority High, and tomorrow's date pre-filled
 
-@story_133
+@story_135
 Scenario: User updates the task title and the list reflects the change
   Given a task "Old title" is in the task list
   When the user opens the edit form, changes the title to "New title", and saves
   Then "New title" appears in the task list and "Old title" does not
 
-@story_133
+@story_135
 Scenario: Saving with an empty title is rejected
   Given the task edit form is open
   When the user clears the title and clicks Save
   Then a validation error is shown and the task is not updated
 
-@story_133
+@story_135
 Scenario: Cancelling discards all changes
   Given the task edit form is open with title changed to "Draft title"
   When the user clicks Cancel
   Then the task still shows its original title in the list
 
-@story_133
+@story_135
 Scenario: Edited task persists after application restart
   Given a task has been edited and saved with the title "Updated task"
   When the user restarts the application

@@ -30,7 +30,7 @@ As an agent, I want received emails from my contacts to appear in OurCRM, so tha
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/email.feature`.
 
 ```gherkin
-@story_29
+@story_189
 Scenario: User enables inbox sync and grants inbox-read permission
   Given Gmail is connected via OAuth
   And inbox sync is disabled
@@ -38,7 +38,7 @@ Scenario: User enables inbox sync and grants inbox-read permission
   Then an OAuth re-authorisation prompt requests inbox-read permission
   And after granting permission, inbox sync shows as enabled
 
-@story_29
+@story_189
 Scenario: Received email from a known contact appears in their timeline
   Given inbox sync is enabled
   And a contact exists with email address matching the sender
@@ -46,33 +46,33 @@ Scenario: Received email from a known contact appears in their timeline
   Then the email appears in the contact's email history tab
   And it shows the sender name, subject, and received date
 
-@story_29
+@story_189
 Scenario: Email body is collapsed by default and expands on click
   Given a received email is shown in the contact's timeline
   When the user clicks the email entry
   Then the full email body is revealed
 
-@story_29
+@story_189
 Scenario: Attachment on a received email is downloadable
   Given a received email contains an attachment
   And the email is synced to the contact timeline
   When the user clicks the attachment name
   Then the file is downloaded
 
-@story_29
+@story_189
 Scenario: Email from unknown sender is not synced
   Given inbox sync is enabled
   When an email is received from an address not matching any contact
   Then the email does not appear anywhere in OurCRM
 
-@story_29
+@story_189
 Scenario: User disables inbox sync and new inbound emails stop appearing
   Given inbox sync is enabled and a contact has synced emails
   When the user disables inbox sync
   Then no new inbound emails appear in any contact timeline
   And previously synced emails remain visible
 
-@story_29 @live_email
+@story_189 @live_email
 Scenario: Live inbound email from a known contact syncs to their timeline
   Given inbox sync is enabled with a real Gmail or Outlook account
   When a test email is sent to the connected account from a contact's address

@@ -27,25 +27,25 @@ As a real estate agent, I want to add timestamped notes to a showing at any time
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/calendar.feature`.
 
 ```gherkin
-@story_108
+@story_125
 Scenario: User adds a note to an upcoming showing and it appears in the detail view
   Given a showing scheduled for tomorrow exists
   When the user opens the showing's detail view and adds the note "Bring pre-approval letter"
   Then "Bring pre-approval letter" is displayed in the showing's notes section with a timestamp
 
-@story_108
+@story_125
 Scenario: User submits an empty note and sees a validation error
   Given a showing's detail view is open
   When the user submits an empty note
   Then a validation error is shown and no note is saved
 
-@story_108
+@story_125
 Scenario: Multiple notes appear in chronological order
   Given a showing with a note added at 9:00 AM and another added at 10:00 AM
   When the user views the showing's details
   Then the 9:00 AM note appears above the 10:00 AM note
 
-@story_108
+@story_125
 Scenario: Notes persist after the application restarts
   Given a note "Buyer very excited about the garden" was added to a showing
   When the user restarts the application and reopens the showing

@@ -24,20 +24,20 @@ As an agent, I want to view MLS listing photos full-screen with previous/next na
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/mls.feature`.
 
 ```gherkin
-@us208
+@story_100
 Scenario: Clicking a listing photo opens the lightbox
   Given an MLS listing detail view shows multiple photos
   When the user clicks the second photo
   Then a full-screen lightbox opens showing that photo
   And the index indicator shows "2 / [total]"
 
-@us208
+@story_100
 Scenario: Next button and right arrow advance to the next photo
   Given the lightbox is open on photo 1 of 5
   When the user clicks Next or presses the right arrow key
   Then photo 2 is shown and the index updates to "2 / 5"
 
-@us208
+@story_100
 Scenario: Escape key closes the lightbox
   Given the lightbox is open
   When the user presses Escape

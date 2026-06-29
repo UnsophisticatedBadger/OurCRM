@@ -30,33 +30,33 @@ As a real estate agent, I want to see a list of backups I have created so that I
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/backup.feature`.
 
 ```gherkin
-@story_158
+@story_169
 Scenario: Backup history lists all previously created backups newest first
   Given three backups were created on Jan 1, Jan 5, and Jan 10
   When the user views the Backup section
   Then the history list shows the Jan 10 backup first, then Jan 5, then Jan 1
   And each row shows the filename, creation date, and file size
 
-@story_158
+@story_169
 Scenario: Restore button in history triggers the restore flow for that backup
   Given the backup history shows a row for "ourcrm_2024-01-10_090000.backup"
   When the user clicks "Restore" on that row
   Then the restore flow from #182 begins using that file
 
-@story_158
+@story_169
 Scenario: Show in Folder opens the file manager with the backup file selected
   Given the backup history shows a row for a backup that still exists
   When the user clicks "Show in Folder" on that row
   Then the OS file manager opens with the backup file selected
 
-@story_158
+@story_169
 Scenario: Missing file shows a File not found indicator with disabled actions
   Given a tracked backup file has been deleted externally
   When the user views the backup history
   Then the row for that backup shows "File not found"
   And the Restore and Show in Folder buttons on that row are disabled
 
-@story_158
+@story_169
 Scenario: Empty state is shown before any backups are created
   Given no backups have been created
   When the user views the Backup section

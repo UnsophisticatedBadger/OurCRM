@@ -28,31 +28,31 @@ As a real estate agent, I want to save frequently used search filters under a na
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/shell.feature`.
 
 ```gherkin
-@story_91
+@story_25
 Scenario: User saves current contact filter as a named search
   Given the contacts list is filtered by tag "VIP" and search text "Smith"
   When the user clicks "Save Search" and names it "VIP Smiths"
   Then "VIP Smiths" appears in the Saved Searches list
 
-@story_91
+@story_25
 Scenario: Applying a saved search restores its criteria
   Given a saved search "Hot Buyers" exists with its stored filter criteria
   When the user clicks "Hot Buyers" in the Saved Searches list
   Then the contacts list updates to show only contacts matching the saved criteria
 
-@story_91
+@story_25
 Scenario: Duplicate saved search name is rejected
   Given a saved search named "My Filter" already exists
   When the user tries to save another search with the name "My Filter"
   Then an error is shown and the duplicate is not saved
 
-@story_91
+@story_25
 Scenario: Deleting a saved search removes it from the list
   Given a saved search "Old Filter" exists
   When the user deletes "Old Filter" and confirms
   Then "Old Filter" no longer appears in the Saved Searches list
 
-@story_91
+@story_25
 Scenario: Saved searches persist after application restart
   Given the user has saved a search named "Weekly Prospects"
   When the user restarts the application and opens the Contacts section

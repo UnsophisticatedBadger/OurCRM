@@ -26,13 +26,13 @@ As a real estate agent, I want to change the priority of an existing task so tha
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/tasks.feature`.
 
 ```gherkin
-@story_129
+@story_131
 Scenario: User changes task priority from the detail view and the list badge updates
   Given a task "Send documents" exists with priority Medium
   When the user opens the task detail view, changes priority to Urgent, and saves
   Then "Send documents" shows the Urgent (red) priority badge in the task list
 
-@story_129
+@story_131
 Scenario: Updated priority persists after application restart
   Given a task's priority has been changed to High
   When the user restarts the application

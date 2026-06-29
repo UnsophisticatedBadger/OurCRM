@@ -34,7 +34,7 @@ A completed showing is excluded from the Upcoming Showings view and instead appe
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/calendar.feature`.
 
 ```gherkin
-@story_107
+@story_124
 Scenario: User marks a past showing as completed with an outcome
   Given a showing scheduled for yesterday exists
   When the user opens that showing's detail view and clicks "Mark as Completed"
@@ -43,19 +43,19 @@ Scenario: User marks a past showing as completed with an outcome
   Then the showing status is "Completed"
   And it no longer appears in the Upcoming Showings view
 
-@story_107
+@story_124
 Scenario: Completed showing appears in Past Showings with outcome and notes
   Given a showing has been completed with outcome "Very Interested" and note "Ready to make an offer"
   When the user opens the Past Showings view
   Then the showing is listed with outcome "Very Interested" and note "Ready to make an offer"
 
-@story_107
+@story_124
 Scenario: User tries to complete a future showing and is blocked
   Given a showing scheduled for tomorrow exists
   When the user tries to mark it as completed
   Then an error explains the showing has not yet occurred and the showing remains incomplete
 
-@story_107
+@story_124
 Scenario: User edits the outcome of a completed showing
   Given a completed showing has outcome "Neutral"
   When the user opens it, changes the outcome to "Very Interested", and saves

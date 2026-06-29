@@ -34,7 +34,7 @@ Privacy boundary: no contact records, notes content, or personally identifiable 
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/infrastructure.feature`.
 
 ```gherkin
-@story_167
+@story_81
 Scenario: Bug report dialog opens from Help menu
   Given the user is on any screen in the application
   When the user selects Help > Report a Bug
@@ -42,27 +42,27 @@ Scenario: Bug report dialog opens from Help menu
   And the Diagnostic Logs section contains the most recent log entries
   And a collapsible System Information section is visible
 
-@story_167
+@story_81
 Scenario: Required fields are validated before submitting
   Given the bug report dialog is open
   When the user clicks Submit without filling Category, Title, and Description
   Then the empty required fields are highlighted
   And the report is not submitted
 
-@story_167
+@story_81
 Scenario: Privacy notice is visible in the dialog
   Given the bug report dialog is open
   When the user views the dialog
   Then a privacy notice is shown stating what data will be sent
 
-@story_167
+@story_81
 Scenario: Opening from an error log entry pre-selects that entry
   Given the error log viewer is open and shows an Error entry
   When the user clicks "Report Bug" on that entry
   Then the bug report dialog opens
   And that entry is pre-selected in the Diagnostic Logs section
 
-@story_167
+@story_81
 Scenario: Successful submission shows a confirmation with a report ID
   Given the bug report dialog is filled with Category, Title, and Description
   When the user submits the report

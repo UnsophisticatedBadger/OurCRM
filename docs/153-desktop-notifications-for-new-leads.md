@@ -32,37 +32,37 @@ Notification preferences (enable/disable per event type) are handled by #178.
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/notifications.feature`.
 
 ```gherkin
-@story_180
+@story_153
 Scenario: Creating a new lead triggers a desktop notification with the lead's name and source
   Given notification preferences allow new-lead notifications
   When the user saves a new lead named "John Doe" with source "Website"
   Then a desktop notification fires with title "New Lead: John Doe" and body "From Website"
 
-@story_180
+@story_153
 Scenario: Manually added lead shows "Manually added" as the source in the notification
   Given notification preferences allow new-lead notifications
   When the user saves a new lead named "Jane Smith" with no source set
   Then a desktop notification fires with title "New Lead: Jane Smith" and body "Manually added"
 
-@story_180
+@story_153
 Scenario: Bulk import completion fires a single summary notification
   Given notification preferences allow new-lead notifications
   When a CSV import completes and adds 8 leads successfully
   Then a single desktop notification fires with title "8 Leads Imported" and body "View the Leads section to see the new records"
 
-@story_180
+@story_153
 Scenario: Clicking the notification navigates to the new lead
   Given a desktop notification for "New Lead: John Doe" has fired
   When the user clicks the notification
   Then OurCRM comes to the foreground and John Doe's lead detail view is shown
 
-@story_180
+@story_153
 Scenario: Clicking the import summary notification navigates to the Leads list
   Given a desktop notification "8 Leads Imported" has fired
   When the user clicks the notification
   Then OurCRM comes to the foreground and the Leads list is shown
 
-@story_180
+@story_153
 Scenario: No notification fires when new-lead notifications are disabled
   Given new-lead notifications are disabled in notification preferences
   When the user saves a new lead

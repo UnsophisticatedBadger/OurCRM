@@ -23,20 +23,20 @@ As an agent, I want to save an AI-generated lead summary to the lead record, so 
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/ai.feature`.
 
 ```gherkin
-@story_98
+@story_203
 Scenario: User saves a generated summary and it appears in the lead detail
   Given a lead summary has been generated
   When the user clicks "Save Summary"
   Then the summary is stored in the lead record
   And a read-only panel shows the summary text and the date it was saved
 
-@story_98
+@story_203
 Scenario: Lead detail shows a prompt when no summary has been saved
   Given a lead has no saved summary
   When the user views the lead detail
   Then the summary panel shows a prompt to generate and save one
 
-@story_98
+@story_203
 Scenario: Saving a new summary replaces the previous one
   Given a saved summary exists from a previous session
   When the user generates and saves a new summary

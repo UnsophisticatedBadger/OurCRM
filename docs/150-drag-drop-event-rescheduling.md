@@ -24,19 +24,19 @@ As an agent, I want to drag a calendar event to a new time slot to reschedule it
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/calendar.feature`.
 
 ```gherkin
-@story_202
+@story_150
 Scenario: Dragging an event to a new time slot reschedules it
   Given a calendar event "Team Meeting" is at 10:00 AM on Monday in the Week view
   When the user drags it to 2:00 PM on Monday
   Then the event is rescheduled to 2:00 PM and the change is saved
 
-@story_202
+@story_150
 Scenario: Dragging across a day boundary changes the event date
   Given a calendar event is on Monday in the Week view
   When the user drags it to Tuesday's column
   Then the event's date is updated to Tuesday at the dropped time
 
-@story_202
+@story_150
 Scenario: Overlap warning is shown after a conflicting drag
   Given a showing exists at 2:00 PM on Monday
   When the user drags another event to 2:00 PM on Monday

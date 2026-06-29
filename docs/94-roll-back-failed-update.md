@@ -23,7 +23,7 @@ As a user, I want the app to restore the previous version if an update fails to 
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/infrastructure.feature`.
 
 ```gherkin
-@story_151
+@story_94
 Scenario: Failed installer triggers automatic rollback
   Given a pre-update backup exists
   And the update installer exits with an error
@@ -31,14 +31,14 @@ Scenario: Failed installer triggers automatic rollback
   Then the previous version is restored from the backup
   And the user is notified that the update failed and the previous version is running
 
-@story_151
+@story_94
 Scenario: App launches successfully at the previous version after rollback
   Given a rollback has completed
   When the application starts
   Then the previous version number is shown
   And all data is intact
 
-@story_151
+@story_94
 Scenario: User is shown manual recovery path if rollback itself fails
   Given a pre-update backup exists
   And both the installer and the rollback fail

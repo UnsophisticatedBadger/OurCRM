@@ -35,30 +35,30 @@ The export is structured as a single JSON object with one key per entity type. A
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/import_export.feature`.
 
 ```gherkin
-@story_168
+@story_172
 Scenario: Full JSON export option is accessible from the menu
   Given the user is in the main app window
   When the user opens the Export menu
   Then "Full Backup (JSON)" is listed as an option
 
-@story_168
+@story_172
 Scenario: Exported file is valid JSON containing all entity types
   Given the user has contacts, leads, properties, transactions, tasks, and notes in the app
   When the user exports a full JSON backup
   Then the resulting file is valid JSON containing a key for each entity type
 
-@story_168
+@story_172
 Scenario: Exported file includes a metadata block
   Given the user exports a full JSON backup
   Then the file contains a "metadata" key with the export date, application version, and record counts
 
-@story_168
+@story_172
 Scenario: Default filename includes the current date
   Given the user initiates a full JSON export
   When the file dialog opens
   Then the suggested filename matches the pattern "ourcrm-backup-YYYY-MM-DD.json"
 
-@story_168
+@story_172
 Scenario: Success message shows the file path and size
   Given the user completes a full JSON export
   Then a success message is shown containing the saved file path and the file size

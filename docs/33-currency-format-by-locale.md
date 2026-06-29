@@ -23,25 +23,25 @@ As an agent, I want monetary values to be formatted according to my locale, so t
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/shell.feature`.
 
 ```gherkin
-@story_41
+@story_33
 Scenario: Currency format follows US locale
   Given the locale is set to English (US)
   When the user views a lead's budget of 1000000
   Then it is displayed as "$1,000,000.00"
 
-@story_41
+@story_33
 Scenario: Currency format follows Spanish locale
   Given the locale is set to Español (Spain)
   When the user views a lead's budget of 1000000
   Then it is displayed as "1.000.000,00 €"
 
-@story_41
+@story_33
 Scenario: User overrides locale currency to GBP and all monetary values update
   Given the locale is English (US) but the user selects GBP as the currency override
   When the user views any monetary value
   Then it is formatted as "£1,000.00"
 
-@story_41
+@story_33
 Scenario: Currency format persists after app restart
   Given GBP is set as the currency override
   When the user restarts the app

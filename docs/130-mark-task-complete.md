@@ -29,25 +29,25 @@ As a real estate agent, I want to mark a task as complete so that I can track my
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/tasks.feature`.
 
 ```gherkin
-@story_128
+@story_130
 Scenario: Clicking the list checkbox marks a task complete and records a timestamp
   Given an active task "Follow up with Bob" is in the task list
   When the user clicks the checkbox next to "Follow up with Bob"
   Then "Follow up with Bob" is marked complete with a completion timestamp recorded
 
-@story_128
+@story_130
 Scenario: Completed task disappears from the Active filter view
   Given the user is viewing Active tasks and "Send docs" is listed
   When the user marks "Send docs" as complete
   Then "Send docs" is no longer shown in the Active filter view
 
-@story_128
+@story_130
 Scenario: Unmarking a completed task returns it to active
   Given "Send docs" is marked complete
   When the user clicks the checkbox again on "Send docs"
   Then "Send docs" is marked active, the completion timestamp is cleared, and it appears in the Active filter view
 
-@story_128
+@story_130
 Scenario: Completion state persists after application restart
   Given the user has marked task "Old follow-up" as complete
   When the user restarts the application and views the Completed filter

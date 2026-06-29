@@ -23,20 +23,20 @@ As an agent, I want to edit and delete notes I have added to a contact, so that 
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/contacts.feature`.
 
 ```gherkin
-@story_203
+@story_90
 Scenario: User edits a contact note and the change is saved
   Given a contact has a note "Meeting at 10am"
   When the user edits it to "Meeting at 11am" and saves
   Then the note displays "Meeting at 11am"
   And an edited timestamp is shown alongside the original created timestamp
 
-@story_203
+@story_90
 Scenario: User deletes a contact note after confirming
   Given a contact has a note "Old information"
   When the user clicks Delete and confirms
   Then the note is permanently removed from the contact's notes list
 
-@story_203
+@story_90
 Scenario: Cancelling the delete prompt leaves the note unchanged
   Given a contact has a note "Keep this"
   When the user clicks Delete and then cancels the confirmation prompt

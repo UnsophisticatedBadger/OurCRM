@@ -32,21 +32,21 @@ Documents attached from the contact picker enter the same attachments list as fi
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/email.feature`.
 
 ```gherkin
-@story_122
+@story_180
 Scenario: User opens the document picker and sees the contact's linked documents
   Given contact "Alice Smith" has documents "contract.pdf" (200 KB) and "disclosure.pdf" (150 KB) linked
   And the email compose form is open addressed to Alice Smith
   When the user clicks "Attach from Contact's Documents"
   Then the picker lists "contract.pdf" and "disclosure.pdf" with their names, types, sizes, and dates added
 
-@story_122
+@story_180
 Scenario: User selects a document and it is added to the email attachments list
   Given the document picker shows "contract.pdf" for contact "Alice Smith"
   When the user selects "contract.pdf" and clicks "Attach Selected"
   Then "contract.pdf" appears in the compose form's attachments list
   And the picker closes
 
-@story_122
+@story_180
 Scenario: Contact with no linked documents shows an empty state
   Given contact "Bob Jones" has no linked documents
   And the email compose form is open addressed to Bob Jones

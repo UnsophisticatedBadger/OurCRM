@@ -49,11 +49,33 @@ def audit(path: Path) -> list[str]:
         if not re.search(pattern, content, re.MULTILINE):
             issues.append(f"missing field: {label}")
 
-    # Check Test Locations section has an actual table
+    # Check Test Locations section has an actual table, and manual test files exist
+    tl_section: str | None = None
     if "## Test Locations" in content:
         tl_match = re.search(r"## Test Locations\n(.*?)(?=\n## |\Z)", content, re.DOTALL)
-        if tl_match and "|" not in tl_match.group(1):
-            issues.append("Test Locations section has no table")
+        if tl_match:
+            tl_section = tl_match.group(1)
+            if "|" not in tl_section:
+                issues.append("Test Locations section has no table")
+
+    if tl_section:
+        root = path.parent.parent
+        for line in tl_section.splitlines():
+            if re.search(r"\|\s*Manual tests\s*\|", line, re.IGNORECASE):
+                for ref in re.findall(r"`(tests/manual/[^`]+)`", line):
+                    if not (root / ref).exists():
+                        issues.append(f"manual test file missing: {ref}")
+
+    # Check BDD tags match the issue number
+    issue_m = re.search(r"^\*\*GitHub Issue:\*\* #(\d+)", content, re.MULTILINE)
+    if issue_m:
+        issue_num = issue_m.group(1)
+        wrong_tags = sorted({t for t in re.findall(r"@story_(\d+)", content) if t != issue_num})
+        for tag_num in wrong_tags:
+            issues.append(f"BDD tag @story_{tag_num} should be @story_{issue_num}")
+        # Flag old-style @usNNN / @us_NNN tags left over from before migration
+        for tag in sorted(set(re.findall(r"@us_?\d+", content))):
+            issues.append(f"old-style BDD tag {tag} should be @story_{issue_num}")
 
     return issues
 

@@ -23,20 +23,20 @@ As an agent, I want to choose which types of events are included in my iCal expo
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/calendar.feature`.
 
 ```gherkin
-@story_189
+@story_147
 Scenario: All event types are included by default
   Given iCal export is newly enabled
   When the user views Settings → Calendar → iCal Export
   Then all event type checkboxes are checked
 
-@story_189
+@story_147
 Scenario: Deselecting Showings removes showings from the .ics file
   Given iCal export is enabled with all types checked
   And the .ics file contains a showing
   When the user unchecks "Showings"
   Then the showing is no longer present in the .ics file
 
-@story_189
+@story_147
 Scenario: Re-selecting a type adds those events back to the .ics file
   Given "Task Due Dates" is unchecked
   When the user checks "Task Due Dates"

@@ -27,25 +27,25 @@ As a real estate agent, I want to view all documents associated with a contact s
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/contacts.feature`.
 
 ```gherkin
-@story_22
+@story_67
 Scenario: Documents section lists all uploaded documents for a contact
   Given contact "Alice Smith" has documents "contract.pdf" (Contract, 200 KB) and "photo.jpg" (Photo, 1.2 MB)
   When the user opens Alice Smith's contact detail view
   Then the Documents section lists "contract.pdf" and "photo.jpg" with their filenames, type icons, sizes, upload dates, and document types
 
-@story_22
+@story_67
 Scenario: Documents are sorted newest first by default
   Given two documents were uploaded to a contact at different times
   When the user views the Documents section
   Then the most recently uploaded document appears first
 
-@story_22
+@story_67
 Scenario: Document type filter shows only documents of the selected type
   Given a contact has a "Contract" document and a "Photo" document
   When the user selects the "Photo" filter
   Then only the "Photo" document is shown
 
-@story_22
+@story_67
 Scenario: Empty state appears when a contact has no documents
   Given contact "Bob Jones" has no uploaded documents
   When the user opens Bob Jones's contact detail view

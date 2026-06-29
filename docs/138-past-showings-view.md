@@ -22,19 +22,19 @@ As an agent, I want to see a list of completed showings with their outcomes and 
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/calendar.feature`.
 
 ```gherkin
-@story_198
+@story_138
 Scenario: Completed showing appears in Past Showings tab
   Given a showing for "123 Main St" was marked completed with outcome "Interested"
   When the user opens the Past Showings tab
   Then the showing appears with the property address, completion date, and outcome
 
-@story_198
+@story_138
 Scenario: Past Showings list is ordered newest first
   Given two showings were completed on different dates
   When the user opens the Past Showings tab
   Then the more recently completed showing appears first
 
-@story_198
+@story_138
 Scenario: Filter by outcome shows only matching showings
   Given completed showings with outcomes "Interested" and "Not Interested" both exist
   When the user filters by "Interested"

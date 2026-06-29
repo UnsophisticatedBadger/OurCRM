@@ -23,20 +23,20 @@ As an agent, I want to maintain multiple iCal export files with different event-
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/calendar.feature`.
 
 ```gherkin
-@story_190
+@story_148
 Scenario: User creates a second iCal export profile with a different filter
   Given one iCal export profile already exists
   When the user adds a profile named "Clients" with only "Showings" checked
   Then a second .ics file named "ourcrm-Clients.ics" is created in the chosen folder
   And it contains only showings
 
-@story_190
+@story_148
 Scenario: All active profiles update when an event changes
   Given two active iCal export profiles exist
   When the user creates a new calendar event
   Then both .ics files are updated to include the new event (subject to each profile's filter)
 
-@story_190
+@story_148
 Scenario: Deleting a profile removes its .ics file
   Given a profile named "Clients" exists with a corresponding .ics file
   When the user deletes the "Clients" profile

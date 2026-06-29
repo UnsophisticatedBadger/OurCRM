@@ -28,32 +28,32 @@ As a real estate agent, I want to mark a property as sold and record the sale de
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/properties.feature`.
 
 ```gherkin
-@story_70
+@story_110
 Scenario: User marks a property as sold and it moves to Sold status
   Given the user is viewing an Active property
   When the user clicks "Mark as Sold", enters sale price 500000 and closing date, and confirms
   Then the property status is "Sold"
   And a success notification is shown
 
-@story_70
+@story_110
 Scenario: Sale details are visible in property details after the sale
   Given the user marks a property as sold with price 480000 and buyer "Jane Smith"
   When the user views the property details
   Then sale price "$480,000" and buyer "Jane Smith" are shown
 
-@story_70
+@story_110
 Scenario: Commission amount is calculated from sale price and percentage
   Given the sale details form is open with price 500000
   When the user enters commission percentage 3
   Then the form shows "$500,000 × 3% = $15,000"
 
-@story_70
+@story_110
 Scenario: User cancels the sale dialog and the property status is unchanged
   Given the user is viewing an Active property
   When the user clicks "Mark as Sold" then cancels the dialog
   Then the property status is still "Active"
 
-@story_70
+@story_110
 Scenario: Reverting a sold property's status requires extra confirmation
   Given a property has been marked as sold
   When the user changes its status to "Active"

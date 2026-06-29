@@ -25,25 +25,25 @@ As a real estate agent, I want to search through my notes by keyword so that I c
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/shell.feature`.
 
 ```gherkin
-@story_160
+@story_40
 Scenario: Keyword in title matches and filters the list
   Given notes "Market update" and "Call Alice" exist
   When the user types "market" in the search field
   Then only "Market update" is shown
 
-@story_160
+@story_40
 Scenario: Keyword in note content matches and filters the list
   Given a note "Procedure" exists with content "Always submit offer by fax"
   When the user types "fax" in the search field
   Then "Procedure" is shown
 
-@story_160
+@story_40
 Scenario: Clearing the search restores the full list
   Given the search field contains "market" and one note is shown
   When the user clears the search field
   Then all notes are shown again
 
-@story_160
+@story_40
 Scenario: No matching notes shows an empty-results message
   Given no note contains the word "rhinoceros"
   When the user types "rhinoceros" in the search field

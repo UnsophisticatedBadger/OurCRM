@@ -27,25 +27,25 @@ As a real estate agent, I want the contact search to also look through notes, ta
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/contacts.feature`.
 
 ```gherkin
-@story_57
+@story_65
 Scenario: User finds a contact by searching note content
   Given "Jane Smith" has a note containing "conference"
   When the user searches for "conference"
   Then "Jane Smith" appears in results
 
-@story_57
+@story_65
 Scenario: User finds contacts by searching a tag name
   Given "Bob Carter" has the tag "investor"
   When the user searches for "investor"
   Then "Bob Carter" appears in results
 
-@story_57
+@story_65
 Scenario: User finds a contact by searching an address field
   Given a contact with city "Houston" exists
   When the user searches for "Houston"
   Then that contact appears in results
 
-@story_57
+@story_65
 Scenario: Name matches rank above note matches
   Given "John Smith" exists and "Jane Doe" has a note mentioning "John"
   When the user searches for "John"

@@ -31,26 +31,26 @@ The export is a diagnostic package intended to be emailed or attached to a bug r
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/infrastructure.feature`.
 
 ```gherkin
-@story_23
+@story_84
 Scenario: Export logs for support saves a ZIP containing logs and system info
   Given the application has Error and Warning log entries
   When the user selects Help > Export Logs for Support and confirms the save dialog
   Then a ZIP file is saved containing the log entries and a system information file
 
-@story_23
+@story_84
 Scenario: Privacy notice is shown before the export dialog proceeds
   Given the user opens Help > Export Logs for Support
   When the dialog opens
   Then a privacy notice is visible stating the file does not include personal contact data
 
-@story_23
+@story_84
 Scenario: Export with an empty log still produces a valid ZIP
   Given the application log is empty
   When the user exports logs for support
   Then a ZIP file is saved containing at least the system information file
   And no error is shown
 
-@story_23
+@story_84
 Scenario: Success message shows file path and an Open Folder button
   Given the user has just completed an export
   Then a success message shows the saved file path and its size

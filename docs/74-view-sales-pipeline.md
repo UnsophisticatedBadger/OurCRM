@@ -28,31 +28,31 @@ As a real estate agent, I want to see all my leads in a kanban board organised b
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/leads.feature`.
 
 ```gherkin
-@story_64
+@story_74
 Scenario: User switches to pipeline view and sees all stage columns
   Given leads exist in various pipeline stages
   When the user clicks the "Pipeline" toggle in the Leads section
   Then a kanban board is shown with all eight stage columns in order
 
-@story_64
+@story_74
 Scenario: Column header shows the correct lead count
   Given three leads are in the "Contacted" stage
   When the user views the pipeline
   Then the "Contacted" column header shows a count of 3
 
-@story_64
+@story_74
 Scenario: Empty column shows a No leads placeholder
   Given no leads are in the "Offer Made" stage
   When the user views the pipeline
   Then the "Offer Made" column shows "No leads" instead of being empty or hidden
 
-@story_64
+@story_74
 Scenario: User clicks a lead card and opens its details
   Given the user is viewing the pipeline
   When the user clicks the card for lead "Sara Lee"
   Then the lead details view opens for "Sara Lee"
 
-@story_64
+@story_74
 Scenario: User drags a lead card to another column and the stage updates
   Given lead "Bob Kim" is in the "New Lead" column
   When the user drags "Bob Kim"'s card to the "Contacted" column

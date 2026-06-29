@@ -35,7 +35,7 @@ AI qualification sends the lead's stored data (budget, timeline, notes, current 
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/ai.feature`.
 
 ```gherkin
-@story_112
+@story_182
 Scenario: User qualifies a lead and receives a structured result
   Given a lead "Alice Smith" exists with notes "Pre-approved, actively looking"
   And an AI provider is configured
@@ -43,20 +43,20 @@ Scenario: User qualifies a lead and receives a structured result
   Then a progress indicator is shown during analysis
   And when complete, the qualification panel shows a score (0–100), a status (Hot / Warm / Cold), reasoning text, and a qualification timestamp
 
-@story_112
+@story_182
 Scenario: Qualification result persists after the application restarts
   Given a lead has been qualified with score 78, status "Hot", and reasoning "Pre-approved buyer"
   When the user restarts the application and opens that lead's detail view
   Then the score "78", status "Hot", reasoning, and qualification timestamp are still displayed
 
-@story_112
+@story_182
 Scenario: Re-qualifying a lead updates the result
   Given a lead has a qualification result with score 40
   And additional notes have been added to the lead
   When the user clicks "Qualify with AI" again and the AI returns score 72
   Then the displayed score is "72" and the qualification timestamp is updated
 
-@story_112
+@story_182
 Scenario: AI provider error leaves the existing qualification unchanged
   Given a lead has a qualification score of 60
   And the AI provider is unreachable
@@ -64,7 +64,7 @@ Scenario: AI provider error leaves the existing qualification unchanged
   Then a clear error message is shown
   And the lead's qualification score remains "60"
 
-@story_112
+@story_182
 Scenario: Qualify with AI button is hidden when AI is disabled
   Given the AI provider is set to "None" in AI settings
   When the user opens any lead's detail view

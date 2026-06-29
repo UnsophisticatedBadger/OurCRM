@@ -1,4 +1,4 @@
-﻿# #8 — Change Master Password
+# #8 — Change Master Password
 
 **Capability:** Authentication & Security
 **Milestone:** v0.2.0 — Secure Shell
@@ -36,31 +36,31 @@ Re-encryption must be atomic: if the process fails mid-way (e.g., disk full), th
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/authentication.feature`.
 
 ```gherkin
-@story_178
+@story_8
 Scenario: Entering the wrong current password is rejected
   Given the Change Master Password form is open
   When the user enters an incorrect current password and clicks Continue
   Then an error is shown and the form stays open
 
-@story_178
+@story_8
 Scenario: New password shorter than 12 characters is rejected
   Given the current password has been verified
   When the user enters a new password of 8 characters
   Then a validation error is shown and the password is not changed
 
-@story_178
+@story_8
 Scenario: Mismatched new password and confirmation is rejected
   Given the current password has been verified
   When the user enters different values in the new password and confirmation fields
   Then an error "Passwords do not match" is shown and the password is not changed
 
-@story_178
+@story_8
 Scenario: Successful password change logs the user out
   Given the user enters the correct current password and a valid matching new password
   When the user confirms the change
   Then the database is re-encrypted and the user is taken to the login screen
 
-@story_178
+@story_8
 Scenario: New password works at login and old password does not
   Given the master password has been changed to "NewSecurePassword99!"
   When the user attempts to log in with the old password

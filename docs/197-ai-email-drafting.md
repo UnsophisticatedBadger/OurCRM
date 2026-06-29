@@ -28,41 +28,41 @@ As an agent, I want to generate an AI-drafted email from the compose form, so th
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/ai.feature`.
 
 ```gherkin
-@story_30
+@story_197
 Scenario: User generates an email draft with AI
   Given AI is configured
   And the user has the email compose form open
   When the user clicks "Draft with AI", enters a purpose, selects "Professional" tone, and clicks "Generate"
   Then an email body and suggested subject line are shown in the preview panel
 
-@story_30
+@story_197
 Scenario: Draft addresses the selected recipient by first name
   Given AI is configured
   And a contact named "Maria" is selected as the recipient
   When the user generates a draft
   Then the greeting in the draft uses "Maria"
 
-@story_30
+@story_197
 Scenario: User regenerates to get a different draft
   Given a draft has been generated
   When the user clicks "Regenerate"
   Then a new draft body is returned with different wording
 
-@story_30
+@story_197
 Scenario: User inserts the draft into the compose form
   Given a draft has been generated and the user is satisfied
   When the user clicks "Use This Draft"
   Then the draft body replaces the compose form body
   And the suggested subject line replaces the subject field
 
-@story_30
+@story_197
 Scenario: "Draft with AI" button is disabled when AI is not configured
   Given AI is not configured
   When the user opens the email compose form
   Then the "Draft with AI" button is disabled
   And hovering shows a tooltip directing the user to Settings → AI
 
-@story_30 @live_ai
+@story_197 @live_ai
 Scenario: User generates a draft using a real AI provider
   Given a real AI provider is configured (Ollama or OpenAI)
   When the user generates a draft with purpose "follow up after showing" and "Professional" tone

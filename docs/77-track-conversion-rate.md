@@ -27,31 +27,31 @@ As a real estate agent, I want to see my lead conversion rate, so that I can mea
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/leads.feature`.
 
 ```gherkin
-@story_67
+@story_77
 Scenario: Conversion rate is calculated correctly
   Given 10 leads exist and 3 have been converted
   When the user views the Leads section
   Then the summary bar shows "10 leads total — 3 converted (30%)"
 
-@story_67
+@story_77
 Scenario: Filtering by This Month shows only this month's figures
   Given 2 leads were converted this month and 3 were converted last year
   When the user selects "This Month" in the summary bar filter
   Then the summary bar shows 2 converted with the corresponding rate
 
-@story_67
+@story_77
 Scenario: Per-source breakdown shows each source's conversion rate
   Given 4 Zillow leads exist with 2 converted, and 6 Referral leads exist with 3 converted
   When the user views the per-source breakdown
   Then Zillow shows 50% and Referral shows 50%
 
-@story_67
+@story_77
 Scenario: Summary bar updates immediately after a conversion
   Given the user is viewing the Leads section with 9 leads and 2 converted (22%)
   When the user converts a third lead
   Then the summary bar immediately shows "10 leads total — 3 converted (30%)"
 
-@story_67
+@story_77
 Scenario: Summary bar shows zero gracefully with no conversions
   Given leads exist but none have been converted
   When the user views the Leads section

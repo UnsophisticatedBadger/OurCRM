@@ -24,7 +24,7 @@ As an agent, I want to choose which Google Calendar or Outlook calendar folder t
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/calendar.feature`.
 
 ```gherkin
-@story_187
+@story_145
 Scenario: User selects a non-primary Google calendar to sync
   Given Google Calendar is connected
   And the user has multiple Google calendars
@@ -32,14 +32,14 @@ Scenario: User selects a non-primary Google calendar to sync
   Then only events from the "Work" calendar are synced
   And events from other Google calendars are not pulled into OurCRM
 
-@story_187
+@story_145
 Scenario: User changes the selected calendar and the change takes effect on next sync
   Given Google Calendar is connected and syncing the "Personal" calendar
   When the user changes the selection to "Work"
   And a sync runs
   Then new events come from the "Work" calendar only
 
-@story_187
+@story_145
 Scenario: Previously synced events are not removed when the calendar selection changes
   Given OurCRM has synced events from the "Personal" calendar
   When the user changes the selection to "Work"

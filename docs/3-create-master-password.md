@@ -1,4 +1,4 @@
-﻿# #3 — Create Master Password
+# #3 — Create Master Password
 
 **Capability:** Authentication & Security
 **Milestone:** v0.2.0 — Secure Shell
@@ -24,17 +24,17 @@ None — first authentication story.
 
 ## BDD Scenarios
 
-> Startup dialog widget scenarios (@story_10) are in `tests/bdd/features/authentication.feature`.
+> Startup dialog widget scenarios (@story_3) are in `tests/bdd/features/authentication.feature`.
 > The following wiring scenarios are not yet implemented.
 
 ```gherkin
-@story_10
+@story_3
 Scenario: First launch detects missing database and shows create-password mode
   Given no database file exists
   When the application starts
   Then the startup dialog is shown in create-password mode
 
-@story_10
+@story_3
 Scenario: Correct password on first launch creates the database and opens the main window
   Given no database file exists
   And the startup dialog is open in create-password mode
@@ -42,7 +42,7 @@ Scenario: Correct password on first launch creates the database and opens the ma
   Then the database file is created on disk
   And the main window is shown
 
-@story_10
+@story_3
 Scenario: Closing the startup dialog on first launch exits the application
   Given no database file exists
   And the startup dialog is open in create-password mode

@@ -25,7 +25,7 @@ As an agent, I want to see today's calendar events and showings on the dashboard
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/shell.feature`.
 
 ```gherkin
-@story_145
+@story_21
 Scenario: Widget shows today's events and showings in time order
   Given a calendar event exists for today at 10:00 AM titled "Team Meeting"
   And a showing exists for today at 2:00 PM for "123 Main St"
@@ -33,13 +33,13 @@ Scenario: Widget shows today's events and showings in time order
   Then the Today's Schedule widget shows "Team Meeting" at 10:00 AM
   And the "123 Main St" showing appears below it at 2:00 PM
 
-@story_145
+@story_21
 Scenario: Widget shows empty state when no events are scheduled today
   Given no calendar events or showings exist for today
   When the user views the dashboard
   Then the Today's Schedule widget shows "No events scheduled for today"
 
-@story_145
+@story_21
 Scenario: Clicking an event in the widget navigates to the Calendar section
   Given a calendar event exists for today
   When the user clicks the event in the Today's Schedule widget

@@ -33,32 +33,32 @@ Saved mappings are keyed to the set of column headers in the source file. Loadin
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/import_export.feature`.
 
 ```gherkin
-@story_138
+@story_171
 Scenario: User saves a field mapping after completing column assignments
   Given the user has completed column mapping in a CSV import
   When the user clicks "Save Mapping" and names it "Zillow Weekly"
   Then "Zillow Weekly" is available in the Load Mapping list for future imports
 
-@story_138
+@story_171
 Scenario: Loading a saved mapping pre-fills column assignments
   Given a saved mapping "Zillow Weekly" exists
   When the user starts a new CSV import and selects "Zillow Weekly" from Load Mapping
   Then the column-to-field dropdowns are pre-filled according to the saved mapping
 
-@story_138
+@story_171
 Scenario: Unrecognised columns default to Skip when loading a mapping
   Given a saved mapping "Zillow Weekly" exists
   And the new import file has a column "LeadScore" not present in the saved mapping
   When the user loads "Zillow Weekly"
   Then "LeadScore" defaults to "Skip"
 
-@story_138
+@story_171
 Scenario: Duplicate mapping name is rejected
   Given a saved mapping named "Monthly Import" exists
   When the user tries to save another mapping with the name "Monthly Import"
   Then an error is shown and the duplicate is not saved
 
-@story_138
+@story_171
 Scenario: Saved mappings persist after application restart
   Given the user has saved a mapping named "Zillow Weekly"
   When the user restarts the application and starts a CSV import

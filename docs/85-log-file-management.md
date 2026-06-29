@@ -33,24 +33,24 @@ Log files are stored in a dedicated folder (e.g., `<app-data>/logs/`). Each file
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/infrastructure.feature`.
 
 ```gherkin
-@story_170
+@story_85
 Scenario: Log files are written to a dedicated folder with date-stamped names
   Given the application is running and producing log output
   Then the log file is located in the app-data logs folder and named "ourcrm-YYYY-MM-DD.log" for the current date
 
-@story_170
+@story_85
 Scenario: A new file is started when the current log file reaches 10 MB
   Given the current log file has reached the 10 MB size limit
   When a new log entry is written
   Then a new file named "ourcrm-YYYY-MM-DD-2.log" is created and the original file is not modified further
 
-@story_170
+@story_85
 Scenario: Old log files are deleted at startup beyond the retention period
   Given the log folder contains files with dates older than the configured retention period
   When the application starts
   Then those files are deleted and only files within the retention window remain
 
-@story_170
+@story_85
 Scenario: Log retention period is configurable in Settings
   Given the user opens Settings → Advanced → Log Retention and sets the period to 14 days
   When the application restarts

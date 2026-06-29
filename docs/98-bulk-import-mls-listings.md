@@ -23,19 +23,19 @@ As an agent, I want to select multiple MLS listings and import them all as prope
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/mls.feature`.
 
 ```gherkin
-@story_174
+@story_98
 Scenario: Selecting multiple listings enables the Import Selected button
   Given the MLS listings view shows fetched results
   When the user checks the boxes for three listings
   Then the "Import Selected" button is visible
 
-@story_174
+@story_98
 Scenario: Bulk import creates a property for each selected listing
   Given three listings are selected and none are already imported
   When the user confirms the bulk import
   Then three new properties are created
 
-@story_174
+@story_98
 Scenario: Already-imported listings are skipped in bulk import
   Given two listings are selected and one was previously imported
   When the user confirms the bulk import

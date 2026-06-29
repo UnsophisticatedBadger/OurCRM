@@ -29,32 +29,32 @@ As a real estate agent, I want to delete tasks that are no longer relevant so th
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/tasks.feature`.
 
 ```gherkin
-@story_134
+@story_136
 Scenario: Clicking Delete shows a confirmation dialog with the task title
   Given a task "Follow up with Bob" is in the task list
   When the user clicks "Delete" on that task
   Then a confirmation dialog appears showing "Follow up with Bob"
   And the dialog includes the text "This action cannot be undone"
 
-@story_134
+@story_136
 Scenario: Confirming deletion removes the task from the list
   Given the delete confirmation dialog is open for "Follow up with Bob"
   When the user confirms the deletion
   Then "Follow up with Bob" is no longer visible in the task list
 
-@story_134
+@story_136
 Scenario: Cancelling deletion leaves the task unchanged
   Given the delete confirmation dialog is open for "Follow up with Bob"
   When the user clicks Cancel
   Then "Follow up with Bob" is still visible in the task list
 
-@story_134
+@story_136
 Scenario: Deleting a task cancels its scheduled reminder
   Given a task has a reminder scheduled for 1 minute from now
   When the user deletes the task and confirms
   Then no reminder notification fires after 1 minute
 
-@story_134
+@story_136
 Scenario: Deleted task is absent after application restart
   Given the user has deleted a task titled "Cancelled appointment"
   When the user restarts the application and views the task list

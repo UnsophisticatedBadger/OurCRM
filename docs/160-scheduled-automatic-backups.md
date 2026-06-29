@@ -24,26 +24,26 @@ As an agent, I want OurCRM to create backups automatically on a schedule, so tha
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/backup.feature`.
 
 ```gherkin
-@story_205
+@story_160
 Scenario: Enabling automatic backups with a Daily schedule saves the setting
   Given the user enables automatic backups and selects "Daily at 11:00 PM"
   When the user saves Settings
   Then the automatic backup schedule is saved as Daily at 11:00 PM
 
-@story_205
+@story_160
 Scenario: Missed backup runs on next app launch
   Given a daily backup was scheduled for a time that has already passed today
   And the app was not running at that time
   When the user launches the app
   Then a backup is created immediately on launch
 
-@story_205
+@story_160
 Scenario: Automatic backup appears in backup history labelled "Automatic"
   Given automatic backups are enabled and a scheduled backup has run
   When the user views the backup history
   Then the backup is listed with the label "Automatic"
 
-@story_205
+@story_160
 Scenario: Oldest automatic backup is deleted when the 10-backup limit is reached
   Given 10 automatic backups already exist
   When a new scheduled backup runs

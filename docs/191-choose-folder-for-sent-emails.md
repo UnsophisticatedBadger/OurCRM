@@ -23,13 +23,13 @@ As an agent, I want to choose which Gmail label or Outlook folder OurCRM-sent em
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/email.feature`.
 
 ```gherkin
-@story_192
+@story_191
 Scenario: Sent emails are filed in the Gmail Sent folder by default
   Given Gmail is connected
   When the user sends an email from OurCRM
   Then the email appears in the Gmail Sent folder
 
-@story_192
+@story_191
 Scenario: User changes the Gmail label and subsequent emails are filed there
   Given Gmail is connected
   When the user selects "CRM Sent" from the "Sent emails label" dropdown
@@ -37,7 +37,7 @@ Scenario: User changes the Gmail label and subsequent emails are filed there
   Then the email appears under the "CRM Sent" label in Gmail
   And not in the standard Sent folder
 
-@story_192
+@story_191
 Scenario: Changing the label does not move previously sent emails
   Given three emails were previously sent and filed in the Gmail Sent folder
   When the user changes the label to "CRM Sent"

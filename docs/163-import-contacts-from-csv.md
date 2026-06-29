@@ -41,31 +41,31 @@ Duplicate detection is handled by the logic defined in #183.
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/import_export.feature`.
 
 ```gherkin
-@story_162
+@story_163
 Scenario: Field mapping panel shows CSV headers and sample values
   Given a CSV file with headers "Full Name", "Email Address", "Mobile" and one data row
   When the user selects the file in the import dialog
   Then a mapping panel shows each header alongside its sample value and a dropdown defaulting to "Skip"
 
-@story_162
+@story_163
 Scenario: Importing with a complete mapping creates contacts for each row
   Given a CSV with 5 rows mapped to first name, last name, and email
   When the user clicks "Import"
   Then 5 contact records are created with the correct field values
 
-@story_162
+@story_163
 Scenario: Rows with invalid email format are skipped and reported
   Given a CSV where row 3 has "not-an-email" in the email column
   When the user imports the file
   Then rows 1, 2, 4, and 5 are imported and row 3 is listed in the summary as skipped due to invalid email
 
-@story_162
+@story_163
 Scenario: Preview shows mapped data from the first five rows
   Given a CSV file with a mapping applied
   When the user views the preview panel
   Then the first five rows are shown as they will appear as contact records
 
-@story_162
+@story_163
 Scenario: Import summary is shown after completion
   Given a CSV with 20 rows, 3 invalid, and 2 duplicates (skipped)
   When the user imports the file

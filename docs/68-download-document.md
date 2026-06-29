@@ -25,19 +25,19 @@ As a real estate agent, I want to download a contact's document to my computer s
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/contacts.feature`.
 
 ```gherkin
-@story_175
+@story_68
 Scenario: Clicking a document row opens the OS save dialog with the original filename
   Given contact "Alice Smith" has document "contract.pdf"
   When the user clicks "contract.pdf" in the Documents section
   Then the OS save dialog opens with "contract.pdf" as the suggested filename
 
-@story_175
+@story_68
 Scenario: Confirming the save dialog writes the file to the chosen location
   Given the OS save dialog is open for "contract.pdf"
   When the user confirms a save location
   Then the file is saved at that location and its contents match the original upload
 
-@story_175
+@story_68
 Scenario: Cancelling the save dialog writes no file
   Given the OS save dialog is open for "contract.pdf"
   When the user clicks Cancel in the save dialog

@@ -26,19 +26,19 @@ As a real estate agent, I want to create a task so that I can track follow-ups a
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/tasks.feature`.
 
 ```gherkin
-@story_127
+@story_128
 Scenario: User creates a task with a title and it appears in the list
   Given the user is in the Tasks section
   When the user clicks "New Task", enters the title "Call Alice about contract", and saves
   Then the task "Call Alice about contract" appears in the task list
 
-@story_127
+@story_128
 Scenario: Submitting the task form without a title shows a validation error
   Given the task creation form is open
   When the user leaves the title empty and clicks Save
   Then a validation error is shown and no task is created
 
-@story_127
+@story_128
 Scenario: Task created with all fields persists after restart
   Given the user creates a task with title "Send disclosure", priority High, and linked to contact "Alice Smith"
   When the user restarts the application and opens the Tasks section

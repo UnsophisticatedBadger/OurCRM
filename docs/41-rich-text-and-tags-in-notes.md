@@ -23,19 +23,19 @@ As an agent, I want to format my notes with basic rich text and tag them with ke
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/shell.feature`.
 
 ```gherkin
-@us206
+@story_41
 Scenario: Bold formatting is applied in the note editor
   Given the user is editing a note
   When the user selects text and clicks Bold
   Then the selected text appears bold in the editor and is saved with bold formatting
 
-@us206
+@story_41
 Scenario: Adding a tag to a note displays it as a badge
   Given the user adds the tag "buyer" to a note
   When the note is saved
   Then a "buyer" badge appears below the note in the notes list
 
-@us206
+@story_41
 Scenario: Filtering notes by tag shows only matching notes
   Given notes tagged "buyer" and "seller" exist
   When the user selects the "buyer" tag filter

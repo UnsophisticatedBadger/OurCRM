@@ -30,40 +30,40 @@ As an agent, I want to sync my OurCRM calendar with Outlook Calendar, so that I 
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/calendar.feature`.
 
 ```gherkin
-@story_93
+@story_141
 Scenario: User connects Outlook Calendar via OAuth
   Given the user is in Settings → Calendar
   When the user clicks "Connect Outlook Calendar" and completes the Microsoft OAuth flow
   Then Outlook Calendar shows as connected in Settings
   And a success confirmation is shown
 
-@story_93
+@story_141
 Scenario: New OurCRM event is pushed to Outlook Calendar after sync
   Given Outlook Calendar is connected
   When the user creates a new event in OurCRM
   Then the event is pushed to the user's Outlook Calendar
 
-@story_93
+@story_141
 Scenario: New Outlook Calendar event appears in OurCRM after sync
   Given Outlook Calendar is connected
   When a new event is created in Outlook Calendar
   Then the event appears in OurCRM on the next sync
 
-@story_93
+@story_141
 Scenario: Editing a synced event in OurCRM updates Outlook Calendar
   Given Outlook Calendar is connected
   And a synced event exists in both systems
   When the user edits the event in OurCRM
   Then the updated details are reflected in Outlook Calendar
 
-@story_93
+@story_141
 Scenario: Deleting a synced event in OurCRM removes it from Outlook Calendar
   Given Outlook Calendar is connected
   And a synced event exists in both systems
   When the user deletes the event in OurCRM
   Then the event is removed from Outlook Calendar
 
-@story_93
+@story_141
 Scenario: User disconnects Outlook Calendar
   Given Outlook Calendar is connected
   When the user clicks "Disconnect" in Settings
@@ -72,7 +72,7 @@ Scenario: User disconnects Outlook Calendar
   And new OurCRM events are no longer pushed to Outlook Calendar
   And existing synced events remain in OurCRM
 
-@story_93 @live_microsoft
+@story_141 @live_microsoft
 Scenario: App authenticates with Microsoft OAuth and retrieves the calendar list
   Given the user has a valid Microsoft account
   When the user completes the Microsoft OAuth flow

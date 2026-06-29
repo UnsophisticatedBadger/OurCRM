@@ -25,25 +25,25 @@ As an agent, I want to connect more than one Gmail or Outlook account, so that I
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/email.feature`.
 
 ```gherkin
-@story_191
+@story_190
 Scenario: User connects a second Gmail account and both appear in Settings
   Given one Gmail account is already connected
   When the user clicks "Add another Gmail account" and completes OAuth
   Then both accounts are listed in Settings → Email → Gmail
 
-@story_191
+@story_190
 Scenario: From dropdown in compose form lists all connected accounts
   Given two Gmail accounts are connected
   When the user opens the email compose form
   Then the "From" dropdown shows both Gmail addresses
 
-@story_191
+@story_190
 Scenario: Email is sent from the selected account
   Given two Gmail accounts are connected
   When the user selects the second account in the "From" dropdown and sends an email
   Then the email is sent via the second Gmail account
 
-@story_191
+@story_190
 Scenario: Disconnecting one account does not affect the other
   Given two Gmail accounts are connected
   When the user disconnects the second account

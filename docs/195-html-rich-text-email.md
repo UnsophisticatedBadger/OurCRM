@@ -23,25 +23,25 @@ As an agent, I want to compose emails with basic rich-text formatting, so that I
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/email.feature`.
 
 ```gherkin
-@story_103
+@story_195
 Scenario: Bold formatting is applied and preserved in the compose form
   Given the user is composing an email
   When the user types "Hello" and applies Bold formatting
   Then "Hello" appears bold in the compose form
 
-@story_103
+@story_195
 Scenario: Email is sent as HTML with a plain-text fallback
   Given the compose form contains bold text
   When the user sends the email
   Then the sent email has a text/html part and a text/plain fallback part
 
-@story_103
+@story_195
 Scenario: Switching to Plain Text mode strips formatting after confirmation
   Given the compose form contains bold and italic text
   When the user switches to Plain Text mode and confirms the warning
   Then the text is preserved but all formatting is removed
 
-@story_103 @live_email
+@story_195 @live_email
 Scenario: Rich-text email is received with formatting intact by a real email client
   Given a real SMTP account is configured
   When the user sends an email with bold text and a bullet list

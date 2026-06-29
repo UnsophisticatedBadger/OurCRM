@@ -28,33 +28,33 @@ As a user, I want to clear old log entries so that I can free up disk space and 
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/infrastructure.feature`.
 
 ```gherkin
-@story_88
+@story_83
 Scenario: Clear Logs button opens the clearing dialog
   Given the error log viewer is open
   When the user clicks "Clear Logs"
   Then the clearing dialog opens showing the current entry count and approximate file size
 
-@story_88
+@story_83
 Scenario: Preview shows what will be deleted before clearing
   Given the clearing dialog is open and 200 entries are older than 30 days
   When the user selects "Older than 30 days"
   Then the preview shows "200 entries will be deleted"
 
-@story_88
+@story_83
 Scenario: Confirmation is required before entries are deleted
   Given the user has selected a clearing criteria and seen the preview
   When the user clicks "Clear"
   Then a confirmation dialog appears before any deletion occurs
   And clicking Cancel leaves all entries intact
 
-@story_88
+@story_83
 Scenario: Clear all requires an explicit cannot-be-undone warning
   Given the clearing dialog is open
   When the user selects "Clear all log entries"
   And clicks "Clear"
   Then the confirmation text reads "This will permanently delete all log entries and cannot be undone"
 
-@story_88
+@story_83
 Scenario: Log viewer shows remaining entries after a partial clear
   Given 50 log entries exist and 30 are older than 90 days
   When the user clears entries older than 90 days and confirms

@@ -24,21 +24,21 @@ As an agent, I want to see inbound emails from senders not in my contacts, so th
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/email.feature`.
 
 ```gherkin
-@story_194
+@story_193
 Scenario: Inbound email from unknown sender appears in Unknown Senders section
   Given inbox sync is enabled
   When an email arrives from an address not matching any contact
   Then it appears in the Email tab → Unknown Senders section
   And shows the sender address, subject, and received date
 
-@story_194
+@story_193
 Scenario: User creates a contact from an unknown sender entry
   Given an unknown sender email is shown
   When the user clicks "Create Contact"
   Then the new contact form opens pre-filled with the sender's email address
   And after saving, the email is linked to the new contact and removed from Unknown Senders
 
-@story_194
+@story_193
 Scenario: User dismisses an unknown sender email and it does not reappear
   Given an unknown sender email is shown
   When the user clicks "Dismiss"

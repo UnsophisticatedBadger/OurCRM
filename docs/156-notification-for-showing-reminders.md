@@ -43,52 +43,52 @@ Notification content and delivery channels (desktop, in-app) respect the user's 
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/notifications.feature`.
 
 ```gherkin
-@story_82
+@story_156
 Scenario: Saving a showing schedules a reminder at the configured lead time before it
   Given the showing reminder lead time is set to 60 minutes in preferences
   And a showing is saved for 2026-07-01 at 14:00
   When the showing is saved
   Then a reminder is scheduled for 2026-07-01 at 13:00
 
-@story_82
+@story_156
 Scenario: Reminder fires an in-app notification with property address and contact name
   Given a reminder is due now for a showing at "789 Elm St" with contact "Bob Jones" at 14:00
   When the reminder fires
   Then an in-app notification appears with title "Showing in 60 minutes: 789 Elm St" and body "Bob Jones — 14:00"
 
-@story_82
+@story_156
 Scenario: Clicking the reminder notification navigates to the showing detail
   Given the reminder notification for a showing is visible
   When the user clicks it
   Then the showing detail view for that showing is displayed
 
-@story_82
+@story_156
 Scenario: Cancelling a showing removes its pending reminder
   Given a showing has a pending reminder scheduled
   When the showing is cancelled
   Then the pending reminder is removed and does not fire
 
-@story_82
+@story_156
 Scenario: Editing a showing's time reschedules the reminder
   Given a showing at 14:00 has a reminder scheduled for 13:00
   When the showing is rescheduled to 16:00
   Then the old reminder is removed
   And a new reminder is scheduled for 15:00
 
-@story_82
+@story_156
 Scenario: Reminder fires on app startup when the app was closed at reminder time
   Given a showing reminder was due at 13:00 while the app was closed
   And the showing is scheduled for 14:00 and has not yet occurred
   When the user opens the app at 13:05
   Then the reminder fires immediately as an in-app notification
 
-@story_82
+@story_156
 Scenario: Reminder for a past showing is silently discarded on startup
   Given a showing reminder was due at 13:00 for a showing at 14:00 yesterday
   When the user opens the app today
   Then no reminder notification fires for that showing
 
-@story_82
+@story_156
 Scenario: Showing Reminder toggle off suppresses all showing reminders
   Given the Showing Reminder notification toggle is disabled in preferences
   When a showing is saved

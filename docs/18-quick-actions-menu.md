@@ -27,40 +27,40 @@ As a real estate agent, I want to type action commands into the global search to
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/shell.feature`.
 
 ```gherkin
-@story_78
+@story_18
 Scenario: Typing "new" shows creation quick actions
   Given the global search overlay is open
   When the user types "new"
   Then quick action suggestions appear: "New Contact", "New Lead", "New Property", "New Transaction", "New Showing"
 
-@story_78
+@story_18
 Scenario: Selecting "New Contact" opens the contact creation form
   Given the global search overlay shows the "New Contact" quick action
   When the user selects "New Contact"
   Then the new contact creation form opens
   And the overlay closes
 
-@story_78
+@story_18
 Scenario: Typing "leads" shows a navigation quick action
   Given the global search overlay is open
   When the user types "leads"
   Then a "Go to Leads" quick action appears
 
-@story_78
+@story_18
 Scenario: Selecting a navigation action takes the user to that section
   Given the global search overlay shows "Go to Properties"
   When the user selects "Go to Properties"
   Then the Properties section opens
   And the overlay closes
 
-@story_78
+@story_18
 Scenario: Typing "settings" shows the Open Settings action
   Given the global search overlay is open
   When the user types "settings"
   Then an "Open Settings" quick action appears
   And selecting it opens the Settings window
 
-@story_78
+@story_18
 Scenario: Quick actions and record results appear together with actions separated visually
   Given a contact "Alice Smith" exists
   And the user types "new" in the global search

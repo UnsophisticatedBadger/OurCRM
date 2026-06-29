@@ -26,26 +26,26 @@ As a real estate agent, I want to view a list of all my standalone notes so that
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/shell.feature`.
 
 ```gherkin
-@story_159
+@story_39
 Scenario: Notes list shows title, date, content preview, and linked entity for each note
   Given notes "Market update" (content "Prices rising…", linked to no entity) and "Alice reminder" (content "Call re: contract", linked to contact "Alice Smith") exist
   When the user opens the Notes section
   Then "Market update" is listed with a preview "Prices rising…" and no linked entity
   And "Alice reminder" is listed with a preview "Call re: contract" and linked to "Alice Smith"
 
-@story_159
+@story_39
 Scenario: Notes are sorted newest first by default
   Given notes created at different times exist
   When the user opens the Notes section
   Then the most recently created note appears at the top
 
-@story_159
+@story_39
 Scenario: User can sort notes alphabetically by title
   Given multiple notes with different titles exist
   When the user selects the "Title A–Z" sort option
   Then notes are listed in alphabetical order by title
 
-@story_159
+@story_39
 Scenario: Empty state appears when no notes have been created
   Given no notes exist
   When the user opens the Notes section

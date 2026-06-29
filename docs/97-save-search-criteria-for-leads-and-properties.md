@@ -30,19 +30,19 @@ Saved searches in Leads and Properties follow the same name-and-recall model as 
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/leads.feature` and `tests/bdd/features/properties.feature`.
 
 ```gherkin
-@us213
+@story_97
 Scenario: User saves a lead filter and recalls it by name
   Given the user has filtered leads to Status "Hot" and source "Referral"
   When the user clicks "Save Search" and names it "Hot Referrals"
   Then "Hot Referrals" appears in the Saved Searches dropdown
 
-@us213
+@story_97
 Scenario: Recalling a saved lead search applies its criteria
   Given the saved search "Hot Referrals" stores Status "Hot" and source "Referral"
   When the user selects "Hot Referrals" from the Saved Searches dropdown
   Then the Leads list is filtered to show only Hot leads from Referral source
 
-@us213
+@story_97
 Scenario: User saves a property filter and recalls it
   Given the user has filtered properties to Status "Active" and type "Condo"
   When the user saves the search as "Active Condos"

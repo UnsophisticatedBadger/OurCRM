@@ -27,37 +27,37 @@ As an agent, I want a report of my commission earnings by period, property type,
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/transactions.feature`.
 
 ```gherkin
-@story_96
+@story_139
 Scenario: Report shows total earned and pending commission for the period
   Given two closed transactions with $10,000 commission each and one in-progress transaction with $8,000 commission
   When the user opens the Commission Report for the current period
   Then earned commission shows $20,000 and pending commission shows $8,000
 
-@story_96
+@story_139
 Scenario: Date range filter updates the report
   Given transactions with commission exist across multiple months
   When the user changes the date range to last quarter
   Then the report recalculates using only transactions closed in that quarter
 
-@story_96
+@story_139
 Scenario: Commission is broken down by property type
   Given closed transactions include one Residential and one Commercial property
   When the user views the Commission Report
   Then the report shows separate commission totals for Residential and Commercial
 
-@story_96
+@story_139
 Scenario: Average commission per transaction is calculated correctly
   Given three closed transactions with commissions of $5,000, $10,000, and $15,000
   When the user views the report
   Then the average commission per transaction shows $10,000
 
-@story_96
+@story_139
 Scenario: Report data can be exported to CSV
   Given the Commission Report is displaying data
   When the user clicks "Export to CSV"
   Then a CSV file is saved containing the report data
 
-@story_96
+@story_139
 Scenario: Report can be exported to PDF
   Given the Commission Report is displaying data
   When the user clicks "Export to PDF"

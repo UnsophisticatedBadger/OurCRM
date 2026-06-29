@@ -33,7 +33,7 @@ This story specifies the display format of qualification results. The AI call an
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/ai.feature`.
 
 ```gherkin
-@story_113
+@story_183
 Scenario: Qualified lead shows colour-coded score, status, reasoning, and date
   Given a lead has been qualified with score 78 and status "Hot"
   When the user views the lead's detail view
@@ -42,20 +42,20 @@ Scenario: Qualified lead shows colour-coded score, status, reasoning, and date
   And the reasoning is displayed as readable text
   And the qualification date is shown
 
-@story_113
+@story_183
 Scenario: Unqualified lead shows "Not yet qualified" and a prompt
   Given a lead has never been qualified by AI
   When the user views the lead's detail view
   Then the qualification panel shows "Not yet qualified"
   And a "Qualify with AI" button is present in the panel
 
-@story_113
+@story_183
 Scenario: Qualified lead shows a Re-qualify button
   Given a lead has already been qualified by AI
   When the user views the lead's detail view
   Then a "Re-qualify" button is present in the qualification panel
 
-@story_113
+@story_183
 Scenario: Lead list shows AI status badges for qualified leads
   Given lead "Alice Smith" is qualified as "Hot" and lead "Bob Jones" is qualified as "Cold"
   And lead "Carol White" has not been qualified

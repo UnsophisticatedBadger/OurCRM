@@ -29,32 +29,32 @@ As a real estate agent, I want to see all my transactions in a sortable, filtera
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/transactions.feature`.
 
 ```gherkin
-@story_72
+@story_112
 Scenario: User with transactions sees them in the Transactions section
   Given transactions "123 Oak St Sale" (Under Contract) and "456 Elm Ave Lease" (Closed) exist
   When the user opens the Transactions section
   Then the list shows both transactions
 
-@story_72
+@story_112
 Scenario: Status column is color-coded
   Given transactions with Under Contract, Pending, Closed, and Cancelled statuses exist
   When the user views the transaction list
   Then Under Contract is yellow, Pending is orange, Closed is green, and Cancelled is grey
 
-@story_72
+@story_112
 Scenario: Transactions closing within 7 days show a warning indicator
   Given a transaction has a closing date 3 days from today
   When the user views the transaction list
   Then that transaction row shows a warning indicator
 
-@story_72
+@story_112
 Scenario: User with no transactions sees an empty state
   Given no transactions exist
   When the user opens the Transactions section
   Then "No transactions yet" is shown
   And a "Create Your First Transaction" button is visible
 
-@story_72
+@story_112
 Scenario: Status filter is preserved after navigating away and back
   Given the user has the "Under Contract" filter active
   When the user navigates to Contacts and returns to Transactions

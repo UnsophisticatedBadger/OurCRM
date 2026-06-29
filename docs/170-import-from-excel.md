@@ -35,30 +35,30 @@ The first row of the selected sheet is treated as column headers (same assumptio
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/import_export.feature`.
 
 ```gherkin
-@story_137
+@story_170
 Scenario: Selecting a non-Excel file shows an error
   Given the user selects a file that is not a valid .xlsx document via the Excel import option
   Then an error is shown and the import does not proceed
 
-@story_137
+@story_170
 Scenario: Multi-sheet workbook requires sheet selection
   Given the user selects an Excel file with sheets named "Contacts", "Archive", and "Notes"
   When the import dialog opens
   Then the user is prompted to choose which sheet to import before seeing the field mapping panel
 
-@story_137
+@story_170
 Scenario: Single-sheet workbook skips the sheet selection step
   Given the user selects an Excel file with exactly one sheet
   When the import dialog opens
   Then the field mapping panel is shown immediately without a sheet selection step
 
-@story_137
+@story_170
 Scenario: Field mapping and preview match the CSV import flow
   Given the user has selected a sheet with contact data
   When the field mapping panel is shown
   Then the same mapping dropdowns and 5-row preview as #153 are displayed
 
-@story_137
+@story_170
 Scenario: Import summary reports contacts added and blank rows skipped
   Given an Excel sheet with 10 data rows where 2 rows have all mapped fields blank
   When the import completes

@@ -25,19 +25,19 @@ As a real estate agent, I want to change a property's status directly from the p
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/properties.feature`.
 
 ```gherkin
-@story_18
+@story_108
 Scenario: User right-clicks a property and changes its status from the list
   Given a property "123 Oak St" with status "Active" is in the list
   When the user right-clicks "123 Oak St" and selects "Change Status" then "Pending"
   Then the "123 Oak St" row shows status "Pending" immediately
 
-@story_18
+@story_108
 Scenario: Status change updates the row color immediately
   Given a property with status "Active" (green) is in the list
   When the user changes its status to "Withdrawn" via right-click
   Then the row indicator changes to red immediately
 
-@story_18
+@story_108
 Scenario: Status change persists after an application restart
   Given the user has changed a property's status to "Pending" from the list
   When the application is restarted and the user opens the Properties section

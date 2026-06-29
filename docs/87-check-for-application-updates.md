@@ -30,14 +30,14 @@ As a user, I want to check for and install application updates, so that I can ke
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/infrastructure.feature`.
 
 ```gherkin
-@story_172
+@story_87
 Scenario: User opens Help menu and is already on the latest version
   Given the application is running
   And no newer version is available
   When the user clicks "Help" → "Check for Updates"
   Then a dialog shows "You're up to date" with the current version number
 
-@story_172
+@story_87
 Scenario: User opens Help menu and a new version is available
   Given the application is running
   And a newer version is available
@@ -45,7 +45,7 @@ Scenario: User opens Help menu and a new version is available
   Then a dialog shows the current version, new version number, and release notes
   And buttons to "Download and Install" and "Remind Me Later" are shown
 
-@story_172
+@story_87
 Scenario: User downloads and installs the update and sees the new version after restart
   Given a newer version is available
   And the user has clicked "Download and Install"
@@ -55,26 +55,26 @@ Scenario: User downloads and installs the update and sees the new version after 
   And installation progress is displayed
   And the application restarts with the new version number confirmed on launch
 
-@story_172
+@story_87
 Scenario: User postpones an available update
   Given a newer version is available
   When the user clicks "Remind Me Later" in the update dialog
   Then the dialog closes without installing the update
 
-@story_172
+@story_87
 Scenario: User checks for updates while offline
   Given the device has no internet connection
   When the user clicks "Help" → "Check for Updates"
   Then no disruptive error is shown
   And the app continues to function normally
 
-@story_172
+@story_87
 Scenario: User disables startup update check in Settings
   Given the user has disabled "Check for updates on startup" in Settings
   When the application starts
   Then no update check is performed on startup
 
-@story_172 @live_github
+@story_87 @live_github
 Scenario: User downloads and installs a release artifact from GitHub
   Given a newer version is available on GitHub Releases
   And the user has clicked "Download and Install"

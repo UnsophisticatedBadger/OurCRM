@@ -39,7 +39,7 @@ The resolution policy is applied to all duplicates at once (blanket policy). Per
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/import_export.feature`.
 
 ```gherkin
-@story_163
+@story_161
 Scenario: Duplicate resolution dialog appears when an import contains matching emails
   Given a contact with email "alice@example.com" exists in OurCRM
   And an import file contains a contact with the same email
@@ -47,14 +47,14 @@ Scenario: Duplicate resolution dialog appears when an import contains matching e
   Then the duplicate resolution dialog appears before any record is written
   And it states that 1 duplicate was found
 
-@story_163
+@story_161
 Scenario: Skip duplicates keeps existing records unchanged
   Given the duplicate resolution dialog is shown for 2 duplicates
   When the user selects "Skip duplicates" and confirms
   Then the 2 existing contacts are unchanged
   And the import summary shows "2 duplicates skipped"
 
-@story_163
+@story_161
 Scenario: Update existing writes non-blank incoming fields to the existing record
   Given an existing contact has name "Alice Smith", email "alice@example.com", and phone "(713) 555-0001"
   And the incoming duplicate has email "alice@example.com" and phone "(713) 555-9999" but no name
@@ -62,13 +62,13 @@ Scenario: Update existing writes non-blank incoming fields to the existing recor
   Then the existing contact's phone is updated to "(713) 555-9999"
   And the name remains "Alice Smith"
 
-@story_163
+@story_161
 Scenario: Create new imports the duplicate as an additional contact record
   Given the duplicate resolution dialog is shown for 1 duplicate
   When the user selects "Create new" and confirms
   Then a new contact record is created alongside the existing one
 
-@story_163
+@story_161
 Scenario: Cancelling the resolution dialog cancels the entire import
   Given the duplicate resolution dialog is shown
   When the user clicks Cancel

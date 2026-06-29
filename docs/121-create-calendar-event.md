@@ -27,7 +27,7 @@ As a real estate agent, I want to create calendar events for showings, meetings,
 > The following persistence scenario is not yet implemented.
 
 ```gherkin
-@story_123
+@story_121
 Scenario: Calendar event survives an application restart
   Given the application is open and authenticated
   And the user creates an event titled "Showing - 123 Main St" on tomorrow at 2:00 PM

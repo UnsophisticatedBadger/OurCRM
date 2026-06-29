@@ -27,32 +27,32 @@ As a real estate agent, I want to edit a calendar event when plans change, so th
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/calendar.feature`.
 
 ```gherkin
-@story_125
+@story_126
 Scenario: Edit form opens pre-populated with the event's current data
   Given a calendar event "Team Meeting" exists on tomorrow at 10:00 AM – 11:00 AM with description "Weekly sync"
   When the user double-clicks "Team Meeting" in the calendar
   Then the edit form opens with title "Team Meeting", tomorrow's date, start 10:00 AM, end 11:00 AM, and description "Weekly sync" pre-filled
 
-@story_125
+@story_126
 Scenario: User reschedules an event and the calendar updates
   Given a calendar event "Team Meeting" is at 10:00 AM tomorrow
   When the user opens the edit form, changes start time to 2:00 PM and end time to 3:00 PM, and saves
   Then "Team Meeting" appears at 2:00 PM on the calendar
   And no event appears at 10:00 AM
 
-@story_125
+@story_126
 Scenario: Saving with end time before start time is rejected
   Given the event edit form is open
   When the user sets start time to 3:00 PM and end time to 2:00 PM and clicks Save
   Then a validation error is shown and the event is not updated
 
-@story_125
+@story_126
 Scenario: Cancel discards all changes
   Given the event edit form is open with title changed to "Renamed Meeting"
   When the user clicks Cancel
   Then the event still shows its original title in the calendar
 
-@story_125
+@story_126
 Scenario: Edited event persists after the application restarts
   Given a calendar event has been edited and saved with a new title "Rescheduled Showing"
   When the user restarts the application

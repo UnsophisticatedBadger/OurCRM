@@ -25,25 +25,25 @@ As a real estate agent, I want to view all my converted leads in one place, so t
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/leads.feature`.
 
 ```gherkin
-@story_66
+@story_76
 Scenario: Applying the Converted filter shows only converted leads
   Given leads "Sara Lee" (converted) and "Bob Kim" (active) exist
   When the user selects "Converted" from the status filter
   Then only "Sara Lee" is shown in the list
 
-@story_66
+@story_76
 Scenario: Converted leads are sorted by conversion date newest-first
   Given "Sara Lee" was converted yesterday and "Jane Park" was converted today
   When the user views converted leads
   Then "Jane Park" appears above "Sara Lee"
 
-@story_66
+@story_76
 Scenario: Summary banner shows correct conversion counts
   Given 5 leads have been converted in total, 2 this month, 4 this year
   When the user views the converted leads list
   Then the banner shows "5 total · 2 this month · 4 this year"
 
-@story_66
+@story_76
 Scenario: Double-clicking a converted lead opens its details
   Given the user is viewing the converted leads list
   When the user double-clicks "Sara Lee"

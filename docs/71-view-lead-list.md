@@ -28,33 +28,33 @@ As a real estate agent, I want to see all my leads in a sortable, filterable lis
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/leads.feature`.
 
 ```gherkin
-@story_59
+@story_71
 Scenario: User with leads sees them in the Leads section
   Given leads "Sara Lee" (Hot) and "Bob Kim" (Cold) exist
   When the user opens the Leads section
   Then the list shows "Sara Lee" and "Bob Kim"
   And "Sara Lee" appears before "Bob Kim" (Hot sorted first)
 
-@story_59
+@story_71
 Scenario: Status column is color-coded
   Given leads with Hot, Warm, and Cold statuses exist
   When the user views the lead list
   Then the Hot status indicator is red, Warm is orange, and Cold is blue
 
-@story_59
+@story_71
 Scenario: User with no leads sees an empty state
   Given no leads exist
   When the user opens the Leads section
   Then "No leads yet" is shown
   And a "Create Your First Lead" button is visible
 
-@story_59
+@story_71
 Scenario: User filters the list to show only Hot leads
   Given leads with Hot and Cold statuses exist
   When the user selects the "Hot" status filter
   Then only Hot leads are shown in the list
 
-@story_59
+@story_71
 Scenario: Status filter is preserved after navigating away and back
   Given the user has the "Hot" filter active
   When the user navigates to Contacts and returns to Leads

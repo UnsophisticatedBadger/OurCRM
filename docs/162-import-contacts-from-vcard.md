@@ -38,25 +38,25 @@ Duplicate detection is handled by the logic defined in #183 (email match is the 
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/import_export.feature`.
 
 ```gherkin
-@story_161
+@story_162
 Scenario: Importing a vCard file creates contacts for each entry
   Given a .vcf file contains 3 contacts: "Alice", "Bob", and "Carol"
   When the user selects "Import from vCard" and chooses the file and clicks "Import"
   Then 3 new contact records are created with the correct names and field values
 
-@story_161
+@story_162
 Scenario: Preview shows contact count and names before committing the import
   Given a .vcf file contains 5 contacts
   When the user selects the file
   Then a preview panel shows "5 contacts found" and lists the 5 names
 
-@story_161
+@story_162
 Scenario: Corrupted vCard file shows an error and imports nothing
   Given a file that is not a valid vCard
   When the user selects it in the import dialog
   Then an error is shown and no contacts are created
 
-@story_161
+@story_162
 Scenario: Import summary is shown after completion
   Given a .vcf file with 10 contacts, 2 of which duplicate existing contacts (skipped)
   When the user imports the file

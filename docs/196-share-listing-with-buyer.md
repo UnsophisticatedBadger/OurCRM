@@ -23,14 +23,14 @@ As an agent, I want to email an MLS listing's details to a contact from within t
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/email.feature`.
 
 ```gherkin
-@us210
+@story_196
 Scenario: Share with Buyer opens the compose form pre-filled with listing details
   Given an MLS listing detail is open for "456 Oak Ave" with list price $450,000
   When the user clicks "Share with Buyer"
   Then the email compose form opens with subject "Property at 456 Oak Ave"
   And the body contains the address, list price, and property details
 
-@us210
+@story_196
 Scenario: User can edit the pre-filled compose form before sending
   Given the compose form is open from Share with Buyer
   When the user changes the subject and adds a personal message to the body

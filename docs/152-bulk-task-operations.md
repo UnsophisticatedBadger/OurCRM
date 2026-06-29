@@ -24,25 +24,25 @@ As an agent, I want to select multiple tasks and mark them all complete or delet
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/tasks.feature`.
 
 ```gherkin
-@us212
+@story_152
 Scenario: Selecting tasks reveals the bulk action toolbar
   Given the task list shows three tasks
   When the user checks the boxes for two of them
   Then a bulk action toolbar with "Mark Complete" and "Delete" appears
 
-@us212
+@story_152
 Scenario: Bulk Mark Complete marks all selected tasks as complete
   Given two incomplete tasks are selected
   When the user clicks "Mark Complete" in the bulk toolbar
   Then both tasks are marked complete
 
-@us212
+@story_152
 Scenario: Bulk Delete shows a confirmation and then deletes the selected tasks
   Given three tasks are selected
   When the user clicks "Delete" in the bulk toolbar and confirms
   Then all three tasks are permanently deleted
 
-@us212
+@story_152
 Scenario: Select All checkbox selects every visible task
   Given the task list shows five tasks
   When the user checks the "Select All" header checkbox

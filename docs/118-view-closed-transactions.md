@@ -26,31 +26,31 @@ As a real estate agent, I want to view all my closed transactions with commissio
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/transactions.feature`.
 
 ```gherkin
-@story_20
+@story_118
 Scenario: Applying the Closed filter shows only closed transactions
   Given transactions "123 Oak St" (Closed) and "456 Elm Ave" (Under Contract) exist
   When the user selects "Closed" from the status filter
   Then only "123 Oak St" is shown in the list
 
-@story_20
+@story_118
 Scenario: Summary banner shows correct total commission
   Given two closed transactions with commission $12,000 and $8,000 respectively
   When the user views closed transactions
   Then the banner shows total commission "$20,000"
 
-@story_20
+@story_118
 Scenario: Filtering by This Year recalculates the banner
   Given one transaction closed this year (commission $15,000) and one last year (commission $10,000)
   When the user selects "This Year" from the time period selector
   Then the banner shows total commission "$15,000"
 
-@story_20
+@story_118
 Scenario: Each row shows commission earned and days to close
   Given a closed transaction with commission $12,000 that took 30 days from contract to close
   When the user views the closed transactions list
   Then the row shows "$12,000" commission and "30 days"
 
-@story_20
+@story_118
 Scenario: Double-clicking a closed transaction opens its details
   Given the user is viewing the closed transactions list
   When the user double-clicks "123 Oak St"
