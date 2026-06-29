@@ -1,0 +1,68 @@
+name: User Story
+description: Propose a new feature or capability
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form to propose a new feature. A maintainer will assign it a story number, create the `docs/NNN-*.md` file, and add it to the backlog.
+
+  - type: textarea
+    id: user_story
+    attributes:
+      label: User story
+      placeholder: |
+        As a [type of user],
+        I want [some goal],
+        So that [some reason].
+    validations:
+      required: true
+
+  - type: dropdown
+    id: capability
+    attributes:
+      label: Capability group
+      description: Which area of the app does this belong to?
+      options:
+        - Authentication & Security
+        - App Shell
+        - Contacts
+        - Leads
+        - Calendar & Showings
+        - Tasks
+        - Properties
+        - Transactions
+        - Email
+        - MLS Integration
+        - Telephony
+        - AI Features
+        - Notifications
+        - Backup & Recovery
+        - Import & Export
+        - Infrastructure
+        - Not sure
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem being solved
+      description: What pain point or workflow gap does this address?
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance_criteria
+    attributes:
+      label: Proposed acceptance criteria
+      description: What observable outcomes would confirm this is done? A rough draft is fine.
+      placeholder: |
+        1.
+        2.
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Additional notes
+      description: Edge cases, constraints, related stories, etc. Optional.

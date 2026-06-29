@@ -9,6 +9,10 @@
 ## User Story
 As an agent, I want to install and manage plugins, so that I can extend OurCRM with additional features without waiting for a core release.
 
+## Dependencies
+
+- #11 — Open Settings Window
+
 ## Acceptance Criteria
 1. A Plugin Manager is accessible from Settings; it lists all installed plugins with their name, version, and enabled/disabled state
 2. Plugins can be installed from a local file (`.crmplugin` package) via an "Install from file" button
@@ -23,32 +27,32 @@ As an agent, I want to install and manage plugins, so that I can extend OurCRM w
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/shell.feature`.
 
 ```gherkin
-@story_97
+@story_34
 Scenario: User installs a plugin from a local file and it appears in the Plugin Manager
   Given the user has a valid .crmplugin file
   When the user clicks "Install from file" and selects the file
   Then the plugin appears in the installed plugins list
 
-@story_97
+@story_34
 Scenario: Disabling a plugin hides its contributed features
   Given an installed plugin that adds a menu item is enabled
   When the user disables the plugin
   Then the plugin's menu item is no longer visible
   And the plugin remains in the installed list
 
-@story_97
+@story_34
 Scenario: Uninstalling a plugin removes it from the list
   Given an installed plugin exists
   When the user uninstalls it and confirms
   Then the plugin no longer appears in the installed plugins list
 
-@story_97
+@story_34
 Scenario: Plugin update shows current and new version before confirming
   Given an installed plugin has an available update
   When the user clicks "Update" on that plugin
   Then a dialog shows the current version and the new version before the user confirms
 
-@story_97 @live_github
+@story_34 @live_github
 Scenario: Plugin registry browse returns available plugins
   Given the user has internet access
   When the user opens the Plugin Manager and browses the registry
@@ -56,7 +60,7 @@ Scenario: Plugin registry browse returns available plugins
 ```
 
 ## Manual Tests
-**Story:** [#173 — Plugin Installation and Management](../docs/142-plugin-installation-management.md)
+**Story:** [#34 — Plugin Installation and Management](../docs/34-plugin-installation-management.md)
 
 ### Install a plugin from a local file
 1. Click "Install from file" in the Plugin Manager

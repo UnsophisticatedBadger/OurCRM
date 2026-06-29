@@ -9,6 +9,10 @@
 ## User Story
 As an agent, I want a confirmation dialog when I navigate away from an unsaved edit form, so that I don't accidentally lose changes I've made.
 
+## Dependencies
+
+- #10 — Navigate Between Sections
+
 ## Acceptance Criteria
 1. When the user navigates away from any edit form (contact, lead, property, transaction, task, settings) that has unsaved changes, a dialog is shown: "Discard unsaved changes? Your changes will be lost."
 2. The dialog has two buttons: "Discard Changes" and "Keep Editing"
@@ -20,26 +24,26 @@ As an agent, I want a confirmation dialog when I navigate away from an unsaved e
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/shell.feature`.
 
 ```gherkin
-@us205
+@story_26
 Scenario: Navigating away from an edited contact form shows a discard warning
   Given the user has edited a contact's name without saving
   When the user clicks the Leads section in the sidebar
   Then a "Discard unsaved changes?" dialog is shown
 
-@us205
+@story_26
 Scenario: Clicking Discard Changes navigates away
   Given the discard warning dialog is shown
   When the user clicks "Discard Changes"
   Then navigation proceeds to the selected section
   And the unsaved change is lost
 
-@us205
+@story_26
 Scenario: Clicking Keep Editing returns to the form
   Given the discard warning dialog is shown
   When the user clicks "Keep Editing"
   Then the dialog is dismissed and the form is still open with the unsaved change intact
 
-@us205
+@story_26
 Scenario: No dialog is shown when there are no unsaved changes
   Given the user opens a contact detail view without making any edits
   When the user clicks another section in the sidebar
@@ -47,7 +51,7 @@ Scenario: No dialog is shown when there are no unsaved changes
 ```
 
 ## Manual Tests
-**Story:** [#82 — Warn Before Discarding Unsaved Changes](../docs/118-warn-unsaved-changes.md)
+**Story:** [#26 — Warn Before Discarding Unsaved Changes](../docs/26-warn-unsaved-changes.md)
 
 ### Navigating away with unsaved changes shows a warning
 1. Open a contact and edit the name field without saving

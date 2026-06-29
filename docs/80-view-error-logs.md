@@ -9,6 +9,10 @@
 
 As a user or support technician, I want to view the application's error log so that I can understand what went wrong and provide useful diagnostic information when reporting an issue.
 
+## Dependencies
+
+None.
+
 ## Acceptance Criteria
 
 1. The error log viewer is accessible from Help → Error Logs and from Settings → Advanced → Error Logs
@@ -27,39 +31,39 @@ As a user or support technician, I want to view the application's error log so t
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/infrastructure.feature`.
 
 ```gherkin
-@story_86
+@story_80
 Scenario: Error log viewer shows all log entries
   Given the application has produced Error, Warning, Info, and Debug log entries
   When the user opens Help > Error Logs
   Then the error log viewer opens listing all entries newest-first
   And each entry shows its timestamp, level badge, and one-line message
 
-@story_86
+@story_80
 Scenario: Clicking an entry expands its full detail
   Given the error log viewer is open and contains an Error entry
   When the user clicks that entry
   Then the entry expands to show the full stack trace and context
 
-@story_86
+@story_80
 Scenario: Level filter shows only entries of the selected level
   Given the error log viewer contains both Error and Warning entries
   When the user clicks "Errors" in the filter bar
   Then only Error-level entries are shown
   And the filter bar highlights "Errors"
 
-@story_86
+@story_80
 Scenario: Search filters entries by message text
   Given the error log viewer is open
   When the user types "database" in the search box
   Then only entries whose message contains "database" (case-insensitive) are shown
 
-@story_86
+@story_80
 Scenario: Clear All Filters restores the unfiltered view
   Given the user has a level filter and a search term active
   When the user clicks "Clear All Filters"
   Then all entries are shown and the search box is cleared
 
-@story_86
+@story_80
 Scenario: Empty state shown when log contains no entries
   Given the application log is empty
   When the user opens the error log viewer
@@ -68,7 +72,7 @@ Scenario: Empty state shown when log contains no entries
 
 ## Manual Tests
 
-**Story:** [#157 — View Error Logs](../docs/106-view-error-logs.md)
+**Story:** [#80 — View Error Logs](../docs/80-view-error-logs.md)
 
 ### Error log viewer is accessible
 1. Open Help → Error Logs
