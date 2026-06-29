@@ -1,6 +1,7 @@
 ﻿# US-001 — CI Pipeline
 
 **Capability:** infrastructure
+**Milestone:** v0.1.0 — Foundation
 **Status:** Done
 
 ## User Story
