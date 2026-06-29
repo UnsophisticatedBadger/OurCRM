@@ -16,8 +16,10 @@ As a developer, I want a macOS executable built and published automatically alon
 
 1. The release workflow matrix is extended to include `macos-latest`
 2. The macOS `.app` bundle is built using `scripts/build.py` as the driver
-3. The macOS bundle is attached to the GitHub Release alongside the Windows executable
-4. A macOS build failure prevents the release from being published
+3. After the build, `scripts/build.py` wraps the `.app` bundle in a `.dmg` disk image using `hdiutil` (built into macOS — no extra tooling required)
+4. The `.dmg` contains `OurCRM.app` and a symlink to `/Applications` so the user sees the standard drag-to-install layout
+5. The disk image is named `ourcrm-macos.dmg` and attached to the GitHub Release alongside the Windows zip
+6. A macOS build or packaging failure prevents the release from being published
 
 ## Test Locations
 
@@ -32,4 +34,4 @@ As a developer, I want a macOS executable built and published automatically alon
 
 - [ ] BDD scenarios pass
 - [ ] `ruff`, `mypy --strict` clean
-- [ ] macOS `.app` bundle verified by the primary user: app opens, window shows "OurCRM", shuts down cleanly
+- [ ] DMG verified by the primary user: mounts cleanly, drag-to-Applications works, app opens from Applications folder, no quarantine warnings block launch
