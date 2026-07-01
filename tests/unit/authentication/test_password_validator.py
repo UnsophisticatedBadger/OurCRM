@@ -95,3 +95,43 @@ def test_invalid_password_with_matching_confirmation_is_not_valid(
 ) -> None:
     result = validator.validate_with_confirmation("short", "short")
     assert not result.is_valid
+
+
+# ── Per-requirement status (live checklist) ────────────────────────────────────
+
+
+def test_empty_password_meets_no_requirements(validator: PasswordValidator) -> None:
+    statuses = validator.check_requirements("")
+    assert all(not status.met for status in statuses)
+
+
+def test_valid_password_meets_every_requirement(validator: PasswordValidator) -> None:
+    statuses = validator.check_requirements("SecureP@ssw0rd!2024")
+    assert all(status.met for status in statuses)
+
+
+def test_requirement_keys_are_stable_and_ordered(validator: PasswordValidator) -> None:
+    keys = [status.key for status in validator.check_requirements("anything")]
+    assert keys == ["length", "uppercase", "lowercase", "digit", "special"]
+
+
+def test_only_length_requirement_unmet_for_short_valid_password(
+    validator: PasswordValidator,
+) -> None:
+    statuses = {status.key: status.met for status in validator.check_requirements("Sh0rt!")}
+    assert statuses["length"] is False
+    assert statuses["uppercase"] is True
+    assert statuses["lowercase"] is True
+    assert statuses["digit"] is True
+    assert statuses["special"] is True
+
+
+# ── Passwords match (live checklist) ────────────────────────────────────────────
+
+
+def test_identical_passwords_match(validator: PasswordValidator) -> None:
+    assert validator.passwords_match("SecureP@ssw0rd!2024", "SecureP@ssw0rd!2024")
+
+
+def test_different_passwords_do_not_match(validator: PasswordValidator) -> None:
+    assert not validator.passwords_match("SecureP@ssw0rd!2024", "DifferentP@ss1!")

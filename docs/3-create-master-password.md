@@ -2,7 +2,7 @@
 
 **Capability:** Authentication & Security
 **Milestone:** v0.2.0 — Secure Shell
-**Status:** Not Done
+**Status:** Done
 **GitHub Issue:** #3
 
 ## User Story
@@ -21,47 +21,37 @@ None — first authentication story.
 4. First launch (no DB file) → startup dialog opens in "Create password" mode
 5. Correct password on first launch → DB file is created on disk → main window opens
 6. Closing or cancelling the startup dialog on first launch → application exits without creating a DB
+7. Every password requirement (length, uppercase, lowercase, digit, special character) is listed under the password field in create mode, shown in red when unmet and green when met, updating live as the user types
+8. A "Passwords match" indicator is listed under the confirmation field, shown in red until the password and confirmation fields match, updating live as the user types
+9. The password entry field has a show/hide toggle button that temporarily displays its value in plain text — the confirmation field does not
 
 ## BDD Scenarios
 
-> Startup dialog widget scenarios (@story_3) are in `tests/bdd/features/authentication.feature`.
-> The following wiring scenarios are not yet implemented.
-
-```gherkin
-@story_3
-Scenario: First launch detects missing database and shows create-password mode
-  Given no database file exists
-  When the application starts
-  Then the startup dialog is shown in create-password mode
-
-@story_3
-Scenario: Correct password on first launch creates the database and opens the main window
-  Given no database file exists
-  And the startup dialog is open in create-password mode
-  When the user submits the correct new password
-  Then the database file is created on disk
-  And the main window is shown
-
-@story_3
-Scenario: Closing the startup dialog on first launch exits the application
-  Given no database file exists
-  And the startup dialog is open in create-password mode
-  When the user closes the dialog
-  Then the application exits without creating a database file
-```
+> All @story_3 scenarios — password validation/hashing, the startup dialog widget (including the
+> confirmation field and the live red/green requirement checklist), and startup wiring
+> (missing-DB detection, DB creation on first launch, exit on cancel) — are in
+> `tests/bdd/features/authentication.feature`. The wiring scenarios drive the
+> real `ourcrm.main.build_startup_dialog` / `complete_startup` functions that `main()` calls, not a
+> test-only double. Only `main()`'s own thin wrapper (`sys.exit(app.exec())`) is outside automated
+> coverage — see Manual Tests below.
 
 ## Manual Tests
 
-**Story:** [#3 — Create Master Password](../docs/003-create-master-password.md)
+**Story:** [#3 — Create Master Password](../docs/3-create-master-password.md)
 
 ### User cold-launches from a fresh install and creates a password
 1. Delete any existing `ourcrm.db` from the data directory
 2. Run `uv run ourcrm`
-3. Confirm the "Create Master Password" dialog appears before the main window
-4. Enter a password shorter than 12 characters — confirm error is shown
-5. Enter a valid password and click Create
-6. Confirm the main window opens
-7. Confirm a `ourcrm.db` file exists in the data directory
+3. Confirm the "Create Master Password" dialog appears before the main window, with a password field (with a "Show" toggle button) and a confirmation field (with no toggle)
+4. Confirm all 5 requirement labels under the password field, and the "Passwords match" label under the confirmation field, start in red
+5. Type a password one character at a time and confirm each requirement label turns green individually as it is satisfied (not all at once)
+6. Click "Show" next to the password field — confirm the password becomes readable plain text and the button now reads "Hide"; click it again — confirm it re-masks
+7. Enter a password shorter than 12 characters (matching confirmation) — confirm the length error is shown, and the length requirement label remains red
+8. Enter a valid password with a different value in the confirmation field — confirm "Passwords do not match" is shown and the "Passwords match" label is red
+9. Correct the confirmation field to match — confirm the "Passwords match" label turns green
+10. Click Create
+11. Confirm the main window opens
+12. Confirm a `ourcrm.db` file exists in the data directory
 
 ### User closes the create-password dialog — app exits
 1. Delete any existing `ourcrm.db`
@@ -75,13 +65,12 @@ Scenario: Closing the startup dialog on first launch exits the application
 |----------|------|
 | BDD feature | `tests/bdd/features/authentication.feature` |
 | BDD step defs | `tests/bdd/test_authentication.py` |
-| Unit tests | `tests/unit/authentication/test_password_validation.py`, `test_password_hashing.py`, `test_auth_service.py` |
+| Unit tests | `tests/unit/authentication/test_password_validator.py`, `test_password_hasher.py`, `test_auth_service_create.py`, `test_startup_dialog.py`, `test_startup_wiring.py` |
 | Manual tests | `tests/manual/authentication/password_creation.md` |
 
 ## Definition of Done
 
-- [x] Password validation and Argon2id hashing BDD scenarios pass
-- [ ] Startup wiring BDD scenarios pass
-- [ ] Feature reachable from the running app (startup dialog appears on first launch)
+- [x] Password validation, Argon2id hashing, startup dialog widget, and startup wiring BDD scenarios pass
+- [x] Feature reachable from the running app (startup dialog appears on first launch) — verified via manual smoke test, since automated coverage stops at `main()`'s `sys.exit(app.exec())` wrapper
 - [x] `ruff`, `mypy --strict` clean
-- [ ] Manual tests documented and verified
+- [x] Manual tests documented in `tests/manual/authentication/password_creation.md` and verified

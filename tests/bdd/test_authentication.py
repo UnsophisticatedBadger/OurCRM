@@ -7,7 +7,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 import pytest
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QTimer
 from PySide6.QtWidgets import (
     QAbstractButton,
     QApplication,
@@ -31,6 +31,7 @@ from ourcrm.core.security.recovery_confirmation import RecoveryConfirmation
 from ourcrm.core.security.recovery_generator import RecoveryPasswordGenerator
 from ourcrm.database.encrypted_database import EncryptedDatabase, InvalidDatabaseKeyError
 from ourcrm.database.manager import DatabaseManager
+from ourcrm.main import build_startup_dialog, complete_startup
 from ourcrm.ui.main_window import MainWindow
 from ourcrm.ui.navigation import Section
 from ourcrm.ui.startup_dialog import StartupDialog, StartupMode
@@ -304,6 +305,7 @@ def in_memory_db_manager() -> Generator[DatabaseManager]:
 
 
 @given("a temporary data directory", target_fixture="tmp_dir")
+@given("no database file exists", target_fixture="tmp_dir")
 def temporary_data_directory(tmp_path: Path) -> Path:
     return tmp_path
 
@@ -770,7 +772,7 @@ def auth_service_logged_out(main_window: MainWindow) -> None:
 
 @given("the startup dialog is open in create mode", target_fixture="startup_dialog")
 def startup_dialog_create_mode(qtbot: QtBot) -> StartupDialog:
-    dialog = StartupDialog(StartupMode.CREATE)
+    dialog = StartupDialog(StartupMode.CREATE, validator=PasswordValidator())
     qtbot.addWidget(dialog)
     dialog.show()
     return dialog
@@ -778,7 +780,7 @@ def startup_dialog_create_mode(qtbot: QtBot) -> StartupDialog:
 
 @given("the startup dialog is open in open mode", target_fixture="startup_dialog")
 def startup_dialog_open_mode(qtbot: QtBot) -> StartupDialog:
-    dialog = StartupDialog(StartupMode.OPEN)
+    dialog = StartupDialog(StartupMode.OPEN, validator=PasswordValidator())
     qtbot.addWidget(dialog)
     dialog.show()
     return dialog
@@ -803,6 +805,13 @@ def type_password(startup_dialog: StartupDialog, password: str) -> None:
     field.setText(password)
 
 
+@when(parsers.parse('I type "{text}" in the startup confirmation field'))
+def type_confirmation(startup_dialog: StartupDialog, text: str) -> None:
+    field = startup_dialog.findChild(QLineEdit, "startup_confirm_field")
+    assert field is not None, "startup_confirm_field not found"
+    field.setText(text)
+
+
 @when("I click the startup dialog submit button")
 def click_submit_button(startup_dialog: StartupDialog, qtbot: QtBot) -> None:
     btn = startup_dialog.findChild(QPushButton, "startup_submit_btn")
@@ -813,6 +822,12 @@ def click_submit_button(startup_dialog: StartupDialog, qtbot: QtBot) -> None:
 @then("the startup dialog is accepted")
 def dialog_is_accepted(startup_dialog: StartupDialog) -> None:
     assert startup_dialog.result() == QDialog.DialogCode.Accepted
+
+
+@then("the startup dialog is not accepted")
+def dialog_is_not_accepted(startup_dialog: StartupDialog) -> None:
+    assert startup_dialog.result() != QDialog.DialogCode.Accepted
+    assert startup_dialog.isVisible(), "Dialog should remain open, not closed"
 
 
 @then(parsers.parse('the submitted password is "{expected}"'))
@@ -840,3 +855,143 @@ def error_label_reads(startup_dialog: StartupDialog, expected: str) -> None:
     label = startup_dialog.findChild(QLabel, "startup_error_label")
     assert label is not None, "startup_error_label not found"
     assert label.text() == expected
+
+
+_REQUIREMENT_LABEL_NAMES = (
+    "requirement_label_length",
+    "requirement_label_uppercase",
+    "requirement_label_lowercase",
+    "requirement_label_digit",
+    "requirement_label_special",
+)
+
+
+def _label_shows_met(label: QLabel) -> bool:
+    return "green" in label.styleSheet()
+
+
+@then("every requirement label shows as unmet")
+def every_requirement_label_unmet(startup_dialog: StartupDialog) -> None:
+    for name in _REQUIREMENT_LABEL_NAMES:
+        label = startup_dialog.findChild(QLabel, name)
+        assert label is not None, f"{name} not found"
+        assert not _label_shows_met(label), f"{name} should start unmet"
+
+
+@then("every requirement label shows as met")
+def every_requirement_label_met(startup_dialog: StartupDialog) -> None:
+    for name in _REQUIREMENT_LABEL_NAMES:
+        label = startup_dialog.findChild(QLabel, name)
+        assert label is not None, f"{name} not found"
+        assert _label_shows_met(label), f"{name} should show as met"
+
+
+@then("the passwords-match label shows as unmet")
+def match_label_shows_unmet(startup_dialog: StartupDialog) -> None:
+    label = startup_dialog.findChild(QLabel, "requirement_label_match")
+    assert label is not None, "requirement_label_match not found"
+    assert not _label_shows_met(label)
+
+
+@then("the passwords-match label shows as met")
+def match_label_shows_met(startup_dialog: StartupDialog) -> None:
+    label = startup_dialog.findChild(QLabel, "requirement_label_match")
+    assert label is not None, "requirement_label_match not found"
+    assert _label_shows_met(label)
+
+
+@when("I click the show-password toggle for the password field")
+def click_password_toggle(startup_dialog: StartupDialog, qtbot: QtBot) -> None:
+    btn = startup_dialog.findChild(QPushButton, "startup_password_toggle_btn")
+    assert btn is not None, "startup_password_toggle_btn not found"
+    qtbot.mouseClick(btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+
+
+@then("the password field echo mode is plain text")
+def password_field_is_plain_text(startup_dialog: StartupDialog) -> None:
+    field = startup_dialog.findChild(QLineEdit, "startup_password_field")
+    assert field is not None, "startup_password_field not found"
+    assert field.echoMode() == QLineEdit.EchoMode.Normal
+
+
+@then("the password field echo mode is masked")
+def password_field_is_masked(startup_dialog: StartupDialog) -> None:
+    field = startup_dialog.findChild(QLineEdit, "startup_password_field")
+    assert field is not None, "startup_password_field not found"
+    assert field.echoMode() == QLineEdit.EchoMode.Password
+
+
+# ── US-003: Startup Wiring (first-launch DB detection, creation, exit) ────────
+
+_STARTUP_PASSWORD = "SecureP@ssw0rd!2024"
+
+
+@when("I build the startup dialog for that path", target_fixture="startup_dialog")
+def build_dialog_for_path(tmp_dir: Path, qtbot: QtBot) -> StartupDialog:
+    dialog, _mode = build_startup_dialog(tmp_dir / "ourcrm.db", PasswordValidator())
+    qtbot.addWidget(dialog)
+    return dialog
+
+
+@given(
+    "the startup dialog is open in create-password mode for that path",
+    target_fixture="startup_dialog",
+)
+def startup_dialog_for_path(tmp_dir: Path, qtbot: QtBot) -> StartupDialog:
+    dialog, _mode = build_startup_dialog(tmp_dir / "ourcrm.db", PasswordValidator())
+    qtbot.addWidget(dialog)
+    return dialog
+
+
+@when(
+    "the user submits a valid new password and matching confirmation",
+    target_fixture="startup_result",
+)
+def submit_valid_new_password(startup_dialog: StartupDialog, tmp_dir: Path, qtbot: QtBot) -> bool:
+    def fill_and_submit() -> None:
+        password_field = startup_dialog.findChild(QLineEdit, "startup_password_field")
+        confirm_field = startup_dialog.findChild(QLineEdit, "startup_confirm_field")
+        assert password_field is not None, "startup_password_field not found"
+        assert confirm_field is not None, "startup_confirm_field not found"
+        password_field.setText(_STARTUP_PASSWORD)
+        confirm_field.setText(_STARTUP_PASSWORD)
+        btn = startup_dialog.findChild(QPushButton, "startup_submit_btn")
+        assert btn is not None, "startup_submit_btn not found"
+        qtbot.mouseClick(btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+
+    QTimer.singleShot(0, fill_and_submit)
+    with patch("keyring.set_password"):
+        return complete_startup(
+            startup_dialog,
+            StartupMode.CREATE,
+            tmp_dir / "ourcrm.db",
+            _KEY_SERVICE,
+            _HASHER,
+        )
+
+
+@when("the user closes the dialog before submitting", target_fixture="startup_result")
+def close_dialog_before_submitting(startup_dialog: StartupDialog, tmp_dir: Path) -> bool:
+    QTimer.singleShot(0, startup_dialog.reject)
+    return complete_startup(
+        startup_dialog,
+        StartupMode.CREATE,
+        tmp_dir / "ourcrm.db",
+        _KEY_SERVICE,
+        _HASHER,
+    )
+
+
+@then("startup completes successfully")
+def startup_completes_successfully(startup_result: bool) -> None:
+    assert startup_result is True
+
+
+@then("startup does not complete")
+def startup_does_not_complete(startup_result: bool) -> None:
+    assert startup_result is False
+
+
+@then("no database file was created")
+def no_database_file_created(tmp_dir: Path) -> None:
+    assert not (tmp_dir / "ourcrm.db").exists()

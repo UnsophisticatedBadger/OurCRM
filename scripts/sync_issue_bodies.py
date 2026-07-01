@@ -2,14 +2,14 @@
 """Sync GitHub issue bodies with current docs/*.md content.
 
 The story docs were edited after issues were created, so issue bodies are
-stale. This script updates every issue body to match its doc file.
-
-Safe to re-run — issues whose body already matches are skipped.
+stale. This script updates issue bodies to match their doc files.
 
 Usage:
-    uv run python scripts/sync_issue_bodies.py
+    uv run python scripts/sync_issue_bodies.py          # sync every story doc
+    uv run python scripts/sync_issue_bodies.py 3         # sync only issue #3
 """
 
+import argparse
 import re
 import subprocess
 import tempfile
@@ -27,12 +27,25 @@ def gh(*args: str) -> str:
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "issue",
+        nargs="?",
+        type=int,
+        default=None,
+        help="Only sync this GitHub issue number (default: sync all story docs)",
+    )
+    args = parser.parse_args()
+
     paths = sorted(DOCS.glob("*.md"))
-    total = len(paths)
     updated = 0
     failed = 0
+    matched = 0
 
-    print(f"Syncing {total} story docs to GitHub issue bodies...\n")
+    if args.issue is not None:
+        print(f"Syncing story doc for issue #{args.issue} to its GitHub issue body...\n")
+    else:
+        print(f"Syncing {len(paths)} story docs to GitHub issue bodies...\n")
 
     for path in paths:
         # Strip BOM if present (some editors save UTF-8 with BOM on Windows)
@@ -40,9 +53,13 @@ def main() -> None:
 
         issue_m = re.search(r"^\*\*GitHub Issue:\*\* #(\d+)", content, re.MULTILINE)
         if not issue_m:
-            print(f"  ⚠  No GitHub Issue field: {path.name}")
+            if args.issue is None:
+                print(f"  ⚠  No GitHub Issue field: {path.name}")
             continue
-        issue_num = issue_m.group(1)
+        issue_num = int(issue_m.group(1))
+        if args.issue is not None and issue_num != args.issue:
+            continue
+        matched += 1
 
         # Write to a temp file to avoid Windows command-line length limits
         try:
@@ -51,7 +68,7 @@ def main() -> None:
             ) as tmp:
                 tmp.write(content)
                 tmp_path = tmp.name
-            gh("issue", "edit", issue_num, "--body-file", tmp_path)
+            gh("issue", "edit", str(issue_num), "--body-file", tmp_path)
             print(f"  ✓ #{issue_num} {path.name}")
             updated += 1
         except subprocess.CalledProcessError as e:
@@ -59,6 +76,10 @@ def main() -> None:
             failed += 1
         finally:
             Path(tmp_path).unlink(missing_ok=True)
+
+    if args.issue is not None and matched == 0:
+        print(f"No story doc found with GitHub Issue #{args.issue}")
+        return
 
     print(f"\nDone. {updated} updated, {failed} failed.")
 

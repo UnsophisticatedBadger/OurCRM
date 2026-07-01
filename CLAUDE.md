@@ -22,6 +22,7 @@ uv run pre-commit run --all-files      # run all hooks
 
 # Story doc maintenance
 uv run python scripts/sync_issue_bodies.py     # sync story docs → GitHub issue bodies
+uv run python scripts/sync_issue_bodies.py 3    # sync only issue #3's story doc
 uv run python scripts/audit_story_sections.py  # audit story docs for missing sections/fields
 uv run python scripts/fix_bdd_tags.py --apply  # fix BDD @story_NNN tags after renumbering
 ```

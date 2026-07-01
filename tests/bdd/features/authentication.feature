@@ -408,6 +408,29 @@ Feature: Authentication
     Then the dialog title is "Create Master Password"
     And the submit button is labelled "Create"
 
+  @story_3
+  Scenario: First launch detects missing database and shows create-password mode
+    Given no database file exists
+    When I build the startup dialog for that path
+    Then the dialog title is "Create Master Password"
+    And the submit button is labelled "Create"
+
+  @story_3
+  Scenario: Correct password on first launch creates the database and opens the main window
+    Given no database file exists
+    And the startup dialog is open in create-password mode for that path
+    When the user submits a valid new password and matching confirmation
+    Then startup completes successfully
+    And a database file should exist at that path
+
+  @story_3
+  Scenario: Closing the startup dialog on first launch exits the application
+    Given no database file exists
+    And the startup dialog is open in create-password mode for that path
+    When the user closes the dialog before submitting
+    Then startup does not complete
+    And no database file was created
+
   @story_6
   Scenario: Returning launch shows enter-password dialog
     Given the startup dialog is open in open mode
@@ -415,12 +438,70 @@ Feature: Authentication
     And the submit button is labelled "Open"
 
   @story_3
-  Scenario: Submitting a password accepts the dialog
+  Scenario: Submitting matching password and confirmation accepts the dialog
     Given the startup dialog is open in create mode
-    When I type "s3cr3t!" in the startup password field
+    When I type "SecureP@ssw0rd!2024" in the startup password field
+    And I type "SecureP@ssw0rd!2024" in the startup confirmation field
     And I click the startup dialog submit button
     Then the startup dialog is accepted
-    And the submitted password is "s3cr3t!"
+    And the submitted password is "SecureP@ssw0rd!2024"
+
+  @story_3
+  Scenario: Mismatched confirmation is rejected and the dialog stays open
+    Given the startup dialog is open in create mode
+    When I type "SecureP@ssw0rd!2024" in the startup password field
+    And I type "DifferentP@ss1!" in the startup confirmation field
+    And I click the startup dialog submit button
+    Then the startup dialog is not accepted
+    And the error label reads "Passwords do not match"
+
+  @story_3
+  Scenario: An invalid new password is rejected and the dialog stays open
+    Given the startup dialog is open in create mode
+    When I type "weak" in the startup password field
+    And I type "weak" in the startup confirmation field
+    And I click the startup dialog submit button
+    Then the startup dialog is not accepted
+    And the error label reads "Password must be at least 12 characters"
+
+  @story_3
+  Scenario: Requirement checklist starts unmet when the create dialog opens
+    Given the startup dialog is open in create mode
+    Then every requirement label shows as unmet
+    And the passwords-match label shows as unmet
+
+  @story_3
+  Scenario: Typing a password meeting all requirements turns the checklist to met
+    Given the startup dialog is open in create mode
+    When I type "SecureP@ssw0rd!2024" in the startup password field
+    Then every requirement label shows as met
+
+  @story_3
+  Scenario: Typing a matching confirmation turns the passwords-match label to met
+    Given the startup dialog is open in create mode
+    When I type "SecureP@ssw0rd!2024" in the startup password field
+    And I type "SecureP@ssw0rd!2024" in the startup confirmation field
+    Then the passwords-match label shows as met
+
+  @story_3
+  Scenario: Typing a mismatched confirmation keeps the passwords-match label unmet
+    Given the startup dialog is open in create mode
+    When I type "SecureP@ssw0rd!2024" in the startup password field
+    And I type "DifferentP@ss1!" in the startup confirmation field
+    Then the passwords-match label shows as unmet
+
+  @story_3
+  Scenario: Clicking Show reveals the password field in plain text
+    Given the startup dialog is open in create mode
+    When I click the show-password toggle for the password field
+    Then the password field echo mode is plain text
+
+  @story_3
+  Scenario: Clicking Show again hides the password field
+    Given the startup dialog is open in create mode
+    When I click the show-password toggle for the password field
+    And I click the show-password toggle for the password field
+    Then the password field echo mode is masked
 
   @story_6
   Scenario: Closing the startup dialog rejects it
