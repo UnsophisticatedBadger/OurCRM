@@ -2,6 +2,19 @@
 
 <!-- version list -->
 
+## v0.4.0 (2026-07-02)
+
+### Chores
+
+- Remove version numbers from milestone names
+  ([`5c724c5`](https://github.com/UnsophisticatedBadger/OurCRM/commit/5c724c5c730ec1eba884e8b3be3f4c3bb10f9f26))
+
+### Features
+
+- Wire encrypted database session key management (Story #5)
+  ([`2aba65b`](https://github.com/UnsophisticatedBadger/OurCRM/commit/2aba65bd908b4b84bbd5fe8a61270904f7b5f5e1))
+
+
 ## v0.3.0 (2026-07-02)
 
 ### Features
