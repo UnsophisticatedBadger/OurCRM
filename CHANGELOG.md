@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v0.3.0 (2026-07-02)
+
+### Features
+
+- Implement recovery password setup screen (Story #4)
+  ([`2bfdc4d`](https://github.com/UnsophisticatedBadger/OurCRM/commit/2bfdc4d86e14f41f9bd7cf977e8eca5a276c5625))
+
+
 ## v0.2.0 (2026-07-01)
 
 ### Chores
