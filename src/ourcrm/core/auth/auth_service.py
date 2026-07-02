@@ -1,4 +1,7 @@
+import contextlib
+
 import keyring
+import keyring.errors
 
 from ourcrm.core.auth.result import AuthResult, LoginResult
 from ourcrm.core.security.password_hasher import PasswordHasher
@@ -23,6 +26,10 @@ class AuthService:
     def create_master_password(self, password: str) -> None:
         hashed = self._hasher.hash(password)
         keyring.set_password(_SERVICE, _MASTER_HASH_KEY, hashed)
+
+    def delete_master_password(self) -> None:
+        with contextlib.suppress(keyring.errors.PasswordDeleteError):
+            keyring.delete_password(_SERVICE, _MASTER_HASH_KEY)
 
     def login(self, password: str) -> LoginResult:
         if not password:

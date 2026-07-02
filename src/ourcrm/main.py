@@ -9,8 +9,10 @@ from ourcrm.core.config import AppConfig
 from ourcrm.core.security.key_derivation import KeyDerivationService
 from ourcrm.core.security.password_hasher import PasswordHasher
 from ourcrm.core.security.password_validator import PasswordValidator
+from ourcrm.core.security.recovery_generator import RecoveryPasswordGenerator
 from ourcrm.database.encrypted_database import EncryptedDatabase
 from ourcrm.ui.main_window import MainWindow
+from ourcrm.ui.recovery_password_dialog import RecoveryPasswordDialog
 from ourcrm.ui.startup_dialog import StartupDialog, StartupMode
 
 
@@ -63,6 +65,24 @@ def complete_startup(
     return True
 
 
+def run_recovery_setup(
+    dialog: RecoveryPasswordDialog,
+    db_path: Path,
+    hasher: PasswordHasher,
+) -> bool:
+    """Runs the modal recovery password setup screen. On acceptance, stores the
+    recovery password hash. On rejection (user confirmed exit), deletes the
+    just-created database and master password so the next launch starts fresh.
+    Returns whether the caller should proceed to the main window."""
+    if dialog.exec() != QDialog.DialogCode.Accepted:
+        db_path.unlink(missing_ok=True)
+        AuthService(hasher=hasher).delete_master_password()
+        return False
+
+    AuthService(hasher=hasher).store_recovery_password(dialog.raw_password)
+    return True
+
+
 def main() -> None:
     _existing = QApplication.instance()
     app: QApplication = _existing if _existing is not None else QApplication(sys.argv)  # type: ignore[assignment]
@@ -71,8 +91,14 @@ def main() -> None:
 
     db_path = _db_path()
     dialog, mode = build_startup_dialog(db_path, PasswordValidator())
-    if not complete_startup(dialog, mode, db_path, KeyDerivationService(), PasswordHasher()):
+    hasher = PasswordHasher()
+    if not complete_startup(dialog, mode, db_path, KeyDerivationService(), hasher):
         sys.exit(0)
+
+    if mode == StartupMode.CREATE:
+        recovery_dialog = RecoveryPasswordDialog(RecoveryPasswordGenerator())
+        if not run_recovery_setup(recovery_dialog, db_path, hasher):
+            sys.exit(0)
 
     window = MainWindow(app_config=config, qt_app=app, calendar_repository=calendar_repository)
     window.show()

@@ -94,77 +94,58 @@ Feature: Authentication
     And the required wait should be 0 seconds
 
   @story_4
-  Scenario: Generated password is 32 characters long
-    Given the recovery password generator is available
-    When I generate a recovery password
-    Then the raw password should be exactly 32 characters
+  Scenario: User's recovery password is 32 characters long with no ambiguous characters
+    Given the recovery password setup screen is open
+    Then the recovery password is 32 characters long
+    And the recovery password contains no ambiguous characters
 
   @story_4
-  Scenario: Generated password excludes ambiguous characters
-    Given the recovery password generator is available
-    When I generate a recovery password
-    Then the raw password should not contain any of "0OIl1"
+  Scenario: The recovery password is displayed grouped with dashes and round-trips to the raw password
+    Given the recovery password setup screen is open
+    Then the displayed recovery password is grouped with dashes every 5 characters
+    And the displayed recovery password with dashes removed matches the recovery password
 
   @story_4
-  Scenario: Generated password contains only allowed characters
-    Given the recovery password generator is available
-    When I generate a recovery password
-    Then every character should be from the allowed character set
+  Scenario: Reopening the setup screen generates a different recovery password
+    Given the recovery password setup screen is open
+    When the recovery password setup screen is opened again
+    Then the two recovery passwords are different
 
   @story_4
-  Scenario: Multiple generations produce unique passwords
-    Given the recovery password generator is available
-    When I generate two recovery passwords
-    Then the two passwords should be different
+  Scenario: User copies the recovery password to the clipboard
+    Given the recovery password setup screen is open
+    When the user clicks Copy to Clipboard
+    Then the clipboard contains the recovery password with no dashes
 
   @story_4
-  Scenario: Formatted password has dashes every 5 characters
-    Given the recovery password generator is available
-    When I generate and format a recovery password
-    Then each group separated by dashes should have at most 5 characters
+  Scenario: Continue button starts disabled when the setup screen opens
+    Given the recovery password setup screen is open
+    Then the Continue button is disabled
 
   @story_4
-  Scenario: Formatted password round-trips back to the raw password
-    Given the recovery password generator is available
-    When I generate and format a recovery password
-    Then removing the dashes should give back the raw password
+  Scenario: Checking only the first checkbox keeps Continue disabled
+    Given the recovery password setup screen is open
+    When the user checks the first confirmation checkbox
+    Then the Continue button is disabled
 
   @story_4
-  Scenario: Can proceed when both checkboxes checked and CONFIRM typed
-    Given a recovery confirmation
-    When I check the first checkbox
-    And I check the second checkbox
-    And I type "CONFIRM" in the confirmation field
-    Then I should be able to proceed
+  Scenario: Checking only the second checkbox keeps Continue disabled
+    Given the recovery password setup screen is open
+    When the user checks the second confirmation checkbox
+    Then the Continue button is disabled
 
   @story_4
-  Scenario: Cannot proceed without first checkbox
-    Given a recovery confirmation
-    When I check the second checkbox
-    And I type "CONFIRM" in the confirmation field
-    Then I should not be able to proceed
+  Scenario: Checking both checkboxes without typing CONFIRM keeps Continue disabled
+    Given the recovery password setup screen is open
+    When the user checks both checkboxes
+    Then the Continue button is disabled
 
   @story_4
-  Scenario: Cannot proceed without second checkbox
-    Given a recovery confirmation
-    When I check the first checkbox
-    And I type "CONFIRM" in the confirmation field
-    Then I should not be able to proceed
-
-  @story_4
-  Scenario: Cannot proceed without typing CONFIRM
-    Given a recovery confirmation
-    When I check the first checkbox
-    And I check the second checkbox
-    Then I should not be able to proceed
-
-  @story_4
-  Scenario Outline: Cannot proceed with incorrect confirmation text
-    Given a recovery confirmation
-    When I check the first checkbox
-    And I check the second checkbox
-    And I type "<text>" in the confirmation field
-    Then I should not be able to proceed
+  Scenario Outline: Typing anything other than exact CONFIRM keeps Continue disabled
+    Given the recovery password setup screen is open
+    When the user checks both checkboxes
+    And the user types "<text>" in the recovery confirmation field
+    Then the Continue button is disabled
 
     Examples:
       | text     |
@@ -174,9 +155,38 @@ Feature: Authentication
       | confirm! |
 
   @story_4
-  Scenario: Fresh confirmation state does not allow proceeding
-    Given a recovery confirmation
-    Then I should not be able to proceed
+  Scenario: Checking both checkboxes and typing CONFIRM enables Continue
+    Given the recovery password setup screen is open
+    When the user checks both checkboxes
+    And the user types "CONFIRM" in the recovery confirmation field
+    Then the Continue button is enabled
+
+  @story_4
+  Scenario: Clicking Continue accepts the recovery password setup screen
+    Given the recovery password setup screen is open
+    When the user checks both checkboxes
+    And the user types "CONFIRM" in the recovery confirmation field
+    And the user clicks Continue
+    Then the recovery password setup screen is accepted
+
+  @story_4
+  Scenario: Closing the setup screen warns that progress will be lost
+    Given the recovery password setup screen is open
+    When the user closes the recovery password setup screen
+    Then a warning explains the master password and database will be deleted
+
+  @story_4
+  Scenario: Confirming exit deletes the database and clears the master password
+    Given the recovery password setup screen is open for a freshly created database
+    When the user closes the recovery password setup screen and confirms exit
+    Then the database file no longer exists
+    And the master password is cleared from the keyring
+
+  @story_4
+  Scenario: Declining to exit keeps the setup screen open
+    Given the recovery password setup screen is open
+    When the user closes the recovery password setup screen and declines to exit
+    Then the recovery password setup screen is still open
 
   @story_5
   Scenario: Schema is initialized after database creation

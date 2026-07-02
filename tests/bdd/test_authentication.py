@@ -4,17 +4,19 @@ from __future__ import annotations
 
 from collections.abc import Generator
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 import pytest
 from PySide6.QtCore import Qt, QTimer
 from PySide6.QtWidgets import (
     QAbstractButton,
     QApplication,
+    QCheckBox,
     QDialog,
     QLabel,
     QLineEdit,
     QMenu,
+    QMessageBox,
     QPushButton,
     QToolBar,
 )
@@ -27,13 +29,13 @@ from ourcrm.core.auth.result import AuthResult, LoginResult
 from ourcrm.core.security.key_derivation import KeyDerivationService
 from ourcrm.core.security.password_hasher import PasswordHasher
 from ourcrm.core.security.password_validator import PasswordValidator, ValidationResult
-from ourcrm.core.security.recovery_confirmation import RecoveryConfirmation
 from ourcrm.core.security.recovery_generator import RecoveryPasswordGenerator
 from ourcrm.database.encrypted_database import EncryptedDatabase, InvalidDatabaseKeyError
 from ourcrm.database.manager import DatabaseManager
-from ourcrm.main import build_startup_dialog, complete_startup
+from ourcrm.main import build_startup_dialog, complete_startup, run_recovery_setup
 from ourcrm.ui.main_window import MainWindow
 from ourcrm.ui.navigation import Section
+from ourcrm.ui.recovery_password_dialog import RecoveryPasswordDialog
 from ourcrm.ui.startup_dialog import StartupDialog, StartupMode
 from tests._keyring import InMemoryKeyring
 
@@ -199,99 +201,220 @@ def failure_count_reset(auth_service: AuthService, count: int) -> None:
     assert auth_service.failure_count == count
 
 
-# ── US-004: Generate Recovery Password ────────────────────────────────────────
+# ── US-004: Recovery Password Setup Screen ────────────────────────────────────
 
 
-@given("the recovery password generator is available", target_fixture="generator")
-def recovery_generator_available() -> RecoveryPasswordGenerator:
-    return RecoveryPasswordGenerator()
+@pytest.fixture(autouse=True)
+def mock_recovery_warning() -> Generator[MagicMock]:
+    """Prevents a real, blocking QMessageBox from appearing when a
+    RecoveryPasswordDialog is closed/rejected — including when pytest-qt closes
+    leftover dialogs during test teardown. Must stay active through teardown, so
+    it's autouse (pytest tears down autouse fixtures after explicitly-requested
+    ones like qtbot, which is the ordering this depends on). Defaults to "No"
+    (safe/conservative); scenarios that need "Yes" override the return_value."""
+    with patch(
+        "ourcrm.ui.recovery_password_dialog.QMessageBox.warning",
+        return_value=QMessageBox.StandardButton.No,
+    ) as mock_warning:
+        yield mock_warning
 
 
-@when("I generate a recovery password", target_fixture="raw_password")
-def generate_recovery_password(generator: RecoveryPasswordGenerator) -> str:
-    return generator.generate()
+@given("the recovery password setup screen is open", target_fixture="recovery_dialog")
+def recovery_dialog_open(qtbot: QtBot) -> RecoveryPasswordDialog:
+    dialog = RecoveryPasswordDialog(RecoveryPasswordGenerator())
+    qtbot.addWidget(dialog)
+    dialog.show()
+    return dialog
 
 
-@when("I generate two recovery passwords", target_fixture="two_passwords")
-def generate_two_passwords(generator: RecoveryPasswordGenerator) -> tuple[str, str]:
-    return generator.generate(), generator.generate()
+@given(
+    "the recovery password setup screen is open for a freshly created database",
+    target_fixture="recovery_dialog",
+)
+def recovery_dialog_with_database(
+    tmp_path: Path, qtbot: QtBot, in_memory_keyring: InMemoryKeyring
+) -> RecoveryPasswordDialog:
+    (tmp_path / "ourcrm.db").write_bytes(b"fake-encrypted-contents")
+    AuthService(hasher=_HASHER).create_master_password(_PASSWORD)
+    dialog = RecoveryPasswordDialog(RecoveryPasswordGenerator())
+    qtbot.addWidget(dialog)
+    dialog.show()
+    return dialog
 
 
-@when("I generate and format a recovery password", target_fixture="formatted_result")
-def generate_and_format(generator: RecoveryPasswordGenerator) -> tuple[str, str]:
-    raw = generator.generate()
-    formatted = generator.format_for_display(raw)
-    return raw, formatted
+@when("the recovery password setup screen is opened again", target_fixture="second_recovery_dialog")
+def recovery_dialog_open_again(qtbot: QtBot) -> RecoveryPasswordDialog:
+    dialog = RecoveryPasswordDialog(RecoveryPasswordGenerator())
+    qtbot.addWidget(dialog)
+    dialog.show()
+    return dialog
 
 
-@then("the raw password should be exactly 32 characters")
-def raw_password_is_32_chars(raw_password: str) -> None:
-    assert len(raw_password) == 32, f"Expected 32 chars, got {len(raw_password)}"
+@then("the recovery password is 32 characters long")
+def recovery_password_is_32_chars(recovery_dialog: RecoveryPasswordDialog) -> None:
+    assert len(recovery_dialog.raw_password) == 32, (
+        f"Expected 32 chars, got {len(recovery_dialog.raw_password)}"
+    )
 
 
-@then(parsers.parse('the raw password should not contain any of "{chars}"'))
-def raw_password_excludes_chars(raw_password: str, chars: str) -> None:
-    found = [c for c in raw_password if c in chars]
-    assert not found, f"Found ambiguous characters {found} in password"
+@then("the recovery password contains no ambiguous characters")
+def recovery_password_no_ambiguous_chars(recovery_dialog: RecoveryPasswordDialog) -> None:
+    ambiguous = set("0OIl1")
+    found = ambiguous & set(recovery_dialog.raw_password)
+    assert not found, f"Found ambiguous characters {found} in recovery password"
 
 
-@then("every character should be from the allowed character set")
-def password_uses_allowed_chars(generator: RecoveryPasswordGenerator, raw_password: str) -> None:
-    for ch in raw_password:
-        assert ch in generator.allowed_chars, f"Disallowed character '{ch}' found"
+@then("the displayed recovery password is grouped with dashes every 5 characters")
+def displayed_password_grouped_with_dashes(recovery_dialog: RecoveryPasswordDialog) -> None:
+    label = recovery_dialog.findChild(QLabel, "recovery_password_label")
+    assert label is not None, "recovery_password_label not found"
+    groups = label.text().split("-")
+    assert len(groups) > 1, f"Expected dash-separated groups, got: {label.text()}"
+    assert all(len(group) <= 5 for group in groups), f"Group too long in: {label.text()}"
 
 
-@then("the two passwords should be different")
-def two_passwords_are_different(two_passwords: tuple[str, str]) -> None:
-    p1, p2 = two_passwords
-    assert p1 != p2, "Two generated passwords were identical"
+@then("the displayed recovery password with dashes removed matches the recovery password")
+def displayed_password_matches_raw(recovery_dialog: RecoveryPasswordDialog) -> None:
+    label = recovery_dialog.findChild(QLabel, "recovery_password_label")
+    assert label is not None, "recovery_password_label not found"
+    assert label.text().replace("-", "") == recovery_dialog.raw_password
 
 
-@then("each group separated by dashes should have at most 5 characters")
-def groups_are_at_most_5_chars(formatted_result: tuple[str, str]) -> None:
-    _, formatted = formatted_result
-    groups = formatted.split("-")
-    for group in groups:
-        assert len(group) <= 5, f"Group '{group}' has {len(group)} chars (max 5)"
+@then("the two recovery passwords are different")
+def two_recovery_passwords_differ(
+    recovery_dialog: RecoveryPasswordDialog, second_recovery_dialog: RecoveryPasswordDialog
+) -> None:
+    assert recovery_dialog.raw_password != second_recovery_dialog.raw_password
 
 
-@then("removing the dashes should give back the raw password")
-def dashes_removed_equals_raw(formatted_result: tuple[str, str]) -> None:
-    raw, formatted = formatted_result
-    assert formatted.replace("-", "") == raw
+@when("the user clicks Copy to Clipboard", target_fixture="recovery_clipboard")
+def click_copy_to_clipboard(recovery_dialog: RecoveryPasswordDialog, qtbot: QtBot) -> MagicMock:
+    mock_app = MagicMock()
+    with patch("ourcrm.ui.recovery_password_dialog.QApplication", mock_app):
+        btn = recovery_dialog.findChild(QPushButton, "recovery_copy_btn")
+        assert btn is not None, "recovery_copy_btn not found"
+        qtbot.mouseClick(btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+    clipboard_mock = mock_app.clipboard.return_value
+    assert isinstance(clipboard_mock, MagicMock)
+    return clipboard_mock
 
 
-# ── US-004: Confirm Recovery Password Saved ───────────────────────────────────
+@then("the clipboard contains the recovery password with no dashes")
+def clipboard_contains_raw_password(
+    recovery_dialog: RecoveryPasswordDialog, recovery_clipboard: MagicMock
+) -> None:
+    recovery_clipboard.setText.assert_called_once_with(recovery_dialog.raw_password)
 
 
-@given("a recovery confirmation", target_fixture="confirmation")
-def recovery_confirmation() -> RecoveryConfirmation:
-    return RecoveryConfirmation()
+def _find_recovery_continue_btn(dialog: RecoveryPasswordDialog) -> QPushButton:
+    btn = dialog.findChild(QPushButton, "recovery_continue_btn")
+    assert btn is not None, "recovery_continue_btn not found"
+    return btn
 
 
-@when("I check the first checkbox")
-def check_first(confirmation: RecoveryConfirmation) -> None:
-    confirmation.check1 = True
+@then("the Continue button is disabled")
+def recovery_continue_button_disabled(recovery_dialog: RecoveryPasswordDialog) -> None:
+    assert not _find_recovery_continue_btn(recovery_dialog).isEnabled()
 
 
-@when("I check the second checkbox")
-def check_second(confirmation: RecoveryConfirmation) -> None:
-    confirmation.check2 = True
+@then("the Continue button is enabled")
+def recovery_continue_button_enabled(recovery_dialog: RecoveryPasswordDialog) -> None:
+    assert _find_recovery_continue_btn(recovery_dialog).isEnabled()
 
 
-@when(parsers.parse('I type "{text}" in the confirmation field'))
-def type_confirm_text(confirmation: RecoveryConfirmation, text: str) -> None:
-    confirmation.confirm_text = text
+@when("the user checks the first confirmation checkbox")
+def check_first_recovery_checkbox(recovery_dialog: RecoveryPasswordDialog) -> None:
+    checkbox = recovery_dialog.findChild(QCheckBox, "recovery_check1")
+    assert checkbox is not None, "recovery_check1 not found"
+    checkbox.setChecked(True)
 
 
-@then("I should be able to proceed")
-def can_proceed(confirmation: RecoveryConfirmation) -> None:
-    assert confirmation.can_proceed
+@when("the user checks the second confirmation checkbox")
+def check_second_recovery_checkbox(recovery_dialog: RecoveryPasswordDialog) -> None:
+    checkbox = recovery_dialog.findChild(QCheckBox, "recovery_check2")
+    assert checkbox is not None, "recovery_check2 not found"
+    checkbox.setChecked(True)
 
 
-@then("I should not be able to proceed")
-def cannot_proceed(confirmation: RecoveryConfirmation) -> None:
-    assert not confirmation.can_proceed
+@when("the user checks both checkboxes")
+def check_both_recovery_checkboxes(recovery_dialog: RecoveryPasswordDialog) -> None:
+    check_first_recovery_checkbox(recovery_dialog)
+    check_second_recovery_checkbox(recovery_dialog)
+
+
+@when(parsers.parse('the user types "{text}" in the recovery confirmation field'))
+def type_recovery_confirmation_text(recovery_dialog: RecoveryPasswordDialog, text: str) -> None:
+    field = recovery_dialog.findChild(QLineEdit, "recovery_confirm_field")
+    assert field is not None, "recovery_confirm_field not found"
+    field.setText(text)
+
+
+@when("the user clicks Continue")
+def click_recovery_continue_button(recovery_dialog: RecoveryPasswordDialog, qtbot: QtBot) -> None:
+    qtbot.mouseClick(  # type: ignore[no-untyped-call]
+        _find_recovery_continue_btn(recovery_dialog), Qt.MouseButton.LeftButton
+    )
+
+
+@then("the recovery password setup screen is accepted")
+def recovery_dialog_is_accepted(recovery_dialog: RecoveryPasswordDialog) -> None:
+    assert recovery_dialog.result() == QDialog.DialogCode.Accepted
+
+
+@when(
+    "the user closes the recovery password setup screen",
+    target_fixture="recovery_warning_message",
+)
+def close_recovery_dialog(
+    recovery_dialog: RecoveryPasswordDialog, mock_recovery_warning: MagicMock
+) -> str:
+    recovery_dialog.reject()
+    assert mock_recovery_warning.called, "Expected a warning dialog to be shown"
+    return str(mock_recovery_warning.call_args.args[2])
+
+
+@then("a warning explains the master password and database will be deleted")
+def warning_explains_deletion(recovery_warning_message: str) -> None:
+    lowered = recovery_warning_message.lower()
+    assert "master password" in lowered, lowered
+    assert "database" in lowered, lowered
+    assert "delete" in lowered, lowered
+
+
+@when("the user closes the recovery password setup screen and declines to exit")
+def close_recovery_dialog_and_decline(recovery_dialog: RecoveryPasswordDialog) -> None:
+    recovery_dialog.reject()  # mock_recovery_warning (autouse) defaults to "No"
+
+
+@then("the recovery password setup screen is still open")
+def recovery_dialog_still_open(recovery_dialog: RecoveryPasswordDialog) -> None:
+    assert recovery_dialog.result() != QDialog.DialogCode.Accepted
+    assert recovery_dialog.isVisible()
+
+
+@when(
+    "the user closes the recovery password setup screen and confirms exit",
+    target_fixture="recovery_setup_completed",
+)
+def close_recovery_dialog_and_confirm_exit(
+    recovery_dialog: RecoveryPasswordDialog,
+    tmp_path: Path,
+    mock_recovery_warning: MagicMock,
+) -> bool:
+    db_path = tmp_path / "ourcrm.db"
+    mock_recovery_warning.return_value = QMessageBox.StandardButton.Yes
+    QTimer.singleShot(0, recovery_dialog.reject)
+    return run_recovery_setup(recovery_dialog, db_path, _HASHER)
+
+
+@then("the database file no longer exists")
+def recovery_database_file_gone(tmp_path: Path) -> None:
+    assert not (tmp_path / "ourcrm.db").exists()
+
+
+@then("the master password is cleared from the keyring")
+def recovery_master_password_cleared(in_memory_keyring: InMemoryKeyring) -> None:
+    assert in_memory_keyring.get_password("ourcrm", "master_password_hash") is None
 
 
 # ── US-005: Create Encrypted Database ─────────────────────────────────────────
