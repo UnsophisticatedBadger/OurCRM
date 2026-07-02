@@ -1,7 +1,7 @@
 # 157 - Notification For Email Received
 
 **Capability:** Notifications
-**Milestone:** v1.0.0 — Production
+**Milestone:** Production
 **Status:** Not Done
 **GitHub Issue:** #157
 

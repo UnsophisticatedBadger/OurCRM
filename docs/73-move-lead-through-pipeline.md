@@ -1,7 +1,7 @@
 # 73 - Move Lead Through Pipeline
 
 **Capability:** Leads
-**Milestone:** v0.5.0 — MVP
+**Milestone:** MVP
 **Status:** Not Done
 **GitHub Issue:** #73
 

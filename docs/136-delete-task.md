@@ -1,7 +1,7 @@
 # 136 - Delete A Task
 
 **Capability:** Tasks
-**Milestone:** v0.8.0 — Extended CRM
+**Milestone:** Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #136
 

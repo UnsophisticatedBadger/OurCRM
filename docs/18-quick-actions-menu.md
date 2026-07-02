@@ -1,7 +1,7 @@
 # 18 - Quick Actions In Global Search
 
 **Capability:** App Shell
-**Milestone:** v0.2.0 — Secure Shell
+**Milestone:** Secure Shell
 **Status:** Not Done
 **GitHub Issue:** #18
 

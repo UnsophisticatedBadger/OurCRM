@@ -1,7 +1,7 @@
 # 156 - Notification For Showing Reminders
 
 **Capability:** Notifications
-**Milestone:** v1.0.0 — Production
+**Milestone:** Production
 **Status:** Not Done
 **GitHub Issue:** #156
 

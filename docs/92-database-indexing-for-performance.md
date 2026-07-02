@@ -1,7 +1,7 @@
 # 92 - Database Indexing For Performance
 
 **Capability:** infrastructure
-**Milestone:** v0.5.0 — MVP
+**Milestone:** MVP
 **Status:** Not Done
 **GitHub Issue:** #92
 **Priority:** Post-MVP

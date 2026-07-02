@@ -1,7 +1,7 @@
 # #6 — Log In and Out
 
 **Capability:** Authentication & Security
-**Milestone:** v0.2.0 — Secure Shell
+**Milestone:** Secure Shell
 **Status:** Not Done
 **GitHub Issue:** #6
 

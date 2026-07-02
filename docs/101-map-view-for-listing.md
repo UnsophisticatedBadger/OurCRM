@@ -1,7 +1,7 @@
 # 101 - Map View For MLS Listing
 
 **Capability:** mls
-**Milestone:** v0.5.0 — MVP
+**Milestone:** MVP
 **Status:** Not Done
 **GitHub Issue:** #101
 **Priority:** Post-MVP

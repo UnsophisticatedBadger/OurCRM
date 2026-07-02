@@ -1,7 +1,7 @@
 # 187 - Connect Gmail Via OAuth
 
 **Capability:** email
-**Milestone:** v1.1.0+ — Post-Production
+**Milestone:** Post-Production
 **Status:** Not Done
 **GitHub Issue:** #187
 **Priority:** Post-MVP

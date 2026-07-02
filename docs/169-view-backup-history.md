@@ -1,7 +1,7 @@
 # 169 - View Backup History
 
 **Capability:** Backup & Recovery
-**Milestone:** v1.0.0 — Production
+**Milestone:** Production
 **Status:** Not Done
 **GitHub Issue:** #169
 **Priority:** Should Have (deferrable to post-MVP)

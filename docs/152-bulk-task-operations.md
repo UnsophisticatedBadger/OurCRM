@@ -1,7 +1,7 @@
 # 152 - Bulk Task Operations
 
 **Capability:** tasks
-**Milestone:** v0.8.0 — Extended CRM
+**Milestone:** Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #152
 **Priority:** Post-MVP

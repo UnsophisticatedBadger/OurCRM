@@ -1,7 +1,7 @@
 # 31 - Font Size Adjustment
 
 **Capability:** shell
-**Milestone:** v0.2.0 — Secure Shell
+**Milestone:** Secure Shell
 **Status:** Not Done
 **GitHub Issue:** #31
 **Priority:** Post-MVP

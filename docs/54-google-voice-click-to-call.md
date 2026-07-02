@@ -1,7 +1,7 @@
 # 54 - Google Voice Click-to-Call
 
 **Capability:** telephony
-**Milestone:** v0.5.0 — MVP
+**Milestone:** MVP
 **Status:** Not Started
 **GitHub Issue:** #54
 

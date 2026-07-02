@@ -1,7 +1,7 @@
 # 160 - Scheduled Automatic Backups
 
 **Capability:** backup
-**Milestone:** v1.0.0 — Production
+**Milestone:** Production
 **Status:** Not Done
 **GitHub Issue:** #160
 **Priority:** Post-MVP

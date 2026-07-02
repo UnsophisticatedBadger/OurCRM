@@ -1,7 +1,7 @@
 # 166 - Export Contacts To CSV
 
 **Capability:** Import & Export
-**Milestone:** v1.0.0 — Production
+**Milestone:** Production
 **Status:** Not Done
 **GitHub Issue:** #166
 

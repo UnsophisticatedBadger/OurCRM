@@ -1,7 +1,7 @@
-﻿# #11 — Open the Settings Window
+# #11 — Open the Settings Window
 
 **Capability:** App Shell
-**Milestone:** v0.2.0 — Secure Shell
+**Milestone:** Secure Shell
 **Status:** Not Done
 **GitHub Issue:** #11
 

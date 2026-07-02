@@ -1,7 +1,7 @@
 # #9 — Password Recovery Flow
 
 **Capability:** Authentication & Security
-**Milestone:** v0.2.0 — Secure Shell
+**Milestone:** Secure Shell
 **Status:** Not Done
 **GitHub Issue:** #9
 

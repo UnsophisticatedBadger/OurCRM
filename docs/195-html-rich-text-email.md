@@ -1,7 +1,7 @@
 # 195 - HTML Rich-Text Email Composing
 
 **Capability:** email
-**Milestone:** v1.1.0+ — Post-Production
+**Milestone:** Post-Production
 **Status:** Not Done
 **GitHub Issue:** #195
 **Priority:** Post-MVP

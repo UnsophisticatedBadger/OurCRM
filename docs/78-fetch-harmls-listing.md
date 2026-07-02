@@ -1,7 +1,7 @@
 # 78 - Fetch HAR MLS Listings
 
 **Capability:** MLS Integration
-**Milestone:** v0.5.0 — MVP
+**Milestone:** MVP
 **Status:** Not Done
 **GitHub Issue:** #78
 

@@ -209,7 +209,9 @@ H1: `# NNN - Title` (e.g. `# 3 - Create Master Password`)
 **Required header fields** (immediately after the H1):
 ```
 **Capability:**    # exactly one canonical group from the table above
-**Milestone:**     # e.g. v0.2.0 — Secure Shell
+**Milestone:**     # capability-named milestone only, no version number — e.g. Secure Shell
+                   # (version numbers can't be pre-assigned; semantic-release auto-increments
+                   # per commit, decoupling the version number from milestone boundaries)
 **Status:**        # Not Done | Done
 **GitHub Issue:**  # #NNN
 ```

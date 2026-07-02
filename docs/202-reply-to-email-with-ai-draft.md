@@ -1,7 +1,7 @@
 # 202 - Reply To Email With AI Draft
 
 **Capability:** ai
-**Milestone:** v1.1.0+ — Post-Production
+**Milestone:** Post-Production
 **Status:** Not Done
 **GitHub Issue:** #202
 **Priority:** Post-MVP

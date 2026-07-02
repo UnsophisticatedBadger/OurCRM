@@ -1,7 +1,7 @@
 # 178 - View Email History In Contact Timeline
 
 **Capability:** Email
-**Milestone:** v1.1.0+ — Post-Production
+**Milestone:** Post-Production
 **Status:** Not Done
 **GitHub Issue:** #178
 

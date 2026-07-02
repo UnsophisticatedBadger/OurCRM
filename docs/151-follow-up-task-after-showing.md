@@ -1,7 +1,7 @@
 # 151 - Create Follow-Up Task After Completing A Showing
 
 **Capability:** tasks
-**Milestone:** v0.8.0 — Extended CRM
+**Milestone:** Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #151
 **Priority:** Post-MVP

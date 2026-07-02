@@ -1,7 +1,7 @@
 # 50 - Windows Installer
 
 **Capability:** infrastructure
-**Milestone:** v0.5.0 — MVP
+**Milestone:** MVP
 **Status:** Not Started
 **GitHub Issue:** #50
 

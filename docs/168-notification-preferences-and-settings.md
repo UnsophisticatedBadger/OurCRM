@@ -1,7 +1,7 @@
 # 168 - Advanced Notification Preferences
 
 **Capability:** Notifications
-**Milestone:** v1.0.0 — Production
+**Milestone:** Production
 **Status:** Not Done
 **GitHub Issue:** #168
 **Priority:** Should Have (deferrable to post-MVP)

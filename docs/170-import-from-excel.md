@@ -1,7 +1,7 @@
 # 170 - Import Contacts From Excel
 
 **Capability:** Import & Export
-**Milestone:** v1.0.0 — Production
+**Milestone:** Production
 **Status:** Not Done
 **GitHub Issue:** #170
 **Priority:** Should Have (deferrable to post-MVP)

@@ -1,7 +1,7 @@
 # 159 - Restore From Backup
 
 **Capability:** Backup & Recovery
-**Milestone:** v1.0.0 — Production
+**Milestone:** Production
 **Status:** Not Done
 **GitHub Issue:** #159
 

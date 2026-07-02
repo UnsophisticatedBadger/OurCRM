@@ -1,7 +1,7 @@
 # 102 - Twilio Calling Integration
 
 **Capability:** telephony
-**Milestone:** v1.1.0+ — Post-Production
+**Milestone:** Post-Production
 **Status:** Not Started
 **GitHub Issue:** #102
 

@@ -1,7 +1,7 @@
 # 48 - Dashboard
 
 **Capability:** shell
-**Milestone:** v0.5.0 — MVP
+**Milestone:** MVP
 **Status:** Not Started
 **GitHub Issue:** #48
 

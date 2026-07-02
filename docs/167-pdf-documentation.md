@@ -1,7 +1,7 @@
 # 167 - PDF Manual Auto-generation
 
 **Capability:** infrastructure
-**Milestone:** v1.0.0 — Production
+**Milestone:** Production
 **Status:** Not Started
 **GitHub Issue:** #167
 

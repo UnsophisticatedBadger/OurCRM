@@ -1,7 +1,7 @@
 # 96 - Update Lead Status From Showing Outcome
 
 **Capability:** leads
-**Milestone:** v0.5.0 — MVP
+**Milestone:** MVP
 **Status:** Not Done
 **GitHub Issue:** #96
 **Priority:** Post-MVP

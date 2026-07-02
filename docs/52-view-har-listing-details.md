@@ -1,7 +1,7 @@
 # 52 - View HAR Listing Details
 
 **Capability:** MLS Integration
-**Milestone:** v0.5.0 — MVP
+**Milestone:** MVP
 **Status:** Not Done
 **GitHub Issue:** #52
 

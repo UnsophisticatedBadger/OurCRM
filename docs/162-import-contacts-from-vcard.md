@@ -1,7 +1,7 @@
 # 162 - Import Contacts From VCard
 
 **Capability:** Import & Export
-**Milestone:** v1.0.0 — Production
+**Milestone:** Production
 **Status:** Not Done
 **GitHub Issue:** #162
 

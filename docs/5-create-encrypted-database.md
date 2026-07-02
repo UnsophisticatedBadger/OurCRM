@@ -1,7 +1,7 @@
-﻿# #5 — Encrypt the Database
+# #5 — Encrypt the Database
 
 **Capability:** Authentication & Security
-**Milestone:** v0.2.0 — Secure Shell
+**Milestone:** Secure Shell
 **Status:** Not Done
 **GitHub Issue:** #5
 

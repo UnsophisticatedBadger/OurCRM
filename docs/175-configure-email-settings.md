@@ -1,7 +1,7 @@
 # 175 - Configure Email Settings
 
 **Capability:** Email
-**Milestone:** v1.1.0+ — Post-Production
+**Milestone:** Post-Production
 **Status:** Not Done
 **GitHub Issue:** #175
 

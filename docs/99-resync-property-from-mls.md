@@ -1,7 +1,7 @@
 # 99 - Re-Sync Property From MLS
 
 **Capability:** mls
-**Milestone:** v0.5.0 — MVP
+**Milestone:** MVP
 **Status:** Not Done
 **GitHub Issue:** #99
 **Priority:** Post-MVP

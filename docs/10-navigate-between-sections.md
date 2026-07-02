@@ -1,7 +1,7 @@
-﻿# #10 — Navigate Between Sections
+# #10 — Navigate Between Sections
 
 **Capability:** App Shell
-**Milestone:** v0.2.0 — Secure Shell
+**Milestone:** Secure Shell
 **Status:** Not Done
 **GitHub Issue:** #10
 

@@ -1,7 +1,7 @@
 # 103 - Linux Build On Tag
 
 **Capability:** infrastructure
-**Milestone:** v1.1.0+ — Post-Production
+**Milestone:** Post-Production
 **Status:** Not Started
 **GitHub Issue:** #103
 **Priority:** Low — Linux is not required by the primary user or either development platform

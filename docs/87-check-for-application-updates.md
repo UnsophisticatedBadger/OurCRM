@@ -1,7 +1,7 @@
 # 87 - Check For And Install Application Updates
 
 **Capability:** infrastructure
-**Milestone:** v0.5.0 — MVP
+**Milestone:** MVP
 **Status:** Not Done
 **GitHub Issue:** #87
 **Priority:** Should Have

@@ -1,7 +1,7 @@
 # 165 - Export Contacts To VCard
 
 **Capability:** Import & Export
-**Milestone:** v1.0.0 — Production
+**Milestone:** Production
 **Status:** Not Done
 **GitHub Issue:** #165
 

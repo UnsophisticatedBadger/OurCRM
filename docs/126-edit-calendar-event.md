@@ -1,7 +1,7 @@
 # 126 - Edit Calendar Event
 
 **Capability:** Calendar & Showings
-**Milestone:** v0.8.0 — Extended CRM
+**Milestone:** Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #126
 

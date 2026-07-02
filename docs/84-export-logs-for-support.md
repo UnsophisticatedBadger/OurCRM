@@ -1,7 +1,7 @@
 # 84 - Export Logs For Support
 
 **Capability:** Infrastructure
-**Milestone:** v0.5.0 — MVP
+**Milestone:** MVP
 **Status:** Not Done
 **GitHub Issue:** #84
 

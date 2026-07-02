@@ -1,7 +1,7 @@
 # 142 - Export Calendar As ICal File
 
 **Capability:** calendar
-**Milestone:** v0.8.0 — Extended CRM
+**Milestone:** Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #142
 **Priority:** Post-MVP

@@ -1,7 +1,7 @@
 # 112 - View Transaction List
 
 **Capability:** Transactions
-**Milestone:** v0.8.0 — Extended CRM
+**Milestone:** Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #112
 

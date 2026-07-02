@@ -1,7 +1,7 @@
 # 123 - View Upcoming Showings
 
 **Capability:** Calendar & Showings
-**Milestone:** v0.8.0 — Extended CRM
+**Milestone:** Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #123
 

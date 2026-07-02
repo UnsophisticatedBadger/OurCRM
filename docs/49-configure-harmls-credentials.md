@@ -1,7 +1,7 @@
-﻿# #49 — Configure HAR MLS Credentials
+# #49 — Configure HAR MLS Credentials
 
 **Capability:** mls
-**Milestone:** v0.5.0 — MVP
+**Milestone:** MVP
 **Status:** Not Started
 **GitHub Issue:** #49
 

@@ -1,7 +1,7 @@
 # 76 - View Converted Leads
 
 **Capability:** Leads
-**Milestone:** v0.5.0 — MVP
+**Milestone:** MVP
 **Status:** Not Done
 **GitHub Issue:** #76
 

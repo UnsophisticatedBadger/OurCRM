@@ -1,7 +1,7 @@
 # 27 - Fuzzy Search
 
 **Capability:** shell
-**Milestone:** v0.2.0 — Secure Shell
+**Milestone:** Secure Shell
 **Status:** Not Done
 **GitHub Issue:** #27
 **Priority:** Post-MVP

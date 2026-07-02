@@ -1,7 +1,7 @@
 # 149 - Detect Overlapping Showings
 
 **Capability:** calendar
-**Milestone:** v0.8.0 — Extended CRM
+**Milestone:** Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #149
 **Priority:** Post-MVP

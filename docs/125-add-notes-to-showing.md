@@ -1,7 +1,7 @@
 # 125 - Add Notes To A Showing
 
 **Capability:** Calendar & Showings
-**Milestone:** v0.8.0 — Extended CRM
+**Milestone:** Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #125
 

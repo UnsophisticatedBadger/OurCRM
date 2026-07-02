@@ -1,7 +1,7 @@
 # 95 - Lead Conversion Report
 
 **Capability:** leads
-**Milestone:** v0.5.0 — MVP
+**Milestone:** MVP
 **Status:** Not Done
 **GitHub Issue:** #95
 **Priority:** Post-MVP

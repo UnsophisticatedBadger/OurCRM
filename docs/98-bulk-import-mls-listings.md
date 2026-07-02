@@ -1,7 +1,7 @@
 # 98 - Bulk Import MLS Listings As Properties
 
 **Capability:** mls
-**Milestone:** v0.5.0 — MVP
+**Milestone:** MVP
 **Status:** Not Done
 **GitHub Issue:** #98
 **Priority:** Post-MVP

@@ -1,7 +1,7 @@
 # 67 - View Contact Documents
 
 **Capability:** Contacts
-**Milestone:** v0.5.0 — MVP
+**Milestone:** MVP
 **Status:** Not Done
 **GitHub Issue:** #67
 

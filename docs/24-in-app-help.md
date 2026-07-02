@@ -1,7 +1,7 @@
 # 24 - In-App Help
 
 **Capability:** App Shell
-**Milestone:** v0.2.0 — Secure Shell
+**Milestone:** Secure Shell
 **Status:** Not Done
 **GitHub Issue:** #24
 

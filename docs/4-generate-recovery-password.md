@@ -1,7 +1,7 @@
-﻿# #4 — Set Up Recovery Password
+# #4 — Set Up Recovery Password
 
 **Capability:** Authentication & Security
-**Milestone:** v0.2.0 — Secure Shell
+**Milestone:** Secure Shell
 **Status:** Done
 **GitHub Issue:** #4
 

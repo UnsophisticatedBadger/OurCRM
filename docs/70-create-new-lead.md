@@ -1,7 +1,7 @@
 # 70 - Create A New Lead
 
 **Capability:** Leads
-**Milestone:** v0.5.0 — MVP
+**Milestone:** MVP
 **Status:** Not Done
 **GitHub Issue:** #70
 

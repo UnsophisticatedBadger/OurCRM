@@ -1,7 +1,7 @@
 # 37 - Record Prices In Multiple Currencies
 
 **Capability:** shell
-**Milestone:** v0.2.0 — Secure Shell
+**Milestone:** Secure Shell
 **Status:** Not Done
 **GitHub Issue:** #37
 **Priority:** Post-MVP

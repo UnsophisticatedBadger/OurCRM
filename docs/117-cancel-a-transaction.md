@@ -1,7 +1,7 @@
 # 117 - Cancel A Transaction
 
 **Capability:** Transactions
-**Milestone:** v0.8.0 — Extended CRM
+**Milestone:** Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #117
 

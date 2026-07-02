@@ -1,7 +1,7 @@
 # 153 - Desktop Notifications For New Leads
 
 **Capability:** Notifications
-**Milestone:** v1.0.0 — Production
+**Milestone:** Production
 **Status:** Not Done
 **GitHub Issue:** #153
 

@@ -1,7 +1,7 @@
 # 90 - Edit And Delete Contact Notes
 
 **Capability:** contacts
-**Milestone:** v0.5.0 — MVP
+**Milestone:** MVP
 **Status:** Not Done
 **GitHub Issue:** #90
 **Priority:** Should Have

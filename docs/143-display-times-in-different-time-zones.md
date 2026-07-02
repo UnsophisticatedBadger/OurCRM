@@ -1,7 +1,7 @@
 # 143 - Time Zone Support For Calendar Events
 
 **Capability:** calendar
-**Milestone:** v0.8.0 — Extended CRM
+**Milestone:** Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #143
 **Priority:** Post-MVP

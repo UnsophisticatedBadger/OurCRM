@@ -1,7 +1,7 @@
 # 155 - Notification Preferences
 
 **Capability:** Notifications
-**Milestone:** v1.0.0 — Production
+**Milestone:** Production
 **Status:** Not Done
 **GitHub Issue:** #155
 

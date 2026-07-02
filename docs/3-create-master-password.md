@@ -1,7 +1,7 @@
 # #3 — Create Master Password
 
 **Capability:** Authentication & Security
-**Milestone:** v0.2.0 — Secure Shell
+**Milestone:** Secure Shell
 **Status:** Done
 **GitHub Issue:** #3
 

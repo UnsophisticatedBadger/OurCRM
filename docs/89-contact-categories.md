@@ -1,7 +1,7 @@
 # 89 - Contact Categories
 
 **Capability:** Contacts
-**Milestone:** v0.5.0 — MVP
+**Milestone:** MVP
 **Status:** Not Done
 **GitHub Issue:** #89
 **Priority:** Should Have (deferrable to post-MVP)

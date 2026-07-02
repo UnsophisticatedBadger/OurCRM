@@ -1,7 +1,7 @@
 # 65 - Search Contacts Across All Fields
 
 **Capability:** Contacts
-**Milestone:** v0.5.0 — MVP
+**Milestone:** MVP
 **Status:** Not Done
 **GitHub Issue:** #65
 

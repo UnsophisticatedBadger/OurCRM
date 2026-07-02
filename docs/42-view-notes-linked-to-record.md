@@ -1,7 +1,7 @@
 # 42 - View Notes Linked To A Record
 
 **Capability:** shell
-**Milestone:** v0.2.0 — Secure Shell
+**Milestone:** Secure Shell
 **Status:** Not Done
 **GitHub Issue:** #42
 **Priority:** Post-MVP

@@ -1,7 +1,7 @@
-﻿# #1 — CI Pipeline
+# #1 — CI Pipeline
 
 **Capability:** infrastructure
-**Milestone:** v0.1.0 — Foundation
+**Milestone:** Foundation
 **Status:** Done
 **GitHub Issue:** #1
 

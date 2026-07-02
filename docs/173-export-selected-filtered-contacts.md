@@ -1,7 +1,7 @@
 # 173 - Export Selected Or Filtered Contacts
 
 **Capability:** Import & Export
-**Milestone:** v1.0.0 — Production
+**Milestone:** Production
 **Status:** Not Done
 **GitHub Issue:** #173
 **Priority:** Should Have (deferrable to post-MVP)

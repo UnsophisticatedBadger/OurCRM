@@ -1,7 +1,7 @@
 # 198 - AI Lead Summary
 
 **Capability:** ai
-**Milestone:** v1.1.0+ — Post-Production
+**Milestone:** Post-Production
 **Status:** Not Done
 **GitHub Issue:** #198
 **Priority:** Post-MVP

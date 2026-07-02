@@ -1,7 +1,7 @@
-﻿# #14 — Home Dashboard
+# #14 — Home Dashboard
 
 **Capability:** App Shell
-**Milestone:** v0.2.0 — Secure Shell
+**Milestone:** Secure Shell
 **Status:** Not Done
 **GitHub Issue:** #14
 

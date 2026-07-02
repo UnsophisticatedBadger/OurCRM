@@ -1,7 +1,7 @@
 # 171 - Save Field Mappings For Import
 
 **Capability:** Import & Export
-**Milestone:** v1.0.0 — Production
+**Milestone:** Production
 **Status:** Not Done
 **GitHub Issue:** #171
 **Priority:** Should Have (deferrable to post-MVP)

@@ -1,7 +1,7 @@
 # 100 - MLS Listing Photo Lightbox
 
 **Capability:** mls
-**Milestone:** v0.5.0 — MVP
+**Milestone:** MVP
 **Status:** Not Done
 **GitHub Issue:** #100
 **Priority:** Post-MVP

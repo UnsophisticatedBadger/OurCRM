@@ -1,7 +1,7 @@
 # 56 - Create A New Contact
 
 **Capability:** Contacts
-**Milestone:** v0.5.0 — MVP
+**Milestone:** MVP
 **Status:** Not Done
 **GitHub Issue:** #56
 

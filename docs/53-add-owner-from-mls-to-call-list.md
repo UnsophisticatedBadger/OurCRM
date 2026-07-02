@@ -1,7 +1,7 @@
 # 53 - Add Property Owner To Call List From MLS
 
 **Capability:** mls
-**Milestone:** v0.5.0 — MVP
+**Milestone:** MVP
 **Status:** Not Started
 **GitHub Issue:** #53
 

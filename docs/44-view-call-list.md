@@ -1,7 +1,7 @@
 # 44 - View Call List
 
 **Capability:** contacts
-**Milestone:** v0.5.0 — MVP
+**Milestone:** MVP
 **Status:** Not Started
 **GitHub Issue:** #44
 

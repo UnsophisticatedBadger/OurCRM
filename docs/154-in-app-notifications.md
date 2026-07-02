@@ -1,7 +1,7 @@
 # 154 - In-App Notifications
 
 **Capability:** Notifications
-**Milestone:** v1.0.0 — Production
+**Milestone:** Production
 **Status:** Not Done
 **GitHub Issue:** #154
 

@@ -1,7 +1,7 @@
 # 79 - Import HAR Listing As Property
 
 **Capability:** MLS Integration
-**Milestone:** v0.5.0 — MVP
+**Milestone:** MVP
 **Status:** Not Done
 **GitHub Issue:** #79
 

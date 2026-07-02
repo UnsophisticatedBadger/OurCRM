@@ -1,7 +1,7 @@
 # 105 - View Property List
 
 **Capability:** Properties
-**Milestone:** v0.8.0 — Extended CRM
+**Milestone:** Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #105
 

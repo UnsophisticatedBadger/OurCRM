@@ -1,7 +1,7 @@
 # 83 - Clear Old Logs
 
 **Capability:** Infrastructure
-**Milestone:** v0.5.0 — MVP
+**Milestone:** MVP
 **Status:** Not Done
 **GitHub Issue:** #83
 

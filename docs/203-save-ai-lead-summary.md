@@ -1,7 +1,7 @@
 # 203 - Save AI Lead Summary To Lead Record
 
 **Capability:** ai
-**Milestone:** v1.1.0+ — Post-Production
+**Milestone:** Post-Production
 **Status:** Not Done
 **GitHub Issue:** #203
 **Priority:** Post-MVP

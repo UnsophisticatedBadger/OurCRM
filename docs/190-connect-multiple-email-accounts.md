@@ -1,7 +1,7 @@
 # 190 - Connect Multiple Email Accounts
 
 **Capability:** email
-**Milestone:** v1.1.0+ — Post-Production
+**Milestone:** Post-Production
 **Status:** Not Done
 **GitHub Issue:** #190
 **Priority:** Post-MVP

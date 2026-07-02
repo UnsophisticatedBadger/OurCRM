@@ -1,7 +1,7 @@
 # 205 - AI Lead Preferences Panel
 
 **Capability:** ai
-**Milestone:** v1.1.0+ — Post-Production
+**Milestone:** Post-Production
 **Status:** Not Done
 **GitHub Issue:** #205
 **Priority:** Post-MVP

@@ -1,7 +1,7 @@
 # 93 - Auto-Install Updates
 
 **Capability:** infrastructure
-**Milestone:** v0.5.0 — MVP
+**Milestone:** MVP
 **Status:** Not Done
 **GitHub Issue:** #93
 **Priority:** Post-MVP

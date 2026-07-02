@@ -1,7 +1,7 @@
 # 147 - Filter ICal Export By Event Type
 
 **Capability:** calendar
-**Milestone:** v0.8.0 — Extended CRM
+**Milestone:** Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #147
 **Priority:** Post-MVP

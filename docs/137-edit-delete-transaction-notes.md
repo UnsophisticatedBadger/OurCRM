@@ -1,7 +1,7 @@
 # 137 - Edit And Delete Transaction Notes
 
 **Capability:** transactions
-**Milestone:** v0.8.0 — Extended CRM
+**Milestone:** Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #137
 **Priority:** Should Have

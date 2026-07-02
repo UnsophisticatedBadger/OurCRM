@@ -1,7 +1,7 @@
 # 81 - Report Bug With Error Logs
 
 **Capability:** Infrastructure
-**Milestone:** v0.5.0 — MVP
+**Milestone:** MVP
 **Status:** Not Done
 **GitHub Issue:** #81
 

@@ -1,7 +1,7 @@
 # 97 - Save Search Criteria For Leads And Properties
 
 **Capability:** leads
-**Milestone:** v0.5.0 — MVP
+**Milestone:** MVP
 **Status:** Not Done
 **GitHub Issue:** #97
 **Priority:** Post-MVP

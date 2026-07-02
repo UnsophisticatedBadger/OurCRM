@@ -1,7 +1,7 @@
 # 34 - Plugin Installation And Management
 
 **Capability:** shell
-**Milestone:** v0.2.0 — Secure Shell
+**Milestone:** Secure Shell
 **Status:** Not Done
 **GitHub Issue:** #34
 **Priority:** Post-MVP

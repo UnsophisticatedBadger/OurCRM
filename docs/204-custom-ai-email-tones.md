@@ -1,7 +1,7 @@
 # 204 - Custom AI Email Tones
 
 **Capability:** ai
-**Milestone:** v1.1.0+ — Post-Production
+**Milestone:** Post-Production
 **Status:** Not Done
 **GitHub Issue:** #204
 **Priority:** Post-MVP

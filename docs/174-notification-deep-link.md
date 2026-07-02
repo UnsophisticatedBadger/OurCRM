@@ -1,7 +1,7 @@
 # 174 - Navigate From Notification To Related Record
 
 **Capability:** notifications
-**Milestone:** v1.0.0 — Production
+**Milestone:** Production
 **Status:** Not Done
 **GitHub Issue:** #174
 **Priority:** Post-MVP

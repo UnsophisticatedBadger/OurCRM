@@ -1,7 +1,7 @@
 # 85 - Log File Management
 
 **Capability:** Infrastructure
-**Milestone:** v0.5.0 — MVP
+**Milestone:** MVP
 **Status:** Not Done
 **GitHub Issue:** #85
 **Priority:** Should Have (deferrable to post-MVP)
