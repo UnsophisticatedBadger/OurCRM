@@ -107,6 +107,27 @@ def test_engine_unavailable_before_open(encrypted_db: EncryptedDatabase) -> None
         _ = encrypted_db.engine
 
 
+# ── key ───────────────────────────────────────────────────────────────────────
+
+
+def test_key_unavailable_before_open(encrypted_db: EncryptedDatabase) -> None:
+    with pytest.raises(RuntimeError):
+        _ = encrypted_db.key
+
+
+def test_key_available_after_create(encrypted_db: EncryptedDatabase) -> None:
+    encrypted_db.create(_PASSWORD)
+    assert isinstance(encrypted_db.key, bytes)
+    assert len(encrypted_db.key) == 32  # AES-256 key
+
+
+def test_key_unavailable_after_close(encrypted_db: EncryptedDatabase) -> None:
+    encrypted_db.create(_PASSWORD)
+    encrypted_db.close()
+    with pytest.raises(RuntimeError):
+        _ = encrypted_db.key
+
+
 # ── save ──────────────────────────────────────────────────────────────────────
 
 

@@ -100,6 +100,12 @@ class EncryptedDatabase:
             raise RuntimeError("Database is not open")
         return self._engine
 
+    @property
+    def key(self) -> bytes:
+        if self._key is None:
+            raise RuntimeError("Database is not open")
+        return self._key
+
     def _write_encrypted(self, data: bytes, salt: bytes, key: bytes) -> None:
         nonce = os.urandom(_NONCE_SIZE)
         ciphertext = AESGCM(key).encrypt(nonce, data, None)

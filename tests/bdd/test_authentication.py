@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import base64
 from collections.abc import Generator
 from pathlib import Path
 from unittest.mock import MagicMock, patch
@@ -487,6 +488,34 @@ def save_encrypted_db(encrypted_db: EncryptedDatabase) -> None:
 @when("I close the encrypted database")
 def close_encrypted_db(encrypted_db: EncryptedDatabase) -> None:
     encrypted_db.close()
+
+
+@given(
+    "the main window is open with an active encrypted database",
+    target_fixture="main_window",
+)
+def main_window_with_active_database(tmp_dir: Path, qtbot: QtBot) -> MainWindow:
+    db = EncryptedDatabase(tmp_dir / "ourcrm.db", key_service=_KEY_SERVICE)
+    db.create(_STARTUP_PASSWORD)
+    db.save()
+    DatabaseManager(db.engine).start_session(base64.b64encode(db.key).decode("ascii"))
+    window = MainWindow(encrypted_db=db)
+    qtbot.addWidget(window)
+    window.show()
+    return window
+
+
+@when("the user closes the main window")
+def close_main_window(main_window: MainWindow) -> None:
+    main_window.close()
+
+
+@then("the encrypted database is closed and written to disk")
+def encrypted_database_closed_and_persisted(main_window: MainWindow, tmp_dir: Path) -> None:
+    db = main_window.encrypted_db
+    assert db is not None, "MainWindow has no encrypted_db"
+    assert not db.is_open, "Database should be closed after the window closes"
+    assert (tmp_dir / "ourcrm.db").exists(), "Database file should exist on disk"
 
 
 @when("I write a marker value to the database")
@@ -1083,26 +1112,15 @@ def submit_valid_new_password(startup_dialog: StartupDialog, tmp_dir: Path, qtbo
         qtbot.mouseClick(btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
 
     QTimer.singleShot(0, fill_and_submit)
-    with patch("keyring.set_password"):
-        return complete_startup(
-            startup_dialog,
-            StartupMode.CREATE,
-            tmp_dir / "ourcrm.db",
-            _KEY_SERVICE,
-            _HASHER,
-        )
+    db = EncryptedDatabase(tmp_dir / "ourcrm.db", key_service=_KEY_SERVICE)
+    return complete_startup(startup_dialog, StartupMode.CREATE, db, _HASHER)
 
 
 @when("the user closes the dialog before submitting", target_fixture="startup_result")
 def close_dialog_before_submitting(startup_dialog: StartupDialog, tmp_dir: Path) -> bool:
     QTimer.singleShot(0, startup_dialog.reject)
-    return complete_startup(
-        startup_dialog,
-        StartupMode.CREATE,
-        tmp_dir / "ourcrm.db",
-        _KEY_SERVICE,
-        _HASHER,
-    )
+    db = EncryptedDatabase(tmp_dir / "ourcrm.db", key_service=_KEY_SERVICE)
+    return complete_startup(startup_dialog, StartupMode.CREATE, db, _HASHER)
 
 
 @then("startup completes successfully")

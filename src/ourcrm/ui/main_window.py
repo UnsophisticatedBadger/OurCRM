@@ -19,6 +19,8 @@ from PySide6.QtWidgets import (
 from ourcrm.calendar.repository import CalendarEventRepositoryProtocol
 from ourcrm.core.auth.auth_service import AuthService
 from ourcrm.core.config import AppConfig
+from ourcrm.database.encrypted_database import EncryptedDatabase
+from ourcrm.database.manager import DatabaseManager
 from ourcrm.ui.calendar_page import CalendarPage
 from ourcrm.ui.dashboard_page import DashboardPage
 from ourcrm.ui.help_window import AboutDialog, HelpWindow, KeyboardShortcutsDialog
@@ -44,6 +46,7 @@ class MainWindow(QMainWindow):
         auth_service: AuthService | None = None,
         auto_lock_timeout_minutes: int | None = None,
         calendar_repository: CalendarEventRepositoryProtocol | None = None,
+        encrypted_db: EncryptedDatabase | None = None,
     ) -> None:
         super().__init__()
         self._settings = settings if settings is not None else QSettings("OurCRM", "OurCRM")
@@ -51,6 +54,7 @@ class MainWindow(QMainWindow):
         self._qt_app = qt_app
         self._auth_service = auth_service
         self._calendar_repository = calendar_repository
+        self._encrypted_db = encrypted_db
         self._prior_section: Section = Section.DASHBOARD
         self._inactivity_timer: InactivityTimer | None = None
         self._help_window: HelpWindow | None = None
@@ -200,6 +204,10 @@ class MainWindow(QMainWindow):
         return self._auth_service
 
     @property
+    def encrypted_db(self) -> EncryptedDatabase | None:
+        return self._encrypted_db
+
+    @property
     def settings_panel(self) -> SettingsPanel:
         widget = self._content.widget(Section.SETTINGS)
         assert isinstance(widget, SettingsPanel)
@@ -257,4 +265,7 @@ class MainWindow(QMainWindow):
     def closeEvent(self, event: QCloseEvent) -> None:
         self._settings.setValue("geometry", self.saveGeometry())
         self._settings.sync()
+        if self._encrypted_db is not None and self._encrypted_db.is_open:
+            DatabaseManager(self._encrypted_db.engine).close_session()
+            self._encrypted_db.close()
         super().closeEvent(event)

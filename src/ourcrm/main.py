@@ -1,3 +1,4 @@
+import base64
 import sys
 from pathlib import Path
 
@@ -11,6 +12,7 @@ from ourcrm.core.security.password_hasher import PasswordHasher
 from ourcrm.core.security.password_validator import PasswordValidator
 from ourcrm.core.security.recovery_generator import RecoveryPasswordGenerator
 from ourcrm.database.encrypted_database import EncryptedDatabase
+from ourcrm.database.manager import DatabaseManager
 from ourcrm.ui.main_window import MainWindow
 from ourcrm.ui.recovery_password_dialog import RecoveryPasswordDialog
 from ourcrm.ui.startup_dialog import StartupDialog, StartupMode
@@ -45,22 +47,22 @@ def build_startup_dialog(
 def complete_startup(
     dialog: StartupDialog,
     mode: StartupMode,
-    db_path: Path,
-    key_service: KeyDerivationService,
+    db: EncryptedDatabase,
     hasher: PasswordHasher,
 ) -> bool:
     """Runs the modal startup dialog. On create-mode acceptance, creates the
-    encrypted database and stores the master password hash. Returns whether
-    the caller should proceed to the main window."""
+    encrypted database, starts its session (key staged in the keyring for the
+    duration of the session), and stores the master password hash. Returns
+    whether the caller should proceed to the main window."""
     if dialog.exec() != QDialog.DialogCode.Accepted:
         return False
 
     if mode == StartupMode.CREATE:
         password = dialog.password()
-        db = EncryptedDatabase(db_path, key_service=key_service)
         db.create(password)
         db.save()
         AuthService(hasher=hasher).create_master_password(password)
+        DatabaseManager(db.engine).start_session(base64.b64encode(db.key).decode("ascii"))
 
     return True
 
@@ -92,7 +94,8 @@ def main() -> None:
     db_path = _db_path()
     dialog, mode = build_startup_dialog(db_path, PasswordValidator())
     hasher = PasswordHasher()
-    if not complete_startup(dialog, mode, db_path, KeyDerivationService(), hasher):
+    db = EncryptedDatabase(db_path, key_service=KeyDerivationService())
+    if not complete_startup(dialog, mode, db, hasher):
         sys.exit(0)
 
     if mode == StartupMode.CREATE:
@@ -100,7 +103,12 @@ def main() -> None:
         if not run_recovery_setup(recovery_dialog, db_path, hasher):
             sys.exit(0)
 
-    window = MainWindow(app_config=config, qt_app=app, calendar_repository=calendar_repository)
+    window = MainWindow(
+        app_config=config,
+        qt_app=app,
+        calendar_repository=calendar_repository,
+        encrypted_db=db,
+    )
     window.show()
     sys.exit(app.exec())
 

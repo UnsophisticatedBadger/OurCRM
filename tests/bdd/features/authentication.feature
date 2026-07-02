@@ -210,6 +210,15 @@ Feature: Authentication
     Then the keyring should not contain a session key
 
   @story_5
+  Scenario: Closing the main window closes the database session
+    Given a temporary data directory
+    And a clean in-memory keyring
+    And the main window is open with an active encrypted database
+    When the user closes the main window
+    Then the encrypted database is closed and written to disk
+    And the keyring should not contain a session key
+
+  @story_5
   Scenario: Database file is created at the given path
     Given a temporary data directory
     When I create a database at that path
@@ -426,12 +435,15 @@ Feature: Authentication
     And the submit button is labelled "Create"
 
   @story_3
+  @story_5
   Scenario: Correct password on first launch creates the database and opens the main window
     Given no database file exists
+    And a clean in-memory keyring
     And the startup dialog is open in create-password mode for that path
     When the user submits a valid new password and matching confirmation
     Then startup completes successfully
     And a database file should exist at that path
+    And the keyring should contain the session key under "db_session_key"
 
   @story_3
   Scenario: Closing the startup dialog on first launch exits the application
