@@ -2,6 +2,7 @@
 
 from collections.abc import Generator
 from pathlib import Path
+from unittest.mock import patch
 
 import pytest
 from sqlalchemy import text
@@ -86,6 +87,22 @@ def test_open_wrong_password_raises(encrypted_db: EncryptedDatabase) -> None:
     encrypted_db.close()
     with pytest.raises(InvalidDatabaseKeyError):
         encrypted_db.open(_WRONG_PASSWORD)
+
+
+def test_open_runs_schema_migrations(encrypted_db: EncryptedDatabase, db_path: Path) -> None:
+    # Not testing Alembic's own upgrade logic (that's Alembic's tested behavior) —
+    # just that open() wires the same migration call create() already makes, so a
+    # database opened after a future schema change gets upgraded to head.
+    encrypted_db.create(_PASSWORD)
+    encrypted_db.close()
+
+    reopened = EncryptedDatabase(path=db_path, key_service=_KEY_SERVICE)
+    with patch("ourcrm.database.encrypted_database.DatabaseManager") as mock_manager_cls:
+        reopened.open(_PASSWORD)
+
+    mock_manager_cls.assert_called_once_with(reopened.engine)
+    mock_manager_cls.return_value.initialize_schema.assert_called_once()
+    reopened.close()
 
 
 def test_open_wrong_password_does_not_corrupt_file(

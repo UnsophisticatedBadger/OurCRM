@@ -52,47 +52,6 @@ Feature: Authentication
     Then the keyring should contain an Argon2id hash for "master_password_hash"
     And the plain password should not be in the keyring
 
-  @story_6
-  Scenario: Successful login with correct password
-    Given the auth service is set up with a stored master password "SecureP@ssw0rd!2024"
-    When I attempt to log in with "SecureP@ssw0rd!2024"
-    Then the login should succeed
-    And the failure count should be reset to 0
-
-  @story_6
-  Scenario: Failed login with wrong password
-    Given the auth service is set up with a stored master password "SecureP@ssw0rd!2024"
-    When I attempt to log in with "WrongPassword1!"
-    Then the login should fail
-    And the error should be "Incorrect password"
-
-  @story_6
-  Scenario: Empty password is rejected
-    Given the auth service is set up with a stored master password "SecureP@ssw0rd!2024"
-    When I attempt to log in with ""
-    Then the login should fail
-    And the error should be "Password is required"
-
-  @story_6
-  Scenario: Backoff after first failure
-    Given the auth service is set up with a stored master password "SecureP@ssw0rd!2024"
-    When I attempt to log in with "WrongPassword1!"
-    Then the required wait should be 2 seconds
-
-  @story_6
-  Scenario: Backoff doubles after each failure
-    Given the auth service is set up with a stored master password "SecureP@ssw0rd!2024"
-    When I fail to log in 3 times
-    Then the required wait should be 8 seconds
-
-  @story_6
-  Scenario: Successful login resets failure count
-    Given the auth service is set up with a stored master password "SecureP@ssw0rd!2024"
-    When I fail to log in 2 times
-    And I attempt to log in with "SecureP@ssw0rd!2024"
-    Then the login should succeed
-    And the required wait should be 0 seconds
-
   @story_4
   Scenario: User's recovery password is 32 characters long with no ambiguous characters
     Given the recovery password setup screen is open
@@ -210,6 +169,7 @@ Feature: Authentication
     Then the keyring should not contain a session key
 
   @story_5
+  @story_6
   Scenario: Closing the main window closes the database session
     Given a temporary data directory
     And a clean in-memory keyring
@@ -414,12 +374,65 @@ Feature: Authentication
     And the login screen is shown
 
   @story_6
+  Scenario: Wrong password on the login screen shows the backoff wait time and disables Login
+    Given the main window is open and the user is logged in
+    When I click File > Logout
+    And I enter an incorrect password on the login screen
+    Then an error message is shown on the login screen
+    And the login button is disabled
+
+  @story_6
   Scenario: Can log back in after logout
     Given the main window is open and the user is logged in
     When I click File > Logout
     And I enter the correct password on the login screen
     Then the login screen is gone
     And the Dashboard section is active
+
+  @story_6
+  Scenario: Logging out closes the encrypted database session
+    Given a clean in-memory keyring
+    And the main window is open and logged in with an active encrypted database
+    When I click File > Logout
+    Then the encrypted database is closed
+    And the keyring should not contain a session key
+
+  @story_6
+  Scenario: Logging back in reopens the encrypted database
+    Given a clean in-memory keyring
+    And the main window is open and logged in with an active encrypted database
+    When I click File > Logout
+    And I log back in with the correct password
+    Then the encrypted database is open
+    And the keyring should contain the session key under "db_session_key"
+
+  @story_6
+  Scenario: Keyring failure during account creation shows an error instead of crashing
+    Given a temporary data directory
+    And the keyring backend raises an error
+    And the startup dialog is open in create-password mode for that path
+    When the user submits a valid new password and matching confirmation
+    Then startup does not complete
+    And an error dialog is shown explaining the problem
+    And no database file was created
+
+  @story_6
+  Scenario: Keyring failure during login shows an error instead of crashing
+    Given an existing encrypted database at that path with password "SecureP@ssw0rd!2024"
+    And the keyring backend raises an error
+    And the startup dialog is open in enter-password mode for that path
+    When the user submits the password "SecureP@ssw0rd!2024"
+    Then startup does not complete
+    And an error dialog is shown explaining the problem
+
+  @story_6
+  Scenario: Keyring failure during logout still locks the app instead of crashing
+    Given a clean in-memory keyring
+    And the main window is open and logged in with an active encrypted database
+    And the keyring backend raises an error
+    When I click File > Logout
+    Then an error dialog is shown explaining the problem
+    And the login screen is shown
 
   @story_3
   Scenario: First launch shows create-password dialog
@@ -454,10 +467,34 @@ Feature: Authentication
     And no database file was created
 
   @story_6
-  Scenario: Returning launch shows enter-password dialog
-    Given the startup dialog is open in open mode
+  Scenario: Subsequent launch detects existing database and shows enter-password mode
+    Given a database file already exists at that path
+    When I build the startup dialog for that path
     Then the dialog title is "Enter Master Password"
     And the submit button is labelled "Open"
+
+  @story_6
+  Scenario: Correct password on a subsequent launch opens the database and proceeds
+    Given an existing encrypted database at that path with password "SecureP@ssw0rd!2024"
+    And the startup dialog is open in enter-password mode for that path
+    When the user submits the password "SecureP@ssw0rd!2024"
+    Then startup completes successfully
+
+  @story_6
+  Scenario: Wrong password on a subsequent launch is rejected and the dialog stays open
+    Given an existing encrypted database at that path with password "SecureP@ssw0rd!2024"
+    And the startup dialog is open in enter-password mode for that path
+    When I type "WrongP@ssw0rd!9999" in the startup password field
+    And I click the startup dialog submit button
+    Then the startup dialog is not accepted
+    And the error label reads "Incorrect password. Please wait 2 seconds before trying again."
+
+  @story_6
+  Scenario: Closing the startup dialog on a subsequent launch exits the application
+    Given an existing encrypted database at that path with password "SecureP@ssw0rd!2024"
+    And the startup dialog is open in enter-password mode for that path
+    When the user closes the dialog before submitting
+    Then startup does not complete
 
   @story_3
   Scenario: Submitting matching password and confirmation accepts the dialog
@@ -525,14 +562,3 @@ Feature: Authentication
     And I click the show-password toggle for the password field
     Then the password field echo mode is masked
 
-  @story_6
-  Scenario: Closing the startup dialog rejects it
-    Given the startup dialog is open in open mode
-    When I close the startup dialog
-    Then the startup dialog is rejected
-
-  @story_6
-  Scenario: show_error displays an inline error message
-    Given the startup dialog is open in open mode
-    When show_error is called with "Incorrect password. Please try again."
-    Then the error label reads "Incorrect password. Please try again."

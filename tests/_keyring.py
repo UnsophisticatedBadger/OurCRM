@@ -1,4 +1,5 @@
 from keyring.backend import KeyringBackend
+from keyring.errors import PasswordDeleteError
 
 
 class InMemoryKeyring(KeyringBackend):
@@ -14,4 +15,10 @@ class InMemoryKeyring(KeyringBackend):
         self._store[(service, username)] = password
 
     def delete_password(self, service: str, username: str) -> None:
-        self._store.pop((service, username), None)
+        # Matches real keyring backends: deleting a non-existent credential raises,
+        # rather than silently no-op-ing — callers are expected to handle this
+        # (see contextlib.suppress(PasswordDeleteError) in AuthService/DatabaseManager).
+        try:
+            del self._store[(service, username)]
+        except KeyError as exc:
+            raise PasswordDeleteError("Password not found") from exc

@@ -199,6 +199,20 @@ Every change follows these steps in strict order. No step is skipped or compress
 - All BDD steps for this story are Green
 - Run `ruff`, `mypy`, and coverage to confirm gates are met
 - Verify the feature is reachable from the running app (end-to-end smoke)
+- Judge wiki-documentation applicability (see Documentation Policy) and either write the page or check the DoD item N/A with a reason
+
+## Documentation Policy
+
+Every story's Definition of Done includes:
+```
+- [ ] Wiki documentation written, or marked N/A with a reason
+```
+
+**Applicability test:** could you write a paragraph telling an agent how to use this? If yes, it needs a wiki page. If the story is purely internal/technical with no user-visible surface (CI pipeline, build tooling, performance/indexing, dev-only scripts), mark N/A with a one-line reason instead of skipping it.
+
+Automatic/invisible behavior the user nonetheless depends on and should be able to trust (e.g. database encryption) still counts as applicable — write a short mention even though there's no UI to operate.
+
+**Wiki structure:** one page per capability group (matching the table above), with a subsection per applicable story. This mirrors the capability-grouped architecture and is what `#167` pulls from to generate the PDF manual.
 
 ## User Stories
 All stories live in `docs/NNN-story-name.md`. Always read the relevant story before starting.

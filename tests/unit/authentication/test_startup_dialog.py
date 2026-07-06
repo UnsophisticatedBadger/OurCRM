@@ -6,8 +6,19 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QDialog, QLabel, QLineEdit, QPushButton
 from pytestqt.qtbot import QtBot
 
+from ourcrm.core.auth.auth_service import AuthService
+from ourcrm.core.security.password_hasher import PasswordHasher
 from ourcrm.core.security.password_validator import PasswordValidator
 from ourcrm.ui.startup_dialog import StartupDialog, StartupMode
+
+_HASHER = PasswordHasher(time_cost=1, memory_cost=8, parallelism=1)
+_PASSWORD = "SecureP@ssw0rd!2024"
+
+
+def _auth_service_with_password() -> AuthService:
+    service = AuthService(hasher=_HASHER)
+    service.create_master_password(_PASSWORD)
+    return service
 
 
 class TestStartupDialogCreate:
@@ -121,3 +132,83 @@ class TestStartupDialogBehavior:
         assert btn is not None
         qtbot.mouseClick(btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
         assert dialog.password() == "mypassword"
+
+
+class TestStartupDialogOpenModeVerification:
+    def test_correct_password_accepts_dialog(self, qtbot: QtBot) -> None:
+        dialog = StartupDialog(
+            StartupMode.OPEN,
+            validator=PasswordValidator(),
+            auth_service=_auth_service_with_password(),
+        )
+        qtbot.addWidget(dialog)
+        dialog.show()
+        field = dialog.findChild(QLineEdit, "startup_password_field")
+        assert field is not None
+        field.setText(_PASSWORD)
+        btn = dialog.findChild(QPushButton, "startup_submit_btn")
+        assert btn is not None
+        qtbot.mouseClick(btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+        assert dialog.result() == QDialog.DialogCode.Accepted
+
+    def test_wrong_password_stays_open_with_error(self, qtbot: QtBot) -> None:
+        dialog = StartupDialog(
+            StartupMode.OPEN,
+            validator=PasswordValidator(),
+            auth_service=_auth_service_with_password(),
+        )
+        qtbot.addWidget(dialog)
+        dialog.show()
+        field = dialog.findChild(QLineEdit, "startup_password_field")
+        assert field is not None
+        field.setText("WrongP@ssw0rd!9999")
+        btn = dialog.findChild(QPushButton, "startup_submit_btn")
+        assert btn is not None
+        qtbot.mouseClick(btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+        assert dialog.result() != QDialog.DialogCode.Accepted
+        label = dialog.findChild(QLabel, "startup_error_label")
+        assert label is not None
+        assert label.text() == "Incorrect password. Please wait 2 seconds before trying again."
+
+    def test_without_auth_service_accepts_unconditionally(self, qtbot: QtBot) -> None:
+        # Backward-compat: existing OPEN-mode callers with no auth_service still work.
+        dialog = StartupDialog(StartupMode.OPEN, validator=PasswordValidator())
+        qtbot.addWidget(dialog)
+        dialog.show()
+        btn = dialog.findChild(QPushButton, "startup_submit_btn")
+        assert btn is not None
+        qtbot.mouseClick(btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+        assert dialog.result() == QDialog.DialogCode.Accepted
+
+    def test_wrong_password_disables_submit_button(self, qtbot: QtBot) -> None:
+        dialog = StartupDialog(
+            StartupMode.OPEN,
+            validator=PasswordValidator(),
+            auth_service=_auth_service_with_password(),
+        )
+        qtbot.addWidget(dialog)
+        dialog.show()
+        field = dialog.findChild(QLineEdit, "startup_password_field")
+        assert field is not None
+        field.setText("WrongP@ssw0rd!9999")
+        btn = dialog.findChild(QPushButton, "startup_submit_btn")
+        assert btn is not None
+        qtbot.mouseClick(btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+        assert not btn.isEnabled()
+
+    def test_submit_button_reenables_after_backoff_wait(self, qtbot: QtBot) -> None:
+        dialog = StartupDialog(
+            StartupMode.OPEN,
+            validator=PasswordValidator(),
+            auth_service=_auth_service_with_password(),
+        )
+        qtbot.addWidget(dialog)
+        dialog.show()
+        field = dialog.findChild(QLineEdit, "startup_password_field")
+        assert field is not None
+        field.setText("WrongP@ssw0rd!9999")
+        btn = dialog.findChild(QPushButton, "startup_submit_btn")
+        assert btn is not None
+        qtbot.mouseClick(btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+        assert not btn.isEnabled()
+        qtbot.waitUntil(lambda: btn.isEnabled(), timeout=2500)

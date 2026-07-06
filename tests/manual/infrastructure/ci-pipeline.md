@@ -1,6 +1,6 @@
 # CI Pipeline — Manual Tests
 
-**Story:** [US-001 — CI Pipeline](../../../docs/001-setup-ci-pipeline.md)
+**Story:** [#1 — CI Pipeline](../../../docs/1-setup-ci-pipeline.md)
 
 ## User triggers a push and the pipeline runs
 

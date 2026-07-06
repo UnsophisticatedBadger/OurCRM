@@ -63,3 +63,16 @@ def test_show_error_displays_message(screen: LoginScreen) -> None:
     error = screen.findChild(QLabel, "login_error_label")
     assert isinstance(error, QLabel)
     assert error.text() == "Bad password"
+
+
+def test_disable_login_for_disables_the_button(screen: LoginScreen) -> None:
+    screen.disable_login_for(2)
+    btn = next(b for b in screen.findChildren(QPushButton) if b.text() == "Login")
+    assert not btn.isEnabled()
+
+
+def test_login_button_reenables_after_wait(screen: LoginScreen, qtbot: QtBot) -> None:
+    screen.disable_login_for(2)
+    btn = next(b for b in screen.findChildren(QPushButton) if b.text() == "Login")
+    assert not btn.isEnabled()
+    qtbot.waitUntil(lambda: btn.isEnabled(), timeout=2500)

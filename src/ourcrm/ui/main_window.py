@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import base64
+import contextlib
 from typing import override
 
 from PySide6.QtCore import QByteArray, QEvent, QSettings, Qt
@@ -10,11 +12,13 @@ from PySide6.QtWidgets import (
     QApplication,
     QLabel,
     QMainWindow,
+    QMessageBox,
     QSplitter,
     QStackedWidget,
     QToolBar,
     QWidget,
 )
+from sqlalchemy.orm import Session, sessionmaker
 
 from ourcrm.calendar.repository import CalendarEventRepositoryProtocol
 from ourcrm.core.auth.auth_service import AuthService
@@ -47,6 +51,7 @@ class MainWindow(QMainWindow):
         auto_lock_timeout_minutes: int | None = None,
         calendar_repository: CalendarEventRepositoryProtocol | None = None,
         encrypted_db: EncryptedDatabase | None = None,
+        session_factory: sessionmaker[Session] | None = None,
     ) -> None:
         super().__init__()
         self._settings = settings if settings is not None else QSettings("OurCRM", "OurCRM")
@@ -55,6 +60,7 @@ class MainWindow(QMainWindow):
         self._auth_service = auth_service
         self._calendar_repository = calendar_repository
         self._encrypted_db = encrypted_db
+        self._session_factory = session_factory
         self._prior_section: Section = Section.DASHBOARD
         self._inactivity_timer: InactivityTimer | None = None
         self._help_window: HelpWindow | None = None
@@ -154,7 +160,26 @@ class MainWindow(QMainWindow):
     def _logout(self) -> None:
         if self._auth_service is None:
             return
-        self._auth_service.logout()
+        try:
+            self._auth_service.logout()
+            if self._encrypted_db is not None and self._encrypted_db.is_open:
+                DatabaseManager(self._encrypted_db.engine).close_session()
+                self._encrypted_db.close()
+        except Exception as exc:
+            # Fail closed: show the login screen regardless, even if cleanup
+            # (e.g. the keyring backend) failed — leaving data on screen
+            # after a failed logout is worse than losing unsaved work. Force
+            # the database closed too, in case it failed before reaching
+            # encrypted_db.close() above.
+            if self._encrypted_db is not None and self._encrypted_db.is_open:
+                with contextlib.suppress(Exception):
+                    self._encrypted_db.close()
+            QMessageBox.critical(
+                self,
+                "Logout Error",
+                f"An error occurred while logging out: {exc}\n\n"
+                "For your security, you will still be logged out.",
+            )
         login = LoginScreen(parent=self._central_stack)
         login.login_requested.connect(self._on_login_requested)
         self._central_stack.addWidget(login)
@@ -165,6 +190,27 @@ class MainWindow(QMainWindow):
         result = self._auth_service.login(password)
         login = self.findChild(LoginScreen)
         if result.success:
+            try:
+                if self._encrypted_db is not None and not self._encrypted_db.is_open:
+                    self._encrypted_db.open(password)
+                    DatabaseManager(self._encrypted_db.engine).start_session(
+                        base64.b64encode(self._encrypted_db.key).decode("ascii")
+                    )
+            except Exception as exc:
+                # Fail closed: revoke the login we just granted rather than
+                # leaving the app in a half-unlocked state. encrypted_db.open()
+                # may have already succeeded before start_session() failed, so
+                # force it closed again rather than leaving it decrypted in memory.
+                self._auth_service.logout()
+                if self._encrypted_db is not None and self._encrypted_db.is_open:
+                    with contextlib.suppress(Exception):
+                        self._encrypted_db.close()
+                QMessageBox.critical(
+                    self, "Login Error", f"An error occurred while unlocking your data: {exc}"
+                )
+                if login is not None:
+                    login.show_error("Could not reopen the database. Please try again.")
+                return
             self._central_stack.setCurrentIndex(0)
             if login is not None:
                 self._central_stack.removeWidget(login)
@@ -174,7 +220,9 @@ class MainWindow(QMainWindow):
             self.navigate_to(Section.DASHBOARD)
         else:
             if login is not None:
-                login.show_error(result.error or "Incorrect password")
+                login.show_error(result.display_message)
+                if result.wait_seconds > 0:
+                    login.disable_login_for(result.wait_seconds)
 
     def _on_lock(self) -> None:
         self._prior_section = self.current_section()
@@ -206,6 +254,10 @@ class MainWindow(QMainWindow):
     @property
     def encrypted_db(self) -> EncryptedDatabase | None:
         return self._encrypted_db
+
+    @property
+    def session_factory(self) -> sessionmaker[Session] | None:
+        return self._session_factory
 
     @property
     def settings_panel(self) -> SettingsPanel:

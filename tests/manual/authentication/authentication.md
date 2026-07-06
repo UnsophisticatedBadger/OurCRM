@@ -1,4 +1,4 @@
-﻿# Manual Tests: Authentication
+# Manual Tests: Authentication
 
 ## Create Master Password — US-003
 
@@ -66,87 +66,6 @@
 3. Verify examples are provided
 4. Verify the UI is intuitive
 5. Get feedback from a test user
-
----
-
-## Log In with Master Password — US-006
-
-### Test 1: Test successful login
-
-1. Start OurCRM
-2. Enter the correct master password
-3. Verify the application opens
-4. Verify the main window appears
-5. Verify you can access your data
-6. Close the application
-
-### Test 2: Test failed login
-
-1. Start OurCRM
-2. Enter an incorrect password
-3. Verify the error message appears
-4. Verify you cannot access the application
-5. Check the log file to verify the failed attempt was logged
-6. Close the application
-
-### Test 3: Test exponential backoff
-
-1. Start OurCRM
-2. Enter an incorrect password
-3. Try to log in again immediately
-4. Verify you must wait 2 seconds
-5. Try again with wrong password
-6. Verify you must wait 4 seconds
-7. Try again with wrong password
-8. Verify you must wait 8 seconds
-9. Document the wait times
-
-### Test 4: Test login after wait period
-
-1. Fail to log in 3 times
-2. Wait the required time
-3. Enter the correct password
-4. Verify you can log in
-5. Verify the failure count is reset
-
-### Test 5: Test empty password
-
-1. Start OurCRM
-2. Leave the password field empty
-3. Click "Log In"
-4. Verify the error message appears
-5. Verify the login is not attempted
-6. Enter a password and try again
-7. Verify it works normally
-
-### Test 6: Test password field security
-
-1. Start OurCRM
-2. Look at the password field
-3. Verify the password is masked (shows dots or asterisks)
-4. Verify the password is not visible in the UI
-5. Verify you cannot copy the password from the field
-6. Check that the password is not logged anywhere
-
-### Test 7: Test verification time
-
-1. Start OurCRM
-2. Enter your password
-3. Time how long the verification takes
-4. Verify it takes approximately 2 seconds
-5. Try with a wrong password
-6. Verify it also takes approximately 2 seconds
-7. Document the actual times
-
-### Test 8: Test on all platforms
-
-1. Test login on Windows
-2. Verify it works
-3. Test login on macOS
-4. Verify it works
-5. Test login on Linux
-6. Verify it works
-7. Document any platform-specific issues
 
 ---
 
@@ -527,24 +446,3 @@
 5. Test on Linux
 6. Verify it works
 7. Document any platform-specific issues
-
----
-
-## Logout — US-006
-
-### Memory clearing after logout
-
-Automated tests verify `is_logged_in` state is cleared. This test checks the underlying memory.
-
-1. Log in to OurCRM
-2. Log out via File > Logout or toolbar button
-3. Inspect process memory (e.g. via a debugger or memory profiler)
-4. Verify encryption keys are not present in memory
-5. Verify cached contact/lead data is cleared
-
-### Cross-platform logout/login cycle
-
-1. On Windows: log in → log out → log back in. Verify toolbar and File menu both work.
-2. On macOS: repeat the same cycle. Note any platform-specific menu bar differences.
-3. On Linux: repeat the same cycle.
-4. Document any platform-specific issues found.

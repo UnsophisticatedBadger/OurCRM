@@ -26,14 +26,19 @@ from pytestqt.qtbot import QtBot
 from sqlalchemy import create_engine, text
 
 from ourcrm.core.auth.auth_service import AuthService
-from ourcrm.core.auth.result import AuthResult, LoginResult
+from ourcrm.core.auth.result import AuthResult
 from ourcrm.core.security.key_derivation import KeyDerivationService
 from ourcrm.core.security.password_hasher import PasswordHasher
 from ourcrm.core.security.password_validator import PasswordValidator, ValidationResult
 from ourcrm.core.security.recovery_generator import RecoveryPasswordGenerator
 from ourcrm.database.encrypted_database import EncryptedDatabase, InvalidDatabaseKeyError
 from ourcrm.database.manager import DatabaseManager
-from ourcrm.main import build_startup_dialog, complete_startup, run_recovery_setup
+from ourcrm.main import (
+    build_startup_dialog,
+    complete_startup,
+    determine_startup_mode,
+    run_recovery_setup,
+)
 from ourcrm.ui.main_window import MainWindow
 from ourcrm.ui.navigation import Section
 from ourcrm.ui.recovery_password_dialog import RecoveryPasswordDialog
@@ -151,55 +156,6 @@ def keyring_contains_argon2id_hash(mem_keyring: InMemoryKeyring, key: str) -> No
 def plain_password_not_in_keyring(mem_keyring: InMemoryKeyring) -> None:
     for value in mem_keyring._store.values():
         assert "$argon2id$" in value, f"Non-hashed value found in keyring: {value[:20]}"
-
-
-# ── US-006: Log In with Master Password ───────────────────────────────────────
-
-
-@given(
-    parsers.parse('the auth service is set up with a stored master password "{password}"'),
-    target_fixture="auth_service",
-)
-def auth_service_with_stored_password(password: str) -> AuthService:
-    service = AuthService(hasher=_HASHER)
-    service.create_master_password(password)
-    return service
-
-
-@when(parsers.re(r'I attempt to log in with "(?P<password>.*)"'), target_fixture="login_result")
-def attempt_login(auth_service: AuthService, password: str) -> LoginResult:
-    return auth_service.login(password)
-
-
-@when(parsers.parse("I fail to log in {n:d} times"))
-def fail_login_n_times(auth_service: AuthService, n: int) -> None:
-    for _ in range(n):
-        auth_service.login("WrongPassword1!")
-
-
-@then("the login should succeed")
-def login_succeeds(login_result: LoginResult) -> None:
-    assert login_result.success, f"Expected success, got error: {login_result.error}"
-
-
-@then("the login should fail")
-def login_fails(login_result: LoginResult) -> None:
-    assert not login_result.success
-
-
-@then(parsers.parse('the error should be "{message}"'))
-def error_message_is(login_result: LoginResult, message: str) -> None:
-    assert login_result.error == message
-
-
-@then(parsers.parse("the required wait should be {seconds:d} seconds"))
-def required_wait_is(auth_service: AuthService, seconds: int) -> None:
-    assert auth_service.wait_seconds == seconds
-
-
-@then(parsers.parse("the failure count should be reset to {count:d}"))
-def failure_count_reset(auth_service: AuthService, count: int) -> None:
-    assert auth_service.failure_count == count
 
 
 # ── US-004: Recovery Password Setup Screen ────────────────────────────────────
@@ -405,7 +361,7 @@ def close_recovery_dialog_and_confirm_exit(
     db_path = tmp_path / "ourcrm.db"
     mock_recovery_warning.return_value = QMessageBox.StandardButton.Yes
     QTimer.singleShot(0, recovery_dialog.reject)
-    return run_recovery_setup(recovery_dialog, db_path, _HASHER)
+    return run_recovery_setup(recovery_dialog, db_path, AuthService(hasher=_HASHER))
 
 
 @then("the database file no longer exists")
@@ -908,6 +864,17 @@ def error_shown_on_login_screen(main_window: MainWindow) -> None:
     assert error.text(), "Error label is empty"
 
 
+@then("the login button is disabled")
+def login_button_is_disabled(main_window: MainWindow) -> None:
+    from ourcrm.ui.login_screen import LoginScreen
+
+    login = main_window.findChild(LoginScreen)
+    assert login is not None, "LoginScreen not found"
+    btn = login.findChild(QPushButton, "login_submit_btn")
+    assert btn is not None, "login_submit_btn not found"
+    assert not btn.isEnabled()
+
+
 @then("the main window is still open")
 def main_window_still_open(main_window: MainWindow) -> None:
     assert main_window.isVisible(), "Main window is not visible after logout"
@@ -919,20 +886,57 @@ def auth_service_logged_out(main_window: MainWindow) -> None:
     assert not main_window.auth_service.is_logged_in, "User is still logged in after logout"
 
 
+@given(
+    "the main window is open and logged in with an active encrypted database",
+    target_fixture="main_window",
+)
+def logged_in_window_with_database(tmp_path: Path, qtbot: QtBot) -> MainWindow:
+    db = EncryptedDatabase(tmp_path / "ourcrm.db", key_service=_KEY_SERVICE)
+    db.create(_STARTUP_PASSWORD)
+    db.save()
+    DatabaseManager(db.engine).start_session(base64.b64encode(db.key).decode("ascii"))
+
+    auth_service = AuthService(hasher=_HASHER)
+    auth_service.create_master_password(_STARTUP_PASSWORD)
+    auth_service.login(_STARTUP_PASSWORD)
+
+    window = MainWindow(auth_service=auth_service, encrypted_db=db)
+    qtbot.addWidget(window)
+    window.show()
+    return window
+
+
+@when("I log back in with the correct password")
+def log_back_in_correct_password(main_window: MainWindow, qtbot: QtBot) -> None:
+    field = main_window.findChild(QLineEdit, "login_password_field")
+    assert field is not None, "login_password_field not found"
+    qtbot.keyClicks(field, _STARTUP_PASSWORD)  # type: ignore[no-untyped-call]
+    btn = _find_button(main_window, "Login")
+    assert btn is not None, "Login button not found"
+    qtbot.mouseClick(btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+    QApplication.processEvents()
+
+
+@then("the encrypted database is closed")
+def encrypted_database_is_closed(main_window: MainWindow) -> None:
+    db = main_window.encrypted_db
+    assert db is not None, "MainWindow has no encrypted_db"
+    assert not db.is_open, "Database should be closed after logout"
+
+
+@then("the encrypted database is open")
+def encrypted_database_is_open(main_window: MainWindow) -> None:
+    db = main_window.encrypted_db
+    assert db is not None, "MainWindow has no encrypted_db"
+    assert db.is_open, "Database should be open after logging back in"
+
+
 # ── US-003: Application Startup Dialog ────────────────────────────────────────
 
 
 @given("the startup dialog is open in create mode", target_fixture="startup_dialog")
 def startup_dialog_create_mode(qtbot: QtBot) -> StartupDialog:
     dialog = StartupDialog(StartupMode.CREATE, validator=PasswordValidator())
-    qtbot.addWidget(dialog)
-    dialog.show()
-    return dialog
-
-
-@given("the startup dialog is open in open mode", target_fixture="startup_dialog")
-def startup_dialog_open_mode(qtbot: QtBot) -> StartupDialog:
-    dialog = StartupDialog(StartupMode.OPEN, validator=PasswordValidator())
     qtbot.addWidget(dialog)
     dialog.show()
     return dialog
@@ -985,21 +989,6 @@ def dialog_is_not_accepted(startup_dialog: StartupDialog) -> None:
 @then(parsers.parse('the submitted password is "{expected}"'))
 def submitted_password_is(startup_dialog: StartupDialog, expected: str) -> None:
     assert startup_dialog.password() == expected
-
-
-@when("I close the startup dialog")
-def close_startup_dialog(startup_dialog: StartupDialog) -> None:
-    startup_dialog.reject()
-
-
-@then("the startup dialog is rejected")
-def dialog_is_rejected(startup_dialog: StartupDialog) -> None:
-    assert startup_dialog.result() == QDialog.DialogCode.Rejected
-
-
-@when(parsers.parse('show_error is called with "{message}"'))
-def show_error_called(startup_dialog: StartupDialog, message: str) -> None:
-    startup_dialog.show_error(message)
 
 
 @then(parsers.parse('the error label reads "{expected}"'))
@@ -1113,14 +1102,64 @@ def submit_valid_new_password(startup_dialog: StartupDialog, tmp_dir: Path, qtbo
 
     QTimer.singleShot(0, fill_and_submit)
     db = EncryptedDatabase(tmp_dir / "ourcrm.db", key_service=_KEY_SERVICE)
-    return complete_startup(startup_dialog, StartupMode.CREATE, db, _HASHER)
+    return complete_startup(startup_dialog, StartupMode.CREATE, db, AuthService(hasher=_HASHER))
 
 
 @when("the user closes the dialog before submitting", target_fixture="startup_result")
 def close_dialog_before_submitting(startup_dialog: StartupDialog, tmp_dir: Path) -> bool:
     QTimer.singleShot(0, startup_dialog.reject)
+    db_path = tmp_dir / "ourcrm.db"
+    db = EncryptedDatabase(db_path, key_service=_KEY_SERVICE)
+    mode = determine_startup_mode(db_path)
+    return complete_startup(startup_dialog, mode, db, AuthService(hasher=_HASHER))
+
+
+@given("a database file already exists at that path", target_fixture="tmp_dir")
+def database_file_already_exists(tmp_path: Path) -> Path:
+    (tmp_path / "ourcrm.db").write_bytes(b"fake-encrypted-contents")
+    return tmp_path
+
+
+@given(
+    parsers.parse('an existing encrypted database at that path with password "{password}"'),
+    target_fixture="tmp_dir",
+)
+def existing_encrypted_database(tmp_path: Path, password: str) -> Path:
+    db = EncryptedDatabase(tmp_path / "ourcrm.db", key_service=_KEY_SERVICE)
+    db.create(password)
+    db.close()
+    AuthService(hasher=_HASHER).create_master_password(password)
+    return tmp_path
+
+
+@given(
+    "the startup dialog is open in enter-password mode for that path",
+    target_fixture="startup_dialog",
+)
+def startup_dialog_open_mode_for_path(tmp_dir: Path, qtbot: QtBot) -> StartupDialog:
+    dialog, _mode = build_startup_dialog(
+        tmp_dir / "ourcrm.db", PasswordValidator(), auth_service=AuthService(hasher=_HASHER)
+    )
+    qtbot.addWidget(dialog)
+    dialog.show()
+    return dialog
+
+
+@when(parsers.parse('the user submits the password "{password}"'), target_fixture="startup_result")
+def submit_open_mode_password(
+    startup_dialog: StartupDialog, tmp_dir: Path, qtbot: QtBot, password: str
+) -> bool:
+    def fill_and_submit() -> None:
+        field = startup_dialog.findChild(QLineEdit, "startup_password_field")
+        assert field is not None, "startup_password_field not found"
+        field.setText(password)
+        btn = startup_dialog.findChild(QPushButton, "startup_submit_btn")
+        assert btn is not None, "startup_submit_btn not found"
+        qtbot.mouseClick(btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+
+    QTimer.singleShot(0, fill_and_submit)
     db = EncryptedDatabase(tmp_dir / "ourcrm.db", key_service=_KEY_SERVICE)
-    return complete_startup(startup_dialog, StartupMode.CREATE, db, _HASHER)
+    return complete_startup(startup_dialog, StartupMode.OPEN, db, AuthService(hasher=_HASHER))
 
 
 @then("startup completes successfully")
@@ -1136,3 +1175,34 @@ def startup_does_not_complete(startup_result: bool) -> None:
 @then("no database file was created")
 def no_database_file_created(tmp_dir: Path) -> None:
     assert not (tmp_dir / "ourcrm.db").exists()
+
+
+# ── US-006: Error handling around keyring failures ─────────────────────────────
+
+
+class _ErrorDialogSpy:
+    """Reports whether an error dialog was shown by either main.py's startup
+    path or main_window.py's logout path — whichever the scenario exercises."""
+
+    def __init__(self, *mocks: MagicMock) -> None:
+        self._mocks = mocks
+
+    @property
+    def called(self) -> bool:
+        return any(mock.called for mock in self._mocks)
+
+
+@given("the keyring backend raises an error", target_fixture="error_dialog_spy")
+def keyring_backend_raises_error() -> Generator[_ErrorDialogSpy]:
+    with (
+        patch("keyring.set_password", side_effect=RuntimeError("keyring backend unavailable")),
+        patch("keyring.delete_password", side_effect=RuntimeError("keyring backend unavailable")),
+        patch("ourcrm.main.QMessageBox.critical") as startup_mock,
+        patch("ourcrm.ui.main_window.QMessageBox.critical") as logout_mock,
+    ):
+        yield _ErrorDialogSpy(startup_mock, logout_mock)
+
+
+@then("an error dialog is shown explaining the problem")
+def error_dialog_shown(error_dialog_spy: _ErrorDialogSpy) -> None:
+    assert error_dialog_spy.called, "Expected an error dialog to be shown"

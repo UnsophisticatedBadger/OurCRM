@@ -7,6 +7,7 @@ import tomllib
 from pathlib import Path
 from typing import Any
 
+import pytest
 from build import get_nuitka_args
 from pytest_bdd import given, scenarios, then, when
 
@@ -24,7 +25,10 @@ def build_module_available() -> None:
 
 
 @when("I retrieve the build arguments", target_fixture="build_args")
-def retrieve_build_args() -> list[str]:
+def retrieve_build_args(monkeypatch: pytest.MonkeyPatch) -> list[str]:
+    # Forced rather than left to the host platform — CI runs ubuntu-latest, so the
+    # Windows-only assertion below would silently no-op on every real run otherwise.
+    monkeypatch.setattr(sys, "platform", "win32")
     return get_nuitka_args()
 
 
@@ -50,8 +54,7 @@ def entry_point_is_main(build_args: list[str]) -> None:
 
 @then("the Windows console window is suppressed")
 def console_suppressed(build_args: list[str]) -> None:
-    if sys.platform == "win32":
-        assert "--windows-console-mode=disable" in build_args
+    assert "--windows-console-mode=disable" in build_args
 
 
 # ── US-002: Semantic release configuration ────────────────────────────────────

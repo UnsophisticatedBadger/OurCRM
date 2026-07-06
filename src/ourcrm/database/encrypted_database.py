@@ -64,6 +64,7 @@ class EncryptedDatabase:
         conn = sqlite3.connect(":memory:")
         conn.deserialize(data)
         engine = create_engine("sqlite://", creator=lambda: conn, poolclass=StaticPool)
+        DatabaseManager(engine).initialize_schema()
 
         self._conn = conn
         self._engine = engine
@@ -105,6 +106,10 @@ class EncryptedDatabase:
         if self._key is None:
             raise RuntimeError("Database is not open")
         return self._key
+
+    @property
+    def path(self) -> Path:
+        return self._path
 
     def _write_encrypted(self, data: bytes, salt: bytes, key: bytes) -> None:
         nonce = os.urandom(_NONCE_SIZE)

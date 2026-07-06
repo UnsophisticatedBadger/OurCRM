@@ -1,6 +1,6 @@
 # Release Workflow — Manual Tests
 
-**Story:** [US-002 — Automated Release Pipeline](../../../docs/002-build-executable-on-tag.md)
+**Story:** [#2 — Automated Release Pipeline](../../../docs/2-build-executable-on-tag.md)
 
 ## feat commit on main triggers a new release
 

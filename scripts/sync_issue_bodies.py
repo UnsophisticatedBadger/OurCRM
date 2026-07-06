@@ -54,7 +54,7 @@ def main() -> None:
         issue_m = re.search(r"^\*\*GitHub Issue:\*\* #(\d+)", content, re.MULTILINE)
         if not issue_m:
             if args.issue is None:
-                print(f"  ⚠  No GitHub Issue field: {path.name}")
+                print(f"  WARN No GitHub Issue field: {path.name}")
             continue
         issue_num = int(issue_m.group(1))
         if args.issue is not None and issue_num != args.issue:
@@ -69,10 +69,10 @@ def main() -> None:
                 tmp.write(content)
                 tmp_path = tmp.name
             gh("issue", "edit", str(issue_num), "--body-file", tmp_path)
-            print(f"  ✓ #{issue_num} {path.name}")
+            print(f"  OK #{issue_num} {path.name}")
             updated += 1
         except subprocess.CalledProcessError as e:
-            print(f"  ✗ #{issue_num} {path.name}: {e.stderr.strip()}")
+            print(f"  FAIL #{issue_num} {path.name}: {e.stderr.strip()}")
             failed += 1
         finally:
             Path(tmp_path).unlink(missing_ok=True)

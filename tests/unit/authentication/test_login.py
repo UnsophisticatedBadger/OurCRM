@@ -40,6 +40,22 @@ def test_login_result_carries_wait_seconds() -> None:
     assert result.wait_seconds == 4
 
 
+def test_display_message_with_no_wait_is_just_the_error() -> None:
+    result = LoginResult(success=False, error="Password is required")
+    assert result.display_message == "Password is required"
+
+
+def test_display_message_with_wait_includes_the_seconds() -> None:
+    result = LoginResult(success=False, error="Incorrect password", wait_seconds=4)
+    expected = "Incorrect password. Please wait 4 seconds before trying again."
+    assert result.display_message == expected
+
+
+def test_display_message_falls_back_when_error_is_none() -> None:
+    result = LoginResult(success=False, error=None)
+    assert result.display_message == "Incorrect password"
+
+
 # ── Successful login ───────────────────────────────────────────────────────────
 
 

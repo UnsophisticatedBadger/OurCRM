@@ -67,3 +67,9 @@ def test_no_session_key_before_start(
 ) -> None:
     stored = in_memory_keyring.get_password("ourcrm", "db_session_key")
     assert stored is None
+
+
+def test_close_session_when_none_started_does_not_raise(
+    manager: DatabaseManager, in_memory_keyring: InMemoryKeyring
+) -> None:
+    manager.close_session()  # nothing to close — should not raise
