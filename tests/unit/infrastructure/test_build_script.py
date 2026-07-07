@@ -26,6 +26,51 @@ def test_entry_point_is_main_module() -> None:
     assert any("main.py" in arg for arg in build.get_nuitka_args())
 
 
+# Alembic loads env.py/script.py.mako/versions/*.py via its own file-path
+# lookups, not Python's import system, so Nuitka's import analysis never sees
+# them. --include-data-dir won't help either — Nuitka 1.4+ deliberately
+# excludes *.py/*.mako from it, treating them as code rather than data.
+# --include-data-files with an explicit pattern is the only mechanism that
+# actually bundles them; without it a packaged build fails with "Can't find
+# Python file ...\migrations\env.py" the first time it opens a database.
+_MIGRATIONS_SRC = "src/ourcrm/database/migrations"
+
+
+def test_migrations_env_py_is_bundled_as_data() -> None:
+    expected = (
+        f"--include-data-files={build.ROOT / _MIGRATIONS_SRC / 'env.py'}"
+        "=ourcrm/database/migrations/env.py"
+    )
+    assert expected in build.get_nuitka_args()
+
+
+def test_migrations_script_mako_is_bundled_as_data() -> None:
+    expected = (
+        f"--include-data-files={build.ROOT / _MIGRATIONS_SRC / 'script.py.mako'}"
+        "=ourcrm/database/migrations/script.py.mako"
+    )
+    assert expected in build.get_nuitka_args()
+
+
+def test_migrations_versions_are_bundled_as_data() -> None:
+    expected = (
+        f"--include-data-files={build.ROOT / _MIGRATIONS_SRC / 'versions' / '*.py'}"
+        "=ourcrm/database/migrations/versions/"
+    )
+    assert expected in build.get_nuitka_args()
+
+
+# env.py (bundled as opaque data, not compiled code) does `from logging.config
+# import fileConfig`. Because Nuitka's static import analysis never parses
+# env.py's contents, it never discovers this import, so logging.config is
+# absent from a standalone build and Alembic's fileConfig() call fails at
+# runtime with "No module named 'logging.config'" the first time a database
+# is opened. Nothing else in src/ imports logging, so there's no other path
+# that would pull it in — it must be forced in explicitly.
+def test_logging_config_module_is_force_included() -> None:
+    assert "--include-module=logging.config" in build.get_nuitka_args()
+
+
 def test_console_window_is_suppressed_on_windows(monkeypatch: pytest.MonkeyPatch) -> None:
     # Forced rather than gated on the host platform — CI runs ubuntu-latest, so a
     # `if sys.platform == "win32"` guard here would silently skip this assertion

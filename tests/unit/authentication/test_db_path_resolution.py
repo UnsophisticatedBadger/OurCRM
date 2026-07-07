@@ -10,6 +10,7 @@ through to the dev-mode path and silently shared the source tree's database.
 from __future__ import annotations
 
 import sys
+import types
 
 import pytest
 
@@ -30,6 +31,12 @@ def test_sys_frozen_attribute_is_detected(monkeypatch: pytest.MonkeyPatch) -> No
     assert container._is_frozen() is True
 
 
-def test_nuitka_compiled_marker_is_detected(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(container, "__compiled__", True, raising=False)
+def test_nuitka_compiled_marker_on_main_module_is_detected(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # Nuitka sets __compiled__ on the __main__ module — the module that
+    # happens to call _is_frozen() is not guaranteed to carry that marker
+    # itself, so this must check sys.modules["__main__"] specifically.
+    fake_main = types.SimpleNamespace(__compiled__=True)
+    monkeypatch.setitem(sys.modules, "__main__", fake_main)
     assert container._is_frozen() is True

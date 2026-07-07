@@ -160,6 +160,18 @@ def test_save_file_not_plain_sqlite(encrypted_db: EncryptedDatabase, db_path: Pa
     assert not db_path.read_bytes().startswith(_SQLITE_MAGIC)
 
 
+def test_save_creates_missing_parent_directory(tmp_path: Path) -> None:
+    # A fresh machine's per-user data directory (e.g. %APPDATA%\ourcrm) doesn't
+    # exist until something creates it. Dev mode never exercises this because
+    # config/ is a committed directory in the project tree.
+    nested_path = tmp_path / "ourcrm" / "ourcrm.db.enc"
+    db = EncryptedDatabase(path=nested_path, key_service=_KEY_SERVICE)
+    db.create(_PASSWORD)
+    db.save()
+    assert nested_path.exists()
+    db.close()
+
+
 def test_engine_still_usable_after_save(encrypted_db: EncryptedDatabase) -> None:
     encrypted_db.create(_PASSWORD)
     encrypted_db.save()

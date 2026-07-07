@@ -22,11 +22,14 @@ from ourcrm.database.encrypted_database import EncryptedDatabase
 
 
 def _is_frozen() -> bool:
-    # PyInstaller sets sys.frozen; Nuitka instead injects a module-level
-    # __compiled__ name into every compiled module (it deliberately never
-    # sets sys.frozen). Both must be checked or a Nuitka standalone build
-    # silently falls through to the dev-mode path below.
-    return bool(getattr(sys, "frozen", False)) or "__compiled__" in globals()
+    # PyInstaller sets sys.frozen; Nuitka instead injects a __compiled__
+    # attribute on the __main__ module (it deliberately never sets
+    # sys.frozen). This must check sys.modules["__main__"] specifically —
+    # checking the calling module's own globals() only works if that
+    # module happens to be __main__, which container.py is not.
+    return bool(getattr(sys, "frozen", False)) or hasattr(
+        sys.modules.get("__main__"), "__compiled__"
+    )
 
 
 def resolve_config_path() -> Path:

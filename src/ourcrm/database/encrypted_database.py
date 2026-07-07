@@ -114,4 +114,5 @@ class EncryptedDatabase:
     def _write_encrypted(self, data: bytes, salt: bytes, key: bytes) -> None:
         nonce = os.urandom(_NONCE_SIZE)
         ciphertext = AESGCM(key).encrypt(nonce, data, None)
+        self._path.parent.mkdir(parents=True, exist_ok=True)
         self._path.write_bytes(salt + nonce + ciphertext)
