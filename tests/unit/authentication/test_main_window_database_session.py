@@ -3,8 +3,9 @@
 from __future__ import annotations
 
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
+import pytest
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QAbstractButton, QApplication, QLabel, QLineEdit, QMenu
 from pytestqt.qtbot import QtBot
@@ -70,6 +71,36 @@ def test_closing_window_without_a_database_does_not_raise(qtbot: QtBot) -> None:
     window = MainWindow()
     qtbot.addWidget(window)
     window.close()  # should not raise
+
+
+def test_closing_window_shows_error_when_database_close_fails(
+    qtbot: QtBot, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    db = EncryptedDatabase(tmp_path / "ourcrm.db", key_service=_KEY_SERVICE)
+    db.create(_PASSWORD)
+    window = MainWindow(encrypted_db=db)
+    qtbot.addWidget(window)
+
+    def _raise_close() -> None:
+        raise OSError("disk full")
+
+    monkeypatch.setattr(db, "close", _raise_close)
+
+    # Bound via monkeypatch (not a `with patch(...)` block) so this mock stays
+    # active for qtbot's own teardown-time window.close() call too — otherwise
+    # that second call can hit a real, unmocked QMessageBox.critical() and hang
+    # the process waiting for a click nothing will ever provide.
+    mock_critical = MagicMock()
+    monkeypatch.setattr("ourcrm.ui.main_window.QMessageBox.critical", mock_critical)
+
+    window.close()  # should not raise, despite the database close failing
+
+    assert mock_critical.called, "Expected an error dialog when database close fails"
+
+    # The stubbed close() never released the real sqlite connection — restore
+    # it and close for real so this test doesn't leak a live connection.
+    monkeypatch.undo()
+    db.close()
 
 
 def test_session_factory_property_returns_none_by_default(qtbot: QtBot) -> None:

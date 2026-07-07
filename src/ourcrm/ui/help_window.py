@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import importlib.metadata
 import re
 
 from PySide6.QtCore import Qt
@@ -20,13 +19,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-
-def _app_version() -> str:
-    try:
-        return importlib.metadata.version("ourcrm")
-    except importlib.metadata.PackageNotFoundError:
-        return "0.1.0"
-
+from ourcrm.core.app_version import app_version
 
 # ── Help content ──────────────────────────────────────────────────────────────
 
@@ -125,7 +118,7 @@ class AboutDialog(QDialog):
         name.setObjectName("app_name")
         layout.addWidget(name)
 
-        version = QLabel(f"Version {_app_version()}")
+        version = QLabel(f"Version {app_version()}")
         version.setObjectName("app_version")
         layout.addWidget(version)
 

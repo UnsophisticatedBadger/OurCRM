@@ -1,15 +1,20 @@
 import base64
 import contextlib
 import sys
+import traceback
+from collections.abc import Callable
 from pathlib import Path
+from types import TracebackType
 
 from PySide6.QtWidgets import QApplication, QDialog, QMessageBox
 
 from ourcrm.core.auth.auth_service import AuthService
 from ourcrm.core.container import ApplicationContainer
+from ourcrm.core.crash_handler import format_crash_entry, write_crash_log
 from ourcrm.core.security.password_validator import PasswordValidator
 from ourcrm.database.encrypted_database import EncryptedDatabase
 from ourcrm.database.manager import DatabaseManager
+from ourcrm.ui.crash_dialog import CrashDialog
 from ourcrm.ui.main_window import MainWindow
 from ourcrm.ui.recovery_password_dialog import RecoveryPasswordDialog
 from ourcrm.ui.startup_dialog import StartupDialog, StartupMode
@@ -79,14 +84,66 @@ def run_recovery_setup(
     """Runs the modal recovery password setup screen. On acceptance, stores the
     recovery password hash. On rejection (user confirmed exit), deletes the
     just-created database and master password so the next launch starts fresh.
-    Returns whether the caller should proceed to the main window."""
+    Returns whether the caller should proceed to the main window.
+
+    A failure while storing the recovery password (e.g. the keyring backend is
+    unavailable) is caught and rolled back the same way complete_startup()
+    handles its own keyring failures — otherwise the database and master
+    password would already exist with no recovery password ever stored, and
+    no way for the user to know setup didn't finish."""
     if dialog.exec() != QDialog.DialogCode.Accepted:
         db_path.unlink(missing_ok=True)
         auth_service.delete_master_password()
         return False
 
-    auth_service.store_recovery_password(dialog.raw_password)
+    try:
+        auth_service.store_recovery_password(dialog.raw_password)
+    except Exception as exc:
+        with contextlib.suppress(Exception):
+            db_path.unlink(missing_ok=True)
+        with contextlib.suppress(Exception):
+            auth_service.delete_master_password()
+        QMessageBox.critical(dialog, "Setup Error", f"OurCRM could not finish setup: {exc}")
+        return False
+
     return True
+
+
+def _exec_dialog(dialog: CrashDialog) -> None:
+    dialog.exec()
+
+
+def handle_exception(
+    exc_type: type[BaseException],
+    exc_value: BaseException,
+    exc_tb: TracebackType | None,
+    *,
+    data_dir: Path,
+    encrypted_db: EncryptedDatabase | None,
+    run_dialog: Callable[[CrashDialog], None] = _exec_dialog,
+    exit_func: Callable[[int], None] = lambda code: sys.exit(code),
+) -> None:
+    """Global fallback for any exception nothing else caught. Installed as
+    sys.excepthook, which PySide6 also routes Qt slot exceptions through.
+
+    Writing the crash log is itself wrapped — a failure there (e.g. disk
+    full) must not stop the dialog from showing, since this is the last
+    line of defense and there is nowhere further for a failure here to go."""
+    entry = format_crash_entry(exc_type, exc_value, exc_tb)
+    try:
+        log_path = write_crash_log(data_dir, entry)
+    except Exception:
+        log_path = data_dir / "logs" / "crash.log"
+
+    summary = f"{exc_type.__name__}: {exc_value}"
+    full_traceback = "".join(traceback.format_exception(exc_type, exc_value, exc_tb))
+    run_dialog(CrashDialog(summary=summary, full_traceback=full_traceback, log_path=log_path))
+
+    if encrypted_db is not None and encrypted_db.is_open:
+        with contextlib.suppress(Exception):
+            encrypted_db.close()
+
+    exit_func(1)
 
 
 def main() -> None:
@@ -94,6 +151,21 @@ def main() -> None:
 
     _existing = QApplication.instance()
     app: QApplication = _existing if _existing is not None else QApplication(sys.argv)  # type: ignore[assignment]
+
+    _open_db: EncryptedDatabase | None = None
+
+    def _excepthook(
+        exc_type: type[BaseException], exc_value: BaseException, exc_tb: TracebackType | None
+    ) -> None:
+        handle_exception(
+            exc_type,
+            exc_value,
+            exc_tb,
+            data_dir=container.config_path().parent,
+            encrypted_db=_open_db,
+        )
+
+    sys.excepthook = _excepthook
 
     config = container.app_config()
     calendar_repository = container.calendar_repository()
@@ -104,6 +176,7 @@ def main() -> None:
         db_path, container.password_validator(), auth_service=auth_service
     )
     db = container.encrypted_database()
+    _open_db = db
     if not complete_startup(dialog, mode, db, auth_service):
         sys.exit(0)
 

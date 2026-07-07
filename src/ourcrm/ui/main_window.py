@@ -318,6 +318,16 @@ class MainWindow(QMainWindow):
         self._settings.setValue("geometry", self.saveGeometry())
         self._settings.sync()
         if self._encrypted_db is not None and self._encrypted_db.is_open:
-            DatabaseManager(self._encrypted_db.engine).close_session()
-            self._encrypted_db.close()
+            try:
+                DatabaseManager(self._encrypted_db.engine).close_session()
+                self._encrypted_db.close()
+            except Exception as exc:
+                # Fail closed: let the window close regardless of the error —
+                # trapping the user in a broken window is worse than losing
+                # the ability to re-encrypt and persist this session's data.
+                QMessageBox.critical(
+                    self,
+                    "Shutdown Error",
+                    f"An error occurred while closing the database: {exc}",
+                )
         super().closeEvent(event)
