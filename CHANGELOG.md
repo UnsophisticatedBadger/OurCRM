@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v0.5.0 (2026-07-06)
+
+### Features
+
+- Complete login/logout flow (Story #6)
+  ([`f85a250`](https://github.com/UnsophisticatedBadger/OurCRM/commit/f85a2501bd8516ac6d32f4324b13311b8976c685))
+
+
 ## v0.4.0 (2026-07-02)
 
 ### Chores
