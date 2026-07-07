@@ -2,6 +2,15 @@
 
 <!-- version list -->
 
+## v0.5.2 (2026-07-07)
+
+### Bug Fixes
+
+- Resolve packaged build failures on a fresh install
+  ([#206](https://github.com/UnsophisticatedBadger/OurCRM/pull/206),
+  [`0373c2c`](https://github.com/UnsophisticatedBadger/OurCRM/commit/0373c2cee4d5781960d6f4f4934a09adce81f891))
+
+
 ## v0.5.1 (2026-07-07)
 
 
