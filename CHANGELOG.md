@@ -2,6 +2,26 @@
 
 <!-- version list -->
 
+## v0.6.0 (2026-07-08)
+
+### Documentation
+
+- Added acceptance criteria for user documentation
+  ([`c5edb2a`](https://github.com/UnsophisticatedBadger/OurCRM/commit/c5edb2ab45fb4a96bb32a01e3c0db3c4e4c563bb))
+
+- Remove configuration from lockout timer
+  ([`b8a61e0`](https://github.com/UnsophisticatedBadger/OurCRM/commit/b8a61e061369e21b6c8b207a9d07ac614eed7ec1))
+
+- Updated dod on all user stories
+  ([`71d4fe9`](https://github.com/UnsophisticatedBadger/OurCRM/commit/71d4fe95216d40ab5f5f68e4ae9f9e4d8db760d3))
+
+### Features
+
+- Wire auto-lock after inactivity into the running app
+  ([#7](https://github.com/UnsophisticatedBadger/OurCRM/pull/7),
+  [`5397650`](https://github.com/UnsophisticatedBadger/OurCRM/commit/53976504ab06cb14690b6843855530450a4e53b3))
+
+
 ## v0.5.2 (2026-07-07)
 
 ### Bug Fixes
