@@ -262,11 +262,6 @@ Feature: Authentication
     When I interact with the app
     Then the inactivity timer is reset
 
-  @story_7
-  Scenario: No timer runs when auto-lock is set to Never
-    Given the main window is open with auto-lock set to Never
-    Then the inactivity timer is not running
-
   @story_8
   Scenario: Change password successfully
     Given the auth service is set up with master password "SecureP@ssw0rd!2024"

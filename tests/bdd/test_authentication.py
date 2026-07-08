@@ -544,15 +544,7 @@ def marker_value_present(encrypted_db: EncryptedDatabase) -> None:
 
 @given("the main window is open with auto-lock enabled", target_fixture="main_window")
 def autolock_window(qtbot: QtBot) -> MainWindow:
-    window = MainWindow(auth_service=_auth_service_fresh(), auto_lock_timeout_minutes=5)
-    qtbot.addWidget(window)
-    window.show()
-    return window
-
-
-@given("the main window is open with auto-lock set to Never", target_fixture="main_window")
-def autolock_never_window(qtbot: QtBot) -> MainWindow:
-    window = MainWindow(auth_service=_auth_service_fresh(), auto_lock_timeout_minutes=0)
+    window = MainWindow(auth_service=_auth_service_fresh(), auto_lock_timeout_seconds=300)
     qtbot.addWidget(window)
     window.show()
     return window
@@ -664,14 +656,6 @@ def timer_is_reset(main_window: MainWindow) -> None:
     timer = main_window.findChild(InactivityTimer)
     assert timer is not None, "InactivityTimer not found"
     assert timer.is_active(), "Timer is not active after interaction"
-
-
-@then("the inactivity timer is not running")
-def timer_not_running(main_window: MainWindow) -> None:
-    from ourcrm.ui.inactivity_timer import InactivityTimer
-
-    timer = main_window.findChild(InactivityTimer)
-    assert timer is None or not timer.is_active(), "Timer should not run when set to Never"
 
 
 # ── US-008: Change Master Password ────────────────────────────────────────────

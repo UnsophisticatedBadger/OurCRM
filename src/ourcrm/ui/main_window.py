@@ -48,7 +48,7 @@ class MainWindow(QMainWindow):
         app_config: AppConfig | None = None,
         qt_app: QApplication | None = None,
         auth_service: AuthService | None = None,
-        auto_lock_timeout_minutes: int | None = None,
+        auto_lock_timeout_seconds: int | None = None,
         calendar_repository: CalendarEventRepositoryProtocol | None = None,
         encrypted_db: EncryptedDatabase | None = None,
         session_factory: sessionmaker[Session] | None = None,
@@ -73,7 +73,7 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("OurCRM")
         self.setMinimumSize(800, 600)
         self._setup_ui()
-        self._setup_autolock(auto_lock_timeout_minutes)
+        self._setup_autolock(auto_lock_timeout_seconds)
         self._restore_geometry()
 
     def _setup_ui(self) -> None:
@@ -138,10 +138,10 @@ class MainWindow(QMainWindow):
         self._central_stack.addWidget(splitter)
         self.setCentralWidget(self._central_stack)
 
-    def _setup_autolock(self, timeout_minutes: int | None) -> None:
-        if timeout_minutes is None or timeout_minutes == 0 or self._auth_service is None:
+    def _setup_autolock(self, timeout_seconds: int | None) -> None:
+        if timeout_seconds is None or timeout_seconds == 0 or self._auth_service is None:
             return
-        timer = InactivityTimer(timeout_minutes=timeout_minutes, parent=self)
+        timer = InactivityTimer(timeout_seconds=timeout_seconds, parent=self)
         timer.timed_out.connect(self._on_lock)
         self._inactivity_timer = timer
 

@@ -234,6 +234,14 @@ Feature: Shell
     Then the saved auto-lock timeout is "0" minutes
 
   @story_13
+  Scenario: No inactivity timer runs after saving Never from Settings
+    Given the settings panel is open on Security
+    When I set the Auto-lock Timeout to "0" minutes
+    And I click Save
+    And the main window is opened using the saved security settings
+    Then the inactivity timer is not running
+
+  @story_13
   Scenario: Settings persist across restarts
     Given the settings panel is open on Security
     When I set the Auto-lock Timeout to "5" minutes

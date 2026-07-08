@@ -190,6 +190,7 @@ def main() -> None:
         app_config=config,
         qt_app=app,
         auth_service=auth_service,
+        auto_lock_timeout_seconds=30,
         calendar_repository=calendar_repository,
         encrypted_db=db,
         session_factory=session_factory,

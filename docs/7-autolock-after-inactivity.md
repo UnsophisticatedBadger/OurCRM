@@ -2,7 +2,7 @@
 
 **Capability:** Authentication & Security
 **Milestone:** Secure Shell
-**Status:** Not Done
+**Status:** Done
 **GitHub Issue:** #7
 
 ## User Story
@@ -29,7 +29,7 @@ The inactivity period is hard-coded to 30 seconds for this story — short on pu
 |----------|------|
 | BDD feature | `tests/bdd/features/authentication.feature` |
 | BDD step defs | `tests/bdd/test_authentication.py` |
-| Unit tests | `tests/unit/authentication/test_inactivity_timer.py`, `test_lock_screen.py`, `test_autolock_wiring.py` |
+| Unit tests | `tests/unit/authentication/test_inactivity_timer.py`, `test_lock_screen.py`, `tests/unit/shell/test_main_window_autolock.py` |
 | Manual tests | `tests/manual/authentication/autolock.md` |
 
 ## Definition of Done
@@ -38,4 +38,4 @@ The inactivity period is hard-coded to 30 seconds for this story — short on pu
 - [x] Feature reachable from the running app
 - [x] `ruff`, `mypy --strict` clean
 - [x] Manual tests documented and verified
-- [ ] Wiki documentation written, or marked N/A with a reason
+- [x] Wiki documentation written — see [Authentication & Security](https://github.com/UnsophisticatedBadger/OurCRM/wiki/Authentication-and-Security)

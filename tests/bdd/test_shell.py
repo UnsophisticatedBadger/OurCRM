@@ -510,6 +510,30 @@ def saved_auto_lock_timeout_is(panel_ctx: dict[str, object], value: str) -> None
     assert config.load_security().auto_lock_timeout_minutes == int(value)
 
 
+@when(
+    "the main window is opened using the saved security settings",
+    target_fixture="main_window",
+)
+def open_main_window_with_saved_security_settings(
+    panel_ctx: dict[str, object], qtbot: QtBot
+) -> MainWindow:
+    config = panel_ctx["config"]
+    assert isinstance(config, AppConfig)
+    timeout_minutes = config.load_security().auto_lock_timeout_minutes
+    window = MainWindow(auto_lock_timeout_seconds=timeout_minutes * 60)
+    qtbot.addWidget(window)
+    window.show()
+    return window
+
+
+@then("the inactivity timer is not running")
+def timer_not_running(main_window: MainWindow) -> None:
+    from ourcrm.ui.inactivity_timer import InactivityTimer
+
+    timer = main_window.findChild(InactivityTimer)
+    assert timer is None or not timer.is_active(), "Timer should not run when set to Never"
+
+
 # ── US-014: Home Dashboard ────────────────────────────────────────────────────
 
 

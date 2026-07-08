@@ -28,7 +28,7 @@ def _auth() -> AuthService:
 
 @pytest.fixture()
 def locked_window(qtbot: QtBot) -> MainWindow:
-    window = MainWindow(auth_service=_auth(), auto_lock_timeout_minutes=5)
+    window = MainWindow(auth_service=_auth(), auto_lock_timeout_seconds=300)
     qtbot.addWidget(window)
     window.show()
     timer = window.findChild(InactivityTimer)
@@ -41,13 +41,13 @@ def locked_window(qtbot: QtBot) -> MainWindow:
 
 
 def test_inactivity_timer_present_when_enabled(qtbot: QtBot) -> None:
-    window = MainWindow(auth_service=_auth(), auto_lock_timeout_minutes=5)
+    window = MainWindow(auth_service=_auth(), auto_lock_timeout_seconds=300)
     qtbot.addWidget(window)
     assert window.findChild(InactivityTimer) is not None
 
 
 def test_inactivity_timer_absent_when_never(qtbot: QtBot) -> None:
-    window = MainWindow(auth_service=_auth(), auto_lock_timeout_minutes=0)
+    window = MainWindow(auth_service=_auth(), auto_lock_timeout_seconds=0)
     qtbot.addWidget(window)
     timer = window.findChild(InactivityTimer)
     assert timer is None or not timer.is_active()
@@ -61,7 +61,7 @@ def test_lock_screen_shown_after_timer_fires(locked_window: MainWindow) -> None:
 
 
 def test_prior_section_preserved_after_lock(qtbot: QtBot) -> None:
-    window = MainWindow(auth_service=_auth(), auto_lock_timeout_minutes=5)
+    window = MainWindow(auth_service=_auth(), auto_lock_timeout_seconds=300)
     qtbot.addWidget(window)
     window.show()
     window.navigate_to(Section.CONTACTS)
@@ -83,7 +83,7 @@ def test_correct_password_removes_lock_screen(locked_window: MainWindow) -> None
 
 
 def test_correct_password_restores_prior_section(qtbot: QtBot) -> None:
-    window = MainWindow(auth_service=_auth(), auto_lock_timeout_minutes=5)
+    window = MainWindow(auth_service=_auth(), auto_lock_timeout_seconds=300)
     qtbot.addWidget(window)
     window.show()
     window.navigate_to(Section.CONTACTS)
