@@ -11,13 +11,15 @@ As a real estate agent, I want to configure security preferences such as auto-lo
 
 ## Dependencies
 
+- #7 — Auto-Lock After Inactivity *(makes the hard-coded 30-second timeout configurable)*
 - #11 — Open the Settings Window
 
 ## Acceptance Criteria
 
 1. Auto-lock timeout is configurable in the Security settings panel, including a "Never" option
-2. Auto-lock triggers after the configured period of inactivity and immediately resets on any user activity
-3. Security settings are stored in TOML format and persist across restarts
+2. When the timeout is set to Never, no inactivity timer runs
+3. Auto-lock triggers after the configured period of inactivity and immediately resets on any user activity
+4. Security settings are stored in TOML format and persist across restarts
 
 ## Test Locations
 

@@ -11,15 +11,17 @@ As a real estate agent, I want OurCRM to lock itself after I've been away from m
 
 ## Dependencies
 
-- #13 — Configure Security Settings *(auto-lock timeout setting)*
 - #6 — Log In with Master Password *(password verification on unlock)*
+
+## Notes
+
+The inactivity period is hard-coded to 30 seconds for this story — short on purpose, to fail fast during initial development and testing. #13 (Configure Security Settings) later makes this value configurable and adds a "Never" option.
 
 ## Acceptance Criteria
 
-1. After the configured inactivity period, the lock screen is shown — any keyboard or mouse activity resets the timer
+1. After 30 seconds of inactivity, the lock screen is shown — any keyboard or mouse activity resets the timer
 2. Correct password on the lock screen returns the user to the section they were viewing before the lock
 3. Wrong password shows an error on the lock screen without dismissing it
-4. When auto-lock is set to Never, no inactivity timer runs
 
 ## Test Locations
 
