@@ -74,3 +74,4 @@ None — first authentication story.
 - [x] Feature reachable from the running app (startup dialog appears on first launch) — verified via manual smoke test, since automated coverage stops at `main()`'s `sys.exit(app.exec())` wrapper
 - [x] `ruff`, `mypy --strict` clean
 - [x] Manual tests documented in `tests/manual/authentication/password_creation.md` and verified
+- [x] Wiki documentation written — see [Authentication & Security](https://github.com/UnsophisticatedBadger/OurCRM/wiki/Authentication-and-Security)

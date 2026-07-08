@@ -149,3 +149,4 @@ not independently user-facing beyond what the wiring scenarios above already exe
 - [x] Feature reachable from the running app end-to-end (startup → login → use → logout → login)
 - [x] `ruff`, `mypy --strict` clean
 - [x] Manual tests documented and verified
+- [x] Wiki documentation written — see [Authentication & Security](https://github.com/UnsophisticatedBadger/OurCRM/wiki/Authentication-and-Security)

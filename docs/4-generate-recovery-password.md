@@ -38,3 +38,4 @@ As a real estate agent, I want the app to generate a recovery password when I fi
 - [x] Feature reachable from the running app
 - [x] `ruff`, `mypy --strict` clean
 - [x] Manual tests documented and verified
+- [x] Wiki documentation written — see [Authentication & Security](https://github.com/UnsophisticatedBadger/OurCRM/wiki/Authentication-and-Security)

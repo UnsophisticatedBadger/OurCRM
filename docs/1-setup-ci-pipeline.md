@@ -29,3 +29,4 @@ As a developer, I want automated checks to run on every push and pull request, s
 - [x] ruff, mypy, and pytest steps all pass
 - [x] uv caching is in place
 - [x] Pipeline status visible on PRs
+- [x] Wiki documentation: N/A — internal CI/build tooling, no user-visible surface
