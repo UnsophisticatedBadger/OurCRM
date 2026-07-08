@@ -37,3 +37,4 @@ As a developer, I want a proper Windows installer published with each release so
 - [ ] BDD scenarios pass
 - [ ] `ruff`, `mypy --strict` clean
 - [ ] Installer verified by the primary user: installs cleanly, shortcut works, app opens, uninstaller removes it without leftovers
+- [ ] Wiki documentation written, or marked N/A with a reason

@@ -115,3 +115,4 @@ Scenario: Uploaded documents persist after application restart
 - [ ] Feature reachable from the running app
 - [ ] `ruff`, `mypy --strict` clean
 - [ ] Manual tests documented and verified
+- [ ] Wiki documentation written, or marked N/A with a reason

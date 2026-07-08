@@ -96,3 +96,4 @@ Scenario: Empty state appears when no notes have been created
 - [ ] Feature reachable from the running app
 - [ ] `ruff`, `mypy --strict` clean
 - [ ] Manual tests documented and verified
+- [ ] Wiki documentation written, or marked N/A with a reason

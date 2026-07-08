@@ -71,3 +71,4 @@ Scenario: Changing the currency on a record updates the symbol without altering 
 - [ ] Feature reachable from the running app
 - [ ] `ruff`, `mypy --strict` clean
 - [ ] Manual tests documented and verified
+- [ ] Wiki documentation written, or marked N/A with a reason

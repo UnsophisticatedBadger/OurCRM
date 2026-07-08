@@ -35,3 +35,4 @@ As a real estate agent, I want to see all my contacts sorted by who needs to be 
 - [ ] BDD scenarios pass
 - [ ] `ruff`, `mypy --strict` clean
 - [ ] Call list opened with overdue, due-today, and new contacts present; correct sort order verified by inspection
+- [ ] Wiki documentation written, or marked N/A with a reason

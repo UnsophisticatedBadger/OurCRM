@@ -114,3 +114,4 @@ Scenario: Empty state shown when log contains no entries
 - [ ] Feature reachable from the running app
 - [ ] `ruff`, `mypy --strict` clean
 - [ ] Manual tests documented and verified
+- [ ] Wiki documentation written, or marked N/A with a reason

@@ -35,3 +35,4 @@ As a real estate agent, I want to set a vague callback timeframe when someone as
 - [ ] BDD scenarios pass
 - [ ] `ruff`, `mypy --strict` clean
 - [ ] Callback set for next week; contact disappears from active list; after simulating date change contact reappears above new contacts
+- [ ] Wiki documentation written, or marked N/A with a reason

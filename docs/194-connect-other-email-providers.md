@@ -81,3 +81,4 @@ Scenario: Disconnecting the IMAP account stops inbox sync
 - [ ] Feature reachable from the running app
 - [ ] `ruff`, `mypy --strict` clean
 - [ ] Manual tests documented and verified
+- [ ] Wiki documentation written, or marked N/A with a reason

@@ -97,3 +97,4 @@ Scenario: Selecting Debug shows a warning about large log files
 - [ ] Feature reachable from the running app
 - [ ] `ruff`, `mypy --strict` clean
 - [ ] Manual tests documented and verified
+- [ ] Wiki documentation written, or marked N/A with a reason

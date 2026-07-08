@@ -115,3 +115,4 @@ Scenario: User tries to save without a required field and sees a validation erro
 - [ ] Feature reachable from the running app
 - [ ] `ruff`, `mypy --strict` clean
 - [ ] Manual tests documented and verified
+- [ ] Wiki documentation written, or marked N/A with a reason

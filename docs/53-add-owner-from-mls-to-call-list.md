@@ -38,3 +38,4 @@ As a real estate agent, I want to add a property owner directly to my call list 
 - [ ] BDD scenarios pass
 - [ ] `ruff`, `mypy --strict` clean
 - [ ] MLS listing found, owner added to call list with phone number entered, contact appears in call list linked to the MLS property
+- [ ] Wiki documentation written, or marked N/A with a reason

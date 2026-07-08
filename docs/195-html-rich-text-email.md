@@ -79,3 +79,4 @@ Scenario: Rich-text email is received with formatting intact by a real email cli
 - [ ] Feature reachable from the running app
 - [ ] `ruff`, `mypy --strict` clean
 - [ ] Manual tests documented and verified
+- [ ] Wiki documentation written, or marked N/A with a reason

@@ -39,3 +39,4 @@ As a real estate agent, I want to see exactly what I need to do today the moment
 - [ ] BDD scenarios pass
 - [ ] `ruff`, `mypy --strict` clean
 - [ ] Dashboard opened with real contacts in both sections; due callbacks and new contacts appear correctly; call count updates after logging an outcome
+- [ ] Wiki documentation written, or marked N/A with a reason

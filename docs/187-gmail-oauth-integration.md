@@ -103,3 +103,4 @@ Scenario: App completes real Google OAuth flow and obtains a send-capable token
 - [ ] Feature reachable from the running app
 - [ ] `ruff`, `mypy --strict` clean
 - [ ] Manual tests documented and verified
+- [ ] Wiki documentation written, or marked N/A with a reason

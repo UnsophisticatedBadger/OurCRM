@@ -33,3 +33,4 @@ As a user, I want a PDF manual bundled with every release, so I can reference th
 - [ ] `ruff`, `mypy --strict` clean
 - [ ] PDF generated locally from the wiki and reviewed for formatting
 - [ ] PDF attached to a real GitHub Release and confirmed downloadable
+- [ ] Wiki documentation written, or marked N/A with a reason

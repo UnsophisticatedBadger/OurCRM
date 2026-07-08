@@ -38,3 +38,4 @@ As a real estate agent, I want to click a button next to a contact and have Goog
 - [ ] BDD scenarios pass
 - [ ] `ruff`, `mypy --strict` clean
 - [ ] Google Voice number configured in the app, Call button clicked, Google Voice opens in browser with number pre-filled and call connects through headset
+- [ ] Wiki documentation written, or marked N/A with a reason

@@ -73,3 +73,4 @@ Scenario: Clicking a linked note opens it in the Notes section
 - [ ] Feature reachable from the running app
 - [ ] `ruff`, `mypy --strict` clean
 - [ ] Manual tests documented and verified
+- [ ] Wiki documentation written, or marked N/A with a reason

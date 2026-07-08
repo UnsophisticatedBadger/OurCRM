@@ -84,3 +84,4 @@ Scenario: Disabling auto-install reverts to manual update flow
 - [ ] Feature reachable from the running app
 - [ ] `ruff`, `mypy --strict` clean
 - [ ] Manual tests documented and verified
+- [ ] Wiki documentation written, or marked N/A with a reason

@@ -36,3 +36,4 @@ As a developer, I want a macOS executable built and published automatically alon
 - [ ] BDD scenarios pass
 - [ ] `ruff`, `mypy --strict` clean
 - [ ] DMG verified by the primary user: mounts cleanly, drag-to-Applications works, app opens from Applications folder, no quarantine warnings block launch
+- [ ] Wiki documentation written, or marked N/A with a reason

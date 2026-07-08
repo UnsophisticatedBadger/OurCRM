@@ -37,3 +37,4 @@ As a real estate agent, I want to log what happened after I call a contact, so t
 - [ ] BDD scenarios pass
 - [ ] `ruff`, `mypy --strict` clean
 - [ ] All four outcomes logged on real contacts; Not Interested removes from list; Became Client shows badge; history visible on second visit
+- [ ] Wiki documentation written, or marked N/A with a reason

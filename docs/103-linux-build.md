@@ -35,3 +35,4 @@ As a developer, I want a Linux executable built and published automatically alon
 - [ ] BDD scenarios pass
 - [ ] `ruff`, `mypy --strict` clean
 - [ ] Linux executable verified by running the built artifact on a Linux machine
+- [ ] Wiki documentation written, or marked N/A with a reason

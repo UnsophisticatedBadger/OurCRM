@@ -75,3 +75,4 @@ Scenario: Calendar event survives an application restart
 - [ ] Feature reachable from the running app end-to-end with encrypted DB
 - [x] `ruff`, `mypy --strict` clean
 - [ ] Manual tests documented and verified
+- [ ] Wiki documentation written, or marked N/A with a reason

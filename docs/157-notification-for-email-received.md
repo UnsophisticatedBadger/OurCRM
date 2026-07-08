@@ -102,3 +102,4 @@ Scenario: No notification fires when Email Received preference is disabled
 - [ ] Feature reachable from the running app
 - [ ] `ruff`, `mypy --strict` clean
 - [ ] Manual tests documented and verified
+- [ ] Wiki documentation written, or marked N/A with a reason

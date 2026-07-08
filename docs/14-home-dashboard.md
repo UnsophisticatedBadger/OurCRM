@@ -37,3 +37,4 @@ Each region renders placeholder/empty content until its widget story lands.
 - [x] Feature reachable from the running app
 - [x] `ruff`, `mypy --strict` clean
 - [x] Manual tests documented and verified
+- [ ] Wiki documentation written, or marked N/A with a reason

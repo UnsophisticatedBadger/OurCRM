@@ -33,3 +33,4 @@ As a real estate agent, I want to see a row of key business counts on the dashbo
 - [x] Feature reachable from the running app
 - [x] `ruff`, `mypy --strict` clean
 - [x] Manual tests documented and verified
+- [ ] Wiki documentation written, or marked N/A with a reason

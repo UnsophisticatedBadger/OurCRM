@@ -34,3 +34,4 @@ As a real estate agent, I want the Quick Actions buttons on the dashboard to tak
 - [x] Feature reachable from the running app
 - [x] `ruff`, `mypy --strict` clean
 - [x] Manual tests documented and verified
+- [ ] Wiki documentation written, or marked N/A with a reason

@@ -35,3 +35,4 @@ As a real estate agent, I want to see at a glance which callbacks are due this w
 - [ ] BDD scenarios pass
 - [ ] `ruff`, `mypy --strict` clean
 - [ ] Contacts with callbacks due this week visible in filtered view; overdue contacts appear before upcoming ones with days displayed
+- [ ] Wiki documentation written, or marked N/A with a reason

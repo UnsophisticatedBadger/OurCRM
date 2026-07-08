@@ -40,3 +40,4 @@ As a real estate agent, I want to configure Twilio as a calling option so that I
 - [ ] `ruff`, `mypy --strict` clean
 - [ ] Twilio credentials configured in a real account, test call completed through the app using a headset
 - [ ] Both Google Voice and Twilio configured simultaneously; per-call selection verified
+- [ ] Wiki documentation written, or marked N/A with a reason

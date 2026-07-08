@@ -99,3 +99,4 @@ Scenario: Real AI provider extracts key dates and amounts from a contract PDF
 - [ ] Feature reachable from the running app
 - [ ] `ruff`, `mypy --strict` clean
 - [ ] Manual tests documented and verified
+- [ ] Wiki documentation written, or marked N/A with a reason

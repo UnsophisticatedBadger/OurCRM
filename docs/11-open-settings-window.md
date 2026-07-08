@@ -34,3 +34,4 @@ As a real estate agent, I want to open a Settings window, so that I can configur
 - [x] Feature reachable from the running app
 - [x] `ruff`, `mypy --strict` clean
 - [x] Manual tests documented and verified
+- [ ] Wiki documentation written, or marked N/A with a reason

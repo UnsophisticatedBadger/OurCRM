@@ -134,3 +134,4 @@ Scenario: Deleting a category with no assigned contacts needs no confirmation
 - [ ] Feature reachable from the running app
 - [ ] `ruff`, `mypy --strict` clean
 - [ ] Manual tests documented and verified
+- [ ] Wiki documentation written, or marked N/A with a reason

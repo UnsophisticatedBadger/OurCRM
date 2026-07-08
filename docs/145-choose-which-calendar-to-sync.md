@@ -73,3 +73,4 @@ Scenario: Previously synced events are not removed when the calendar selection c
 - [ ] Feature reachable from the running app
 - [ ] `ruff`, `mypy --strict` clean
 - [ ] Manual tests documented and verified
+- [ ] Wiki documentation written, or marked N/A with a reason
