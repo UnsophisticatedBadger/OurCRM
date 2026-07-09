@@ -2,6 +2,15 @@
 
 <!-- version list -->
 
+## v0.8.0 (2026-07-09)
+
+### Features
+
+- Open Settings window via sidebar, File menu, and Ctrl+comma
+  ([#11](https://github.com/UnsophisticatedBadger/OurCRM/pull/11),
+  [`f181712`](https://github.com/UnsophisticatedBadger/OurCRM/commit/f18171234519e168d2b25aa2bafc43793449f620))
+
+
 ## v0.7.0 (2026-07-09)
 
 ### Documentation
