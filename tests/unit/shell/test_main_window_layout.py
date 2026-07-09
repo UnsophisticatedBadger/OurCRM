@@ -93,31 +93,6 @@ def test_minimum_height(qtbot: QtBot) -> None:
     assert _make(qtbot).minimumHeight() >= 600
 
 
-# ── keyboard shortcuts ────────────────────────────────────────────────────────
-
-
-def test_unhandled_ctrl_key_does_not_navigate(qtbot: QtBot) -> None:
-    from PySide6.QtCore import Qt
-
-    from ourcrm.ui.navigation import Section
-
-    w = _make(qtbot)
-    w.show()
-    qtbot.keyClick(w, Qt.Key.Key_Q, modifier=Qt.KeyboardModifier.ControlModifier)  # type: ignore[no-untyped-call]
-    assert w.current_section() == Section.DASHBOARD
-
-
-def test_non_ctrl_key_does_not_navigate(qtbot: QtBot) -> None:
-    from PySide6.QtCore import Qt
-
-    from ourcrm.ui.navigation import Section
-
-    w = _make(qtbot)
-    w.show()
-    qtbot.keyClick(w, Qt.Key.Key_Q)  # type: ignore[no-untyped-call]
-    assert w.current_section() == Section.DASHBOARD
-
-
 # ── geometry persistence ───────────────────────────────────────────────────────
 
 

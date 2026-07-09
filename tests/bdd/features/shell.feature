@@ -68,37 +68,40 @@ Feature: Shell
     And the "Dashboard" nav item is highlighted
 
   @story_10
-  Scenario: Navigate to a section by clicking the nav item
+  Scenario Outline: Navigate to a section
     Given the main window is launched
-    When I navigate to the "Leads" section
-    Then the Leads section is active
-    And the "Leads" nav item is highlighted
+    When I navigate to the "<section>" section
+    Then the <section> section is active
+    And the "<section>" nav item is highlighted
     And other nav items are not highlighted
 
-  @story_10
-  Scenario: Navigate to Settings
-    Given the main window is launched
-    When I navigate to the "Settings" section
-    Then the Settings section is active
+    Examples:
+      | section      |
+      | Dashboard    |
+      | Contacts     |
+      | Leads        |
+      | Properties   |
+      | Transactions |
+      | Calendar     |
+      | Settings     |
 
   @story_10
-  Scenario: Navigate using keyboard shortcut Ctrl+1
+  Scenario Outline: Navigate to a section using its keyboard shortcut
     Given the main window is launched
-    When I press the Ctrl+1 shortcut
-    Then the Dashboard section is active
+    And I have navigated to the "<start_section>" section
+    When I press the Ctrl+<n> shortcut
+    Then the <section> section is active
+    And the "<section>" nav item is highlighted
 
-  @story_10
-  Scenario: Keyboard shortcut Ctrl+1 navigates to Dashboard from any section
-    Given the main window is launched
-    When I navigate to the "Leads" section
-    And I press the Ctrl+1 shortcut
-    Then the Dashboard section is active
-
-  @story_10
-  Scenario: Navigate using keyboard shortcut Ctrl+2
-    Given the main window is launched
-    When I press the Ctrl+2 shortcut
-    Then the Contacts section is active
+    Examples:
+      | n | section      | start_section |
+      | 1 | Dashboard    | Contacts      |
+      | 2 | Contacts     | Dashboard     |
+      | 3 | Leads        | Dashboard     |
+      | 4 | Properties   | Dashboard     |
+      | 5 | Transactions | Dashboard     |
+      | 6 | Calendar     | Dashboard     |
+      | 7 | Settings     | Dashboard     |
 
   @story_10
   Scenario: Content area updates when navigating to a section

@@ -163,6 +163,8 @@ Every manual test file begins with a story link so a tester can trace the test b
 
 Every change follows these steps in strict order. No step is skipped or compressed.
 
+This applies equally to modifying or backfilling tests on existing, already-working code — a story being `Done`, code that visibly already works, or a change that looks like pure test reorganization does not exempt it. Before editing any test file, get its current result reported first (don't infer pass/fail from reading code). Before changing production code behavior, including a rename or signature change, write or update the test and confirm it fails before making the minimal implementation change.
+
 ### Step 1 — Plan
 - Read the user story and review its BDD scenarios and manual tests for viability and coverage gaps
 - Explain the planned changes

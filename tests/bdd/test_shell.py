@@ -245,6 +245,11 @@ def navigate_to_section(main_window: MainWindow, section: str) -> None:
     main_window.navigate_to(_SECTION_NAMES[section])
 
 
+@given(parsers.parse('I have navigated to the "{section}" section'))
+def have_navigated_to_section(main_window: MainWindow, section: str) -> None:
+    main_window.navigate_to(_SECTION_NAMES[section])
+
+
 @when(parsers.parse("I press the Ctrl+{n} shortcut"))
 def press_ctrl_n(main_window: MainWindow, qtbot: QtBot, n: str) -> None:
     key = getattr(Qt.Key, f"Key_{n}")
@@ -728,13 +733,3 @@ def click_quick_action(main_window: MainWindow, label: str, qtbot: QtBot) -> Non
     target = next((b for b in buttons if b.text() == label), None)
     assert target is not None, f"Quick action button '{label}' not found"
     qtbot.mouseClick(target, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
-
-
-@then("the Properties section is active")
-def properties_section_active(main_window: MainWindow) -> None:
-    assert main_window.current_section() == Section.PROPERTIES
-
-
-@then("the Calendar section is active")
-def calendar_section_active(main_window: MainWindow) -> None:
-    assert main_window.current_section() == Section.CALENDAR

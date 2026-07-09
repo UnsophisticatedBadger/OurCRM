@@ -50,32 +50,9 @@ def config_reloaded(panel_ctx: dict[str, object]) -> None:
     panel_ctx["config"] = AppConfig(config_path)
 
 
-@then("the Dashboard section is active")
-def dashboard_section_active(main_window: MainWindow) -> None:
-    from ourcrm.ui.navigation import Section
-
-    assert main_window.current_section() == Section.DASHBOARD
-
-
-@then("the Contacts section is active")
-def contacts_section_active(main_window: MainWindow) -> None:
-    from ourcrm.ui.navigation import Section
-
-    assert main_window.current_section() == Section.CONTACTS
-
-
-@then("the Leads section is active")
-def leads_section_active(main_window: MainWindow) -> None:
-    from ourcrm.ui.navigation import Section
-
-    assert main_window.current_section() == Section.LEADS
-
-
-@then("the Settings section is active")
-def settings_section_active(main_window: MainWindow) -> None:
-    from ourcrm.ui.navigation import Section
-
-    assert main_window.current_section() == Section.SETTINGS
+@then(parsers.parse("the {section} section is active"))
+def section_is_active(main_window: MainWindow, section: str) -> None:
+    assert main_window.current_section() == Section[section.upper()]
 
 
 @then(parsers.parse('the "{label}" nav item is highlighted'))

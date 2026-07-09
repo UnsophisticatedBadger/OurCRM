@@ -2,7 +2,7 @@
 
 **Capability:** App Shell
 **Milestone:** Secure Shell
-**Status:** Not Done
+**Status:** Done
 **GitHub Issue:** #10
 
 ## User Story
@@ -11,11 +11,11 @@ As a real estate agent, I want to move between the main sections of OurCRM from 
 
 ## Dependencies
 
-- #15 — Wire Encrypted Database into Application Startup
+- #6 — Log In and Out *(main window must exist with an active session before sections can be navigated)*
 
 ## Acceptance Criteria
 
-1. All major sections (Contacts, Leads, Properties, Transactions, Calendar, Tasks, Settings) are reachable from the sidebar
+1. All major sections (Dashboard, Contacts, Leads, Properties, Transactions, Calendar, Settings) are reachable from the sidebar
 2. The currently active section is visually highlighted in the sidebar
 3. Keyboard shortcuts navigate to sections (e.g., Ctrl+1 through Ctrl+N)
 
@@ -25,13 +25,13 @@ As a real estate agent, I want to move between the main sections of OurCRM from 
 |----------|------|
 | BDD feature | `tests/bdd/features/shell.feature` |
 | BDD step defs | `tests/bdd/test_shell.py` |
-| Unit tests | `tests/unit/shell/test_main_window_layout.py`, `test_section_navigation.py` |
+| Unit tests | `tests/unit/shell/test_section_navigation.py` (navigation), `test_main_window_layout.py` (window shell) |
 | Manual tests | `tests/manual/shell/section_navigation.md` |
 
 ## Definition of Done
 
-- [ ] BDD scenarios pass end-to-end
-- [ ] Feature reachable from the running app
-- [ ] `ruff`, `mypy --strict` clean
-- [ ] Manual tests documented and verified
-- [ ] Wiki documentation written, or marked N/A with a reason
+- [x] BDD scenarios pass end-to-end
+- [x] Feature reachable from the running app
+- [x] `ruff`, `mypy --strict` clean
+- [x] Manual tests documented and verified
+- [x] Wiki documentation written — see [App Shell](https://github.com/UnsophisticatedBadger/OurCRM/wiki/App-Shell)
