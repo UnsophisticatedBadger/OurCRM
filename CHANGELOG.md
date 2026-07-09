@@ -2,6 +2,20 @@
 
 <!-- version list -->
 
+## v0.7.0 (2026-07-09)
+
+### Documentation
+
+- Updated DoD items on not started user stories
+  ([`0a193e3`](https://github.com/UnsophisticatedBadger/OurCRM/commit/0a193e3fe07e2d5f6fad891c259ee349661db7c3))
+
+### Features
+
+- Navigate between sections via sidebar and keyboard shortcuts
+  ([#10](https://github.com/UnsophisticatedBadger/OurCRM/pull/10),
+  [`90461b9`](https://github.com/UnsophisticatedBadger/OurCRM/commit/90461b9c7508eda5a7d1d61cafb7d42ede5c07cc))
+
+
 ## v0.6.0 (2026-07-08)
 
 ### Documentation
