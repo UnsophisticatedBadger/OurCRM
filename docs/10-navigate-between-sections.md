@@ -30,8 +30,8 @@ As a real estate agent, I want to move between the main sections of OurCRM from 
 
 ## Definition of Done
 
-- [x] BDD scenarios pass end-to-end
-- [x] Feature reachable from the running app
-- [x] `ruff`, `mypy --strict` clean
-- [x] Manual tests documented and verified
+- [ ] BDD scenarios pass end-to-end
+- [ ] Feature reachable from the running app
+- [ ] `ruff`, `mypy --strict` clean
+- [ ] Manual tests documented and verified
 - [ ] Wiki documentation written, or marked N/A with a reason
