@@ -23,7 +23,7 @@ from sqlalchemy.orm import Session, sessionmaker
 
 from ourcrm.calendar.repository import CalendarEventRepositoryProtocol
 from ourcrm.core.auth.auth_service import AuthService
-from ourcrm.core.config import AppConfig
+from ourcrm.core.config import SettingsStoreProtocol
 from ourcrm.database.encrypted_database import EncryptedDatabase
 from ourcrm.database.manager import DatabaseManager
 from ourcrm.ui.calendar_page import CalendarPage
@@ -46,7 +46,7 @@ class MainWindow(QMainWindow):
     def __init__(
         self,
         settings: QSettings | None = None,
-        app_config: AppConfig | None = None,
+        app_config: SettingsStoreProtocol | None = None,
         qt_app: QApplication | None = None,
         auth_service: AuthService | None = None,
         auto_lock_timeout_seconds: int | None = None,
@@ -149,13 +149,23 @@ class MainWindow(QMainWindow):
         timer.timed_out.connect(self._on_lock)
         self._inactivity_timer = timer
 
+    def _reconfigure_autolock(self, timeout_minutes: int) -> None:
+        if self._inactivity_timer is not None:
+            self._inactivity_timer.stop()
+            self._inactivity_timer.setParent(None)
+            self._inactivity_timer.deleteLater()
+            self._inactivity_timer = None
+        self._setup_autolock(timeout_minutes * 60)
+
     def _create_section_widget(self, section: Section) -> QWidget:
         if section == Section.DASHBOARD:
             return DashboardPage(navigate_to=self.navigate_to)
         if section == Section.CALENDAR:
             return CalendarPage(repository=self._calendar_repository)
         if section == Section.SETTINGS:
-            return SettingsPanel(app_config=self._app_config, qt_app=self._qt_app)
+            panel = SettingsPanel(app_config=self._app_config, qt_app=self._qt_app)
+            panel.security_saved.connect(self._reconfigure_autolock)
+            return panel
         return QLabel(section.name.capitalize())
 
     def _setup_status_bar(self) -> None:

@@ -4,7 +4,9 @@ from __future__ import annotations
 
 import pathlib
 import re
+from collections.abc import Generator
 from typing import TYPE_CHECKING
+from unittest.mock import MagicMock, patch
 
 if TYPE_CHECKING:
     from ourcrm.ui.help_window import AboutDialog
@@ -13,7 +15,6 @@ from PySide6.QtCore import Qt
 from PySide6.QtGui import QAction
 from PySide6.QtWidgets import (
     QApplication,
-    QCheckBox,
     QComboBox,
     QDialogButtonBox,
     QGroupBox,
@@ -27,6 +28,7 @@ from PySide6.QtWidgets import (
 from pytest_bdd import given, parsers, scenarios, then, when
 from pytestqt.qtbot import QtBot
 
+from ourcrm.core.auth.auth_service import AuthService
 from ourcrm.core.config import AppConfig
 from ourcrm.ui.general_page import GeneralPage
 from ourcrm.ui.main_window import MainWindow
@@ -493,14 +495,6 @@ def see_auto_lock_field(panel_ctx: dict[str, object]) -> None:
     assert _security_page(panel_ctx).findChild(QSpinBox, "auto_lock_timeout_spinbox") is not None
 
 
-@then("I should see a Require Password for Sensitive Actions checkbox")
-def see_require_password_checkbox(panel_ctx: dict[str, object]) -> None:
-    assert (
-        _security_page(panel_ctx).findChild(QCheckBox, "require_password_sensitive_checkbox")
-        is not None
-    )
-
-
 @when(parsers.parse('I set the Auto-lock Timeout to "{value}" minutes'))
 def set_auto_lock_timeout(panel_ctx: dict[str, object], value: str) -> None:
     sb = _security_page(panel_ctx).findChild(QSpinBox, "auto_lock_timeout_spinbox")
@@ -515,6 +509,16 @@ def saved_auto_lock_timeout_is(panel_ctx: dict[str, object], value: str) -> None
     assert config.load_security().auto_lock_timeout_minutes == int(value)
 
 
+def _test_auth_service() -> AuthService:
+    from ourcrm.core.security.password_hasher import PasswordHasher
+
+    hasher = PasswordHasher(time_cost=1, memory_cost=8, parallelism=1)
+    svc = AuthService(hasher=hasher)
+    with patch("keyring.set_password"):
+        svc.create_master_password("TestP@ss1234!")
+    return svc
+
+
 @when(
     "the main window is opened using the saved security settings",
     target_fixture="main_window",
@@ -522,10 +526,14 @@ def saved_auto_lock_timeout_is(panel_ctx: dict[str, object], value: str) -> None
 def open_main_window_with_saved_security_settings(
     panel_ctx: dict[str, object], qtbot: QtBot
 ) -> MainWindow:
+    from ourcrm.main import resolve_auto_lock_seconds
+
     config = panel_ctx["config"]
     assert isinstance(config, AppConfig)
-    timeout_minutes = config.load_security().auto_lock_timeout_minutes
-    window = MainWindow(auto_lock_timeout_seconds=timeout_minutes * 60)
+    window = MainWindow(
+        auth_service=_test_auth_service(),
+        auto_lock_timeout_seconds=resolve_auto_lock_seconds(config),
+    )
     qtbot.addWidget(window)
     window.show()
     return window
@@ -537,6 +545,40 @@ def timer_not_running(main_window: MainWindow) -> None:
 
     timer = main_window.findChild(InactivityTimer)
     assert timer is None or not timer.is_active(), "Timer should not run when set to Never"
+
+
+@then("the inactivity timer is running")
+def timer_is_running(main_window: MainWindow) -> None:
+    from ourcrm.ui.inactivity_timer import InactivityTimer
+
+    timer = main_window.findChild(InactivityTimer)
+    assert timer is not None and timer.is_active(), "Timer should run with a non-zero timeout"
+
+
+@given("saving settings to disk will fail", target_fixture="panel_ctx")
+def saving_settings_will_fail(
+    panel_ctx: dict[str, object],
+) -> Generator[dict[str, object]]:
+    with (
+        patch("ourcrm.ui.settings_window.QMessageBox.critical") as mock_critical,
+        patch.object(AppConfig, "_save_raw", side_effect=OSError("disk full")),
+    ):
+        panel_ctx["save_error_dialog"] = mock_critical
+        yield panel_ctx
+
+
+@then("a settings save error is shown")
+def settings_save_error_is_shown(panel_ctx: dict[str, object]) -> None:
+    mock_critical = panel_ctx["save_error_dialog"]
+    assert isinstance(mock_critical, MagicMock)
+    assert mock_critical.called, "Expected a settings save error dialog to be shown"
+
+
+@then(parsers.parse('the Auto-lock Timeout field still shows "{value}" minutes'))
+def auto_lock_field_still_shows(panel_ctx: dict[str, object], value: str) -> None:
+    sb = _security_page(panel_ctx).findChild(QSpinBox, "auto_lock_timeout_spinbox")
+    assert sb is not None
+    assert sb.value() == int(value)
 
 
 # ── US-014: Home Dashboard ────────────────────────────────────────────────────

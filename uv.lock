@@ -724,7 +724,7 @@ sdist = { url = "https://files.pythonhosted.org/packages/e6/2e/9ea398ca1a4fc4589
 
 [[package]]
 name = "ourcrm"
-version = "0.6.0"
+version = "0.7.0"
 source = { editable = "." }
 dependencies = [
     { name = "alembic" },

@@ -9,6 +9,7 @@ from types import TracebackType
 from PySide6.QtWidgets import QApplication, QDialog, QMessageBox
 
 from ourcrm.core.auth.auth_service import AuthService
+from ourcrm.core.config import SettingsStoreProtocol
 from ourcrm.core.container import ApplicationContainer
 from ourcrm.core.crash_handler import format_crash_entry, write_crash_log
 from ourcrm.core.security.password_validator import PasswordValidator
@@ -22,6 +23,10 @@ from ourcrm.ui.startup_dialog import StartupDialog, StartupMode
 
 def determine_startup_mode(db_path: Path) -> StartupMode:
     return StartupMode.OPEN if db_path.exists() else StartupMode.CREATE
+
+
+def resolve_auto_lock_seconds(config: SettingsStoreProtocol) -> int:
+    return config.load_security().auto_lock_timeout_minutes * 60
 
 
 def build_startup_dialog(
@@ -190,7 +195,7 @@ def main() -> None:
         app_config=config,
         qt_app=app,
         auth_service=auth_service,
-        auto_lock_timeout_seconds=30,
+        auto_lock_timeout_seconds=resolve_auto_lock_seconds(config),
         calendar_repository=calendar_repository,
         encrypted_db=db,
         session_factory=session_factory,

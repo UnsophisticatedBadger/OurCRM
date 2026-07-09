@@ -2,12 +2,15 @@
 
 from __future__ import annotations
 
+import pathlib
 from unittest.mock import patch
 
 import pytest
+from PySide6.QtWidgets import QDialogButtonBox, QSpinBox
 from pytestqt.qtbot import QtBot
 
 from ourcrm.core.auth.auth_service import AuthService
+from ourcrm.core.config import AppConfig
 from ourcrm.core.security.password_hasher import PasswordHasher
 from ourcrm.ui.inactivity_timer import InactivityTimer
 from ourcrm.ui.lock_screen import LockScreen
@@ -115,3 +118,56 @@ def test_wrong_password_shows_error(locked_window: MainWindow) -> None:
     error = locked_window.findChild(QLabel, "lock_error_label")
     assert error is not None
     assert error.text() != ""
+
+
+# ── Live reconfiguration on Settings save (US-013) ─────────────────────────────
+
+
+def _set_and_save_timeout(window: MainWindow, minutes: int) -> None:
+    window.navigate_to(Section.SETTINGS)
+    panel = window.settings_panel
+    spinbox = panel.findChild(QSpinBox, "auto_lock_timeout_spinbox")
+    assert spinbox is not None
+    spinbox.setValue(minutes)
+    box = panel.findChild(QDialogButtonBox)
+    assert box is not None
+    save_btn = box.button(QDialogButtonBox.StandardButton.Save)
+    assert save_btn is not None
+    save_btn.click()
+
+
+def test_saving_new_timeout_replaces_the_running_timer(
+    qtbot: QtBot, tmp_path: pathlib.Path
+) -> None:
+    config = AppConfig(tmp_path / "config.toml")
+    window = MainWindow(auth_service=_auth(), app_config=config, auto_lock_timeout_seconds=300)
+    qtbot.addWidget(window)
+    window.show()
+    _set_and_save_timeout(window, 1)
+    timer = window.findChild(InactivityTimer)
+    assert timer is not None
+    assert timer.timeout_seconds == 60
+
+
+def test_saving_never_stops_the_running_timer(qtbot: QtBot, tmp_path: pathlib.Path) -> None:
+    config = AppConfig(tmp_path / "config.toml")
+    window = MainWindow(auth_service=_auth(), app_config=config, auto_lock_timeout_seconds=300)
+    qtbot.addWidget(window)
+    window.show()
+    _set_and_save_timeout(window, 0)
+    timer = window.findChild(InactivityTimer)
+    assert timer is None or not timer.is_active()
+
+
+def test_saving_a_nonzero_timeout_starts_a_timer_when_none_was_running(
+    qtbot: QtBot, tmp_path: pathlib.Path
+) -> None:
+    config = AppConfig(tmp_path / "config.toml")
+    window = MainWindow(auth_service=_auth(), app_config=config, auto_lock_timeout_seconds=0)
+    qtbot.addWidget(window)
+    window.show()
+    assert window.findChild(InactivityTimer) is None
+    _set_and_save_timeout(window, 2)
+    timer = window.findChild(InactivityTimer)
+    assert timer is not None
+    assert timer.timeout_seconds == 120

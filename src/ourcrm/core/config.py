@@ -6,7 +6,7 @@ import dataclasses
 import pathlib
 import tomllib
 from enum import StrEnum
-from typing import Any
+from typing import Any, Protocol
 
 import tomli_w
 
@@ -42,10 +42,15 @@ class StartupBehavior(StrEnum):
     DEFAULT_PAGE = "Default Page"
 
 
+@dataclasses.dataclass
+class ConfigSaveResult:
+    success: bool
+    error: str | None = None
+
+
 @dataclasses.dataclass(frozen=True)
 class SecuritySettings:
     auto_lock_timeout_minutes: int = 10  # 0 = Never
-    require_password_sensitive: bool = True
 
 
 @dataclasses.dataclass(frozen=True)
@@ -64,6 +69,13 @@ def _coerce[T: StrEnum](cls: type[T], raw: object, default: T) -> T:
         return cls(raw)
     except ValueError:
         return default
+
+
+class SettingsStoreProtocol(Protocol):
+    def load_general(self) -> GeneralSettings: ...
+    def save_general(self, settings: GeneralSettings) -> ConfigSaveResult: ...
+    def load_security(self) -> SecuritySettings: ...
+    def save_security(self, settings: SecuritySettings) -> ConfigSaveResult: ...
 
 
 class AppConfig:
@@ -98,7 +110,7 @@ class AppConfig:
             ),
         )
 
-    def save_general(self, settings: GeneralSettings) -> None:
+    def save_general(self, settings: GeneralSettings) -> ConfigSaveResult:
         data = self._load_raw()
         data["general"] = {
             "theme": settings.theme.value,
@@ -107,7 +119,11 @@ class AppConfig:
             "landing_page": settings.landing_page.value,
             "startup_behavior": settings.startup_behavior.value,
         }
-        self._save_raw(data)
+        try:
+            self._save_raw(data)
+        except OSError as exc:
+            return ConfigSaveResult(success=False, error=str(exc))
+        return ConfigSaveResult(success=True)
 
     def load_security(self) -> SecuritySettings:
         data = self._load_raw()
@@ -118,17 +134,15 @@ class AppConfig:
         raw_timeout = section.get("auto_lock_timeout_minutes")
         timeout = raw_timeout if isinstance(raw_timeout, int) else d.auto_lock_timeout_minutes
         timeout = max(0, timeout)
-        raw_require = section.get("require_password_sensitive")
-        require = raw_require if isinstance(raw_require, bool) else d.require_password_sensitive
-        return SecuritySettings(
-            auto_lock_timeout_minutes=timeout,
-            require_password_sensitive=require,
-        )
+        return SecuritySettings(auto_lock_timeout_minutes=timeout)
 
-    def save_security(self, settings: SecuritySettings) -> None:
+    def save_security(self, settings: SecuritySettings) -> ConfigSaveResult:
         data = self._load_raw()
         data["security"] = {
             "auto_lock_timeout_minutes": settings.auto_lock_timeout_minutes,
-            "require_password_sensitive": settings.require_password_sensitive,
         }
-        self._save_raw(data)
+        try:
+            self._save_raw(data)
+        except OSError as exc:
+            return ConfigSaveResult(success=False, error=str(exc))
+        return ConfigSaveResult(success=True)

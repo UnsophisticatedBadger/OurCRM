@@ -234,7 +234,6 @@ Feature: Shell
   Scenario: View Security settings
     Given the settings panel is open on Security
     Then I should see an Auto-lock Timeout field
-    And I should see a Require Password for Sensitive Actions checkbox
 
   @story_13
   Scenario: Change auto-lock timeout and save
@@ -259,12 +258,29 @@ Feature: Shell
     Then the inactivity timer is not running
 
   @story_13
+  Scenario: Inactivity timer runs with the configured non-zero timeout after reopening
+    Given the settings panel is open on Security
+    When I set the Auto-lock Timeout to "5" minutes
+    And I click Save
+    And the main window is opened using the saved security settings
+    Then the inactivity timer is running
+
+  @story_13
   Scenario: Settings persist across restarts
     Given the settings panel is open on Security
     When I set the Auto-lock Timeout to "5" minutes
     And I click Save
     And the config is reloaded from disk
     Then the saved auto-lock timeout is "5" minutes
+
+  @story_13
+  Scenario: Save failure shows an error and preserves unsaved changes
+    Given the settings panel is open on Security
+    And saving settings to disk will fail
+    When I set the Auto-lock Timeout to "20" minutes
+    And I click Save
+    Then a settings save error is shown
+    And the Auto-lock Timeout field still shows "20" minutes
 
   @story_14
   Scenario: Dashboard is the default view on startup

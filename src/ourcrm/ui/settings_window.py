@@ -4,19 +4,20 @@ from __future__ import annotations
 
 from enum import StrEnum
 
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, Signal
 from PySide6.QtWidgets import (
     QApplication,
     QDialogButtonBox,
     QLabel,
     QListWidget,
+    QMessageBox,
     QSplitter,
     QStackedWidget,
     QVBoxLayout,
     QWidget,
 )
 
-from ourcrm.core.config import AppConfig
+from ourcrm.core.config import SettingsStoreProtocol
 from ourcrm.ui.general_page import GeneralPage
 from ourcrm.ui.security_page import SecurityPage
 from ourcrm.ui.theme import apply_theme
@@ -36,11 +37,13 @@ _CATEGORIES: list[SettingsCategory] = list(SettingsCategory)
 
 
 class SettingsPanel(QWidget):
+    security_saved = Signal(int)  # auto_lock_timeout_minutes, emitted on a successful Save
+
     def __init__(
         self,
         parent: QWidget | None = None,
         *,
-        app_config: AppConfig | None = None,
+        app_config: SettingsStoreProtocol | None = None,
         qt_app: QApplication | None = None,
     ) -> None:
         super().__init__(parent)
@@ -100,10 +103,21 @@ class SettingsPanel(QWidget):
         if self._app_config is None:
             return
         general = self._general_page.collect()
-        self._app_config.save_general(general)
+        general_result = self._app_config.save_general(general)
+        if not general_result.success:
+            self._show_save_error(general_result.error)
+            return
         if self._qt_app is not None:
             apply_theme(general.theme, self._qt_app)
-        self._app_config.save_security(self._security_page.collect())
+        security = self._security_page.collect()
+        security_result = self._app_config.save_security(security)
+        if not security_result.success:
+            self._show_save_error(security_result.error)
+            return
+        self.security_saved.emit(security.auto_lock_timeout_minutes)
+
+    def _show_save_error(self, error: str | None) -> None:
+        QMessageBox.critical(self, "Settings Error", f"Could not save settings: {error}")
 
     def _on_cancel(self) -> None:
         if self._app_config is None:

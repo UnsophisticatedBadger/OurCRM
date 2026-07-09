@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import pathlib
+from unittest.mock import patch
 
 from ourcrm.core.config import (
     AppConfig,
@@ -120,3 +121,21 @@ def test_separate_instance_reads_saved_file(tmp_path: pathlib.Path) -> None:
     AppConfig(tmp_path / "config.toml").save_general(GeneralSettings(theme=Theme.LIGHT))
     loaded = AppConfig(tmp_path / "config.toml").load_general()
     assert loaded.theme == Theme.LIGHT
+
+
+# ── save_general: result reporting ─────────────────────────────────────────────
+
+
+def test_save_general_returns_success_result(tmp_path: pathlib.Path) -> None:
+    cfg = _config(tmp_path)
+    result = cfg.save_general(GeneralSettings())
+    assert result.success is True
+    assert result.error is None
+
+
+def test_save_general_disk_failure_returns_error_result(tmp_path: pathlib.Path) -> None:
+    cfg = _config(tmp_path)
+    with patch.object(AppConfig, "_save_raw", side_effect=OSError("disk full")):
+        result = cfg.save_general(GeneralSettings())
+    assert result.success is False
+    assert result.error is not None

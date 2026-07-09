@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import pathlib
+from unittest.mock import patch
 
 from ourcrm.core.config import AppConfig, SecuritySettings
 
@@ -31,12 +32,6 @@ def test_save_and_load_auto_lock_never(tmp_path: pathlib.Path) -> None:
     cfg = _cfg(tmp_path)
     cfg.save_security(SecuritySettings(auto_lock_timeout_minutes=0))
     assert cfg.load_security().auto_lock_timeout_minutes == 0
-
-
-def test_save_and_load_require_password_false(tmp_path: pathlib.Path) -> None:
-    cfg = _cfg(tmp_path)
-    cfg.save_security(SecuritySettings(require_password_sensitive=False))
-    assert cfg.load_security().require_password_sensitive is False
 
 
 def test_separate_instance_reads_saved_security(tmp_path: pathlib.Path) -> None:
@@ -77,3 +72,21 @@ def test_negative_timeout_clamped_to_zero(tmp_path: pathlib.Path) -> None:
     p = tmp_path / "config.toml"
     p.write_text("[security]\nauto_lock_timeout_minutes = -5\n")
     assert _cfg(tmp_path).load_security().auto_lock_timeout_minutes == 0
+
+
+# ── save_security: result reporting ──────────────────────────────────────────
+
+
+def test_save_security_returns_success_result(tmp_path: pathlib.Path) -> None:
+    cfg = _cfg(tmp_path)
+    result = cfg.save_security(SecuritySettings(auto_lock_timeout_minutes=15))
+    assert result.success is True
+    assert result.error is None
+
+
+def test_save_security_disk_failure_returns_error_result(tmp_path: pathlib.Path) -> None:
+    cfg = _cfg(tmp_path)
+    with patch.object(AppConfig, "_save_raw", side_effect=OSError("disk full")):
+        result = cfg.save_security(SecuritySettings(auto_lock_timeout_minutes=15))
+    assert result.success is False
+    assert result.error is not None

@@ -20,9 +20,16 @@ class InactivityTimer(QObject):
     def is_active(self) -> bool:
         return self._timer.isActive()
 
+    @property
+    def timeout_seconds(self) -> int:
+        return self._timer.interval() // 1000
+
     def reset(self) -> None:
         if self._enabled:
             self._timer.start()
+
+    def stop(self) -> None:
+        self._timer.stop()
 
     def fire_for_testing(self) -> None:
         if self._enabled:

@@ -110,3 +110,16 @@ def test_cancel_reverts_unsaved_timeout_change(
     _timeout_sb(panel).setValue(60)
     qtbot.mouseClick(_cancel_btn(panel), Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
     assert _timeout_sb(panel).value() == 15
+
+
+# ── security_saved signal ──────────────────────────────────────────────────────
+
+
+def test_successful_save_emits_security_saved_with_new_timeout(
+    qtbot: QtBot, tmp_path: pathlib.Path, qapp: QApplication
+) -> None:
+    panel, _ = _make(qtbot, tmp_path, qapp)
+    _timeout_sb(panel).setValue(20)
+    with qtbot.waitSignal(panel.security_saved, timeout=1000) as blocker:
+        qtbot.mouseClick(_save_btn(panel), Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+    assert blocker.args == [20]
