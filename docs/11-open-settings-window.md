@@ -2,7 +2,7 @@
 
 **Capability:** App Shell
 **Milestone:** Secure Shell
-**Status:** Not Done
+**Status:** Done
 **GitHub Issue:** #11
 
 ## User Story
@@ -30,8 +30,8 @@ As a real estate agent, I want to open a Settings window, so that I can configur
 
 ## Definition of Done
 
-- [ ] BDD scenarios pass end-to-end
-- [ ] Feature reachable from the running app
-- [ ] `ruff`, `mypy --strict` clean
-- [ ] Manual tests documented and verified
-- [ ] Wiki documentation written, or marked N/A with a reason
+- [x] BDD scenarios pass end-to-end
+- [x] Feature reachable from the running app
+- [x] `ruff`, `mypy --strict` clean
+- [x] Manual tests documented and verified
+- [x] Wiki documentation written — see [App Shell](https://github.com/UnsophisticatedBadger/OurCRM/wiki/App-Shell)

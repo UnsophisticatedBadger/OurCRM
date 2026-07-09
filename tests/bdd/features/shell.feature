@@ -185,6 +185,20 @@ Feature: Shell
     And I should see a Default Landing Page dropdown
     And I should see a Startup Behavior dropdown
 
+  @story_11
+  Scenario: Save persists an unsaved change to disk
+    Given the settings panel is open on General
+    When I select "Dark" from the Theme dropdown
+    And I click Save
+    Then the saved theme is "Dark"
+
+  @story_11
+  Scenario: Cancel discards an unsaved change
+    Given the settings panel is open on General
+    When I select "Dark" from the Theme dropdown
+    And I click Cancel
+    Then the saved theme is "Auto"
+
   @story_12
   Scenario: Change theme to Dark and save
     Given the settings panel is open on General

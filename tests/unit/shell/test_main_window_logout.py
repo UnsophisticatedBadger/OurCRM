@@ -5,7 +5,15 @@ from __future__ import annotations
 from unittest.mock import patch
 
 import pytest
-from PySide6.QtWidgets import QAbstractButton, QApplication, QLabel, QLineEdit, QMenu, QToolBar
+from PySide6.QtWidgets import (
+    QAbstractButton,
+    QApplication,
+    QLabel,
+    QLineEdit,
+    QMenu,
+    QSizePolicy,
+    QToolBar,
+)
 from pytestqt.qtbot import QtBot
 
 from ourcrm.core.auth.auth_service import AuthService
@@ -60,6 +68,19 @@ def test_toolbar_has_logout_button(window: MainWindow) -> None:
         None,
     )
     assert btn is not None
+
+
+def test_logout_button_is_right_aligned_in_toolbar(window: MainWindow) -> None:
+    """Regression guard: the Logout button used to sit at the toolbar's left edge,
+    directly under the File menu, making it easy to click by accident. It must be
+    pushed to the right edge via an expanding spacer widget."""
+    toolbar = window.findChild(QToolBar)
+    assert toolbar is not None
+    actions = toolbar.actions()
+    assert actions[-1].text() == "Logout"
+    spacer = toolbar.widgetForAction(actions[0])
+    assert spacer is not None
+    assert spacer.sizePolicy().horizontalPolicy() == QSizePolicy.Policy.Expanding
 
 
 def test_logout_via_menu_shows_login_screen(window: MainWindow) -> None:

@@ -43,6 +43,17 @@ def click_save(panel_ctx: dict[str, object], qtbot: QtBot) -> None:
     qtbot.mouseClick(btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
 
 
+@when("I click Cancel")
+def click_cancel(panel_ctx: dict[str, object], qtbot: QtBot) -> None:
+    panel = panel_ctx["panel"]
+    assert isinstance(panel, SettingsPanel)
+    box = panel.findChild(QDialogButtonBox)
+    assert box is not None
+    btn = box.button(QDialogButtonBox.StandardButton.Cancel)
+    assert btn is not None
+    qtbot.mouseClick(btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+
+
 @when("the config is reloaded from disk")
 def config_reloaded(panel_ctx: dict[str, object]) -> None:
     config_path = panel_ctx["config_path"]

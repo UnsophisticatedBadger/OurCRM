@@ -13,6 +13,7 @@ from PySide6.QtWidgets import (
     QLabel,
     QMainWindow,
     QMessageBox,
+    QSizePolicy,
     QSplitter,
     QStackedWidget,
     QToolBar,
@@ -114,6 +115,9 @@ class MainWindow(QMainWindow):
 
     def _setup_toolbar(self) -> None:
         toolbar = QToolBar("Main Toolbar")
+        spacer = QWidget()
+        spacer.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
+        toolbar.addWidget(spacer)
         toolbar.addAction("Logout").triggered.connect(self._logout)
         self.addToolBar(toolbar)
 
