@@ -2,6 +2,15 @@
 
 <!-- version list -->
 
+## v0.10.0 (2026-07-11)
+
+### Features
+
+- Change master password with database re-encryption
+  ([#8](https://github.com/UnsophisticatedBadger/OurCRM/pull/8),
+  [`9ccf8ad`](https://github.com/UnsophisticatedBadger/OurCRM/commit/9ccf8adaaacc66b0c57398d6ce1913e4213856e8))
+
+
 ## v0.9.0 (2026-07-09)
 
 
