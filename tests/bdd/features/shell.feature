@@ -282,6 +282,11 @@ Feature: Shell
     Then a settings save error is shown
     And the Auto-lock Timeout field still shows "20" minutes
 
+  @story_8
+  Scenario: Change Master Password option is available in Security settings
+    Given the settings panel is open on Security
+    Then the Security settings category has a "Change Master Password" button
+
   @story_14
   Scenario: Dashboard is the default view on startup
     Given the main window is open

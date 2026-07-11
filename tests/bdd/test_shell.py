@@ -581,6 +581,16 @@ def auto_lock_field_still_shows(panel_ctx: dict[str, object], value: str) -> Non
     assert sb.value() == int(value)
 
 
+# ── US-008: Change Master Password ────────────────────────────────────────────
+
+
+@then(parsers.parse('the Security settings category has a "{label}" button'))
+def security_page_has_change_password_button(panel_ctx: dict[str, object], label: str) -> None:
+    button = _security_page(panel_ctx).findChild(QPushButton, "change_master_password_button")
+    assert button is not None, f"'{label}' button not found in Security settings"
+    assert button.text() == label
+
+
 # ── US-014: Home Dashboard ────────────────────────────────────────────────────
 
 

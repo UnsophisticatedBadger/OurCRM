@@ -5,7 +5,11 @@ from __future__ import annotations
 import base64
 from collections.abc import Generator
 from pathlib import Path
+from typing import TYPE_CHECKING
 from unittest.mock import MagicMock, patch
+
+if TYPE_CHECKING:
+    from ourcrm.ui.change_master_password_dialog import ChangeMasterPasswordDialog
 
 import pytest
 from PySide6.QtCore import Qt, QTimer
@@ -710,6 +714,227 @@ def login_with_succeeds(auth_service: AuthService, password: str) -> None:
 def login_with_fails(auth_service: AuthService, password: str) -> None:
     result = auth_service.login(password)
     assert not result.success
+
+
+@given("the Change Master Password dialog is open", target_fixture="change_password_dialog")
+def change_password_dialog_open(
+    qtbot: QtBot, tmp_path: Path
+) -> Generator[ChangeMasterPasswordDialog]:
+    from ourcrm.ui.change_master_password_dialog import ChangeMasterPasswordDialog as _Dialog
+
+    service = AuthService(hasher=_HASHER)
+    service.create_master_password(_PASSWORD)
+    db = EncryptedDatabase(path=tmp_path / "ourcrm.db.enc", key_service=_KEY_SERVICE)
+    db.create(_PASSWORD)
+    dialog = _Dialog(auth_service=service, encrypted_db=db)
+    qtbot.addWidget(dialog)
+    yield dialog
+    if db.is_open:
+        db.close()
+
+
+@then("the dialog has a current password field")
+def dialog_has_current_password_field(change_password_dialog: ChangeMasterPasswordDialog) -> None:
+    field = change_password_dialog.findChild(QLineEdit, "current_password_field")
+    assert field is not None, "current_password_field not found"
+
+
+@then("the dialog has a new password field")
+def dialog_has_new_password_field(change_password_dialog: ChangeMasterPasswordDialog) -> None:
+    field = change_password_dialog.findChild(QLineEdit, "new_password_field")
+    assert field is not None, "new_password_field not found"
+
+
+@then("the dialog has a confirm new password field")
+def dialog_has_confirm_password_field(
+    change_password_dialog: ChangeMasterPasswordDialog,
+) -> None:
+    field = change_password_dialog.findChild(QLineEdit, "confirm_password_field")
+    assert field is not None, "confirm_password_field not found"
+
+
+@then("every requirement label on the Change Master Password dialog shows as unmet")
+def change_dialog_requirements_unmet(change_password_dialog: ChangeMasterPasswordDialog) -> None:
+    for name in _REQUIREMENT_LABEL_NAMES:
+        label = change_password_dialog.findChild(QLabel, name)
+        assert label is not None, f"{name} not found"
+        assert not _label_shows_met(label), f"{name} should start unmet"
+
+
+@then("every requirement label on the Change Master Password dialog shows as met")
+def change_dialog_requirements_met(change_password_dialog: ChangeMasterPasswordDialog) -> None:
+    for name in _REQUIREMENT_LABEL_NAMES:
+        label = change_password_dialog.findChild(QLabel, name)
+        assert label is not None, f"{name} not found"
+        assert _label_shows_met(label), f"{name} should show as met"
+
+
+@then("the passwords-match label on the Change Master Password dialog shows as unmet")
+def change_dialog_match_label_unmet(change_password_dialog: ChangeMasterPasswordDialog) -> None:
+    label = change_password_dialog.findChild(QLabel, "requirement_label_match")
+    assert label is not None, "requirement_label_match not found"
+    assert not _label_shows_met(label)
+
+
+@then("the passwords-match label on the Change Master Password dialog shows as met")
+def change_dialog_match_label_met(change_password_dialog: ChangeMasterPasswordDialog) -> None:
+    label = change_password_dialog.findChild(QLabel, "requirement_label_match")
+    assert label is not None, "requirement_label_match not found"
+    assert _label_shows_met(label)
+
+
+@when(parsers.parse('I type "{text}" in the new password field'))
+def type_in_new_password_field(
+    change_password_dialog: ChangeMasterPasswordDialog, qtbot: QtBot, text: str
+) -> None:
+    field = change_password_dialog.findChild(QLineEdit, "new_password_field")
+    assert field is not None, "new_password_field not found"
+    qtbot.keyClicks(field, text)  # type: ignore[no-untyped-call]
+
+
+@when(parsers.parse('I type "{text}" in the confirm password field'))
+def type_in_confirm_password_field(
+    change_password_dialog: ChangeMasterPasswordDialog, qtbot: QtBot, text: str
+) -> None:
+    field = change_password_dialog.findChild(QLineEdit, "confirm_password_field")
+    assert field is not None, "confirm_password_field not found"
+    qtbot.keyClicks(field, text)  # type: ignore[no-untyped-call]
+
+
+@when("I click the show-password toggle for the new password field")
+def click_new_password_toggle(
+    change_password_dialog: ChangeMasterPasswordDialog, qtbot: QtBot
+) -> None:
+    btn = change_password_dialog.findChild(QPushButton, "new_password_toggle_btn")
+    assert btn is not None, "new_password_toggle_btn not found"
+    qtbot.mouseClick(btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+
+
+@then("the new password field echo mode is plain text")
+def new_password_field_is_plain_text(
+    change_password_dialog: ChangeMasterPasswordDialog,
+) -> None:
+    field = change_password_dialog.findChild(QLineEdit, "new_password_field")
+    assert field is not None, "new_password_field not found"
+    assert field.echoMode() == QLineEdit.EchoMode.Normal
+
+
+@then("the new password field echo mode is masked")
+def new_password_field_is_masked(change_password_dialog: ChangeMasterPasswordDialog) -> None:
+    field = change_password_dialog.findChild(QLineEdit, "new_password_field")
+    assert field is not None, "new_password_field not found"
+    assert field.echoMode() == QLineEdit.EchoMode.Password
+
+
+@when("the user enters an incorrect current password and clicks Continue")
+def enter_wrong_current_password_and_continue(
+    change_password_dialog: ChangeMasterPasswordDialog, qtbot: QtBot
+) -> None:
+    current_field = change_password_dialog.findChild(QLineEdit, "current_password_field")
+    new_field = change_password_dialog.findChild(QLineEdit, "new_password_field")
+    confirm_field = change_password_dialog.findChild(QLineEdit, "confirm_password_field")
+    assert current_field is not None
+    assert new_field is not None
+    assert confirm_field is not None
+    qtbot.keyClicks(current_field, "WrongCurrentP@ss1!")  # type: ignore[no-untyped-call]
+    qtbot.keyClicks(new_field, "NewP@ssw0rd!2025")  # type: ignore[no-untyped-call]
+    qtbot.keyClicks(confirm_field, "NewP@ssw0rd!2025")  # type: ignore[no-untyped-call]
+    btn = change_password_dialog.findChild(QPushButton, "change_password_submit_btn")
+    assert btn is not None, "change_password_submit_btn not found"
+    qtbot.mouseClick(btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+    QApplication.processEvents()
+
+
+@then("an error is shown on the dialog")
+def error_shown_on_change_password_dialog(
+    change_password_dialog: ChangeMasterPasswordDialog,
+) -> None:
+    error = change_password_dialog.findChild(QLabel, "change_password_error_label")
+    assert isinstance(error, QLabel)
+    assert error.text(), "Error label is empty"
+
+
+@then("the Change Master Password dialog is still open")
+def change_password_dialog_still_open(
+    change_password_dialog: ChangeMasterPasswordDialog,
+) -> None:
+    assert change_password_dialog.result() != QDialog.DialogCode.Accepted, "Dialog was accepted"
+
+
+@when(
+    parsers.parse(
+        'I change the master password from "{current}" to "{new}" confirmed with "{confirm}"'
+    ),
+    target_fixture="change_result",
+)
+def change_master_password_reencrypt_db(
+    encrypted_db: EncryptedDatabase, current: str, new: str, confirm: str
+) -> AuthResult:
+    from ourcrm.core.auth.master_password_change import change_master_password_and_reencrypt
+
+    service = AuthService(hasher=_HASHER)
+    service.create_master_password(current)
+    return change_master_password_and_reencrypt(service, encrypted_db, current, new, confirm)
+
+
+@when("the next database write fails")
+def next_database_write_fails() -> Generator[None]:
+    original = EncryptedDatabase._write_encrypted
+    remaining = {"count": 1}
+
+    def flaky_write(self: EncryptedDatabase, data: bytes, salt: bytes, key: bytes) -> None:
+        if remaining["count"] > 0:
+            remaining["count"] -= 1
+            raise OSError("disk full")
+        original(self, data, salt, key)
+
+    with patch.object(EncryptedDatabase, "_write_encrypted", flaky_write):
+        yield
+
+
+@when(
+    parsers.parse(
+        'the user changes the master password from "{current}" to "{new}" '
+        'confirmed with "{confirm}"'
+    )
+)
+def user_changes_master_password_via_main_window(
+    main_window: MainWindow, qtbot: QtBot, current: str, new: str, confirm: str
+) -> None:
+    from ourcrm.ui.change_master_password_dialog import ChangeMasterPasswordDialog as _Dialog
+    from ourcrm.ui.security_page import SecurityPage
+
+    main_window.navigate_to(Section.SETTINGS)
+    security_page = main_window.settings_panel.findChild(SecurityPage)
+    assert security_page is not None, "SecurityPage not found"
+    open_btn = security_page.findChild(QPushButton, "change_master_password_button")
+    assert open_btn is not None, "change_master_password_button not found"
+    qtbot.mouseClick(open_btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+    QApplication.processEvents()
+
+    dialog = main_window.findChild(_Dialog)
+    assert dialog is not None, "Change Master Password dialog did not open"
+
+    dialog.findChild(QLineEdit, "current_password_field").setText(current)  # type: ignore[union-attr]
+    dialog.findChild(QLineEdit, "new_password_field").setText(new)  # type: ignore[union-attr]
+    dialog.findChild(QLineEdit, "confirm_password_field").setText(confirm)  # type: ignore[union-attr]
+    dialog.findChild(QPushButton, "change_password_submit_btn").click()  # type: ignore[union-attr]
+    QApplication.processEvents()
+
+
+@when(parsers.parse('I enter "{password}" on the login screen'))
+def enter_specific_password_on_login_screen(
+    main_window: MainWindow, qtbot: QtBot, password: str
+) -> None:
+    field = main_window.findChild(QLineEdit, "login_password_field")
+    assert field is not None, "login_password_field not found"
+    btn = _find_button(main_window, "Login")
+    assert btn is not None, "Login button not found"
+    qtbot.waitUntil(lambda: btn.isEnabled(), timeout=5000)
+    field.clear()
+    qtbot.keyClicks(field, password)  # type: ignore[no-untyped-call]
+    qtbot.mouseClick(btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+    QApplication.processEvents()
 
 
 # ── US-009: Password Recovery ─────────────────────────────────────────────────

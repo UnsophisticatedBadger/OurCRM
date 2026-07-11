@@ -68,9 +68,12 @@ class AuthService:
         keyring.set_password(_SERVICE, _MASTER_HASH_KEY, new_hash)
         return AuthResult(success=True)
 
-    def change_password(self, current: str, new_password: str, confirmation: str) -> AuthResult:
+    def verify_password(self, password: str) -> bool:
         stored_hash = keyring.get_password(_SERVICE, _MASTER_HASH_KEY)
-        if stored_hash is None or not self._hasher.verify(current, stored_hash):
+        return stored_hash is not None and self._hasher.verify(password, stored_hash)
+
+    def change_password(self, current: str, new_password: str, confirmation: str) -> AuthResult:
+        if not self.verify_password(current):
             return AuthResult(success=False, error="Incorrect current password")
 
         validation = self._validator.validate_with_confirmation(new_password, confirmation)
@@ -83,6 +86,10 @@ class AuthService:
 
     def logout(self) -> None:
         self._is_logged_in = False
+
+    @property
+    def validator(self) -> PasswordValidator:
+        return self._validator
 
     @property
     def is_logged_in(self) -> bool:

@@ -327,3 +327,52 @@ def test_round_trip_file_remains_encrypted(encrypted_db: EncryptedDatabase, db_p
     encrypted_db.open(_PASSWORD)
     encrypted_db.close()
     assert not db_path.read_bytes().startswith(_SQLITE_MAGIC)
+
+
+# ── atomic write ──────────────────────────────────────────────────────────────
+
+
+def test_failed_write_does_not_touch_existing_file(
+    encrypted_db: EncryptedDatabase, db_path: Path
+) -> None:
+    encrypted_db.create(_PASSWORD)
+    encrypted_db.save()
+    original = db_path.read_bytes()
+
+    with (
+        patch("ourcrm.database.encrypted_database.os.replace", side_effect=OSError("disk full")),
+        pytest.raises(OSError),
+    ):
+        encrypted_db.save()
+
+    assert db_path.read_bytes() == original
+
+
+def test_failed_write_cleans_up_temp_file(encrypted_db: EncryptedDatabase, db_path: Path) -> None:
+    encrypted_db.create(_PASSWORD)
+    encrypted_db.save()
+
+    with (
+        patch("ourcrm.database.encrypted_database.os.replace", side_effect=OSError("disk full")),
+        pytest.raises(OSError),
+    ):
+        encrypted_db.save()
+
+    tmp_path = db_path.with_name(db_path.name + ".tmp")
+    assert not tmp_path.exists(), "Leftover .tmp file was not cleaned up after a failed write"
+
+
+# ── rekey ─────────────────────────────────────────────────────────────────────
+
+
+def test_rekey_persists_file_openable_with_new_password(
+    encrypted_db: EncryptedDatabase, db_path: Path
+) -> None:
+    encrypted_db.create(_PASSWORD)
+    encrypted_db.rekey("NewP@ssw0rd!2025")
+    encrypted_db.close()
+
+    reopened = EncryptedDatabase(path=db_path, key_service=_KEY_SERVICE)
+    reopened.open("NewP@ssw0rd!2025")
+    assert DatabaseManager(reopened.engine).has_table("alembic_version")
+    reopened.close()

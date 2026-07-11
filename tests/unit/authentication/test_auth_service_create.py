@@ -54,3 +54,9 @@ def test_init_uses_injected_validator(in_memory_keyring: InMemoryKeyring) -> Non
     mock_validator.validate_with_confirmation.assert_called_once()
     assert not result.success
     assert result.error == "Custom rejection"
+
+
+def test_validator_property_exposes_injected_validator(in_memory_keyring: InMemoryKeyring) -> None:
+    mock_validator = MagicMock()
+    service = AuthService(hasher=FAST_HASHER, validator=mock_validator)
+    assert service.validator is mock_validator

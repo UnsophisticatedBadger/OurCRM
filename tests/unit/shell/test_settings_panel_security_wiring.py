@@ -123,3 +123,18 @@ def test_successful_save_emits_security_saved_with_new_timeout(
     with qtbot.waitSignal(panel.security_saved, timeout=1000) as blocker:
         qtbot.mouseClick(_save_btn(panel), Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
     assert blocker.args == [20]
+
+
+# ── change_master_password_requested relay ─────────────────────────────────────
+
+
+def test_change_master_password_click_relayed_from_security_page(
+    qtbot: QtBot, tmp_path: pathlib.Path, qapp: QApplication
+) -> None:
+    panel, _ = _make(qtbot, tmp_path, qapp)
+    page = panel.findChild(SecurityPage)
+    assert page is not None
+    button = page.findChild(QPushButton, "change_master_password_button")
+    assert button is not None
+    with qtbot.waitSignal(panel.change_master_password_requested, timeout=1000):
+        qtbot.mouseClick(button, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]

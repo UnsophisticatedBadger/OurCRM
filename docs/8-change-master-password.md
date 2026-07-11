@@ -2,7 +2,7 @@
 
 **Capability:** Authentication & Security
 **Milestone:** Secure Shell
-**Status:** Not Done
+**Status:** Done
 **GitHub Issue:** #8
 
 ## User Story
@@ -15,11 +15,7 @@ As a real estate agent, I want to change my master password so that I can update
 
 ## Notes
 
-`docs/127-change-master-password.md` appears to cover the same scope. #8 is the canonical story; #24 should be converted to a redirect stub when that batch is reached.
-
 Changing the master password requires re-encrypting the entire database under a key derived from the new password. This is a non-trivial, irreversible operation — the user is logged out immediately after so they must re-authenticate with the new password, confirming the re-encryption succeeded before continuing to use the app.
-
-Re-encryption must be atomic: if the process fails mid-way (e.g., disk full), the existing database must remain intact and accessible with the old password. No partial re-encryption should leave the database in an unreadable state.
 
 ## Acceptance Criteria
 
@@ -30,57 +26,31 @@ Re-encryption must be atomic: if the process fails mid-way (e.g., disk full), th
 5. If the new password and confirmation do not match, an error is shown and no change is made
 6. On success, the database is re-encrypted with a key derived from the new password, the user is logged out, and must log in again with the new password
 7. After the change, the old password is rejected at the login screen
+8. If re-encryption fails partway through (e.g., disk full), the existing database remains intact and accessible with the old password — no partial re-encryption leaves the database in an unreadable or inconsistent state
 
 ## BDD Scenarios
 
-> These scenarios are not yet implemented. Add them to `tests/bdd/features/authentication.feature`.
-
-```gherkin
-@story_8
-Scenario: Entering the wrong current password is rejected
-  Given the Change Master Password form is open
-  When the user enters an incorrect current password and clicks Continue
-  Then an error is shown and the form stays open
-
-@story_8
-Scenario: New password shorter than 12 characters is rejected
-  Given the current password has been verified
-  When the user enters a new password of 8 characters
-  Then a validation error is shown and the password is not changed
-
-@story_8
-Scenario: Mismatched new password and confirmation is rejected
-  Given the current password has been verified
-  When the user enters different values in the new password and confirmation fields
-  Then an error "Passwords do not match" is shown and the password is not changed
-
-@story_8
-Scenario: Successful password change logs the user out
-  Given the user enters the correct current password and a valid matching new password
-  When the user confirms the change
-  Then the database is re-encrypted and the user is taken to the login screen
-
-@story_8
-Scenario: New password works at login and old password does not
-  Given the master password has been changed to "NewSecurePassword99!"
-  When the user attempts to log in with the old password
-  Then login is rejected
-  When the user attempts to log in with "NewSecurePassword99!"
-  Then login succeeds and all data is accessible
-```
+> All `@story_8` scenarios — service-layer password change/validation, the `ChangeMasterPasswordDialog`
+> widget, database re-encryption (including atomic failure-safety), and the Security Settings
+> button that opens the dialog — are in `tests/bdd/features/authentication.feature`. The one
+> scenario that only needs to confirm the button is present (not that it works) is in
+> `tests/bdd/features/shell.feature`, matching the split already used by #13. The scenarios that
+> exercise the dialog end-to-end (successful change, wrong current password, login-screen
+> rejection of the old password) drive the real `SecurityPage` button → `SettingsPanel` →
+> `MainWindow` wiring, not a test-only shortcut.
 
 ## Manual Tests
 
-**Story:** [#8 — Change Master Password](../docs/008-change-master-password.md)
+**Story:** [#8 — Change Master Password](../../docs/8-change-master-password.md)
 
 ### Change Master Password is accessible from Security Settings
 1. Navigate to Settings → Security
 2. Confirm a "Change Master Password" button or link is present
 
 ### Wrong current password is rejected
-1. Open the Change Master Password form
+1. Click the Change Master Password button
 2. Enter an incorrect current password and click Continue
-3. Confirm an error is shown and no change was made
+3. Confirm an error is shown and the dialog stays open
 
 ### Password complexity is enforced on the new password
 1. Attempt to set a new password shorter than 12 characters
@@ -107,15 +77,15 @@ Scenario: New password works at login and old password does not
 
 | Artifact | Path |
 |----------|------|
-| BDD feature | `tests/bdd/features/authentication.feature` |
-| BDD step defs | `tests/bdd/test_authentication.py` |
-| Unit tests | `tests/unit/authentication/test_password_change.py` |
+| BDD feature | `tests/bdd/features/authentication.feature`, `tests/bdd/features/shell.feature` |
+| BDD step defs | `tests/bdd/test_authentication.py`, `tests/bdd/test_shell.py` |
+| Unit tests | `tests/unit/authentication/test_change_password.py`, `test_change_password_dialog.py`, `test_encrypted_database.py`, `test_master_password_change.py`; `tests/unit/shell/test_security_page.py`, `test_settings_panel_security_wiring.py`, `test_main_window_settings.py` |
 | Manual tests | `tests/manual/authentication/password_change.md` |
 
 ## Definition of Done
 
-- [ ] BDD scenarios pass end-to-end
-- [ ] Feature reachable from the running app
-- [ ] `ruff`, `mypy --strict` clean
-- [ ] Manual tests documented and verified
-- [ ] Wiki documentation written, or marked N/A with a reason
+- [x] BDD scenarios pass end-to-end
+- [x] Feature reachable from the running app — verified via manual smoke test
+- [x] `ruff`, `mypy --strict` clean
+- [x] Manual tests documented in `tests/manual/authentication/password_change.md` and verified
+- [x] Wiki documentation written — see [Authentication & Security](https://github.com/UnsophisticatedBadger/OurCRM/wiki/Authentication-and-Security)

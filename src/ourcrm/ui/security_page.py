@@ -2,12 +2,15 @@
 
 from __future__ import annotations
 
-from PySide6.QtWidgets import QFormLayout, QSpinBox, QWidget
+from PySide6.QtCore import Signal
+from PySide6.QtWidgets import QFormLayout, QPushButton, QSpinBox, QWidget
 
 from ourcrm.core.config import SecuritySettings
 
 
 class SecurityPage(QWidget):
+    change_master_password_requested = Signal()
+
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
 
@@ -21,8 +24,13 @@ class SecurityPage(QWidget):
             "Lock the app after this many minutes of inactivity (0 = never lock)"
         )
 
+        self._change_master_password_btn = QPushButton("Change Master Password")
+        self._change_master_password_btn.setObjectName("change_master_password_button")
+        self._change_master_password_btn.clicked.connect(self.change_master_password_requested)
+
         layout = QFormLayout(self)
         layout.addRow("Auto-lock Timeout", self._auto_lock)
+        layout.addWidget(self._change_master_password_btn)
 
         self.load(SecuritySettings())
 

@@ -291,6 +291,99 @@ Feature: Authentication
     Then the change should fail
     And the change error should be "Passwords do not match"
 
+  @story_8
+  Scenario: Change Master Password dialog has the expected fields
+    Given the Change Master Password dialog is open
+    Then the dialog has a current password field
+    And the dialog has a new password field
+    And the dialog has a confirm new password field
+
+  @story_8
+  Scenario: Requirement checklist starts unmet when the Change Master Password dialog opens
+    Given the Change Master Password dialog is open
+    Then every requirement label on the Change Master Password dialog shows as unmet
+    And the passwords-match label on the Change Master Password dialog shows as unmet
+
+  @story_8
+  Scenario: Typing a new password meeting all requirements turns the checklist to met
+    Given the Change Master Password dialog is open
+    When I type "NewP@ssw0rd!2025" in the new password field
+    Then every requirement label on the Change Master Password dialog shows as met
+
+  @story_8
+  Scenario: Typing a matching confirmation turns the passwords-match label to met
+    Given the Change Master Password dialog is open
+    When I type "NewP@ssw0rd!2025" in the new password field
+    And I type "NewP@ssw0rd!2025" in the confirm password field
+    Then the passwords-match label on the Change Master Password dialog shows as met
+
+  @story_8
+  Scenario: Typing a mismatched confirmation keeps the passwords-match label unmet
+    Given the Change Master Password dialog is open
+    When I type "NewP@ssw0rd!2025" in the new password field
+    And I type "DifferentP@ss1!" in the confirm password field
+    Then the passwords-match label on the Change Master Password dialog shows as unmet
+
+  @story_8
+  Scenario: Clicking Show reveals the new password field in plain text
+    Given the Change Master Password dialog is open
+    When I click the show-password toggle for the new password field
+    Then the new password field echo mode is plain text
+
+  @story_8
+  Scenario: Clicking Show again hides the new password field
+    Given the Change Master Password dialog is open
+    When I click the show-password toggle for the new password field
+    And I click the show-password toggle for the new password field
+    Then the new password field echo mode is masked
+
+  @story_8
+  Scenario: Wrong current password on the Change Master Password dialog shows an error and stays open
+    Given the Change Master Password dialog is open
+    When the user enters an incorrect current password and clicks Continue
+    Then an error is shown on the dialog
+    And the Change Master Password dialog is still open
+
+  @story_8
+  Scenario: Successful password change re-encrypts the database
+    Given a temporary data directory
+    And an encrypted database for that directory
+    When I create a new encrypted database with password "SecureP@ssw0rd!2024"
+    And I change the master password from "SecureP@ssw0rd!2024" to "NewP@ssw0rd!2025" confirmed with "NewP@ssw0rd!2025"
+    And I close the encrypted database
+    Then opening the encrypted database with "SecureP@ssw0rd!2024" should fail
+    When I open the encrypted database with password "NewP@ssw0rd!2025"
+    Then the schema should be accessible through the encrypted database
+
+  @story_8
+  Scenario: Successful password change logs the user out
+    Given the main window is open and logged in with an active encrypted database
+    When the user changes the master password from "SecureP@ssw0rd!2024" to "NewP@ssw0rd!2025" confirmed with "NewP@ssw0rd!2025"
+    Then the login screen is shown
+    And the auth service shows the user as logged out
+
+  @story_8
+  Scenario: Old password is rejected at the login screen after a change
+    Given the main window is open and logged in with an active encrypted database
+    When the user changes the master password from "SecureP@ssw0rd!2024" to "NewP@ssw0rd!2025" confirmed with "NewP@ssw0rd!2025"
+    And I enter "SecureP@ssw0rd!2024" on the login screen
+    Then an error message is shown on the login screen
+    When I enter "NewP@ssw0rd!2025" on the login screen
+    Then the login screen is gone
+    And the Dashboard section is active
+
+  @story_8
+  Scenario: A failure partway through re-encryption leaves the old database intact
+    Given a temporary data directory
+    And an encrypted database for that directory
+    When I create a new encrypted database with password "SecureP@ssw0rd!2024"
+    And the next database write fails
+    And I change the master password from "SecureP@ssw0rd!2024" to "NewP@ssw0rd!2025" confirmed with "NewP@ssw0rd!2025"
+    Then the change should fail
+    When I close the encrypted database
+    And I open the encrypted database with password "SecureP@ssw0rd!2024"
+    Then the schema should be accessible through the encrypted database
+
   @story_9
   Scenario: Recover with valid recovery password
     Given the auth service has master password "SecureP@ssw0rd!2024" and recovery password "RecoveryTestP@ssABCDEFGHIJ123456"

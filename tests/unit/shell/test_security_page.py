@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from PySide6.QtWidgets import QSpinBox
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QPushButton, QSpinBox
 from pytestqt.qtbot import QtBot
 
 from ourcrm.core.config import SecuritySettings
@@ -20,6 +21,24 @@ def _make(qtbot: QtBot) -> SecurityPage:
 
 def test_has_auto_lock_spinbox(qtbot: QtBot) -> None:
     assert _make(qtbot).findChild(QSpinBox, "auto_lock_timeout_spinbox") is not None
+
+
+def test_has_change_master_password_button(qtbot: QtBot) -> None:
+    page = _make(qtbot)
+    button = page.findChild(QPushButton, "change_master_password_button")
+    assert button is not None
+    assert button.text() == "Change Master Password"
+
+
+# ── change_master_password_requested signal ────────────────────────────────────
+
+
+def test_clicking_change_master_password_button_emits_signal(qtbot: QtBot) -> None:
+    page = _make(qtbot)
+    button = page.findChild(QPushButton, "change_master_password_button")
+    assert button is not None
+    with qtbot.waitSignal(page.change_master_password_requested, timeout=1000):
+        qtbot.mouseClick(button, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
 
 
 # ── Spinbox configuration ─────────────────────────────────────────────────────

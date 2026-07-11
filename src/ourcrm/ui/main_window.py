@@ -27,6 +27,7 @@ from ourcrm.core.config import SettingsStoreProtocol
 from ourcrm.database.encrypted_database import EncryptedDatabase
 from ourcrm.database.manager import DatabaseManager
 from ourcrm.ui.calendar_page import CalendarPage
+from ourcrm.ui.change_master_password_dialog import ChangeMasterPasswordDialog
 from ourcrm.ui.dashboard_page import DashboardPage
 from ourcrm.ui.help_window import AboutDialog, HelpWindow, KeyboardShortcutsDialog
 from ourcrm.ui.inactivity_timer import InactivityTimer
@@ -165,6 +166,7 @@ class MainWindow(QMainWindow):
         if section == Section.SETTINGS:
             panel = SettingsPanel(app_config=self._app_config, qt_app=self._qt_app)
             panel.security_saved.connect(self._reconfigure_autolock)
+            panel.change_master_password_requested.connect(self._open_change_master_password_dialog)
             return panel
         return QLabel(section.name.capitalize())
 
@@ -198,6 +200,16 @@ class MainWindow(QMainWindow):
         login.login_requested.connect(self._on_login_requested)
         self._central_stack.addWidget(login)
         self._central_stack.setCurrentWidget(login)
+
+    def _open_change_master_password_dialog(self) -> None:
+        if self._auth_service is None or self._encrypted_db is None:
+            return
+        dialog = ChangeMasterPasswordDialog(
+            auth_service=self._auth_service, encrypted_db=self._encrypted_db, parent=self
+        )
+        dialog.password_changed.connect(self._logout)
+        dialog.setModal(True)
+        dialog.show()
 
     def _on_login_requested(self, password: str) -> None:
         assert self._auth_service is not None

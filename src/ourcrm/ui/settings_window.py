@@ -38,6 +38,7 @@ _CATEGORIES: list[SettingsCategory] = list(SettingsCategory)
 
 class SettingsPanel(QWidget):
     security_saved = Signal(int)  # auto_lock_timeout_minutes, emitted on a successful Save
+    change_master_password_requested = Signal()
 
     def __init__(
         self,
@@ -51,6 +52,9 @@ class SettingsPanel(QWidget):
         self._qt_app = qt_app
         self._general_page = GeneralPage()
         self._security_page = SecurityPage()
+        self._security_page.change_master_password_requested.connect(
+            self.change_master_password_requested
+        )
         self._setup_ui()
         if app_config is not None:
             self._general_page.load(app_config.load_general())

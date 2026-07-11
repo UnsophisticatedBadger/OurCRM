@@ -102,3 +102,19 @@ def test_mismatched_confirmation_error_message(service: AuthService) -> None:
 def test_mismatched_confirmation_does_not_change_hash(service: AuthService) -> None:
     service.change_password(_PASSWORD, _NEW_PASSWORD, "DifferentP@ss1!")
     assert service.login(_PASSWORD).success
+
+
+# ── verify_password (pure check, no side effects) ──────────────────────────────
+
+
+def test_verify_password_returns_true_for_correct_password(service: AuthService) -> None:
+    assert service.verify_password(_PASSWORD) is True
+
+
+def test_verify_password_returns_false_for_incorrect_password(service: AuthService) -> None:
+    assert service.verify_password("WrongCurrent1!") is False
+
+
+def test_verify_password_does_not_change_login_state(service: AuthService) -> None:
+    service.verify_password(_PASSWORD)
+    assert service.is_logged_in is False

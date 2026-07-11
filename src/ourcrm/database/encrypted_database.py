@@ -77,6 +77,15 @@ class EncryptedDatabase:
         conn, key, salt = self._conn, self._key, self._salt
         self._write_encrypted(conn.serialize(), salt, key)
 
+    def rekey(self, new_password: str) -> None:
+        if self._conn is None or self._key is None:
+            raise RuntimeError("Database is not open")
+        new_salt = self._key_service.generate_salt()
+        new_key = self._key_service.derive_key(new_password, new_salt)
+        self._write_encrypted(self._conn.serialize(), new_salt, new_key)
+        self._key = new_key
+        self._salt = new_salt
+
     def close(self) -> None:
         if self._conn is None or self._key is None or self._salt is None or self._engine is None:
             raise RuntimeError("Database is not open")
@@ -115,4 +124,10 @@ class EncryptedDatabase:
         nonce = os.urandom(_NONCE_SIZE)
         ciphertext = AESGCM(key).encrypt(nonce, data, None)
         self._path.parent.mkdir(parents=True, exist_ok=True)
-        self._path.write_bytes(salt + nonce + ciphertext)
+        tmp_path = self._path.with_name(self._path.name + ".tmp")
+        try:
+            tmp_path.write_bytes(salt + nonce + ciphertext)
+            os.replace(tmp_path, self._path)
+        except OSError:
+            tmp_path.unlink(missing_ok=True)
+            raise
