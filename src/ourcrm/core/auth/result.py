@@ -19,3 +19,10 @@ class LoginResult:
 class AuthResult:
     success: bool
     error: str | None = None
+
+
+@dataclass
+class RecoveryResult:
+    success: bool
+    error: str | None = None
+    new_recovery_password: str | None = None

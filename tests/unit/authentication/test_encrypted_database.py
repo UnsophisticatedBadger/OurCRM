@@ -376,3 +376,155 @@ def test_rekey_persists_file_openable_with_new_password(
     reopened.open("NewP@ssw0rd!2025")
     assert DatabaseManager(reopened.engine).has_table("alembic_version")
     reopened.close()
+
+
+# ── recovery envelope ─────────────────────────────────────────────────────────
+
+_RECOVERY_PASSWORD = "RecoveryTestP@ssABCDEFGHIJ123456"
+
+
+def test_wrap_recovery_allows_opening_with_the_recovery_password(
+    encrypted_db: EncryptedDatabase, db_path: Path
+) -> None:
+    encrypted_db.create(_PASSWORD)
+    encrypted_db.wrap_recovery(_RECOVERY_PASSWORD)
+    encrypted_db.save()
+    encrypted_db.close()
+
+    reopened = EncryptedDatabase(path=db_path, key_service=_KEY_SERVICE)
+    reopened.open_with_recovery(_RECOVERY_PASSWORD)
+    assert DatabaseManager(reopened.engine).has_table("alembic_version")
+    reopened.close()
+
+
+def test_open_with_recovery_when_none_was_ever_configured_raises(
+    encrypted_db: EncryptedDatabase, db_path: Path
+) -> None:
+    # AC9: the error must be identical regardless of the specific reason, so
+    # "recovery never configured" must fail the same way as "wrong password".
+    encrypted_db.create(_PASSWORD)
+    encrypted_db.save()
+    encrypted_db.close()
+
+    reopened = EncryptedDatabase(path=db_path, key_service=_KEY_SERVICE)
+    with pytest.raises(InvalidDatabaseKeyError):
+        reopened.open_with_recovery(_RECOVERY_PASSWORD)
+
+
+def test_wrap_recovery_when_not_open_raises(encrypted_db: EncryptedDatabase) -> None:
+    with pytest.raises(RuntimeError):
+        encrypted_db.wrap_recovery(_RECOVERY_PASSWORD)
+
+
+def test_rekey_when_not_open_raises(encrypted_db: EncryptedDatabase) -> None:
+    with pytest.raises(RuntimeError):
+        encrypted_db.rekey("NewP@ssw0rd!2025")
+
+
+def test_rotate_when_not_open_raises(encrypted_db: EncryptedDatabase) -> None:
+    with pytest.raises(RuntimeError):
+        encrypted_db.rotate("NewP@ssw0rd!2025", "NewRecoveryP@ssABCDEFGHIJ654321")
+
+
+# ── rotate (full recovery) ────────────────────────────────────────────────────
+
+_NEW_MASTER_PASSWORD = "NewP@ssw0rd!2025"
+_NEW_RECOVERY_PASSWORD = "NewRecoveryP@ssABCDEFGHIJ654321"
+
+
+def test_rotate_allows_opening_with_the_new_master_password(
+    encrypted_db: EncryptedDatabase, db_path: Path
+) -> None:
+    # Regression documentation, not a TDD cycle: rotate() was built as part of
+    # the monolithic envelope-format rewrite above.
+    encrypted_db.create(_PASSWORD)
+    encrypted_db.wrap_recovery(_RECOVERY_PASSWORD)
+    encrypted_db.rotate(_NEW_MASTER_PASSWORD, _NEW_RECOVERY_PASSWORD)
+    encrypted_db.close()
+
+    reopened = EncryptedDatabase(path=db_path, key_service=_KEY_SERVICE)
+    reopened.open(_NEW_MASTER_PASSWORD)
+    assert DatabaseManager(reopened.engine).has_table("alembic_version")
+    reopened.close()
+
+
+def test_rotate_allows_opening_with_the_new_recovery_password(
+    encrypted_db: EncryptedDatabase, db_path: Path
+) -> None:
+    encrypted_db.create(_PASSWORD)
+    encrypted_db.wrap_recovery(_RECOVERY_PASSWORD)
+    encrypted_db.rotate(_NEW_MASTER_PASSWORD, _NEW_RECOVERY_PASSWORD)
+    encrypted_db.close()
+
+    reopened = EncryptedDatabase(path=db_path, key_service=_KEY_SERVICE)
+    reopened.open_with_recovery(_NEW_RECOVERY_PASSWORD)
+    assert DatabaseManager(reopened.engine).has_table("alembic_version")
+    reopened.close()
+
+
+def test_rotate_invalidates_the_old_master_password(
+    encrypted_db: EncryptedDatabase, db_path: Path
+) -> None:
+    encrypted_db.create(_PASSWORD)
+    encrypted_db.wrap_recovery(_RECOVERY_PASSWORD)
+    encrypted_db.rotate(_NEW_MASTER_PASSWORD, _NEW_RECOVERY_PASSWORD)
+    encrypted_db.close()
+
+    reopened = EncryptedDatabase(path=db_path, key_service=_KEY_SERVICE)
+    with pytest.raises(InvalidDatabaseKeyError):
+        reopened.open(_PASSWORD)
+
+
+def test_rotate_invalidates_the_old_recovery_password(
+    encrypted_db: EncryptedDatabase, db_path: Path
+) -> None:
+    encrypted_db.create(_PASSWORD)
+    encrypted_db.wrap_recovery(_RECOVERY_PASSWORD)
+    encrypted_db.rotate(_NEW_MASTER_PASSWORD, _NEW_RECOVERY_PASSWORD)
+    encrypted_db.close()
+
+    reopened = EncryptedDatabase(path=db_path, key_service=_KEY_SERVICE)
+    with pytest.raises(InvalidDatabaseKeyError):
+        reopened.open_with_recovery(_RECOVERY_PASSWORD)
+
+
+def test_rekey_does_not_disturb_the_recovery_password(
+    encrypted_db: EncryptedDatabase, db_path: Path
+) -> None:
+    # This is the architectural constraint we caught during planning: a routine
+    # #8 master-password change must never touch the recovery wrap, since #8's
+    # flow never collects the recovery password needed to rewrap it.
+    encrypted_db.create(_PASSWORD)
+    encrypted_db.wrap_recovery(_RECOVERY_PASSWORD)
+    encrypted_db.rekey(_NEW_MASTER_PASSWORD)
+    encrypted_db.close()
+
+    reopened = EncryptedDatabase(path=db_path, key_service=_KEY_SERVICE)
+    reopened.open_with_recovery(_RECOVERY_PASSWORD)
+    assert DatabaseManager(reopened.engine).has_table("alembic_version")
+    reopened.close()
+
+
+def test_failed_rotate_does_not_invalidate_the_old_master_password(
+    encrypted_db: EncryptedDatabase, db_path: Path
+) -> None:
+    # Regression guard for a real bug caught while fixing #8's atomicity test:
+    # rotate() must compute the new DEK/slots into locals and only assign to
+    # self after a successful write, or a failed write still leaves in-memory
+    # state pointing at the new (never-persisted) credentials.
+    encrypted_db.create(_PASSWORD)
+    encrypted_db.wrap_recovery(_RECOVERY_PASSWORD)
+    encrypted_db.save()
+
+    with (
+        patch("ourcrm.database.encrypted_database.os.replace", side_effect=OSError("disk full")),
+        pytest.raises(OSError),
+    ):
+        encrypted_db.rotate(_NEW_MASTER_PASSWORD, _NEW_RECOVERY_PASSWORD)
+
+    encrypted_db.close()
+
+    reopened = EncryptedDatabase(path=db_path, key_service=_KEY_SERVICE)
+    reopened.open(_PASSWORD)
+    assert DatabaseManager(reopened.engine).has_table("alembic_version")
+    reopened.close()

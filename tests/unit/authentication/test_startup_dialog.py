@@ -87,6 +87,20 @@ class TestStartupDialogOpen:
         btn = dialog.findChild(QPushButton, "startup_confirm_toggle_btn")
         assert btn is None
 
+    def test_forgot_password_link_exists(self, qtbot: QtBot) -> None:
+        dialog = StartupDialog(StartupMode.OPEN, validator=PasswordValidator())
+        qtbot.addWidget(dialog)
+        btn = dialog.findChild(QPushButton, "startup_forgot_password_link")
+        assert btn is not None
+
+    def test_clicking_forgot_password_link_emits_signal(self, qtbot: QtBot) -> None:
+        dialog = StartupDialog(StartupMode.OPEN, validator=PasswordValidator())
+        qtbot.addWidget(dialog)
+        btn = dialog.findChild(QPushButton, "startup_forgot_password_link")
+        assert btn is not None
+        with qtbot.waitSignal(dialog.forgot_password_requested, timeout=1000):
+            qtbot.mouseClick(btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+
 
 class TestStartupDialogBehavior:
     def test_password_returns_field_text(self, qtbot: QtBot) -> None:

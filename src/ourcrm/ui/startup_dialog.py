@@ -4,11 +4,12 @@ from __future__ import annotations
 
 from enum import Enum
 
-from PySide6.QtCore import QTimer
+from PySide6.QtCore import Signal
 from PySide6.QtWidgets import QDialog, QHBoxLayout, QLabel, QLineEdit, QPushButton, QVBoxLayout
 
 from ourcrm.core.auth.auth_service import AuthService
 from ourcrm.core.security.password_validator import PasswordValidator
+from ourcrm.ui.backoff import disable_for
 
 
 class StartupMode(Enum):
@@ -17,6 +18,8 @@ class StartupMode(Enum):
 
 
 class StartupDialog(QDialog):
+    forgot_password_requested = Signal()
+
     def __init__(
         self,
         mode: StartupMode,
@@ -27,7 +30,6 @@ class StartupDialog(QDialog):
         self._mode = mode
         self._validator = validator
         self._auth_service = auth_service
-        self._backoff_timer: QTimer | None = None
 
         if mode == StartupMode.CREATE:
             self.setWindowTitle("Create Master Password")
@@ -90,6 +92,13 @@ class StartupDialog(QDialog):
 
         layout.addWidget(self._error_label)
         layout.addWidget(self._submit_btn)
+
+        if mode == StartupMode.OPEN:
+            self._forgot_password_link = QPushButton("Forgot Password?")
+            self._forgot_password_link.setObjectName("startup_forgot_password_link")
+            self._forgot_password_link.clicked.connect(self.forgot_password_requested)
+            layout.addWidget(self._forgot_password_link)
+
         self.setLayout(layout)
 
     def password(self) -> str:
@@ -115,14 +124,7 @@ class StartupDialog(QDialog):
         self.accept()
 
     def _disable_submit_for(self, seconds: int) -> None:
-        self._submit_btn.setEnabled(False)
-        # Parented to self (not QTimer.singleShot as a bare free function) so Qt's
-        # ownership tree cancels/destroys this timer if the dialog is closed before
-        # the wait elapses — otherwise the lambda fires against a deleted widget.
-        self._backoff_timer = QTimer(self)
-        self._backoff_timer.setSingleShot(True)
-        self._backoff_timer.timeout.connect(lambda: self._submit_btn.setEnabled(True))
-        self._backoff_timer.start(seconds * 1000)
+        disable_for(self._submit_btn, seconds, parent=self)
 
     def _update_requirements(self) -> None:
         password = self._password_field.text()

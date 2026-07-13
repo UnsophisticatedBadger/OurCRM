@@ -2,16 +2,18 @@
 
 from __future__ import annotations
 
-from PySide6.QtCore import QTimer, Signal
+from PySide6.QtCore import Signal
 from PySide6.QtWidgets import QLabel, QLineEdit, QPushButton, QVBoxLayout, QWidget
+
+from ourcrm.ui.backoff import disable_for
 
 
 class LoginScreen(QWidget):
     login_requested = Signal(str)
+    forgot_password_requested = Signal()
 
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
-        self._backoff_timer: QTimer | None = None
         layout = QVBoxLayout(self)
         layout.addWidget(QLabel("OurCRM"))
 
@@ -30,6 +32,11 @@ class LoginScreen(QWidget):
         self._submit_btn.clicked.connect(self._on_login)
         layout.addWidget(self._submit_btn)
 
+        self._forgot_password_link = QPushButton("Forgot Password?")
+        self._forgot_password_link.setObjectName("login_forgot_password_link")
+        self._forgot_password_link.clicked.connect(self.forgot_password_requested)
+        layout.addWidget(self._forgot_password_link)
+
     def _on_login(self) -> None:
         password = self._field.text()
         self._field.clear()
@@ -39,11 +46,4 @@ class LoginScreen(QWidget):
         self._error.setText(message)
 
     def disable_login_for(self, seconds: int) -> None:
-        self._submit_btn.setEnabled(False)
-        # Parented to self so Qt's ownership tree cancels/destroys this timer if
-        # the screen is closed before the wait elapses, rather than firing a
-        # lambda against a deleted widget.
-        self._backoff_timer = QTimer(self)
-        self._backoff_timer.setSingleShot(True)
-        self._backoff_timer.timeout.connect(lambda: self._submit_btn.setEnabled(True))
-        self._backoff_timer.start(seconds * 1000)
+        disable_for(self._submit_btn, seconds, parent=self)

@@ -13,11 +13,14 @@ from ourcrm.core.config import SettingsStoreProtocol
 from ourcrm.core.container import ApplicationContainer
 from ourcrm.core.crash_handler import format_crash_entry, write_crash_log
 from ourcrm.core.security.password_validator import PasswordValidator
+from ourcrm.core.security.recovery_generator import RecoveryPasswordGenerator
 from ourcrm.database.encrypted_database import EncryptedDatabase
 from ourcrm.database.manager import DatabaseManager
 from ourcrm.ui.crash_dialog import CrashDialog
 from ourcrm.ui.main_window import MainWindow
 from ourcrm.ui.recovery_password_dialog import RecoveryPasswordDialog
+from ourcrm.ui.recovery_set_password_dialog import RecoverySetPasswordDialog
+from ourcrm.ui.recovery_verify_dialog import RecoveryVerifyDialog
 from ourcrm.ui.startup_dialog import StartupDialog, StartupMode
 
 
@@ -38,6 +41,48 @@ def build_startup_dialog(
     return StartupDialog(mode, validator=validator, auth_service=auth_service), mode
 
 
+def run_password_recovery(
+    parent: StartupDialog,
+    auth_service: AuthService,
+    encrypted_db: EncryptedDatabase,
+    recovery_generator: RecoveryPasswordGenerator,
+) -> None:
+    """Chains the three password-recovery dialogs from the startup "Forgot
+    Password?" link. Each dialog is shown non-blocking (not exec()'d) so the
+    still-running StartupDialog.exec() loop keeps processing events; the final
+    step accepts the parent StartupDialog so its exec() call returns and
+    complete_startup can detect the database is already open."""
+    verify_dialog = RecoveryVerifyDialog(auth_service, parent=parent)
+
+    def _on_verified(recovery_password: str) -> None:
+        set_password_dialog = RecoverySetPasswordDialog(
+            auth_service, encrypted_db, recovery_generator, recovery_password, parent=parent
+        )
+
+        def _on_recovered(new_recovery_password: str) -> None:
+            confirm_dialog = RecoveryPasswordDialog(
+                recovery_generator, raw_password=new_recovery_password, parent=parent
+            )
+
+            def _on_confirm_accepted() -> None:
+                DatabaseManager(encrypted_db.engine).start_session(
+                    base64.b64encode(encrypted_db.key).decode("ascii")
+                )
+                parent.accept()
+
+            confirm_dialog.accepted.connect(_on_confirm_accepted)
+            confirm_dialog.setModal(True)
+            confirm_dialog.show()
+
+        set_password_dialog.recovered.connect(_on_recovered)
+        set_password_dialog.setModal(True)
+        set_password_dialog.show()
+
+    verify_dialog.verified.connect(_on_verified)
+    verify_dialog.setModal(True)
+    verify_dialog.show()
+
+
 def complete_startup(
     dialog: StartupDialog,
     mode: StartupMode,
@@ -56,8 +101,17 @@ def complete_startup(
     has no console, so an unhandled exception here just vanishes with no
     trace. On create-mode failure, any partially-created database file and
     master password are rolled back so the next launch starts fresh."""
+    if mode == StartupMode.OPEN:
+        dialog.forgot_password_requested.connect(
+            lambda: run_password_recovery(dialog, auth_service, db, RecoveryPasswordGenerator())
+        )
+
     if dialog.exec() != QDialog.DialogCode.Accepted:
         return False
+
+    if db.is_open:
+        # Recovery already opened, rotated, and session-started the database.
+        return True
 
     password = dialog.password()
     try:
@@ -83,29 +137,32 @@ def complete_startup(
 
 def run_recovery_setup(
     dialog: RecoveryPasswordDialog,
-    db_path: Path,
+    encrypted_db: EncryptedDatabase,
     auth_service: AuthService,
 ) -> bool:
-    """Runs the modal recovery password setup screen. On acceptance, stores the
-    recovery password hash. On rejection (user confirmed exit), deletes the
-    just-created database and master password so the next launch starts fresh.
-    Returns whether the caller should proceed to the main window.
+    """Runs the modal recovery password setup screen. On acceptance, wraps the
+    database's recovery slot around the new recovery password and stores its
+    hash for later verification. On rejection (user confirmed exit), deletes
+    the just-created database and master password so the next launch starts
+    fresh. Returns whether the caller should proceed to the main window.
 
-    A failure while storing the recovery password (e.g. the keyring backend is
-    unavailable) is caught and rolled back the same way complete_startup()
-    handles its own keyring failures — otherwise the database and master
-    password would already exist with no recovery password ever stored, and
-    no way for the user to know setup didn't finish."""
+    A failure during this process (e.g. the keyring backend is unavailable)
+    is caught and rolled back the same way complete_startup() handles its own
+    keyring failures — otherwise the database and master password would
+    already exist with no recovery password ever stored, and no way for the
+    user to know setup didn't finish."""
     if dialog.exec() != QDialog.DialogCode.Accepted:
-        db_path.unlink(missing_ok=True)
+        encrypted_db.path.unlink(missing_ok=True)
         auth_service.delete_master_password()
         return False
 
     try:
+        encrypted_db.wrap_recovery(dialog.raw_password)
+        encrypted_db.save()
         auth_service.store_recovery_password(dialog.raw_password)
     except Exception as exc:
         with contextlib.suppress(Exception):
-            db_path.unlink(missing_ok=True)
+            encrypted_db.path.unlink(missing_ok=True)
         with contextlib.suppress(Exception):
             auth_service.delete_master_password()
         QMessageBox.critical(dialog, "Setup Error", f"OurCRM could not finish setup: {exc}")
@@ -187,7 +244,7 @@ def main() -> None:
 
     if mode == StartupMode.CREATE:
         recovery_dialog = RecoveryPasswordDialog(container.recovery_password_generator())
-        if not run_recovery_setup(recovery_dialog, db_path, auth_service):
+        if not run_recovery_setup(recovery_dialog, db, auth_service):
             sys.exit(0)
 
     session_factory = container.session_factory(bind=db.engine)

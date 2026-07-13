@@ -10,6 +10,8 @@ from unittest.mock import MagicMock, patch
 
 if TYPE_CHECKING:
     from ourcrm.ui.change_master_password_dialog import ChangeMasterPasswordDialog
+    from ourcrm.ui.recovery_set_password_dialog import RecoverySetPasswordDialog
+    from ourcrm.ui.recovery_verify_dialog import RecoveryVerifyDialog
 
 import pytest
 from PySide6.QtCore import Qt, QTimer
@@ -24,12 +26,14 @@ from PySide6.QtWidgets import (
     QMessageBox,
     QPushButton,
     QToolBar,
+    QWidget,
 )
 from pytest_bdd import given, parsers, scenarios, then, when
 from pytestqt.qtbot import QtBot
 from sqlalchemy import create_engine, text
 
 from ourcrm.core.auth.auth_service import AuthService
+from ourcrm.core.auth.password_recovery import recover_and_reencrypt
 from ourcrm.core.auth.result import AuthResult
 from ourcrm.core.security.key_derivation import KeyDerivationService
 from ourcrm.core.security.password_hasher import PasswordHasher
@@ -41,6 +45,7 @@ from ourcrm.main import (
     build_startup_dialog,
     complete_startup,
     determine_startup_mode,
+    run_password_recovery,
     run_recovery_setup,
 )
 from ourcrm.ui.main_window import MainWindow
@@ -362,10 +367,10 @@ def close_recovery_dialog_and_confirm_exit(
     tmp_path: Path,
     mock_recovery_warning: MagicMock,
 ) -> bool:
-    db_path = tmp_path / "ourcrm.db"
+    db = EncryptedDatabase(tmp_path / "ourcrm.db", key_service=_KEY_SERVICE)
     mock_recovery_warning.return_value = QMessageBox.StandardButton.Yes
     QTimer.singleShot(0, recovery_dialog.reject)
-    return run_recovery_setup(recovery_dialog, db_path, AuthService(hasher=_HASHER))
+    return run_recovery_setup(recovery_dialog, db, AuthService(hasher=_HASHER))
 
 
 @then("the database file no longer exists")
@@ -882,11 +887,17 @@ def next_database_write_fails() -> Generator[None]:
     original = EncryptedDatabase._write_encrypted
     remaining = {"count": 1}
 
-    def flaky_write(self: EncryptedDatabase, data: bytes, salt: bytes, key: bytes) -> None:
+    def flaky_write(
+        self: EncryptedDatabase,
+        data: bytes,
+        dek: bytes,
+        master_slot: tuple[bytes, bytes, bytes],
+        recovery_slot: tuple[bytes, bytes, bytes] | None,
+    ) -> None:
         if remaining["count"] > 0:
             remaining["count"] -= 1
             raise OSError("disk full")
-        original(self, data, salt, key)
+        original(self, data, dek, master_slot, recovery_slot)
 
     with patch.object(EncryptedDatabase, "_write_encrypted", flaky_write):
         yield
@@ -938,50 +949,469 @@ def enter_specific_password_on_login_screen(
 
 
 # ── US-009: Password Recovery ─────────────────────────────────────────────────
+#
+# The production API referenced below does not exist yet — this is the BDD Red
+# stage. New symbols targeted for Step 3:
+#   EncryptedDatabase.wrap_recovery(password), .open_with_recovery(password),
+#     .rotate(new_master_password, new_recovery_password)
+#   AuthService.verify_recovery_password(password), .recovery_wait_seconds
+#   ourcrm.core.auth.password_recovery.recover_and_reencrypt(...) -> RecoveryResult
+#   ourcrm.core.auth.result.RecoveryResult(success, error, new_recovery_password)
+#   ourcrm.ui.recovery_verify_dialog.RecoveryVerifyDialog(auth_service)
+#   ourcrm.ui.recovery_set_password_dialog.RecoverySetPasswordDialog(
+#       auth_service, encrypted_db, recovery_generator, recovery_password)
+#   RecoveryPasswordDialog gains an optional raw_password param
+#   StartupDialog / LoginScreen gain a "Forgot Password?" link + forgot_password_requested signal
+
+_RECOVERY_PASSWORD = "RecoveryTestP@ssABCDEFGHIJ123456"
+_NEW_MASTER_PASSWORD = "NewP@ssw0rd!2025"
+
+
+def _find_forgot_password_link(surface: QWidget) -> QAbstractButton | None:
+    return next(
+        (b for b in surface.findChildren(QAbstractButton) if b.text() == "Forgot Password?"),
+        None,
+    )
+
+
+def _click_forgot_password(surface: QWidget, qtbot: QtBot) -> None:
+    btn = _find_forgot_password_link(surface)
+    assert btn is not None, "Forgot Password link not found"
+    qtbot.mouseClick(btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+    QApplication.processEvents()
+
+
+def _submit_recovery_verify(root: QWidget, qtbot: QtBot, recovery_password: str) -> None:
+    from ourcrm.ui.recovery_verify_dialog import RecoveryVerifyDialog
+
+    dialog = root.findChild(RecoveryVerifyDialog)
+    assert dialog is not None, "Recovery verify form not shown"
+    field = dialog.findChild(QLineEdit, "recovery_password_field")
+    assert field is not None, "recovery_password_field not found"
+    qtbot.keyClicks(field, recovery_password)  # type: ignore[no-untyped-call]
+    btn = dialog.findChild(QPushButton, "recovery_verify_btn")
+    assert btn is not None, "recovery_verify_btn not found"
+    qtbot.mouseClick(btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+    QApplication.processEvents()
+
+
+def _submit_recovery_new_master_password(root: QWidget, qtbot: QtBot, new_password: str) -> None:
+    from ourcrm.ui.recovery_set_password_dialog import RecoverySetPasswordDialog
+
+    dialog = root.findChild(RecoverySetPasswordDialog)
+    assert dialog is not None, "Recovery new-master-password form not shown"
+    field = dialog.findChild(QLineEdit, "new_master_password_field")
+    confirm = dialog.findChild(QLineEdit, "confirm_master_password_field")
+    assert field is not None, "new_master_password_field not found"
+    assert confirm is not None, "confirm_master_password_field not found"
+    qtbot.keyClicks(field, new_password)  # type: ignore[no-untyped-call]
+    qtbot.keyClicks(confirm, new_password)  # type: ignore[no-untyped-call]
+    btn = dialog.findChild(QPushButton, "recovery_set_password_continue_btn")
+    assert btn is not None, "recovery_set_password_continue_btn not found"
+    qtbot.mouseClick(btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+    QApplication.processEvents()
+
+
+def _confirm_new_recovery_password(root: QWidget, qtbot: QtBot) -> None:
+    dialog = root.findChild(RecoveryPasswordDialog)
+    assert dialog is not None, "New recovery password screen not shown"
+    check1 = dialog.findChild(QCheckBox, "recovery_check1")
+    check2 = dialog.findChild(QCheckBox, "recovery_check2")
+    confirm_field = dialog.findChild(QLineEdit, "recovery_confirm_field")
+    assert check1 is not None, "recovery_check1 not found"
+    assert check2 is not None, "recovery_check2 not found"
+    assert confirm_field is not None, "recovery_confirm_field not found"
+    check1.setChecked(True)
+    check2.setChecked(True)
+    qtbot.keyClicks(confirm_field, "CONFIRM")  # type: ignore[no-untyped-call]
+    btn = dialog.findChild(QPushButton, "recovery_continue_btn")
+    assert btn is not None, "recovery_continue_btn not found"
+    qtbot.mouseClick(btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+    QApplication.processEvents()
 
 
 @given(
-    parsers.parse(
-        'the auth service has master password "{master}" and recovery password "{recovery}"'
-    ),
-    target_fixture="auth_service",
+    "a database with a master password and a recovery password configured",
+    target_fixture="recovery_db_path",
 )
-def auth_service_with_both_passwords(master: str, recovery: str) -> AuthService:
-    service = AuthService(hasher=_HASHER)
-    service.create_master_password(master)
-    service.store_recovery_password(recovery)
-    return service
+def database_with_recovery_configured(tmp_path: Path) -> Path:
+    db_path = tmp_path / "ourcrm.db"
+    db = EncryptedDatabase(db_path, key_service=_KEY_SERVICE)
+    db.create(_STARTUP_PASSWORD)
+    db.wrap_recovery(_RECOVERY_PASSWORD)
+    db.save()
+    db.close()
+    AuthService(hasher=_HASHER).create_master_password(_STARTUP_PASSWORD)
+    AuthService(hasher=_HASHER).store_recovery_password(_RECOVERY_PASSWORD)
+    return db_path
+
+
+@given(
+    "the startup login dialog is open for that database",
+    target_fixture="auth_surface",
+)
+def startup_dialog_open_for_recovery(recovery_db_path: Path, qtbot: QtBot) -> StartupDialog:
+    auth_service = AuthService(hasher=_HASHER)
+    dialog, _mode = build_startup_dialog(
+        recovery_db_path, PasswordValidator(), auth_service=auth_service
+    )
+    db = EncryptedDatabase(recovery_db_path, key_service=_KEY_SERVICE)
+    dialog.forgot_password_requested.connect(
+        lambda: run_password_recovery(dialog, auth_service, db, RecoveryPasswordGenerator())
+    )
+    qtbot.addWidget(dialog)
+    dialog.show()
+    return dialog
+
+
+@given(
+    "the post-logout login screen is shown for that database",
+    target_fixture="auth_surface",
+)
+def login_screen_shown_for_recovery(recovery_db_path: Path, qtbot: QtBot) -> MainWindow:
+    db = EncryptedDatabase(recovery_db_path, key_service=_KEY_SERVICE)
+    db.open(_STARTUP_PASSWORD)
+    DatabaseManager(db.engine).start_session(base64.b64encode(db.key).decode("ascii"))
+
+    auth_service = AuthService(hasher=_HASHER)
+    auth_service.login(_STARTUP_PASSWORD)
+
+    window = MainWindow(auth_service=auth_service, encrypted_db=db)
+    qtbot.addWidget(window)
+    window.show()
+
+    bar = window.menuBar()
+    file_menu = next(m for m in bar.findChildren(QMenu) if "File" in m.title())
+    action = next(a for a in file_menu.actions() if "Logout" in a.text())
+    action.trigger()
+    QApplication.processEvents()
+
+    return window
+
+
+@given(
+    "the post-logout login screen is shown for a database with existing data "
+    "and a recovery password configured",
+    target_fixture="auth_surface",
+)
+def login_screen_with_existing_data(tmp_path: Path, qtbot: QtBot) -> MainWindow:
+    db = EncryptedDatabase(tmp_path / "ourcrm.db", key_service=_KEY_SERVICE)
+    db.create(_STARTUP_PASSWORD)
+    db.wrap_recovery(_RECOVERY_PASSWORD)
+    with db.engine.connect() as conn:
+        conn.execute(text("CREATE TABLE IF NOT EXISTS _bdd_marker (val INTEGER)"))
+        conn.execute(text("INSERT INTO _bdd_marker VALUES (:val)"), {"val": _MARKER_VALUE})
+        conn.commit()
+    db.save()
+    DatabaseManager(db.engine).start_session(base64.b64encode(db.key).decode("ascii"))
+
+    auth_service = AuthService(hasher=_HASHER)
+    auth_service.create_master_password(_STARTUP_PASSWORD)
+    auth_service.store_recovery_password(_RECOVERY_PASSWORD)
+    auth_service.login(_STARTUP_PASSWORD)
+
+    window = MainWindow(auth_service=auth_service, encrypted_db=db)
+    qtbot.addWidget(window)
+    window.show()
+
+    bar = window.menuBar()
+    file_menu = next(m for m in bar.findChildren(QMenu) if "File" in m.title())
+    action = next(a for a in file_menu.actions() if "Logout" in a.text())
+    action.trigger()
+    QApplication.processEvents()
+
+    return window
+
+
+@given("the recovery form is open", target_fixture="recovery_verify_dialog")
+def recovery_form_open(qtbot: QtBot) -> RecoveryVerifyDialog:
+    from ourcrm.ui.recovery_verify_dialog import RecoveryVerifyDialog
+
+    auth_service = AuthService(hasher=_HASHER)
+    auth_service.store_recovery_password(_RECOVERY_PASSWORD)
+    dialog = RecoveryVerifyDialog(auth_service)
+    qtbot.addWidget(dialog)
+    dialog.show()
+    return dialog
+
+
+@given(
+    "the user has verified the correct recovery password",
+    target_fixture="recovery_set_password_dialog",
+)
+def verified_recovery_password_given(tmp_path: Path, qtbot: QtBot) -> RecoverySetPasswordDialog:
+    from ourcrm.ui.recovery_set_password_dialog import RecoverySetPasswordDialog
+
+    setup = EncryptedDatabase(tmp_path / "ourcrm.db", key_service=_KEY_SERVICE)
+    setup.create(_STARTUP_PASSWORD)
+    setup.wrap_recovery(_RECOVERY_PASSWORD)
+    setup.save()
+    setup.close()
+    db = EncryptedDatabase(tmp_path / "ourcrm.db", key_service=_KEY_SERVICE)
+
+    auth_service = AuthService(hasher=_HASHER)
+    auth_service.create_master_password(_STARTUP_PASSWORD)
+    auth_service.store_recovery_password(_RECOVERY_PASSWORD)
+
+    dialog = RecoverySetPasswordDialog(
+        auth_service, db, RecoveryPasswordGenerator(), _RECOVERY_PASSWORD
+    )
+    qtbot.addWidget(dialog)
+    dialog.show()
+    return dialog
+
+
+@given(
+    "the user has completed recovery with a new master password",
+    target_fixture="recovery_confirm_dialog",
+)
+def completed_recovery_with_new_master_password(
+    tmp_path: Path, qtbot: QtBot
+) -> RecoveryPasswordDialog:
+    setup = EncryptedDatabase(tmp_path / "ourcrm.db", key_service=_KEY_SERVICE)
+    setup.create(_STARTUP_PASSWORD)
+    setup.wrap_recovery(_RECOVERY_PASSWORD)
+    setup.save()
+    setup.close()
+    db = EncryptedDatabase(tmp_path / "ourcrm.db", key_service=_KEY_SERVICE)
+
+    auth_service = AuthService(hasher=_HASHER)
+    auth_service.create_master_password(_STARTUP_PASSWORD)
+    auth_service.store_recovery_password(_RECOVERY_PASSWORD)
+
+    generator = RecoveryPasswordGenerator()
+    result = recover_and_reencrypt(
+        auth_service,
+        db,
+        generator,
+        _RECOVERY_PASSWORD,
+        _NEW_MASTER_PASSWORD,
+        _NEW_MASTER_PASSWORD,
+    )
+    assert result.success, f"Recovery failed: {result.error}"
+    assert result.new_recovery_password is not None
+
+    dialog = RecoveryPasswordDialog(generator, raw_password=result.new_recovery_password)
+    qtbot.addWidget(dialog)
+    dialog.show()
+    return dialog
+
+
+@then(parsers.parse('a "{text}" link is visible'))
+def link_is_visible(auth_surface: QWidget, text: str) -> None:
+    btn = next(
+        (b for b in auth_surface.findChildren(QAbstractButton) if b.text() == text),
+        None,
+    )
+    assert btn is not None, f'"{text}" link not found'
+    assert btn.isVisible()
+
+
+@when(parsers.parse('the user clicks "{text}"'))
+def click_named_link(request: pytest.FixtureRequest, qtbot: QtBot, text: str) -> None:
+    assert text == "Forgot Password?", f"Unexpected link text: {text}"
+    surface = request.getfixturevalue("auth_surface")
+    _click_forgot_password(surface, qtbot)
+
+
+@then("a recovery form prompting for the recovery password is shown")
+def recovery_form_prompt_shown(auth_surface: QWidget) -> None:
+    from ourcrm.ui.recovery_verify_dialog import RecoveryVerifyDialog
+
+    dialog = auth_surface.findChild(RecoveryVerifyDialog)
+    assert dialog is not None, "Recovery verify form not shown"
+    field = dialog.findChild(QLineEdit, "recovery_password_field")
+    assert field is not None, "recovery_password_field not found"
+
+
+@when("the user enters an incorrect recovery password and clicks Verify")
+def enter_wrong_recovery_password(
+    recovery_verify_dialog: RecoveryVerifyDialog, qtbot: QtBot
+) -> None:
+    field = recovery_verify_dialog.findChild(QLineEdit, "recovery_password_field")
+    assert field is not None, "recovery_password_field not found"
+    qtbot.keyClicks(field, "WrongRecoveryP@ss!ABCDEFGHIJ12345")  # type: ignore[no-untyped-call]
+    btn = recovery_verify_dialog.findChild(QPushButton, "recovery_verify_btn")
+    assert btn is not None, "recovery_verify_btn not found"
+    qtbot.mouseClick(btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+    QApplication.processEvents()
 
 
 @when(
-    parsers.parse(
-        'I recover using "{recovery}" setting new password "{new}" confirmed with "{confirm}"'
-    ),
-    target_fixture="recovery_result",
+    "the user enters the correct recovery password with different letter casing and clicks Verify"
 )
-def recover(auth_service: AuthService, recovery: str, new: str, confirm: str) -> AuthResult:
-    return auth_service.recover(recovery, new, confirm)
+def enter_case_mismatched_recovery_password(
+    recovery_verify_dialog: RecoveryVerifyDialog, qtbot: QtBot
+) -> None:
+    field = recovery_verify_dialog.findChild(QLineEdit, "recovery_password_field")
+    assert field is not None, "recovery_password_field not found"
+    qtbot.keyClicks(field, _RECOVERY_PASSWORD.swapcase())  # type: ignore[no-untyped-call]
+    btn = recovery_verify_dialog.findChild(QPushButton, "recovery_verify_btn")
+    assert btn is not None, "recovery_verify_btn not found"
+    qtbot.mouseClick(btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+    QApplication.processEvents()
 
 
-@then("the recovery should succeed")
-def recovery_succeeds(recovery_result: AuthResult) -> None:
-    assert recovery_result.success, f"Expected success, got: {recovery_result.error}"
+@when("the user enters the correct recovery password and clicks Verify")
+def enter_correct_recovery_password(
+    recovery_verify_dialog: RecoveryVerifyDialog, qtbot: QtBot
+) -> None:
+    field = recovery_verify_dialog.findChild(QLineEdit, "recovery_password_field")
+    assert field is not None, "recovery_password_field not found"
+    qtbot.keyClicks(field, _RECOVERY_PASSWORD)  # type: ignore[no-untyped-call]
+    btn = recovery_verify_dialog.findChild(QPushButton, "recovery_verify_btn")
+    assert btn is not None, "recovery_verify_btn not found"
+    qtbot.mouseClick(btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+    QApplication.processEvents()
 
 
-@then("the recovery should fail")
-def recovery_fails(recovery_result: AuthResult) -> None:
-    assert not recovery_result.success
+@then(parsers.parse('the error "{message}" is shown and the form stays open'))
+def recovery_form_error_shown(recovery_verify_dialog: RecoveryVerifyDialog, message: str) -> None:
+    label = recovery_verify_dialog.findChild(QLabel, "recovery_verify_error_label")
+    assert label is not None, "recovery_verify_error_label not found"
+    assert message in label.text()
+    assert recovery_verify_dialog.isVisible(), "Recovery form should stay open"
 
 
-@then(parsers.parse('the recovery error should be "{message}"'))
-def recovery_error_is(recovery_result: AuthResult, message: str) -> None:
-    assert recovery_result.error == message
+@then("a form to set a new master password is shown")
+def new_master_password_form_shown(recovery_verify_dialog: RecoveryVerifyDialog) -> None:
+    assert recovery_verify_dialog.result() == QDialog.DialogCode.Accepted
 
 
-@then(parsers.parse('the recovery error should contain "{text}"'))
-def recovery_error_contains(recovery_result: AuthResult, text: str) -> None:
-    assert recovery_result.error is not None
-    assert text in recovery_result.error
+@when("the user enters a new master password shorter than 12 characters and clicks Continue")
+def enter_short_new_master_password(
+    recovery_set_password_dialog: RecoverySetPasswordDialog, qtbot: QtBot
+) -> None:
+    field = recovery_set_password_dialog.findChild(QLineEdit, "new_master_password_field")
+    confirm = recovery_set_password_dialog.findChild(QLineEdit, "confirm_master_password_field")
+    assert field is not None, "new_master_password_field not found"
+    assert confirm is not None, "confirm_master_password_field not found"
+    qtbot.keyClicks(field, "short1A!")  # type: ignore[no-untyped-call]
+    qtbot.keyClicks(confirm, "short1A!")  # type: ignore[no-untyped-call]
+    btn = recovery_set_password_dialog.findChild(QPushButton, "recovery_set_password_continue_btn")
+    assert btn is not None, "recovery_set_password_continue_btn not found"
+    qtbot.mouseClick(btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+    QApplication.processEvents()
+
+
+@then("a validation error is shown and the password is not accepted")
+def validation_error_shown(recovery_set_password_dialog: RecoverySetPasswordDialog) -> None:
+    label = recovery_set_password_dialog.findChild(QLabel, "recovery_set_password_error_label")
+    assert label is not None, "recovery_set_password_error_label not found"
+    assert label.text(), "Expected a validation error message"
+    assert recovery_set_password_dialog.result() != QDialog.DialogCode.Accepted
+
+
+@when("the user attempts to close the recovery password screen without confirming")
+def attempt_close_recovery_password_screen(
+    recovery_confirm_dialog: RecoveryPasswordDialog, qtbot: QtBot
+) -> None:
+    with patch(
+        "ourcrm.ui.recovery_password_dialog.QMessageBox.warning",
+        return_value=QMessageBox.StandardButton.No,
+    ):
+        recovery_confirm_dialog.reject()
+    QApplication.processEvents()
+
+
+@then("the recovery password screen remains open and the app is not yet accessible")
+def recovery_password_screen_still_open(recovery_confirm_dialog: RecoveryPasswordDialog) -> None:
+    assert recovery_confirm_dialog.isVisible(), "Recovery password screen should remain open"
+    assert recovery_confirm_dialog.result() != QDialog.DialogCode.Accepted
+
+
+@when(
+    "the user verifies and sets a new master password during recovery",
+    target_fixture="auth_surface",
+)
+def verify_and_set_new_master_password(auth_surface: QWidget, qtbot: QtBot) -> QWidget:
+    _click_forgot_password(auth_surface, qtbot)
+    _submit_recovery_verify(auth_surface, qtbot, _RECOVERY_PASSWORD)
+    _submit_recovery_new_master_password(auth_surface, qtbot, _NEW_MASTER_PASSWORD)
+    return auth_surface
+
+
+@when(
+    "the user completes the recovery flow with a new master password",
+    target_fixture="auth_surface",
+)
+def complete_full_recovery_flow(auth_surface: QWidget, qtbot: QtBot) -> QWidget:
+    verify_and_set_new_master_password(auth_surface, qtbot)
+    _confirm_new_recovery_password(auth_surface, qtbot)
+    return auth_surface
+
+
+@then("the user is logged in automatically")
+def user_logged_in_automatically(auth_surface: MainWindow) -> None:
+    assert auth_surface.auth_service is not None, "auth_service is None"
+    assert auth_surface.auth_service.is_logged_in, "User should be logged in automatically"
+
+
+@then("a new recovery password is displayed and must be confirmed saved before proceeding")
+def new_recovery_password_displayed(auth_surface: QWidget) -> None:
+    dialog = auth_surface.findChild(RecoveryPasswordDialog)
+    assert dialog is not None, "New recovery password screen not shown"
+    assert dialog.isVisible()
+
+
+@then("the marker value written before recovery is still present in the database")
+def marker_value_present_after_recovery(auth_surface: MainWindow) -> None:
+    db = auth_surface.encrypted_db
+    assert db is not None and db.is_open, "Database should be open after recovery login"
+    with db.engine.connect() as conn:
+        row = conn.execute(text("SELECT val FROM _bdd_marker")).fetchone()
+    assert row is not None and row[0] == _MARKER_VALUE
+
+
+@then("the startup login dialog closes successfully")
+def startup_login_dialog_closes_successfully(auth_surface: StartupDialog) -> None:
+    assert auth_surface.result() == QDialog.DialogCode.Accepted
+
+
+@when("the user logs out again")
+def log_out_again(auth_surface: MainWindow) -> None:
+    bar = auth_surface.menuBar()
+    file_menu = next(m for m in bar.findChildren(QMenu) if "File" in m.title())
+    action = next(a for a in file_menu.actions() if "Logout" in a.text())
+    action.trigger()
+    QApplication.processEvents()
+
+
+@when("the user attempts to log in with the old master password")
+def attempt_login_with_old_master_password(auth_surface: MainWindow, qtbot: QtBot) -> None:
+    field = auth_surface.findChild(QLineEdit, "login_password_field")
+    assert field is not None, "login_password_field not found"
+    qtbot.keyClicks(field, _STARTUP_PASSWORD)  # type: ignore[no-untyped-call]
+    btn = _find_button(auth_surface, "Login")
+    assert btn is not None, "Login button not found"
+    qtbot.mouseClick(btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+    QApplication.processEvents()
+
+
+@then("login is rejected")
+def login_is_rejected(auth_surface: MainWindow) -> None:
+    from ourcrm.ui.login_screen import LoginScreen
+
+    login = auth_surface.findChild(LoginScreen)
+    assert login is not None, "Should still show the login screen after a rejected login"
+    error = login.findChild(QLabel, "login_error_label")
+    assert error is not None and error.text(), "Expected an error for the old master password"
+
+
+@when("the user attempts to start another recovery using the old recovery password")
+def attempt_recovery_with_old_recovery_password(auth_surface: MainWindow, qtbot: QtBot) -> None:
+    _submit_recovery_verify(auth_surface, qtbot, _RECOVERY_PASSWORD)
+
+
+@then(parsers.parse('the error "{message}" is shown'))
+def recovery_error_message_shown(auth_surface: QWidget, message: str) -> None:
+    from ourcrm.ui.recovery_verify_dialog import RecoveryVerifyDialog
+
+    dialog = auth_surface.findChild(RecoveryVerifyDialog)
+    assert dialog is not None, "Recovery verify form not shown"
+    label = dialog.findChild(QLabel, "recovery_verify_error_label")
+    assert label is not None, "recovery_verify_error_label not found"
+    assert message in label.text()
 
 
 # ── US-006: Logout Functionality ──────────────────────────────────────────────

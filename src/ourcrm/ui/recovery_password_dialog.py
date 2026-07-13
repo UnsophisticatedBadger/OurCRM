@@ -11,6 +11,7 @@ from PySide6.QtWidgets import (
     QMessageBox,
     QPushButton,
     QVBoxLayout,
+    QWidget,
 )
 
 from ourcrm.core.security.recovery_confirmation import RecoveryConfirmation
@@ -24,10 +25,15 @@ _EXIT_WARNING = (
 
 
 class RecoveryPasswordDialog(QDialog):
-    def __init__(self, generator: RecoveryPasswordGenerator) -> None:
-        super().__init__()
+    def __init__(
+        self,
+        generator: RecoveryPasswordGenerator,
+        raw_password: str | None = None,
+        parent: QWidget | None = None,
+    ) -> None:
+        super().__init__(parent)
         self.setWindowTitle("Save Your Recovery Password")
-        self._raw_password = generator.generate()
+        self._raw_password = raw_password if raw_password is not None else generator.generate()
         self._confirmation = RecoveryConfirmation()
 
         self._password_label = QLabel(generator.format_for_display(self._raw_password))

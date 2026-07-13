@@ -24,6 +24,7 @@ from sqlalchemy.orm import Session, sessionmaker
 from ourcrm.calendar.repository import CalendarEventRepositoryProtocol
 from ourcrm.core.auth.auth_service import AuthService
 from ourcrm.core.config import SettingsStoreProtocol
+from ourcrm.core.security.recovery_generator import RecoveryPasswordGenerator
 from ourcrm.database.encrypted_database import EncryptedDatabase
 from ourcrm.database.manager import DatabaseManager
 from ourcrm.ui.calendar_page import CalendarPage
@@ -34,6 +35,9 @@ from ourcrm.ui.inactivity_timer import InactivityTimer
 from ourcrm.ui.lock_screen import LockScreen
 from ourcrm.ui.login_screen import LoginScreen
 from ourcrm.ui.navigation import NavigationPanel, Section
+from ourcrm.ui.recovery_password_dialog import RecoveryPasswordDialog
+from ourcrm.ui.recovery_set_password_dialog import RecoverySetPasswordDialog
+from ourcrm.ui.recovery_verify_dialog import RecoveryVerifyDialog
 from ourcrm.ui.settings_window import SettingsPanel
 
 _ACTIVITY_EVENTS = {
@@ -198,6 +202,7 @@ class MainWindow(QMainWindow):
             )
         login = LoginScreen(parent=self._central_stack)
         login.login_requested.connect(self._on_login_requested)
+        login.forgot_password_requested.connect(self._on_forgot_password_requested)
         self._central_stack.addWidget(login)
         self._central_stack.setCurrentWidget(login)
 
@@ -210,6 +215,50 @@ class MainWindow(QMainWindow):
         dialog.password_changed.connect(self._logout)
         dialog.setModal(True)
         dialog.show()
+
+    def _on_forgot_password_requested(self) -> None:
+        if self._auth_service is None or self._encrypted_db is None:
+            return
+        verify_dialog = RecoveryVerifyDialog(self._auth_service, parent=self)
+        verify_dialog.verified.connect(self._open_recovery_set_password)
+        verify_dialog.setModal(True)
+        verify_dialog.show()
+
+    def _open_recovery_set_password(self, recovery_password: str) -> None:
+        assert self._auth_service is not None
+        assert self._encrypted_db is not None
+        set_password_dialog = RecoverySetPasswordDialog(
+            self._auth_service,
+            self._encrypted_db,
+            RecoveryPasswordGenerator(),
+            recovery_password,
+            parent=self,
+        )
+        set_password_dialog.recovered.connect(self._open_new_recovery_password_screen)
+        set_password_dialog.setModal(True)
+        set_password_dialog.show()
+
+    def _open_new_recovery_password_screen(self, new_recovery_password: str) -> None:
+        confirm_dialog = RecoveryPasswordDialog(
+            RecoveryPasswordGenerator(), raw_password=new_recovery_password, parent=self
+        )
+        confirm_dialog.accepted.connect(self._finish_recovery_login)
+        confirm_dialog.setModal(True)
+        confirm_dialog.show()
+
+    def _finish_recovery_login(self) -> None:
+        assert self._encrypted_db is not None
+        DatabaseManager(self._encrypted_db.engine).start_session(
+            base64.b64encode(self._encrypted_db.key).decode("ascii")
+        )
+        login = self.findChild(LoginScreen)
+        self._central_stack.setCurrentIndex(0)
+        if login is not None:
+            self._central_stack.removeWidget(login)
+            login.hide()
+            login.setParent(None)  # detach immediately so findChild returns None
+            login.deleteLater()
+        self.navigate_to(Section.DASHBOARD)
 
     def _on_login_requested(self, password: str) -> None:
         assert self._auth_service is not None

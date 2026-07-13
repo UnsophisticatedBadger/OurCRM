@@ -385,48 +385,100 @@ Feature: Authentication
     Then the schema should be accessible through the encrypted database
 
   @story_9
-  Scenario: Recover with valid recovery password
-    Given the auth service has master password "SecureP@ssw0rd!2024" and recovery password "RecoveryTestP@ssABCDEFGHIJ123456"
-    When I recover using "RecoveryTestP@ssABCDEFGHIJ123456" setting new password "NewP@ssw0rd!2025" confirmed with "NewP@ssw0rd!2025"
-    Then the recovery should succeed
-    And logging in with "NewP@ssw0rd!2025" should succeed
-    And logging in with "SecureP@ssw0rd!2024" should fail
+  Scenario: Forgot Password link is visible on the startup login dialog
+    Given a database with a master password and a recovery password configured
+    And the startup login dialog is open for that database
+    Then a "Forgot Password?" link is visible
 
   @story_9
-  Scenario: Recovery password is case-sensitive
-    Given the auth service has master password "SecureP@ssw0rd!2024" and recovery password "RecoveryTestP@ssABCDEFGHIJ123456"
-    When I recover using "recoverytestp@ssabcdefghij123456" setting new password "NewP@ssw0rd!2025" confirmed with "NewP@ssw0rd!2025"
-    Then the recovery should fail
-    And the recovery error should be "Invalid recovery password"
+  Scenario: Forgot Password link is visible on the post-logout login screen
+    Given a database with a master password and a recovery password configured
+    And the post-logout login screen is shown for that database
+    Then a "Forgot Password?" link is visible
 
   @story_9
-  Scenario: Incorrect recovery password fails without revealing existence
-    Given the auth service has master password "SecureP@ssw0rd!2024" and recovery password "RecoveryTestP@ssABCDEFGHIJ123456"
-    When I recover using "WrongRecoveryP@ss!ABCDEFGHIJ12345" setting new password "NewP@ssw0rd!2025" confirmed with "NewP@ssw0rd!2025"
-    Then the recovery should fail
-    And the recovery error should be "Invalid recovery password"
+  Scenario: Clicking Forgot Password on the startup dialog opens the recovery form
+    Given a database with a master password and a recovery password configured
+    And the startup login dialog is open for that database
+    When the user clicks "Forgot Password?"
+    Then a recovery form prompting for the recovery password is shown
 
   @story_9
-  Scenario: New password must meet requirements
-    Given the auth service has master password "SecureP@ssw0rd!2024" and recovery password "RecoveryTestP@ssABCDEFGHIJ123456"
-    When I recover using "RecoveryTestP@ssABCDEFGHIJ123456" setting new password "weak" confirmed with "weak"
-    Then the recovery should fail
-    And the recovery error should contain "Password must be at least 12 characters"
+  Scenario: Successful recovery via the startup dialog unlocks the app
+    Given a database with a master password and a recovery password configured
+    And the startup login dialog is open for that database
+    When the user completes the recovery flow with a new master password
+    Then the startup login dialog closes successfully
 
   @story_9
-  Scenario: New password and confirmation must match
-    Given the auth service has master password "SecureP@ssw0rd!2024" and recovery password "RecoveryTestP@ssABCDEFGHIJ123456"
-    When I recover using "RecoveryTestP@ssABCDEFGHIJ123456" setting new password "NewP@ssw0rd!2025" confirmed with "DifferentP@ss1!"
-    Then the recovery should fail
-    And the recovery error should be "Passwords do not match"
+  Scenario: Clicking Forgot Password on the login screen opens the recovery form
+    Given a database with a master password and a recovery password configured
+    And the post-logout login screen is shown for that database
+    When the user clicks "Forgot Password?"
+    Then a recovery form prompting for the recovery password is shown
 
   @story_9
-  Scenario: Recovery password can be used multiple times
-    Given the auth service has master password "SecureP@ssw0rd!2024" and recovery password "RecoveryTestP@ssABCDEFGHIJ123456"
-    When I recover using "RecoveryTestP@ssABCDEFGHIJ123456" setting new password "FirstNewP@ss!2025" confirmed with "FirstNewP@ss!2025"
-    When I recover using "RecoveryTestP@ssABCDEFGHIJ123456" setting new password "SecondNewP@ss!2026" confirmed with "SecondNewP@ss!2026"
-    Then the recovery should succeed
-    And logging in with "SecondNewP@ss!2026" should succeed
+  Scenario: Wrong recovery password shows an error
+    Given the recovery form is open
+    When the user enters an incorrect recovery password and clicks Verify
+    Then the error "Incorrect recovery password" is shown and the form stays open
+
+  @story_9
+  Scenario: Case-mismatched recovery password is rejected with the same error as a wrong one
+    Given the recovery form is open
+    When the user enters the correct recovery password with different letter casing and clicks Verify
+    Then the error "Incorrect recovery password" is shown and the form stays open
+
+  @story_9
+  Scenario: Correct recovery password allows setting a new master password
+    Given the recovery form is open
+    When the user enters the correct recovery password and clicks Verify
+    Then a form to set a new master password is shown
+
+  @story_9
+  Scenario: New master password must meet complexity rules during recovery
+    Given the user has verified the correct recovery password
+    When the user enters a new master password shorter than 12 characters and clicks Continue
+    Then a validation error is shown and the password is not accepted
+
+  @story_9
+  Scenario: New recovery password cannot be dismissed without confirming it was saved
+    Given the user has completed recovery with a new master password
+    When the user attempts to close the recovery password screen without confirming
+    Then the recovery password screen remains open and the app is not yet accessible
+
+  @story_9
+  Scenario: Successful recovery logs the user in and generates a new recovery password
+    Given a database with a master password and a recovery password configured
+    And the post-logout login screen is shown for that database
+    When the user verifies and sets a new master password during recovery
+    Then the user is logged in automatically
+    And a new recovery password is displayed and must be confirmed saved before proceeding
+
+  @story_9
+  Scenario: Existing data remains readable after recovery re-encrypts the database
+    Given the post-logout login screen is shown for a database with existing data and a recovery password configured
+    When the user completes the recovery flow with a new master password
+    Then the marker value written before recovery is still present in the database
+
+  @story_9
+  Scenario: Old master password is rejected after a successful recovery
+    Given a database with a master password and a recovery password configured
+    And the post-logout login screen is shown for that database
+    When the user completes the recovery flow with a new master password
+    And the user logs out again
+    And the user attempts to log in with the old master password
+    Then login is rejected
+
+  @story_9
+  Scenario: Old recovery password is rejected after a successful recovery
+    Given a database with a master password and a recovery password configured
+    And the post-logout login screen is shown for that database
+    When the user completes the recovery flow with a new master password
+    And the user logs out again
+    And the user clicks "Forgot Password?"
+    And the user attempts to start another recovery using the old recovery password
+    Then the error "Incorrect recovery password" is shown
 
   @story_6
   Scenario: Logout via File menu shows login screen

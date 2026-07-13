@@ -21,6 +21,7 @@ class AuthService:
         self._hasher = hasher
         self._validator = validator if validator is not None else PasswordValidator()
         self._failure_count: int = 0
+        self._recovery_failure_count: int = 0
         self._is_logged_in: bool = False
 
     def create_master_password(self, password: str) -> None:
@@ -55,18 +56,19 @@ class AuthService:
         hashed = self._hasher.hash(recovery_password)
         keyring.set_password(_SERVICE, _RECOVERY_HASH_KEY, hashed)
 
-    def recover(self, recovery_password: str, new_password: str, confirmation: str) -> AuthResult:
+    def verify_recovery_password(self, password: str) -> bool:
         stored_hash = keyring.get_password(_SERVICE, _RECOVERY_HASH_KEY)
-        if stored_hash is None or not self._hasher.verify(recovery_password, stored_hash):
-            return AuthResult(success=False, error="Invalid recovery password")
+        if stored_hash is not None and self._hasher.verify(password, stored_hash):
+            self._recovery_failure_count = 0
+            return True
+        self._recovery_failure_count += 1
+        return False
 
-        validation = self._validator.validate_with_confirmation(new_password, confirmation)
-        if not validation.is_valid:
-            return AuthResult(success=False, error=validation.errors[0])
-
-        new_hash = self._hasher.hash(new_password)
-        keyring.set_password(_SERVICE, _MASTER_HASH_KEY, new_hash)
-        return AuthResult(success=True)
+    @property
+    def recovery_wait_seconds(self) -> int:
+        if self._recovery_failure_count < 3:
+            return 0
+        return 30 * (1 << (self._recovery_failure_count - 3))
 
     def verify_password(self, password: str) -> bool:
         stored_hash = keyring.get_password(_SERVICE, _MASTER_HASH_KEY)

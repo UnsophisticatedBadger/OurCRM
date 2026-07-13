@@ -76,3 +76,15 @@ def test_login_button_reenables_after_wait(screen: LoginScreen, qtbot: QtBot) ->
     btn = next(b for b in screen.findChildren(QPushButton) if b.text() == "Login")
     assert not btn.isEnabled()
     qtbot.waitUntil(lambda: btn.isEnabled(), timeout=2500)
+
+
+def test_has_forgot_password_link(screen: LoginScreen) -> None:
+    btn = screen.findChild(QPushButton, "login_forgot_password_link")
+    assert btn is not None
+
+
+def test_clicking_forgot_password_link_emits_signal(screen: LoginScreen, qtbot: QtBot) -> None:
+    btn = screen.findChild(QPushButton, "login_forgot_password_link")
+    assert btn is not None
+    with qtbot.waitSignal(screen.forgot_password_requested, timeout=1000):
+        btn.click()

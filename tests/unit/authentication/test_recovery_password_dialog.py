@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from PySide6.QtWidgets import QCheckBox, QLabel, QLineEdit, QPushButton
+from PySide6.QtWidgets import QCheckBox, QLabel, QLineEdit, QPushButton, QWidget
 from pytestqt.qtbot import QtBot
 
 from ourcrm.core.security.recovery_generator import RecoveryPasswordGenerator
@@ -63,3 +63,23 @@ def test_continue_button_starts_disabled(qtbot: QtBot) -> None:
     assert btn is not None
     assert btn.text() == "Continue"
     assert not btn.isEnabled()
+
+
+# ── displaying an already-generated password (recovery flow reuse) ────────────
+
+
+def test_given_raw_password_is_displayed_instead_of_a_freshly_generated_one(
+    qtbot: QtBot,
+) -> None:
+    given_password = "AlreadyGeneratedP@ssABCDEFGHIJ12"
+    dialog = RecoveryPasswordDialog(RecoveryPasswordGenerator(), raw_password=given_password)
+    qtbot.addWidget(dialog)
+    assert dialog.raw_password == given_password
+
+
+def test_accepts_an_optional_parent_widget(qtbot: QtBot) -> None:
+    parent = QWidget()
+    qtbot.addWidget(parent)
+    dialog = RecoveryPasswordDialog(RecoveryPasswordGenerator(), parent=parent)
+    qtbot.addWidget(dialog)
+    assert dialog.parent() is parent
