@@ -2,6 +2,15 @@
 
 <!-- version list -->
 
+## v0.11.0 (2026-07-13)
+
+### Features
+
+- Password recovery flow with envelope encryption
+  ([#9](https://github.com/UnsophisticatedBadger/OurCRM/pull/9),
+  [`fca719a`](https://github.com/UnsophisticatedBadger/OurCRM/commit/fca719a8d5b977e1706aa08c44fe7f4d05796d10))
+
+
 ## v0.10.0 (2026-07-11)
 
 ### Features
