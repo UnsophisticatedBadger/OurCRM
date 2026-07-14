@@ -2,6 +2,20 @@
 
 <!-- version list -->
 
+## v0.12.0 (2026-07-14)
+
+### Chores
+
+- Remove stale wiki/Roadmap.md draft, superseded by the wiki project's roadmap
+  ([`68d13d9`](https://github.com/UnsophisticatedBadger/OurCRM/commit/68d13d9608d0fde56de0d67cef3abe283a313e4e))
+
+### Features
+
+- Wire general settings (theme, date/time format, landing page) throughout the app
+  ([#12](https://github.com/UnsophisticatedBadger/OurCRM/pull/12),
+  [`f5ebe5b`](https://github.com/UnsophisticatedBadger/OurCRM/commit/f5ebe5b4d8ffc459ce5ac3a90acae5911b43abf4))
+
+
 ## v0.11.0 (2026-07-13)
 
 ### Features
