@@ -18,4 +18,6 @@ Feature: Infrastructure
     And the tag format uses the v prefix
     And feat commits trigger a minor version bump
     And fix commits trigger a patch version bump
+    And perf commits trigger a patch version bump
+    And refactor commits trigger a patch version bump
     And release artifact upload is handled by the release workflow

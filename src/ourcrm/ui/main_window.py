@@ -23,7 +23,7 @@ from sqlalchemy.orm import Session, sessionmaker
 
 from ourcrm.calendar.repository import CalendarEventRepositoryProtocol
 from ourcrm.core.auth.auth_service import AuthService
-from ourcrm.core.config import SettingsStoreProtocol
+from ourcrm.core.config import LandingPage, SettingsStoreProtocol, StartupBehavior
 from ourcrm.core.security.recovery_generator import RecoveryPasswordGenerator
 from ourcrm.database.encrypted_database import EncryptedDatabase
 from ourcrm.database.manager import DatabaseManager
@@ -39,11 +39,21 @@ from ourcrm.ui.recovery_password_dialog import RecoveryPasswordDialog
 from ourcrm.ui.recovery_set_password_dialog import RecoverySetPasswordDialog
 from ourcrm.ui.recovery_verify_dialog import RecoveryVerifyDialog
 from ourcrm.ui.settings_window import SettingsPanel
+from ourcrm.ui.theme import apply_theme
 
 _ACTIVITY_EVENTS = {
     QEvent.Type.KeyPress,
     QEvent.Type.MouseMove,
     QEvent.Type.MouseButtonPress,
+}
+
+_LANDING_PAGE_TO_SECTION = {
+    LandingPage.DASHBOARD: Section.DASHBOARD,
+    LandingPage.CONTACTS: Section.CONTACTS,
+    LandingPage.LEADS: Section.LEADS,
+    LandingPage.PROPERTIES: Section.PROPERTIES,
+    LandingPage.TRANSACTIONS: Section.TRANSACTIONS,
+    LandingPage.CALENDAR: Section.CALENDAR,
 }
 
 
@@ -78,9 +88,28 @@ class MainWindow(QMainWindow):
         self._action_about: QAction
         self.setWindowTitle("OurCRM")
         self.setMinimumSize(800, 600)
+        self._apply_theme_on_launch()
         self._setup_ui()
+        self.navigate_to(self._resolve_initial_section())
         self._setup_autolock(auto_lock_timeout_seconds)
         self._restore_geometry()
+
+    def _apply_theme_on_launch(self) -> None:
+        if self._app_config is None or self._qt_app is None:
+            return
+        apply_theme(self._app_config.load_general().theme, self._qt_app)
+
+    def _resolve_initial_section(self) -> Section:
+        if self._app_config is None:
+            return Section.DASHBOARD
+        general = self._app_config.load_general()
+        if general.startup_behavior == StartupBehavior.LAST_VIEW:
+            raw: object = self._settings.value("last_section")
+            if isinstance(raw, int | str):
+                with contextlib.suppress(ValueError, TypeError):
+                    return Section(int(raw))
+            return Section.DASHBOARD
+        return _LANDING_PAGE_TO_SECTION[general.landing_page]
 
     def _setup_ui(self) -> None:
         self._setup_menu_bar()
@@ -166,7 +195,8 @@ class MainWindow(QMainWindow):
         if section == Section.DASHBOARD:
             return DashboardPage(navigate_to=self.navigate_to)
         if section == Section.CALENDAR:
-            return CalendarPage(repository=self._calendar_repository)
+            general = self._app_config.load_general() if self._app_config is not None else None
+            return CalendarPage(repository=self._calendar_repository, general_settings=general)
         if section == Section.SETTINGS:
             panel = SettingsPanel(app_config=self._app_config, qt_app=self._qt_app)
             panel.security_saved.connect(self._reconfigure_autolock)
@@ -391,6 +421,7 @@ class MainWindow(QMainWindow):
     @override
     def closeEvent(self, event: QCloseEvent) -> None:
         self._settings.setValue("geometry", self.saveGeometry())
+        self._settings.setValue("last_section", self.current_section().value)
         self._settings.sync()
         if self._encrypted_db is not None and self._encrypted_db.is_open:
             try:

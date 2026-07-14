@@ -116,6 +116,9 @@ def test_session_factory_property_returns_injected_factory(qtbot: QtBot, tmp_pat
     window = MainWindow(session_factory=factory)
     qtbot.addWidget(window)
     assert window.session_factory is factory
+    # window has no encrypted_db reference (only session_factory was injected),
+    # so its closeEvent never touches this connection — release it directly.
+    db.close()
 
 
 def test_logout_closes_an_open_database(qtbot: QtBot, tmp_path: Path) -> None:

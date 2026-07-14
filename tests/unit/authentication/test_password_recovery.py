@@ -1,5 +1,6 @@
 """Unit tests for password recovery — verifying the recovery password and its lockout."""
 
+from collections.abc import Generator
 from pathlib import Path
 from unittest.mock import patch
 
@@ -104,13 +105,16 @@ def configured_auth_service(in_memory_keyring: InMemoryKeyring) -> AuthService:
 
 
 @pytest.fixture
-def locked_db(tmp_path: Path) -> EncryptedDatabase:
+def locked_db(tmp_path: Path) -> Generator[EncryptedDatabase]:
     setup = EncryptedDatabase(tmp_path / "ourcrm.db", key_service=_KEY_SERVICE)
     setup.create(_MASTER)
     setup.wrap_recovery(_RECOVERY)
     setup.save()
     setup.close()
-    return EncryptedDatabase(tmp_path / "ourcrm.db", key_service=_KEY_SERVICE)
+    db = EncryptedDatabase(tmp_path / "ourcrm.db", key_service=_KEY_SERVICE)
+    yield db
+    if db.is_open:
+        db.close()
 
 
 def test_correct_recovery_password_succeeds(

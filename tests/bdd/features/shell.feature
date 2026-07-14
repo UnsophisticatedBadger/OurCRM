@@ -225,10 +225,100 @@ Feature: Shell
     Given the settings panel is open on General
     When I select "Dark" from the Theme dropdown
     And I select "DD/MM/YYYY" from the Date Format dropdown
+    And I select "24-hour" from the Time Format dropdown
+    And I select "Contacts" from the Default Landing Page dropdown
+    And I select "Default Page" from the Startup Behavior dropdown
     And I click Save
     And the config is reloaded from disk
     Then the saved theme is "Dark"
     And the saved date format is "DD/MM/YYYY"
+    And the saved time format is "24-hour"
+    And the saved landing page is "Contacts"
+    And the saved startup behavior is "Default Page"
+
+  @story_12
+  Scenario: Theme changes immediately without restarting
+    Given the settings panel is open on General
+    When I select "Dark" from the Theme dropdown
+    And I click Save
+    Then the app's theme is "Dark"
+
+  @story_12
+  Scenario: Theme is re-applied automatically when the app restarts
+    Given the settings panel is open on General
+    When I select "Dark" from the Theme dropdown
+    And I click Save
+    And the main window is opened using the saved general settings
+    Then the app's theme is "Dark"
+
+  @story_12
+  Scenario: Calendar view renders dates using the configured date format
+    Given a calendar event exists on a known date
+    And the date format is set to "DD/MM/YYYY"
+    When I view the Calendar
+    Then the event's date is displayed in "DD/MM/YYYY" format
+
+  @story_12
+  Scenario: Calendar view renders times using the configured time format
+    Given a calendar event exists at a known time
+    And the time format is set to "12-hour"
+    When I view the Calendar
+    Then the event's time is displayed in 12-hour format
+
+  @story_12
+  Scenario: New Event form uses the configured time format
+    Given the calendar is configured with time format "12-hour"
+    When I view the Calendar
+    And I click New Event
+    Then the New Event form's time fields use 12-hour format
+
+  @story_12
+  Scenario: New Event form uses the configured date format
+    Given a calendar event exists on a known date
+    And the date format is set to "DD/MM/YYYY"
+    When I view the Calendar
+    And I click New Event
+    Then the New Event form's date fields use "DD/MM/YYYY" format
+
+  @story_12
+  Scenario: Week view shows event times in the configured time format
+    Given a calendar event exists at a known time
+    And the time format is set to "12-hour"
+    When I view the Calendar
+    And I switch to Week view
+    Then the week view shows the event's time in 12-hour format
+
+  @story_12
+  Scenario: Day view shows time slots in the configured time format
+    Given the calendar is configured with time format "12-hour"
+    When I view the Calendar
+    And I switch to Day view
+    Then the day view shows time slots in 12-hour format
+
+  @story_12
+  Scenario: Month view day list shows event times in the configured time format
+    Given a calendar event exists at a known time
+    And the time format is set to "12-hour"
+    When I view the Calendar
+    Then the month view day list shows the event's time in 12-hour format
+
+  @story_12
+  Scenario: App opens to the Default Landing Page on launch
+    Given the settings panel is open on General
+    When I select "Contacts" from the Default Landing Page dropdown
+    And I select "Default Page" from the Startup Behavior dropdown
+    And I click Save
+    And the main window is opened using the saved general settings
+    Then the Contacts section is active
+
+  @story_12
+  Scenario: App resumes the last viewed section on launch
+    Given the settings panel is open on General
+    When I select "Last View" from the Startup Behavior dropdown
+    And I click Save
+    And I set the last viewed section to "Calendar"
+    And the main window is opened using the saved general settings
+    Then the Calendar section is active
 
   @story_13
   Scenario: View Security settings

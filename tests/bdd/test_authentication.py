@@ -400,11 +400,14 @@ def temporary_data_directory(tmp_path: Path) -> Path:
 
 
 @given("an encrypted database for that directory", target_fixture="encrypted_db")
-def encrypted_database(tmp_dir: Path) -> EncryptedDatabase:
-    return EncryptedDatabase(
+def encrypted_database(tmp_dir: Path) -> Generator[EncryptedDatabase]:
+    db = EncryptedDatabase(
         path=tmp_dir / "ourcrm.db.enc",
         key_service=_KEY_SERVICE,
     )
+    yield db
+    if db.is_open:
+        db.close()
 
 
 @when("I initialize the schema")
@@ -1050,7 +1053,9 @@ def database_with_recovery_configured(tmp_path: Path) -> Path:
     "the startup login dialog is open for that database",
     target_fixture="auth_surface",
 )
-def startup_dialog_open_for_recovery(recovery_db_path: Path, qtbot: QtBot) -> StartupDialog:
+def startup_dialog_open_for_recovery(
+    recovery_db_path: Path, qtbot: QtBot
+) -> Generator[StartupDialog]:
     auth_service = AuthService(hasher=_HASHER)
     dialog, _mode = build_startup_dialog(
         recovery_db_path, PasswordValidator(), auth_service=auth_service
@@ -1061,7 +1066,9 @@ def startup_dialog_open_for_recovery(recovery_db_path: Path, qtbot: QtBot) -> St
     )
     qtbot.addWidget(dialog)
     dialog.show()
-    return dialog
+    yield dialog
+    if db.is_open:
+        db.close()
 
 
 @given(
@@ -1190,6 +1197,7 @@ def completed_recovery_with_new_master_password(
     )
     assert result.success, f"Recovery failed: {result.error}"
     assert result.new_recovery_password is not None
+    db.close()
 
     dialog = RecoveryPasswordDialog(generator, raw_password=result.new_recovery_password)
     qtbot.addWidget(dialog)
@@ -1741,7 +1749,17 @@ def submit_valid_new_password(startup_dialog: StartupDialog, tmp_dir: Path, qtbo
 
     QTimer.singleShot(0, fill_and_submit)
     db = EncryptedDatabase(tmp_dir / "ourcrm.db", key_service=_KEY_SERVICE)
-    return complete_startup(startup_dialog, StartupMode.CREATE, db, AuthService(hasher=_HASHER))
+    result = complete_startup(startup_dialog, StartupMode.CREATE, db, AuthService(hasher=_HASHER))
+    if db.is_open:
+        if db.path.exists():
+            db.close()
+        else:
+            # A keyring failure mid-create rolls back the file, so a real
+            # close() (which writes to db.path) would wrongly resurrect it —
+            # release the in-memory sqlite connection directly instead.
+            assert db._conn is not None
+            db._conn.close()
+    return result
 
 
 @when("the user closes the dialog before submitting", target_fixture="startup_result")
@@ -1798,7 +1816,16 @@ def submit_open_mode_password(
 
     QTimer.singleShot(0, fill_and_submit)
     db = EncryptedDatabase(tmp_dir / "ourcrm.db", key_service=_KEY_SERVICE)
-    return complete_startup(startup_dialog, StartupMode.OPEN, db, AuthService(hasher=_HASHER))
+    result = complete_startup(startup_dialog, StartupMode.OPEN, db, AuthService(hasher=_HASHER))
+    if db.is_open:
+        if db.path.exists():
+            db.close()
+        else:
+            # Mirrors submit_valid_new_password's rollback guard: don't let a
+            # real close() resurrect a file that startup rolled back.
+            assert db._conn is not None
+            db._conn.close()
+    return result
 
 
 @then("startup completes successfully")

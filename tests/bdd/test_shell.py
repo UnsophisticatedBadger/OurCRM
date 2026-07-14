@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import datetime
 import pathlib
 import re
 from collections.abc import Generator
@@ -9,12 +10,14 @@ from typing import TYPE_CHECKING
 from unittest.mock import MagicMock, patch
 
 if TYPE_CHECKING:
+    from ourcrm.ui.calendar_page import EventForm
     from ourcrm.ui.help_window import AboutDialog
 
-from PySide6.QtCore import Qt
+from PySide6.QtCore import QDate, QSettings, Qt
 from PySide6.QtGui import QAction
 from PySide6.QtWidgets import (
     QApplication,
+    QCalendarWidget,
     QComboBox,
     QDialogButtonBox,
     QGroupBox,
@@ -24,12 +27,17 @@ from PySide6.QtWidgets import (
     QPushButton,
     QSpinBox,
     QStackedWidget,
+    QTimeEdit,
+    QWidget,
 )
 from pytest_bdd import given, parsers, scenarios, then, when
 from pytestqt.qtbot import QtBot
 
+from ourcrm.calendar.models import CalendarEvent
+from ourcrm.calendar.repository import CalendarEventRepository
 from ourcrm.core.auth.auth_service import AuthService
-from ourcrm.core.config import AppConfig
+from ourcrm.core.config import AppConfig, DateFormat, GeneralSettings, TimeFormat
+from ourcrm.ui.calendar_page import CalendarPage, EventDetailDialog
 from ourcrm.ui.general_page import GeneralPage
 from ourcrm.ui.main_window import MainWindow
 from ourcrm.ui.navigation import Section
@@ -389,14 +397,20 @@ def settings_nav_contains(main_window: MainWindow, label: str) -> None:
 def panel_open_on_general(
     qtbot: QtBot,
     tmp_path: pathlib.Path,
-    qapp: QApplication,
 ) -> dict[str, object]:
     config_path = tmp_path / "config.toml"
     config = AppConfig(config_path)
-    panel = SettingsPanel(app_config=config, qt_app=qapp)
+    mock_qt_app = MagicMock(spec=QApplication)
+    panel = SettingsPanel(app_config=config, qt_app=mock_qt_app)
     qtbot.addWidget(panel)
     panel.show()
-    return {"panel": panel, "config": config, "config_path": config_path}
+    return {
+        "panel": panel,
+        "config": config,
+        "config_path": config_path,
+        "settings_path": tmp_path / "settings.ini",
+        "mock_qt_app": mock_qt_app,
+    }
 
 
 @then("I should see a Theme dropdown")
@@ -470,6 +484,344 @@ def saved_time_format_is(panel_ctx: dict[str, object], value: str) -> None:
     config = panel_ctx["config"]
     assert isinstance(config, AppConfig)
     assert config.load_general().time_format.value == value
+
+
+@when(parsers.parse('I select "{value}" from the Default Landing Page dropdown'))
+def select_landing_page(panel_ctx: dict[str, object], value: str) -> None:
+    cb = _general_page(panel_ctx).findChild(QComboBox, "landing_page_dropdown")
+    assert cb is not None
+    idx = cb.findText(value)
+    assert idx >= 0, f"Landing page '{value}' not found in dropdown"
+    cb.setCurrentIndex(idx)
+
+
+@when(parsers.parse('I select "{value}" from the Startup Behavior dropdown'))
+def select_startup_behavior(panel_ctx: dict[str, object], value: str) -> None:
+    cb = _general_page(panel_ctx).findChild(QComboBox, "startup_behavior_dropdown")
+    assert cb is not None
+    idx = cb.findText(value)
+    assert idx >= 0, f"Startup behavior '{value}' not found in dropdown"
+    cb.setCurrentIndex(idx)
+
+
+@then(parsers.parse('the saved landing page is "{value}"'))
+def saved_landing_page_is(panel_ctx: dict[str, object], value: str) -> None:
+    config = panel_ctx["config"]
+    assert isinstance(config, AppConfig)
+    assert config.load_general().landing_page.value == value
+
+
+@then(parsers.parse('the saved startup behavior is "{value}"'))
+def saved_startup_behavior_is(panel_ctx: dict[str, object], value: str) -> None:
+    config = panel_ctx["config"]
+    assert isinstance(config, AppConfig)
+    assert config.load_general().startup_behavior.value == value
+
+
+@when(parsers.parse('I set the last viewed section to "{section}"'))
+def set_last_viewed_section(panel_ctx: dict[str, object], section: str) -> None:
+    settings_path = panel_ctx["settings_path"]
+    assert isinstance(settings_path, pathlib.Path)
+    settings = QSettings(str(settings_path), QSettings.Format.IniFormat)
+    settings.setValue("last_section", _SECTION_NAMES[section].value)
+    settings.sync()
+
+
+_THEME_COLOR_SCHEME = {
+    "Light": Qt.ColorScheme.Light,
+    "Dark": Qt.ColorScheme.Dark,
+    "Auto": Qt.ColorScheme.Unknown,
+}
+
+
+@when(
+    "the main window is opened using the saved general settings",
+    target_fixture="main_window",
+)
+def open_main_window_with_saved_general_settings(
+    panel_ctx: dict[str, object], qtbot: QtBot
+) -> MainWindow:
+    config = panel_ctx["config"]
+    assert isinstance(config, AppConfig)
+    settings_path = panel_ctx["settings_path"]
+    assert isinstance(settings_path, pathlib.Path)
+    settings = QSettings(str(settings_path), QSettings.Format.IniFormat)
+    mock_qt_app = MagicMock(spec=QApplication)
+    panel_ctx["mock_qt_app"] = mock_qt_app
+    window = MainWindow(
+        settings=settings,
+        app_config=config,
+        qt_app=mock_qt_app,
+        auth_service=_test_auth_service(),
+    )
+    qtbot.addWidget(window)
+    window.show()
+    return window
+
+
+@then(parsers.parse('the app\'s theme is "{value}"'))
+def app_theme_is(panel_ctx: dict[str, object], value: str) -> None:
+    mock_qt_app = panel_ctx["mock_qt_app"]
+    assert isinstance(mock_qt_app, MagicMock)
+    mock_qt_app.styleHints().setColorScheme.assert_called_with(_THEME_COLOR_SCHEME[value])
+
+
+# ── US-012: Calendar formatting follows General settings ─────────────────────
+
+_KNOWN_DATE = datetime.date(2026, 3, 5)
+_KNOWN_TIME_START = datetime.time(14, 30)
+_KNOWN_TIME_END = datetime.time(15, 30)
+
+
+@given("a calendar event exists on a known date", target_fixture="calendar_ctx")
+def calendar_event_on_known_date(tmp_path: pathlib.Path) -> dict[str, object]:
+    repository = CalendarEventRepository()
+    repository.create(
+        CalendarEvent(
+            title="Known Date Event",
+            date=_KNOWN_DATE,
+            start_time=datetime.time(9, 0),
+            end_time=datetime.time(10, 0),
+        )
+    )
+    return {
+        "repository": repository,
+        "config": AppConfig(tmp_path / "config.toml"),
+        "date": _KNOWN_DATE,
+    }
+
+
+@given("a calendar event exists at a known time", target_fixture="calendar_ctx")
+def calendar_event_at_known_time(tmp_path: pathlib.Path) -> dict[str, object]:
+    repository = CalendarEventRepository()
+    repository.create(
+        CalendarEvent(
+            title="Known Time Event",
+            date=_KNOWN_DATE,
+            start_time=_KNOWN_TIME_START,
+            end_time=_KNOWN_TIME_END,
+        )
+    )
+    return {
+        "repository": repository,
+        "config": AppConfig(tmp_path / "config.toml"),
+        "date": _KNOWN_DATE,
+    }
+
+
+@given(
+    parsers.parse('the calendar is configured with time format "{value}"'),
+    target_fixture="calendar_ctx",
+)
+def calendar_configured_with_time_format(tmp_path: pathlib.Path, value: str) -> dict[str, object]:
+    fmt = next(f for f in TimeFormat if f.value == value)
+    config = AppConfig(tmp_path / "config.toml")
+    config.save_general(GeneralSettings(time_format=fmt))
+    return {
+        "repository": CalendarEventRepository(),
+        "config": config,
+        "date": _KNOWN_DATE,
+    }
+
+
+@given(parsers.parse('the date format is set to "{value}"'))
+def date_format_is_set_to(calendar_ctx: dict[str, object], value: str) -> None:
+    config = calendar_ctx["config"]
+    assert isinstance(config, AppConfig)
+    fmt = next(f for f in DateFormat if f.value == value)
+    config.save_general(GeneralSettings(date_format=fmt))
+
+
+@given(parsers.parse('the time format is set to "{value}"'))
+def time_format_is_set_to(calendar_ctx: dict[str, object], value: str) -> None:
+    config = calendar_ctx["config"]
+    assert isinstance(config, AppConfig)
+    fmt = next(f for f in TimeFormat if f.value == value)
+    config.save_general(GeneralSettings(time_format=fmt))
+
+
+@when("I switch to Week view")
+def switch_to_week_view(
+    calendar_window: MainWindow, calendar_ctx: dict[str, object], qtbot: QtBot
+) -> None:
+    from ourcrm.ui.calendar_page import WeekView, _week_monday
+
+    page = calendar_window.findChild(CalendarPage)
+    assert page is not None
+    btn = page.findChild(QPushButton, "week_view_button")
+    assert btn is not None
+    qtbot.mouseClick(btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+
+    date = calendar_ctx["date"]
+    assert isinstance(date, datetime.date)
+    week_view = page.findChild(WeekView, "week_view")
+    assert week_view is not None
+    week_view.set_week_start(_week_monday(QDate(date.year, date.month, date.day)))
+
+
+@when("I switch to Day view")
+def switch_to_day_view(calendar_window: MainWindow, qtbot: QtBot) -> None:
+    page = calendar_window.findChild(CalendarPage)
+    assert page is not None
+    btn = page.findChild(QPushButton, "day_view_button")
+    assert btn is not None
+    qtbot.mouseClick(btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+
+
+@then("the week view shows the event's time in 12-hour format")
+def week_view_shows_time_in_12_hour_format(calendar_window: MainWindow) -> None:
+    page = calendar_window.findChild(CalendarPage)
+    assert page is not None
+    week_view = page.findChild(QWidget, "week_view")
+    assert week_view is not None
+    texts = [
+        day_list.item(i).text()
+        for day_list in week_view.findChildren(QListWidget)
+        for i in range(day_list.count())
+    ]
+    assert any("2:30 PM" in t for t in texts), f"Expected 12-hour time in week view. Items: {texts}"
+
+
+@then("the day view shows time slots in 12-hour format")
+def day_view_shows_slots_in_12_hour_format(calendar_window: MainWindow) -> None:
+    page = calendar_window.findChild(CalendarPage)
+    assert page is not None
+    slot_list = page.findChild(QListWidget, "day_slot_list")
+    assert slot_list is not None
+    texts = [slot_list.item(i).text() for i in range(slot_list.count())]
+    assert any("6:00 AM" in t for t in texts), f"Expected 12-hour slot time. Items: {texts}"
+
+
+@then("the month view day list shows the event's time in 12-hour format")
+def month_view_day_list_shows_time_in_12_hour_format(
+    calendar_window: MainWindow, calendar_ctx: dict[str, object]
+) -> None:
+    date = calendar_ctx["date"]
+    assert isinstance(date, datetime.date)
+    page = calendar_window.findChild(CalendarPage)
+    assert page is not None
+    calendar_widget = page.findChild(QCalendarWidget, "calendar_widget")
+    assert calendar_widget is not None
+    calendar_widget.setSelectedDate(QDate(date.year, date.month, date.day))
+    day_list = page.findChild(QListWidget, "day_events_list")
+    assert day_list is not None
+    texts = [day_list.item(i).text() for i in range(day_list.count())]
+    assert any("2:30 PM" in t for t in texts), f"Expected 12-hour time in day list. Items: {texts}"
+
+
+@when("I view the Calendar", target_fixture="calendar_window")
+def view_the_calendar(calendar_ctx: dict[str, object], qtbot: QtBot) -> MainWindow:
+    config = calendar_ctx["config"]
+    assert isinstance(config, AppConfig)
+    window = MainWindow(
+        app_config=config,
+        auth_service=_test_auth_service(),
+        calendar_repository=calendar_ctx["repository"],  # type: ignore[arg-type]
+    )
+    qtbot.addWidget(window)
+    window.show()
+    window.navigate_to(Section.CALENDAR)
+    return window
+
+
+@when("I click New Event")
+def click_new_event(calendar_window: MainWindow, qtbot: QtBot) -> None:
+    page = calendar_window.findChild(CalendarPage)
+    assert page is not None
+    new_event_btn = page.findChild(QPushButton, "new_event_button")
+    assert new_event_btn is not None
+    qtbot.mouseClick(new_event_btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+
+
+def _open_new_event_form(qtbot: QtBot) -> EventForm:
+    from ourcrm.ui.calendar_page import EventForm
+
+    forms = [
+        w for w in QApplication.topLevelWidgets() if isinstance(w, EventForm) and w.isVisible()
+    ]
+    assert forms, "New Event form did not open"
+    qtbot.addWidget(forms[0])
+    return forms[0]
+
+
+@then(parsers.parse("the New Event form's time fields use {value} format"))
+def new_event_form_time_fields_use_format(
+    calendar_window: MainWindow, qtbot: QtBot, value: str
+) -> None:
+    form = _open_new_event_form(qtbot)
+    start_field = form.findChild(QTimeEdit, "start_time_field")
+    assert start_field is not None
+    expected = "h:mm AP" if value == "12-hour" else "HH:mm"
+    assert start_field.displayFormat() == expected
+
+
+@then(parsers.parse('the New Event form\'s date fields use "{value}" format'))
+def new_event_form_date_fields_use_format(
+    calendar_window: MainWindow, qtbot: QtBot, value: str
+) -> None:
+    from PySide6.QtWidgets import QDateEdit
+
+    form = _open_new_event_form(qtbot)
+    date_field = form.findChild(QDateEdit, "date_field")
+    assert date_field is not None
+    fmt = next(f for f in DateFormat if f.value == value)
+    expected = {
+        DateFormat.MDY: "MM/dd/yyyy",
+        DateFormat.DMY: "dd/MM/yyyy",
+        DateFormat.YMD: "yyyy-MM-dd",
+    }[fmt]
+    assert date_field.displayFormat() == expected
+
+
+def _open_known_event_detail(
+    window: MainWindow, date: datetime.date, qtbot: QtBot
+) -> EventDetailDialog:
+    page = window.findChild(CalendarPage)
+    assert page is not None
+    calendar_widget = page.findChild(QCalendarWidget, "calendar_widget")
+    assert calendar_widget is not None
+    calendar_widget.setSelectedDate(QDate(date.year, date.month, date.day))
+    day_list = page.findChild(QListWidget, "day_events_list")
+    assert day_list is not None
+    assert day_list.count() > 0, "Expected the known event to appear in the day list"
+    day_list.itemClicked.emit(day_list.item(0))
+    QApplication.processEvents()
+    dialogs = [
+        w
+        for w in QApplication.topLevelWidgets()
+        if isinstance(w, EventDetailDialog) and w.isVisible()
+    ]
+    assert dialogs, "EventDetailDialog did not open"
+    qtbot.addWidget(dialogs[0])
+    return dialogs[0]
+
+
+@then(parsers.parse('the event\'s date is displayed in "{value}" format'))
+def event_date_displayed_in_format(
+    calendar_window: MainWindow, calendar_ctx: dict[str, object], value: str, qtbot: QtBot
+) -> None:
+    from ourcrm.core.formatting import format_date
+
+    date = calendar_ctx["date"]
+    assert isinstance(date, datetime.date)
+    dlg = _open_known_event_detail(calendar_window, date, qtbot)
+    texts = [lbl.text() for lbl in dlg.findChildren(QLabel)]
+    fmt = next(f for f in DateFormat if f.value == value)
+    expected = format_date(date, fmt)
+    assert any(expected in t for t in texts), f"Expected '{expected}' in {texts}"
+
+
+@then("the event's time is displayed in 12-hour format")
+def event_time_displayed_in_12_hour_format(
+    calendar_window: MainWindow, calendar_ctx: dict[str, object], qtbot: QtBot
+) -> None:
+    date = calendar_ctx["date"]
+    assert isinstance(date, datetime.date)
+    dlg = _open_known_event_detail(calendar_window, date, qtbot)
+    texts = [lbl.text() for lbl in dlg.findChildren(QLabel)]
+    assert any("2:30 PM" in t and "3:30 PM" in t for t in texts), (
+        f"Expected 12-hour times in {texts}"
+    )
 
 
 # ── US-013: Configure Security Settings ───────────────────────────────────────

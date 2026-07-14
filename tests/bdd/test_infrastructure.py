@@ -92,6 +92,16 @@ def fix_triggers_patch(sr_config: dict[str, Any]) -> None:
     assert "fix" in sr_config["commit_parser_options"]["patch_tags"]
 
 
+@then("perf commits trigger a patch version bump")
+def perf_triggers_patch(sr_config: dict[str, Any]) -> None:
+    assert "perf" in sr_config["commit_parser_options"]["patch_tags"]
+
+
+@then("refactor commits trigger a patch version bump")
+def refactor_triggers_patch(sr_config: dict[str, Any]) -> None:
+    assert "refactor" in sr_config["commit_parser_options"]["patch_tags"]
+
+
 @then("release artifact upload is handled by the release workflow")
 def artifact_upload_delegated(sr_config: dict[str, Any]) -> None:
     assert not sr_config["publish"]["upload_to_vcs_release"]

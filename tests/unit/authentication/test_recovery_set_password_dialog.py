@@ -1,5 +1,6 @@
 """Unit tests for RecoverySetPasswordDialog — step 2 of the password recovery flow."""
 
+from collections.abc import Generator
 from pathlib import Path
 
 import pytest
@@ -30,13 +31,18 @@ def auth_service(in_memory_keyring: InMemoryKeyring) -> AuthService:
 
 
 @pytest.fixture
-def encrypted_db(tmp_path: Path, in_memory_keyring: InMemoryKeyring) -> EncryptedDatabase:
+def encrypted_db(
+    tmp_path: Path, in_memory_keyring: InMemoryKeyring
+) -> Generator[EncryptedDatabase]:
     setup = EncryptedDatabase(tmp_path / "ourcrm.db", key_service=_KEY_SERVICE)
     setup.create(_MASTER)
     setup.wrap_recovery(_RECOVERY)
     setup.save()
     setup.close()
-    return EncryptedDatabase(tmp_path / "ourcrm.db", key_service=_KEY_SERVICE)
+    db = EncryptedDatabase(tmp_path / "ourcrm.db", key_service=_KEY_SERVICE)
+    yield db
+    if db.is_open:
+        db.close()
 
 
 @pytest.fixture

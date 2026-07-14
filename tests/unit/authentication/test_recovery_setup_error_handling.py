@@ -45,6 +45,11 @@ def test_keyring_failure_during_recovery_setup_shows_error_and_rolls_back(
     assert result is False
     assert mock_critical.called, "Expected an error dialog when recovery-password storage fails"
     assert not db_path.exists(), "Partially-created database should be rolled back"
+    # The rollback already deleted db_path, so encrypted_db.close() (which
+    # writes to that path) would resurrect it — release the in-memory sqlite
+    # connection directly instead.
+    assert encrypted_db._conn is not None
+    encrypted_db._conn.close()
 
 
 def test_successful_setup_creates_a_recovery_slot_usable_for_later_recovery(
@@ -63,3 +68,4 @@ def test_successful_setup_creates_a_recovery_slot_usable_for_later_recovery(
     reopened = EncryptedDatabase(db_path, key_service=_KEY_SERVICE)
     reopened.open_with_recovery("RECOVERY-WORD-1234")
     assert reopened.is_open
+    reopened.close()

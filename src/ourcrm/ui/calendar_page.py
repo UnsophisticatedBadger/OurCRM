@@ -27,6 +27,8 @@ from PySide6.QtWidgets import (
 
 from ourcrm.calendar.models import CalendarEvent, EventType
 from ourcrm.calendar.repository import CalendarEventRepositoryProtocol
+from ourcrm.core.config import DateFormat, GeneralSettings, TimeFormat
+from ourcrm.core.formatting import format_date, format_time
 
 # A date so far in the past it can only mean "not set" in a CRM context.
 _SENTINEL_DATE = QDate(100, 1, 1)
@@ -83,15 +85,31 @@ class EventWarningDialog(QDialog):
         self.adjustSize()
 
 
+_TIME_EDIT_DISPLAY_FORMAT: dict[TimeFormat, str] = {
+    TimeFormat.TWENTY_FOUR_HOUR: "HH:mm",
+    TimeFormat.TWELVE_HOUR: "h:mm AP",
+}
+
+_DATE_EDIT_DISPLAY_FORMAT: dict[DateFormat, str] = {
+    DateFormat.MDY: "MM/dd/yyyy",
+    DateFormat.DMY: "dd/MM/yyyy",
+    DateFormat.YMD: "yyyy-MM-dd",
+}
+
+
 class EventForm(QDialog):
     def __init__(
         self,
         repository: CalendarEventRepositoryProtocol,
+        date_format: DateFormat = DateFormat.MDY,
+        time_format: TimeFormat = TimeFormat.TWENTY_FOUR_HOUR,
         parent: QWidget | None = None,
     ) -> None:
         super().__init__(parent)
         self.setWindowTitle("New Event")
         self._repository = repository
+        self._date_format = date_format
+        self._time_format = time_format
         self._pending_event: CalendarEvent | None = None
         self._warning_dialog: EventWarningDialog | None = None
         self._setup_ui()
@@ -107,27 +125,35 @@ class EventForm(QDialog):
         # date_field starts at _SENTINEL_DATE so that setDate(QDate())
         # (which Qt silently ignores) leaves the sentinel in place, allowing
         # the "date required" validation to fire.
+        date_display_format = _DATE_EDIT_DISPLAY_FORMAT[self._date_format]
+
         self._date = QDateEdit()
         self._date.setObjectName("date_field")
         self._date.setMinimumDate(_SENTINEL_DATE)
+        self._date.setDisplayFormat(date_display_format)
         self._date.setDate(QDate.currentDate())
         self._date.setCalendarPopup(True)
         self._form_layout.addRow("Date", self._date)
 
         self._end_date = QDateEdit()
+        self._end_date.setDisplayFormat(date_display_format)
         self._end_date.setObjectName("end_date_field")
         self._end_date.setMinimumDate(_SENTINEL_DATE)
         self._end_date.setDate(QDate.currentDate())
         self._end_date.setCalendarPopup(True)
         self._form_layout.addRow("End Date", self._end_date)
 
+        display_format = _TIME_EDIT_DISPLAY_FORMAT[self._time_format]
+
         self._start_time = QTimeEdit()
         self._start_time.setObjectName("start_time_field")
+        self._start_time.setDisplayFormat(display_format)
         self._start_time.setTime(QTime(9, 0))
         self._form_layout.addRow("Start Time", self._start_time)
 
         self._end_time = QTimeEdit()
         self._end_time.setObjectName("end_time_field")
+        self._end_time.setDisplayFormat(display_format)
         self._end_time.setTime(QTime(10, 0))
         self._form_layout.addRow("End Time", self._end_time)
 
@@ -225,11 +251,13 @@ class WeekView(QWidget):
     def __init__(
         self,
         repository: CalendarEventRepositoryProtocol | None = None,
+        time_format: TimeFormat = TimeFormat.TWENTY_FOUR_HOUR,
         parent: QWidget | None = None,
     ) -> None:
         super().__init__(parent)
         self.setObjectName("week_view")
         self._repository = repository
+        self._time_format = time_format
         self._week_start: QDate = _week_monday(QDate.currentDate())
         self._day_labels: list[QLabel] = []
         self._day_lists: list[QListWidget] = []
@@ -268,7 +296,7 @@ class WeekView(QWidget):
             if self._repository is None:
                 continue
             for event in self._repository.list_for_date(_to_date(day)):
-                start = event.start_time.strftime("%H:%M")
+                start = format_time(event.start_time, self._time_format)
                 day_list.addItem(_make_event_item(f"{start} {event.title}", event))
 
 
@@ -276,11 +304,13 @@ class DayView(QWidget):
     def __init__(
         self,
         repository: CalendarEventRepositoryProtocol | None = None,
+        time_format: TimeFormat = TimeFormat.TWENTY_FOUR_HOUR,
         parent: QWidget | None = None,
     ) -> None:
         super().__init__(parent)
         self.setObjectName("day_view")
         self._repository = repository
+        self._time_format = time_format
         self._date: QDate = QDate.currentDate()
         self._setup_ui()
 
@@ -304,7 +334,7 @@ class DayView(QWidget):
         for hour in range(6, 22):
             for minute in (0, 30):
                 slot_time = datetime.time(hour, minute)
-                slot_str = slot_time.strftime("%H:%M")
+                slot_str = format_time(slot_time, self._time_format)
                 slot_events = [e for e in events_today if e.start_time == slot_time]
                 if slot_events:
                     for event in slot_events:
@@ -318,7 +348,13 @@ class DayView(QWidget):
 
 
 class EventDetailDialog(QDialog):
-    def __init__(self, event: CalendarEvent, parent: QWidget | None = None) -> None:
+    def __init__(
+        self,
+        event: CalendarEvent,
+        date_format: DateFormat = DateFormat.MDY,
+        time_format: TimeFormat = TimeFormat.TWENTY_FOUR_HOUR,
+        parent: QWidget | None = None,
+    ) -> None:
         super().__init__(parent)
         self.setWindowTitle("Event Details")
         layout = QVBoxLayout(self)
@@ -327,9 +363,9 @@ class EventDetailDialog(QDialog):
         self._title_label.setObjectName("event_title_label")
         layout.addWidget(self._title_label)
 
-        date_str = event.date.strftime("%A, %B %d, %Y")
-        start_str = event.start_time.strftime("%H:%M")
-        end_str = event.end_time.strftime("%H:%M")
+        date_str = format_date(event.date, date_format)
+        start_str = format_time(event.start_time, time_format)
+        end_str = format_time(event.end_time, time_format)
         layout.addWidget(QLabel(f"Date: {date_str}"))
         layout.addWidget(QLabel(f"Time: {start_str} – {end_str}"))  # noqa: RUF001
         layout.addWidget(QLabel(f"Type: {event.event_type.value.capitalize()}"))
@@ -349,10 +385,15 @@ class CalendarPage(QWidget):
     def __init__(
         self,
         repository: CalendarEventRepositoryProtocol | None = None,
+        general_settings: GeneralSettings | None = None,
         parent: QWidget | None = None,
     ) -> None:
         super().__init__(parent)
         self._repository = repository
+        self._date_format = general_settings.date_format if general_settings else DateFormat.MDY
+        self._time_format = (
+            general_settings.time_format if general_settings else TimeFormat.TWENTY_FOUR_HOUR
+        )
         self._view_mode: CalendarViewMode = CalendarViewMode.MONTH
         self._week_start: QDate = _week_monday(QDate.currentDate())
         self._event_form: EventForm | None = None
@@ -399,10 +440,10 @@ class CalendarPage(QWidget):
         self._calendar.setSelectedDate(QDate.currentDate())
         self._view_stack.addWidget(self._calendar)
 
-        self._week_view = WeekView(repository=self._repository)
+        self._week_view = WeekView(repository=self._repository, time_format=self._time_format)
         self._view_stack.addWidget(self._week_view)
 
-        self._day_view = DayView(repository=self._repository)
+        self._day_view = DayView(repository=self._repository, time_format=self._time_format)
         self._view_stack.addWidget(self._day_view)
 
         self._view_stack.setCurrentWidget(self._calendar)
@@ -476,15 +517,17 @@ class CalendarPage(QWidget):
         if self._repository is None:
             return
         for event in self._repository.list_for_date(_to_date(self._calendar.selectedDate())):
-            start = event.start_time.strftime("%H:%M")
-            end = event.end_time.strftime("%H:%M")
+            start = format_time(event.start_time, self._time_format)
+            end = format_time(event.end_time, self._time_format)
             self._day_list.addItem(_make_event_item(f"{start}–{end} {event.title}", event))  # noqa: RUF001
 
     def _open_detail_dialog(self, item: QListWidgetItem) -> None:
         raw = item.data(Qt.ItemDataRole.UserRole)
         if not isinstance(raw, CalendarEvent):
             return
-        dlg = EventDetailDialog(raw, parent=self)
+        dlg = EventDetailDialog(
+            raw, date_format=self._date_format, time_format=self._time_format, parent=self
+        )
         self._detail_dialog = dlg
         dlg.show()
         dlg.raise_()
@@ -493,7 +536,9 @@ class CalendarPage(QWidget):
     def _open_event_form(self) -> None:
         if self._repository is None:
             return
-        form = EventForm(self._repository)
+        form = EventForm(
+            self._repository, date_format=self._date_format, time_format=self._time_format
+        )
         form.accepted.connect(self._refresh_day_list)
         self._event_form = form
         form.show()

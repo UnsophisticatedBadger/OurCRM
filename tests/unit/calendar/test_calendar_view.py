@@ -208,6 +208,85 @@ def test_clicking_day_list_item_opens_detail_dialog(
     qtbot.addWidget(dialogs[0])
 
 
+def test_detail_dialog_opened_from_the_page_uses_the_pages_configured_formats(
+    qtbot: QtBot, repo: CalendarEventRepository
+) -> None:
+    from PySide6.QtWidgets import QCalendarWidget
+
+    from ourcrm.core.config import DateFormat, GeneralSettings, TimeFormat
+    from ourcrm.ui.calendar_page import EventDetailDialog
+
+    target = QDate.currentDate().addDays(-1)
+    repo.create(
+        CalendarEvent(
+            title="Morning Standup",
+            date=cast(datetime.date, target.toPython()),
+            start_time=cast(datetime.time, QTime(9, 0).toPython()),
+            end_time=cast(datetime.time, QTime(9, 30).toPython()),
+        )
+    )
+    page = CalendarPage(
+        repository=repo,
+        general_settings=GeneralSettings(
+            date_format=DateFormat.DMY, time_format=TimeFormat.TWELVE_HOUR
+        ),
+    )
+    qtbot.addWidget(page)
+    page.show()
+
+    cal = page.findChild(QCalendarWidget, "calendar_widget")
+    assert cal is not None
+    cal.setSelectedDate(target)
+    day_list = page.findChild(QListWidget, "day_events_list")
+    assert day_list is not None
+    day_list.itemClicked.emit(day_list.item(0))
+    QApplication.processEvents()
+
+    dialogs = [
+        w
+        for w in QApplication.topLevelWidgets()
+        if isinstance(w, EventDetailDialog) and w.isVisible()
+    ]
+    assert dialogs, "EventDetailDialog did not open"
+    qtbot.addWidget(dialogs[0])
+    texts = [lbl.text() for lbl in dialogs[0].findChildren(QLabel)]
+    assert any("9:00 AM" in t for t in texts), f"Expected 12-hour time. Labels: {texts}"
+
+
+def test_month_view_day_list_shows_event_times_in_the_configured_time_format(
+    qtbot: QtBot, repo: CalendarEventRepository
+) -> None:
+    from PySide6.QtWidgets import QCalendarWidget
+
+    from ourcrm.core.config import GeneralSettings, TimeFormat
+
+    target = QDate.currentDate().addDays(-1)
+    repo.create(
+        CalendarEvent(
+            title="Afternoon Showing",
+            date=cast(datetime.date, target.toPython()),
+            start_time=datetime.time(14, 30),
+            end_time=datetime.time(15, 30),
+        )
+    )
+    page = CalendarPage(
+        repository=repo, general_settings=GeneralSettings(time_format=TimeFormat.TWELVE_HOUR)
+    )
+    qtbot.addWidget(page)
+    page.show()
+
+    cal = page.findChild(QCalendarWidget, "calendar_widget")
+    assert cal is not None
+    cal.setSelectedDate(target)
+
+    day_list = page.findChild(QListWidget, "day_events_list")
+    assert day_list is not None
+    texts = [day_list.item(i).text() for i in range(day_list.count())]
+    assert any("2:30 PM" in t and "3:30 PM" in t for t in texts), (
+        f"Expected 12-hour times in day list. Items: {texts}"
+    )
+
+
 def test_detail_dialog_shows_event_title(
     page_with_repo: CalendarPage, repo: CalendarEventRepository, qtbot: QtBot
 ) -> None:
@@ -372,6 +451,33 @@ def test_week_view_shows_events_from_repository(qtbot: QtBot) -> None:
     )
 
 
+def test_week_view_shows_event_times_in_the_configured_time_format(qtbot: QtBot) -> None:
+    from ourcrm.calendar.models import CalendarEvent
+    from ourcrm.core.config import TimeFormat
+    from ourcrm.ui.calendar_page import WeekView, _week_monday
+
+    repo = CalendarEventRepository()
+    week_start = _week_monday(QDate.currentDate())
+    repo.create(
+        CalendarEvent(
+            title="Afternoon Showing",
+            date=cast(datetime.date, week_start.toPython()),
+            start_time=datetime.time(14, 30),
+            end_time=datetime.time(15, 30),
+        )
+    )
+    week_view = WeekView(repository=repo, time_format=TimeFormat.TWELVE_HOUR)
+    qtbot.addWidget(week_view)
+    week_view.show()
+    week_view.set_week_start(week_start)
+
+    monday_list = week_view.findChildren(QListWidget)[0]
+    item_texts = [monday_list.item(i).text() for i in range(monday_list.count())]
+    assert any("2:30 PM" in text for text in item_texts), (
+        f"Expected 12-hour time in Monday column. Items: {item_texts}"
+    )
+
+
 # ── DayView.set_date ──────────────────────────────────────────────────────────
 
 
@@ -404,6 +510,21 @@ def test_day_view_set_date_shows_events_for_new_date(qtbot: QtBot) -> None:
     assert any("Tomorrow's Appointment" in t for t in updated_texts), (
         f"Event not shown after set_date. Items: {updated_texts}"
     )
+
+
+def test_day_view_shows_slot_times_in_the_configured_time_format(qtbot: QtBot) -> None:
+    from ourcrm.core.config import TimeFormat
+    from ourcrm.ui.calendar_page import DayView
+
+    day_view = DayView(time_format=TimeFormat.TWELVE_HOUR)
+    qtbot.addWidget(day_view)
+    day_view.show()
+
+    slot_list = day_view.findChild(QListWidget, "day_slot_list")
+    assert slot_list is not None
+    texts = [slot_list.item(i).text() for i in range(slot_list.count())]
+    assert any("6:00 AM" in t for t in texts), f"Expected 12-hour slot time. Items: {texts}"
+    assert not any("06:00" in t for t in texts), f"Did not expect 24-hour slot time. Items: {texts}"
 
 
 # ── CalendarPage navigation in week mode ──────────────────────────────────────
@@ -582,6 +703,34 @@ def test_event_detail_dialog_shows_time_range(qtbot: QtBot, detail_event: Calend
     )
 
 
+def test_event_detail_dialog_shows_date_in_the_configured_date_format(
+    qtbot: QtBot, detail_event: CalendarEvent
+) -> None:
+    from ourcrm.core.config import DateFormat
+    from ourcrm.ui.calendar_page import EventDetailDialog
+
+    dlg = EventDetailDialog(detail_event, date_format=DateFormat.DMY)
+    qtbot.addWidget(dlg)
+    dlg.show()
+    texts = [lbl.text() for lbl in dlg.findChildren(QLabel)]
+    assert any("04/07/2026" in t for t in texts), f"DMY date not shown. Labels: {texts}"
+
+
+def test_event_detail_dialog_shows_time_in_the_configured_time_format(
+    qtbot: QtBot, detail_event: CalendarEvent
+) -> None:
+    from ourcrm.core.config import TimeFormat
+    from ourcrm.ui.calendar_page import EventDetailDialog
+
+    dlg = EventDetailDialog(detail_event, time_format=TimeFormat.TWELVE_HOUR)
+    qtbot.addWidget(dlg)
+    dlg.show()
+    texts = [lbl.text() for lbl in dlg.findChildren(QLabel)]
+    assert any("10:00 AM" in t and "11:30 AM" in t for t in texts), (
+        f"12-hour time range not shown. Labels: {texts}"
+    )
+
+
 def test_event_detail_dialog_shows_event_type(qtbot: QtBot, detail_event: CalendarEvent) -> None:
     from ourcrm.ui.calendar_page import EventDetailDialog
 
@@ -657,6 +806,70 @@ def test_event_detail_dialog_omits_location_when_empty(qtbot: QtBot) -> None:
 
 
 # ── EventForm defaults ────────────────────────────────────────────────────────
+
+
+def test_event_form_date_fields_use_mdy_format_by_default(qtbot: QtBot) -> None:
+    from PySide6.QtWidgets import QDateEdit
+
+    from ourcrm.ui.calendar_page import EventForm
+
+    form = EventForm(CalendarEventRepository())
+    qtbot.addWidget(form)
+    form.show()
+
+    date_field = form.findChild(QDateEdit, "date_field")
+    assert date_field is not None
+    assert date_field.displayFormat() == "MM/dd/yyyy"
+
+
+def test_event_form_date_fields_use_the_configured_dmy_format(qtbot: QtBot) -> None:
+    from PySide6.QtWidgets import QDateEdit
+
+    from ourcrm.core.config import DateFormat
+    from ourcrm.ui.calendar_page import EventForm
+
+    form = EventForm(CalendarEventRepository(), date_format=DateFormat.DMY)
+    qtbot.addWidget(form)
+    form.show()
+
+    date_field = form.findChild(QDateEdit, "date_field")
+    end_date_field = form.findChild(QDateEdit, "end_date_field")
+    assert date_field is not None
+    assert end_date_field is not None
+    assert date_field.displayFormat() == "dd/MM/yyyy"
+    assert end_date_field.displayFormat() == "dd/MM/yyyy"
+
+
+def test_event_form_time_fields_use_24_hour_format_by_default(qtbot: QtBot) -> None:
+    from PySide6.QtWidgets import QTimeEdit
+
+    from ourcrm.ui.calendar_page import EventForm
+
+    form = EventForm(CalendarEventRepository())
+    qtbot.addWidget(form)
+    form.show()
+
+    start_field = form.findChild(QTimeEdit, "start_time_field")
+    assert start_field is not None
+    assert start_field.displayFormat() == "HH:mm"
+
+
+def test_event_form_time_fields_use_the_configured_12_hour_format(qtbot: QtBot) -> None:
+    from PySide6.QtWidgets import QTimeEdit
+
+    from ourcrm.core.config import TimeFormat
+    from ourcrm.ui.calendar_page import EventForm
+
+    form = EventForm(CalendarEventRepository(), time_format=TimeFormat.TWELVE_HOUR)
+    qtbot.addWidget(form)
+    form.show()
+
+    start_field = form.findChild(QTimeEdit, "start_time_field")
+    end_field = form.findChild(QTimeEdit, "end_time_field")
+    assert start_field is not None
+    assert end_field is not None
+    assert start_field.displayFormat() == "h:mm AP"
+    assert end_field.displayFormat() == "h:mm AP"
 
 
 def test_event_form_date_defaults_to_today(qtbot: QtBot) -> None:
