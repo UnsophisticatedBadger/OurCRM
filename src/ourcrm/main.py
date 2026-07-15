@@ -231,6 +231,7 @@ def main() -> None:
 
     config = container.app_config()
     calendar_repository = container.calendar_repository()
+    lead_repository = container.lead_repository()
     auth_service = container.auth_service()
     db_path = container.db_path()
 
@@ -254,6 +255,7 @@ def main() -> None:
         auth_service=auth_service,
         auto_lock_timeout_seconds=resolve_auto_lock_seconds(config),
         calendar_repository=calendar_repository,
+        lead_repository=lead_repository,
         encrypted_db=db,
         session_factory=session_factory,
     )

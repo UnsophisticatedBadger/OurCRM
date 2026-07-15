@@ -27,11 +27,13 @@ from ourcrm.core.config import LandingPage, SettingsStoreProtocol, StartupBehavi
 from ourcrm.core.security.recovery_generator import RecoveryPasswordGenerator
 from ourcrm.database.encrypted_database import EncryptedDatabase
 from ourcrm.database.manager import DatabaseManager
+from ourcrm.leads.repository import LeadRepositoryProtocol
 from ourcrm.ui.calendar_page import CalendarPage
 from ourcrm.ui.change_master_password_dialog import ChangeMasterPasswordDialog
 from ourcrm.ui.dashboard_page import DashboardPage
 from ourcrm.ui.help_window import AboutDialog, HelpWindow, KeyboardShortcutsDialog
 from ourcrm.ui.inactivity_timer import InactivityTimer
+from ourcrm.ui.leads_page import LeadsPage
 from ourcrm.ui.lock_screen import LockScreen
 from ourcrm.ui.login_screen import LoginScreen
 from ourcrm.ui.navigation import NavigationPanel, Section
@@ -66,6 +68,7 @@ class MainWindow(QMainWindow):
         auth_service: AuthService | None = None,
         auto_lock_timeout_seconds: int | None = None,
         calendar_repository: CalendarEventRepositoryProtocol | None = None,
+        lead_repository: LeadRepositoryProtocol | None = None,
         encrypted_db: EncryptedDatabase | None = None,
         session_factory: sessionmaker[Session] | None = None,
     ) -> None:
@@ -75,6 +78,7 @@ class MainWindow(QMainWindow):
         self._qt_app = qt_app
         self._auth_service = auth_service
         self._calendar_repository = calendar_repository
+        self._lead_repository = lead_repository
         self._encrypted_db = encrypted_db
         self._session_factory = session_factory
         self._prior_section: Section = Section.DASHBOARD
@@ -197,6 +201,10 @@ class MainWindow(QMainWindow):
         if section == Section.CALENDAR:
             general = self._app_config.load_general() if self._app_config is not None else None
             return CalendarPage(repository=self._calendar_repository, general_settings=general)
+        if section == Section.LEADS:
+            if self._lead_repository is not None:
+                return LeadsPage(repository=self._lead_repository)
+            return QLabel("Leads — repository not configured")
         if section == Section.SETTINGS:
             panel = SettingsPanel(app_config=self._app_config, qt_app=self._qt_app)
             panel.security_saved.connect(self._reconfigure_autolock)

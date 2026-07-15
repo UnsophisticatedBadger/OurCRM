@@ -19,6 +19,7 @@ from ourcrm.core.security.password_hasher import PasswordHasher
 from ourcrm.core.security.password_validator import PasswordValidator
 from ourcrm.core.security.recovery_generator import RecoveryPasswordGenerator
 from ourcrm.database.encrypted_database import EncryptedDatabase
+from ourcrm.leads.repository import LeadRepository
 
 
 def _is_frozen() -> bool:
@@ -56,6 +57,7 @@ class ApplicationContainer(containers.DeclarativeContainer):
     key_derivation_service = providers.Singleton(KeyDerivationService)
     recovery_password_generator = providers.Singleton(RecoveryPasswordGenerator)
     calendar_repository = providers.Singleton(CalendarEventRepository)
+    lead_repository = providers.Singleton(LeadRepository)
 
     app_config = providers.Singleton(AppConfig, config_path=config_path)
 

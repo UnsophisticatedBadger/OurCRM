@@ -2,7 +2,7 @@
 
 **Capability:** leads
 **Milestone:** MVP
-**Status:** Not Done
+**Status:** Done
 **GitHub Issue:** #95
 **Priority:** Post-MVP
 
@@ -23,7 +23,8 @@ As an agent, I want a report showing my lead conversion rates, so that I can mea
 7. The full report data can be exported to CSV or PDF
 
 ## BDD Scenarios
-> These scenarios are not yet implemented. Add them to `tests/bdd/features/leads.feature`.
+
+> All `@story_95` scenarios are in `tests/bdd/features/leads.feature`.
 
 ```gherkin
 @story_95
@@ -64,7 +65,7 @@ Scenario: Report can be exported to PDF
 ```
 
 ## Manual Tests
-**Story:** [#32 — Lead Conversion Report](../docs/077-lead-conversion-report.md)
+**Story:** [#95 — Lead Conversion Report](95-lead-conversion-report.md)
 
 ### Report shows correct totals and conversion rate
 1. Open the Lead Conversion Report for the current month
@@ -96,12 +97,12 @@ Scenario: Report can be exported to PDF
 |----------|------|
 | BDD feature | `tests/bdd/features/leads.feature` |
 | BDD step defs | `tests/bdd/test_leads.py` |
-| Unit tests | `tests/unit/leads/test_conversion_report.py` |
+| Unit tests | `tests/unit/leads/test_conversion_report.py`, `test_conversion_report_export.py` |
 | Manual tests | `tests/manual/leads/lead-conversion-report.md` |
 
 ## Definition of Done
-- [ ] BDD scenarios pass end-to-end
-- [ ] Feature reachable from the running app
-- [ ] `ruff`, `mypy --strict` clean
-- [ ] Manual tests documented and verified
-- [ ] Wiki documentation written, or marked N/A with a reason
+- [x] BDD scenarios pass end-to-end
+- [x] Feature reachable from the running app
+- [x] `ruff`, `mypy --strict` clean
+- [x] Manual tests documented and verified
+- [x] Wiki documentation written — see [Leads](https://github.com/UnsophisticatedBadger/OurCRM/wiki/Leads) (`wiki/Leads.md` in repo)
