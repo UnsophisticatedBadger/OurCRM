@@ -1,6 +1,8 @@
 # Leads
 
-The Leads section helps you track prospects from first contact through conversion. OurCRM works fully offline; lead data is stored locally on your machine.
+The Leads section helps you track prospects from first contact through conversion. OurCRM works fully offline.
+
+**Current limitation:** Lead data for the conversion report is held in an in-memory repository for this release. Leads exist only for the current app session and are lost when OurCRM restarts. Persistent lead storage and the lead pipeline UI depend on [#67 — Mark Lead as Converted](https://github.com/UnsophisticatedBadger/OurCRM/issues/67) and [#69 — Track Conversion Rate](https://github.com/UnsophisticatedBadger/OurCRM/issues/69). Until those stories land, the **Pipeline** tab shows a placeholder and the report starts empty on a fresh launch.
 
 ## Lead Conversion Report
 
