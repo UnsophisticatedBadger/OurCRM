@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v0.14.0 (2026-07-17)
+
+### Features
+
+- Guard dashboard quick-actions navigation architecture, close #15
+  ([`cb20db7`](https://github.com/UnsophisticatedBadger/OurCRM/commit/cb20db7e06878029a126dc6ef643c4769f1ca78e))
+
+
 ## v0.13.0 (2026-07-17)
 
 ### Features
