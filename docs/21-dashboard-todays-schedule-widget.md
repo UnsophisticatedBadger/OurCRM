@@ -1,7 +1,7 @@
 # 21 - Dashboard Today's Schedule Widget
 
 **Capability:** shell
-**Milestone:** Secure Shell
+**Milestone:** MVP
 **Status:** Not Done
 **GitHub Issue:** #21
 **Priority:** Must Have

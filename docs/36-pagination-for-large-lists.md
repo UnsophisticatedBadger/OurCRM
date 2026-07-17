@@ -1,7 +1,7 @@
 # 36 - Pagination For Large Lists
 
 **Capability:** shell
-**Milestone:** Secure Shell
+**Milestone:** MVP
 **Status:** Not Done
 **GitHub Issue:** #36
 **Priority:** Post-MVP

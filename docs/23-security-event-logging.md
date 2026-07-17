@@ -1,7 +1,7 @@
 # 23 - Security Event Logging
 
 **Capability:** authentication
-**Milestone:** Secure Shell
+**Milestone:** MVP
 **Status:** Not Done
 **GitHub Issue:** #23
 **Priority:** Should Have

@@ -1,7 +1,7 @@
 # 33 - Currency Format By Locale
 
 **Capability:** shell
-**Milestone:** Secure Shell
+**Milestone:** Production
 **Status:** Not Done
 **GitHub Issue:** #33
 **Priority:** Post-MVP

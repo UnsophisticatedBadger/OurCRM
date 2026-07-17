@@ -1,7 +1,7 @@
 # 35 - Resizable And Adaptive Window Layout
 
 **Capability:** shell
-**Milestone:** Secure Shell
+**Milestone:** MVP
 **Status:** Not Done
 **GitHub Issue:** #35
 **Priority:** Post-MVP

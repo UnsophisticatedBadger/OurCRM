@@ -1,7 +1,7 @@
 # 24 - In-App Help
 
 **Capability:** App Shell
-**Milestone:** Secure Shell
+**Milestone:** MVP
 **Status:** Not Done
 **GitHub Issue:** #24
 

@@ -1,7 +1,7 @@
 # 38 - Create A Standalone Note
 
 **Capability:** App Shell
-**Milestone:** Secure Shell
+**Milestone:** Production
 **Status:** Not Done
 **GitHub Issue:** #38
 

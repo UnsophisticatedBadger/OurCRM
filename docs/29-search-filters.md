@@ -1,7 +1,7 @@
 # 29 - Advanced Search Filters
 
 **Capability:** shell
-**Milestone:** Secure Shell
+**Milestone:** Production
 **Status:** Not Done
 **GitHub Issue:** #29
 **Priority:** Post-MVP

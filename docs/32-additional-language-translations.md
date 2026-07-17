@@ -1,7 +1,7 @@
 # 32 - Additional Language Support
 
 **Capability:** shell
-**Milestone:** Secure Shell
+**Milestone:** Production
 **Status:** Not Done
 **GitHub Issue:** #32
 **Priority:** Post-MVP

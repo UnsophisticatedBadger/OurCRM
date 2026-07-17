@@ -1,7 +1,7 @@
 # 25 - Save Search Criteria
 
 **Capability:** App Shell
-**Milestone:** Secure Shell
+**Milestone:** Production
 **Status:** Not Done
 **GitHub Issue:** #25
 **Priority:** Should Have (deferrable to post-MVP)

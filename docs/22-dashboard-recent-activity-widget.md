@@ -1,7 +1,7 @@
 # 22 - Dashboard Recent Activity Widget
 
 **Capability:** shell
-**Milestone:** Secure Shell
+**Milestone:** MVP
 **Status:** Not Done
 **GitHub Issue:** #22
 **Priority:** Must Have

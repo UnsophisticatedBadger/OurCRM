@@ -1,7 +1,7 @@
 # 28 - Search Operators
 
 **Capability:** shell
-**Milestone:** Secure Shell
+**Milestone:** Production
 **Status:** Not Done
 **GitHub Issue:** #28
 **Priority:** Post-MVP

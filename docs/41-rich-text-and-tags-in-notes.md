@@ -1,7 +1,7 @@
 # 41 - Rich Text And Tags In Notes
 
 **Capability:** shell
-**Milestone:** Secure Shell
+**Milestone:** Production
 **Status:** Not Done
 **GitHub Issue:** #41
 **Priority:** Post-MVP

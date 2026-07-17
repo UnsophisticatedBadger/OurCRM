@@ -1,7 +1,7 @@
 # 40 - Search Notes
 
 **Capability:** App Shell
-**Milestone:** Secure Shell
+**Milestone:** Production
 **Status:** Not Done
 **GitHub Issue:** #40
 

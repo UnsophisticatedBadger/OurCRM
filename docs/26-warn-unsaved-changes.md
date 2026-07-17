@@ -1,7 +1,7 @@
 # 26 - Warn Before Discarding Unsaved Changes
 
 **Capability:** shell
-**Milestone:** Secure Shell
+**Milestone:** Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #26
 **Priority:** Should Have

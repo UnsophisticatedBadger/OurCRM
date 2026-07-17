@@ -1,7 +1,7 @@
 # 30 - Custom Accent Color
 
 **Capability:** shell
-**Milestone:** Secure Shell
+**Milestone:** Production
 **Status:** Not Done
 **GitHub Issue:** #30
 **Priority:** Post-MVP
