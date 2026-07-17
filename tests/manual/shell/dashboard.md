@@ -1,46 +1,16 @@
 # Dashboard — Manual Tests
 
-**Story:** [US-018 — Dashboard](../../../docs/018-dashboard.md)
+**Story:** [#14 — Home Dashboard](../../../docs/14-home-dashboard.md)
 
-## Dashboard is the first screen shown after login
+## User logs in and lands on the Dashboard immediately
 
 1. Log in with the master password
-2. Verify the dashboard is displayed immediately — no additional navigation required
+2. Verify the Dashboard section is active immediately — no additional navigation required
+3. Verify the "Dashboard" item is highlighted in the sidebar
 
-## Due callbacks appear in the Call Back Today section
+## User views the Dashboard and sees three named regions
 
-1. Add a contact with a callback timeframe that is due today or overdue
-2. Log in or return to the dashboard
-3. Verify the contact appears in the "Call Back Today" section
-4. Verify contacts are sorted by how overdue they are — most overdue first
-
-## New contacts appear in the New to Call section
-
-1. Add a contact to the call list without logging an outcome
-2. Return to the dashboard
-3. Verify the contact appears in the "New to Call" section
-4. Verify contacts are sorted by date added — most recent first
-
-## Contact details are visible on the dashboard
-
-1. Open the dashboard
-2. Verify each contact in both sections shows name, phone number, and property address
-
-## Call button appears on dashboard contacts when calling is configured
-
-1. Configure Google Voice in Settings
-2. Open the dashboard
-3. Verify each contact shows a Call button
-
-## Call count updates after logging an outcome
-
-1. Open the dashboard and note the calls-logged-today count
-2. Open a contact from the dashboard and log a call outcome
-3. Return to the dashboard
-4. Verify the count has increased by one
-
-## Clicking a contact opens their detail view
-
-1. Click a contact on the dashboard
-2. Verify the contact detail view opens
-3. Verify the outcome can be logged from that view
+1. Open the Dashboard section
+2. Verify a Stats region is present showing placeholder/empty counts
+3. Verify a Today's Schedule region is present showing placeholder content
+4. Verify a Quick Actions region is present with New Contact, New Lead, New Property, and New Task buttons

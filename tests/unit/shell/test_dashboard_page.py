@@ -48,6 +48,35 @@ def test_quick_action_new_task_button_exists(page: DashboardPage) -> None:
     assert "New Task" in _button_labels(page)
 
 
+# ── Named layout regions ──────────────────────────────────────────────────────
+
+
+def test_stats_region_is_present(page: DashboardPage) -> None:
+    from PySide6.QtWidgets import QWidget
+
+    assert page.findChild(QWidget, "stats_region") is not None
+
+
+def test_todays_schedule_region_is_present(page: DashboardPage) -> None:
+    from PySide6.QtWidgets import QWidget
+
+    assert page.findChild(QWidget, "todays_schedule_region") is not None
+
+
+def test_overdue_tasks_placeholder_is_not_present(page: DashboardPage) -> None:
+    from PySide6.QtWidgets import QLabel
+
+    texts = [lbl.text() for lbl in page.findChildren(QLabel)]
+    assert "Overdue Tasks — coming soon" not in texts
+
+
+def test_recent_activity_placeholder_is_not_present(page: DashboardPage) -> None:
+    from PySide6.QtWidgets import QLabel
+
+    texts = [lbl.text() for lbl in page.findChildren(QLabel)]
+    assert "Recent Activity — coming soon" not in texts
+
+
 # ── Main window wiring ────────────────────────────────────────────────────────
 
 

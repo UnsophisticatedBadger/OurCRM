@@ -396,6 +396,16 @@ Feature: Shell
     And I should see a "New Property" quick action button
     And I should see a "New Task" quick action button
 
+  @story_14
+  Scenario: Stats region is visible on the dashboard
+    Given the dashboard is the active section
+    Then I should see the "Stats" region
+
+  @story_14
+  Scenario: Today's Schedule region is visible on the dashboard
+    Given the dashboard is the active section
+    Then I should see the "Today's Schedule" region
+
   @story_80
   Scenario: Help menu contains required items
     Given the main window is open
@@ -430,7 +440,7 @@ Feature: Shell
     And the About dialog shows a website link
     And the About dialog shows a support link
 
-  @story_16
+  @story_20
   Scenario: Stats widget is visible on the dashboard
     Given the dashboard is the active section
     Then I should see a "Contacts" stat tile
@@ -438,7 +448,7 @@ Feature: Shell
     And I should see a "Properties" stat tile
     And I should see a "Due Today" stat tile
 
-  @story_16
+  @story_20
   Scenario: Stats widget shows zero counts with no data
     Given the dashboard is the active section
     And no CRM data has been entered

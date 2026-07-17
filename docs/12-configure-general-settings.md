@@ -2,7 +2,7 @@
 
 **Capability:** App Shell
 **Milestone:** Secure Shell
-**Status:** Not Done
+**Status:** Done
 **GitHub Issue:** #12
 
 ## User Story
@@ -197,7 +197,7 @@ Scenario: App resumes the last viewed section on launch
 ## Definition of Done
 
 - [x] BDD scenarios pass end-to-end
-- [ ] Feature reachable from the running app
+- [x] Feature reachable from the running app
 - [x] `ruff`, `mypy --strict` clean
-- [ ] Manual tests documented and verified
+- [x] Manual tests documented and verified
 - [x] Wiki documentation written — see [App Shell](https://github.com/UnsophisticatedBadger/OurCRM/wiki/App-Shell)

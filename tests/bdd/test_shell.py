@@ -956,6 +956,24 @@ def see_quick_action_button(main_window: MainWindow, label: str) -> None:
     assert label in buttons, f"Button '{label}' not found; available: {buttons}"
 
 
+_DASHBOARD_REGION_OBJECT_NAMES: dict[str, str] = {
+    "Stats": "stats_region",
+    "Today's Schedule": "todays_schedule_region",
+}
+
+
+@then(parsers.parse('I should see the "{region}" region'))
+def see_dashboard_region(main_window: MainWindow, region: str) -> None:
+    from ourcrm.ui.dashboard_page import DashboardPage
+
+    page = main_window.findChild(DashboardPage)
+    assert page is not None, "DashboardPage not found in main window"
+    object_name = _DASHBOARD_REGION_OBJECT_NAMES[region]
+    assert page.findChild(QWidget, object_name) is not None, (
+        f"Region '{region}' (objectName={object_name!r}) not found in dashboard"
+    )
+
+
 # ── US-116: In-App Help & Documentation ───────────────────────────────────────
 
 
