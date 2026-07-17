@@ -2,10 +2,14 @@
 
 from __future__ import annotations
 
+import ast
+from pathlib import Path
+
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QPushButton
 from pytestqt.qtbot import QtBot
 
+import ourcrm.ui.dashboard_page as dashboard_page_module
 from ourcrm.ui.dashboard_page import DashboardPage, QuickActionsWidget
 from ourcrm.ui.navigation import Section
 
@@ -60,3 +64,21 @@ def test_dashboard_page_propagates_navigate_callback(qtbot: QtBot) -> None:
     qtbot.addWidget(page)
     _click(page, "New Lead", qtbot)
     assert calls == [Section.LEADS]
+
+
+# ── Import direction (AC2: no direct MainWindow import) ────────────────────────
+
+
+def test_dashboard_page_module_does_not_import_main_window() -> None:
+    source_path = Path(dashboard_page_module.__file__)
+    tree = ast.parse(source_path.read_text())
+    imported_modules = {
+        alias.name
+        for node in ast.walk(tree)
+        if isinstance(node, ast.Import)
+        for alias in node.names
+    } | {node.module for node in ast.walk(tree) if isinstance(node, ast.ImportFrom) and node.module}
+    assert not any("main_window" in name for name in imported_modules), (
+        f"dashboard_page.py must navigate via callback, not import MainWindow directly; "
+        f"found imports: {imported_modules}"
+    )
