@@ -10,7 +10,7 @@
 As an agent, I want to edit and delete notes I have added to a contact, so that I can correct mistakes and remove outdated information.
 
 ## Dependencies
-- #48 — Add Notes to Contact
+- #61 — Add Notes to Contact
 
 ## Acceptance Criteria
 1. Each note entry in the contact's notes list shows an Edit button and a Delete button

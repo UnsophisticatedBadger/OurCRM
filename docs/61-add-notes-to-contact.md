@@ -53,7 +53,7 @@ Scenario: Notes persist after an application restart
 
 ## Manual Tests
 
-**Story:** [#48 — Add Notes to a Contact](../docs/011-add-notes-to-contact.md)
+**Story:** [#61 — Add Notes to a Contact](61-add-notes-to-contact.md)
 
 ### User adds a note and sees it with a timestamp
 1. Open any contact's details

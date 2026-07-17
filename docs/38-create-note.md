@@ -17,7 +17,7 @@ As a real estate agent, I want to create a standalone note so that I can capture
 
 **Capability decision:** The canonical capability list has no "notes" group. Standalone notes are an app-level feature with no natural home in contacts, leads, or any other domain capability. Assigned to `shell` pending a decision on whether a dedicated `notes` capability should be added — raise this if the notes feature grows beyond create/view/search.
 
-**Distinction from entity notes:** #48 (Add Notes to Contact) attaches notes to a specific contact record. This story covers a general-purpose Notes section for information that has no specific contact, lead, or property to attach to — market observations, personal reminders, general procedures, and so on.
+**Distinction from entity notes:** #61 (Add Notes to Contact) attaches notes to a specific contact record. This story covers a general-purpose Notes section for information that has no specific contact, lead, or property to attach to — market observations, personal reminders, general procedures, and so on.
 
 Optional entity links are supported: a standalone note can be linked to a contact, lead, or property for cross-reference, but the note always lives in the Notes section regardless of that link.
 

@@ -12,7 +12,7 @@ As a real estate agent, I want the contact search to also look through notes, ta
 ## Dependencies
 
 - #52 — Search Contacts
-- #48 — Add Notes to a Contact
+- #61 — Add Notes to a Contact
 - #50 — Tag Contacts
 
 ## Acceptance Criteria
