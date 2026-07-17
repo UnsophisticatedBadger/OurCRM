@@ -17,4 +17,4 @@ A user story is ready to be worked on when ALL of the following are true:
 
 ## Priority
 
-Stories are worked in milestone order (Foundation → Secure Shell → MVP → Extended CRM → Production → Post-Production), then by GitHub issue number within a milestone.
+Stories are worked in milestone order (Foundation → Secure Shell → MVP → Extended CRM → Production). Within a milestone, order follows application/dependency flow — the sequence captured in each story's own `## Dependencies` section and reflected in that milestone's row order in the wiki Roadmap — not GitHub issue number, which is assigned at story-creation time and often has no relationship to build order.

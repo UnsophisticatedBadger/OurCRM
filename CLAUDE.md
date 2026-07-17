@@ -244,4 +244,4 @@ Every story has a corresponding GitHub Issue. The issue body mirrors the story d
 When a story's entire scope is absorbed into another story: delete the story doc and close the GitHub Issue with a comment referencing the absorbing story.
 
 ### Story readiness
-Before starting work, verify the story meets the Definition of Ready at `docs/definition-of-ready.md`. Stories are prioritised by milestone (v0.1.0 first), then by GitHub issue number within the milestone.
+Before starting work, verify the story meets the Definition of Ready at `docs/definition-of-ready.md`. Stories are prioritised by milestone (earliest milestone first), then by application/dependency flow within the milestone — not by GitHub issue number, which is assigned at story-creation time and often has no relationship to build order.
