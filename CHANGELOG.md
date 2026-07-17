@@ -2,6 +2,15 @@
 
 <!-- version list -->
 
+## v0.13.0 (2026-07-17)
+
+### Features
+
+- Add named dashboard layout regions and complete Home Dashboard
+  ([#14](https://github.com/UnsophisticatedBadger/OurCRM/pull/14),
+  [`947f29e`](https://github.com/UnsophisticatedBadger/OurCRM/commit/947f29e97360d56ea07bce36a40ac566c9f0bc1a))
+
+
 ## v0.12.0 (2026-07-14)
 
 ### Chores
