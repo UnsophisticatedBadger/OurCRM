@@ -1,7 +1,7 @@
 # 61 - Add Notes To A Contact
 
 **Capability:** Contacts
-**Milestone:** MVP
+**Milestone:** Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #61
 
@@ -11,7 +11,7 @@ As a real estate agent, I want to add timestamped notes to a contact, so that I 
 
 ## Dependencies
 
-- #45 — View Contact Details
+- #58 — View Contact Details
 
 ## Acceptance Criteria
 

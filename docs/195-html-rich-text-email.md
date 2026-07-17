@@ -10,7 +10,7 @@
 As an agent, I want to compose emails with basic rich-text formatting, so that I can send professional-looking emails with bolded text, links, and bullet lists without switching to an external email client.
 
 ## Dependencies
-- #126 — Send Email to Contact
+- #176 — Send Email to Contact
 
 ## Acceptance Criteria
 1. The email compose form includes a formatting toolbar with: Bold, Italic, Underline, Bulleted List, Numbered List, and Insert Link
@@ -49,8 +49,7 @@ Scenario: Rich-text email is received with formatting intact by a real email cli
 ```
 
 ## Manual Tests
-**Story:** [#150 — HTML Rich-Text Email Composing](../docs/176-html-rich-text-email.md)
-
+**Story:** [#195 — HTML Rich-Text Email Composing](195-html-rich-text-email.md)
 ### Formatting toolbar applies styles correctly
 1. Type text in the compose form
 2. Select it and click Bold — verify it appears bold

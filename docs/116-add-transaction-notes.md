@@ -11,7 +11,7 @@ As a real estate agent, I want to add notes to a transaction, so that I can keep
 
 ## Dependencies
 
-- #76 — View Transaction Details
+- #113 — View Transaction Details
 
 ## Acceptance Criteria
 
@@ -52,8 +52,7 @@ Scenario: Notes persist after an application restart
 
 ## Manual Tests
 
-**Story:** [#104 — Add Transaction Notes](../docs/055-add-transaction-notes.md)
-
+**Story:** [#116 — Add Transaction Notes](116-add-transaction-notes.md)
 ### User adds a note and sees it appear
 1. Open any transaction's details and click "Add Note"
 2. Type a note and click Save

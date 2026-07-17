@@ -11,7 +11,7 @@ As a real estate agent, I want to open a transaction and see all its information
 
 ## Dependencies
 
-- #75 — View Transaction List
+- #112 — View Transaction List
 
 ## Acceptance Criteria
 
@@ -53,8 +53,7 @@ Scenario: User presses Escape and returns to the transaction list
 
 ## Manual Tests
 
-**Story:** [#76 — View Transaction Details](../docs/055-view-transaction-details.md)
-
+**Story:** [#113 — View Transaction Details](113-view-transaction-details.md)
 ### User opens transaction details from the list
 1. Double-click a transaction in the list
 2. Confirm the details view opens with all data shown

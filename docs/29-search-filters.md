@@ -10,8 +10,8 @@
 As an agent, I want to filter search results by date ranges, numeric ranges, and custom criteria, so that I can find exactly the records I need without scrolling through unrelated results.
 
 ## Dependencies
-- #52 — Search Contacts
-- #58 — Search Contacts Globally
+- #64 — Search Contacts
+- #16 — Search Contacts Globally
 
 ## Acceptance Criteria
 1. A "Filters" panel is accessible from search results across Contacts, Leads, Properties, and Transactions
@@ -59,8 +59,7 @@ Scenario: Clear All Filters removes all active filters
 ```
 
 ## Manual Tests
-**Story:** [#168 — Advanced Search Filters](../docs/137-search-filters.md)
-
+**Story:** [#29 — Advanced Search Filters](29-search-filters.md)
 ### Absolute date range filter shows only matching records
 1. Set the "Created" date filter to a specific date range
 2. Verify only records created within that range appear

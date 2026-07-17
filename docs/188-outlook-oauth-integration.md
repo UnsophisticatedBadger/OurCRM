@@ -10,8 +10,8 @@
 As an agent, I want to connect my Outlook or Office 365 account via OAuth, so that I can send emails from OurCRM through Outlook without storing my password.
 
 ## Dependencies
-- #126 — Send Email to Contact
-- #125 — Configure Email Settings
+- #176 — Send Email to Contact
+- #175 — Configure Email Settings
 
 ## Acceptance Criteria
 1. User can connect their Outlook or Office 365 account via Microsoft OAuth 2.0 from Settings → Email → Outlook
@@ -69,8 +69,7 @@ Scenario: App completes real Microsoft OAuth flow and obtains a send-capable tok
 ```
 
 ## Manual Tests
-**Story:** [#143 — Connect Outlook via OAuth](../docs/105-outlook-oauth-integration.md)
-
+**Story:** [#188 — Connect Outlook via OAuth](188-outlook-oauth-integration.md)
 ### User connects Outlook and sees it show as connected
 1. Go to Settings → Email → Outlook
 2. Click "Connect Outlook" and complete the Microsoft OAuth consent screen

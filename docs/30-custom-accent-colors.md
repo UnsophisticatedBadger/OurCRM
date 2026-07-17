@@ -56,8 +56,7 @@ Scenario: Reset to Default restores the original accent color
 ```
 
 ## Manual Tests
-**Story:** [#169 — Custom Accent Color](../docs/138-custom-accent-colors.md)
-
+**Story:** [#30 — Custom Accent Color](30-custom-accent-colors.md)
 ### Predefined color is applied throughout the app
 1. Open Settings → General → Appearance → Accent Color
 2. Select a predefined color and save

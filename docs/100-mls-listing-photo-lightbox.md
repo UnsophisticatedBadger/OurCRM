@@ -1,7 +1,7 @@
 # 100 - MLS Listing Photo Lightbox
 
 **Capability:** mls
-**Milestone:** MVP
+**Milestone:** Production
 **Status:** Not Done
 **GitHub Issue:** #100
 **Priority:** Post-MVP
@@ -10,7 +10,7 @@
 As an agent, I want to view MLS listing photos full-screen with previous/next navigation, so that I can review property photos in detail without opening an external image viewer.
 
 ## Dependencies
-- #134 — View MLS Listing Details
+- #52 — View MLS Listing Details
 
 ## Acceptance Criteria
 1. Each photo in the MLS listing detail view is clickable
@@ -45,8 +45,7 @@ Scenario: Escape key closes the lightbox
 ```
 
 ## Manual Tests
-**Story:** [#188 — MLS Listing Photo Lightbox](../docs/180-mls-listing-photo-lightbox.md)
-
+**Story:** [#100 — MLS Listing Photo Lightbox](100-mls-listing-photo-lightbox.md)
 ### Clicking a photo opens the lightbox
 1. Open an MLS listing detail with multiple photos
 2. Click any photo and verify the lightbox opens showing that photo full-screen

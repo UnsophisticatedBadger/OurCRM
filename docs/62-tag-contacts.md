@@ -1,7 +1,7 @@
 # 62 - Tag Contacts
 
 **Capability:** Contacts
-**Milestone:** MVP
+**Milestone:** Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #62
 
@@ -11,7 +11,7 @@ As a real estate agent, I want to add tags like "buyer" or "investor" to contact
 
 ## Dependencies
 
-- #45 — View Contact Details
+- #58 — View Contact Details
 
 ## Acceptance Criteria
 
@@ -60,8 +60,7 @@ Scenario: Tags persist after an application restart
 
 ## Manual Tests
 
-**Story:** [#49 — Tag Contacts](../docs/012-tag-contacts.md)
-
+**Story:** [#62 — Tag Contacts](62-tag-contacts.md)
 ### User adds a tag and sees it as a badge
 1. Open any contact's details
 2. Type "buyer" in the tag input and press Enter

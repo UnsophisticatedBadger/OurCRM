@@ -1,7 +1,7 @@
 # 102 - Twilio Calling Integration
 
 **Capability:** telephony
-**Milestone:** Post-Production
+**Milestone:** Production
 **Status:** Not Started
 **GitHub Issue:** #102
 
@@ -11,9 +11,9 @@ As a real estate agent, I want to configure Twilio as a calling option so that I
 
 ## Dependencies
 
-- #44 — Google Voice Click-to-Call
-- #4 — Create master password on first launch
-- #6 — Encrypt database at rest
+- #54 — Google Voice Click-to-Call
+- #3 — Create master password on first launch
+- #5 — Encrypt database at rest
 
 ## Acceptance Criteria
 

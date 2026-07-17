@@ -10,7 +10,7 @@
 As an agent, I want to connect more than one Google or Outlook account, so that I can see events from all my calendars in OurCRM without switching between accounts.
 
 ## Dependencies
-- #41 — Choose Which Calendar to Sync
+- #145 — Choose Which Calendar to Sync
 
 ## Acceptance Criteria
 1. Settings → Calendar → Google Calendar includes an "Add another Google account" button; the user can connect additional accounts via the same OAuth flow
@@ -45,8 +45,7 @@ Scenario: Disconnecting one account removes only its events
 ```
 
 ## Manual Tests
-**Story:** [#42 — Sync Multiple Calendar Accounts](../docs/161-sync-multiple-calendar-accounts.md)
-
+**Story:** [#146 — Sync Multiple Calendar Accounts](146-sync-multiple-calendar-accounts.md)
 ### User connects a second Google account and sees both accounts listed in Settings
 1. Connect a first Google Calendar account
 2. Click "Add another Google account" and complete OAuth for a second account

@@ -10,8 +10,8 @@
 As an agent, I want to choose which Google Calendar or Outlook calendar folder to sync with OurCRM, so that I don't accidentally mix personal and work events.
 
 ## Dependencies
-- #36 — Sync with Google Calendar
-- #37 — Sync with Outlook Calendar
+- #140 — Sync with Google Calendar
+- #141 — Sync with Outlook Calendar
 
 ## Acceptance Criteria
 1. After connecting Google Calendar, Settings → Calendar → Google Calendar shows a "Sync calendar" dropdown listing the user's available Google calendars; the primary calendar is pre-selected
@@ -47,8 +47,7 @@ Scenario: Previously synced events are not removed when the calendar selection c
 ```
 
 ## Manual Tests
-**Story:** [#41 — Choose Which Calendar to Sync](../docs/141-choose-which-calendar-to-sync.md)
-
+**Story:** [#145 — Choose Which Calendar to Sync](145-choose-which-calendar-to-sync.md)
 ### User selects a non-primary calendar and only its events sync
 1. Connect Google Calendar with multiple calendars available
 2. Open Settings → Calendar → Google Calendar and select a non-primary calendar

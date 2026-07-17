@@ -11,7 +11,7 @@ As a real estate agent, I want to open a property and see all its information in
 
 ## Dependencies
 
-- #18 — View Property List
+- #105 — View Property List
 
 ## Acceptance Criteria
 
@@ -52,8 +52,7 @@ Scenario: User clicks the seller contact link and opens the contact details
 
 ## Manual Tests
 
-**Story:** [#19 — View Property Details](../docs/045-view-property-details.md)
-
+**Story:** [#106 — View Property Details](106-view-property-details.md)
 ### User opens property details from the list
 1. Double-click a property in the list
 2. Confirm the details view opens with all data shown

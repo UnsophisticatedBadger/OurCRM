@@ -11,7 +11,7 @@ As an agent, I want large record lists to be displayed in pages, so that the app
 
 ## Dependencies
 - #44 — View Contact List
-- #63 — View Lead List
+- #71 — View Lead List
 
 ## Acceptance Criteria
 1. All record list views (Contacts, Leads, Properties, Transactions, Tasks) display records in pages of 100 by default
@@ -60,8 +60,7 @@ Scenario: Page size change applies immediately
 ```
 
 ## Manual Tests
-**Story:** [#93 — Pagination for Large Lists](../docs/144-pagination-for-large-lists.md)
-
+**Story:** [#36 — Pagination for Large Lists](36-pagination-for-large-lists.md)
 ### Contacts list shows pagination controls with many records
 1. Ensure more than 100 contacts exist
 2. Open the Contacts list and verify pagination controls appear below the list

@@ -11,7 +11,7 @@ As a real estate agent, I want to see all my property listings in a sortable, fi
 
 ## Dependencies
 
-- #17 — Create a New Property Listing
+- #104 — Create a New Property Listing
 
 ## Acceptance Criteria
 
@@ -63,8 +63,7 @@ Scenario: Status filter is preserved after navigating away and back
 
 ## Manual Tests
 
-**Story:** [#18 — View Property List](../docs/047-view-property-list.md)
-
+**Story:** [#105 — View Property List](105-view-property-list.md)
 ### User sees all properties with correct columns
 1. Create properties with varied data (address, type, beds, baths, price, status)
 2. Open the Properties section and confirm all properties appear

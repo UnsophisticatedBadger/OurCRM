@@ -10,7 +10,7 @@
 As an agent, I want to see a list of completed showings with their outcomes and notes, so that I can review my showing history without scrolling through upcoming events.
 
 ## Dependencies
-- #79 — Mark Showing Completed
+- #124 — Mark Showing Completed
 
 ## Acceptance Criteria
 1. A "Past Showings" tab in the Calendar section lists all showings that have been marked completed, newest first
@@ -42,8 +42,7 @@ Scenario: Filter by outcome shows only matching showings
 ```
 
 ## Manual Tests
-**Story:** [#88 — Past Showings View](../docs/170-past-showings-view.md)
-
+**Story:** [#138 — Past Showings View](138-past-showings-view.md)
 ### Completed showing appears in the Past Showings tab
 1. Mark a showing as completed with an outcome
 2. Open the Calendar section → Past Showings tab

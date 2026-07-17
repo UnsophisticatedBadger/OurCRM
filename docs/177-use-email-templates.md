@@ -11,7 +11,7 @@ As a real estate agent, I want to select a pre-built email template when composi
 
 ## Dependencies
 
-- #126 — Send Email to Contact
+- #176 — Send Email to Contact
 
 ## Acceptance Criteria
 
@@ -59,8 +59,7 @@ Scenario: User edits the body after applying a template and the edits are preser
 
 ## Manual Tests
 
-**Story:** [#127 — Use Email Templates](../docs/080-use-email-templates.md)
-
+**Story:** [#177 — Use Email Templates](177-use-email-templates.md)
 ### Template selection populates subject and body
 1. Open the email compose form
 2. Click "Use Template" and confirm a list of pre-built templates is shown

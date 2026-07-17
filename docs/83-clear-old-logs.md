@@ -1,7 +1,7 @@
 # 83 - Clear Old Logs
 
 **Capability:** Infrastructure
-**Milestone:** MVP
+**Milestone:** Production
 **Status:** Not Done
 **GitHub Issue:** #83
 
@@ -11,11 +11,11 @@ As a user, I want to clear old log entries so that I can free up disk space and 
 
 ## Dependencies
 
-- #157 — View Error Logs
+- #80 — View Error Logs
 
 ## Acceptance Criteria
 
-1. A "Clear Logs" button is accessible from the error log viewer (#157)
+1. A "Clear Logs" button is accessible from the error log viewer (#80)
 2. The clearing dialog shows current log storage stats: total entry count and approximate file size
 3. The user can clear by age: "Older than 30 days", "Older than 90 days", or "Older than 1 year"
 4. The user can clear all log entries
@@ -63,8 +63,7 @@ Scenario: Log viewer shows remaining entries after a partial clear
 
 ## Manual Tests
 
-**Story:** [#160 — Clear Old Logs](../docs/170-clear-old-logs.md)
-
+**Story:** [#83 — Clear Old Logs](83-clear-old-logs.md)
 ### Clear Logs is accessible from the log viewer
 1. Open Help → Error Logs
 2. Confirm a "Clear Logs" button is visible in the viewer

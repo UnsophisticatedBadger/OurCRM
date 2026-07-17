@@ -11,7 +11,7 @@ As a real estate agent, I want to override the AI's qualification with my own st
 
 ## Dependencies
 
-- #22 — View AI Qualification Results
+- #183 — View AI Qualification Results
 
 ## Notes
 
@@ -63,8 +63,7 @@ Scenario: Re-qualifying after an override makes the new AI result the active ass
 
 ## Manual Tests
 
-**Story:** [#175 — Override AI Qualification](../docs/028-override-ai-qualification.md)
-
+**Story:** [#184 — Override AI Qualification](184-override-ai-qualification.md)
 ### Agent overrides an AI qualification and the override is labelled clearly
 1. Qualify a lead with AI and note its status (e.g., "Cold")
 2. Click "Override" in the qualification panel

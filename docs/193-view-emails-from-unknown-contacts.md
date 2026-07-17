@@ -10,8 +10,8 @@
 As an agent, I want to see inbound emails from senders not in my contacts, so that I can identify potential new leads from inbound inquiries.
 
 ## Dependencies
-- #144 — Email Inbox Sync
-- #43 — Create a New Contact
+- #189 — Email Inbox Sync
+- #56 — Create a New Contact
 
 ## Acceptance Criteria
 1. An "Unknown Senders" section in the Email tab lists inbound emails from addresses that do not match any contact
@@ -47,8 +47,7 @@ Scenario: User dismisses an unknown sender email and it does not reappear
 ```
 
 ## Manual Tests
-**Story:** [#148 — View Emails from Unknown Contacts](../docs/174-view-emails-from-unknown-contacts.md)
-
+**Story:** [#193 — View Emails from Unknown Contacts](193-view-emails-from-unknown-contacts.md)
 ### Inbound email from unknown sender appears in the Unknown Senders section
 1. With inbox sync enabled, receive an email from an address not in contacts
 2. Open the Email tab and verify the Unknown Senders section shows the email

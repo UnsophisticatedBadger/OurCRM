@@ -1,7 +1,7 @@
 # 19 - Recent Searches And Quick Access
 
 **Capability:** App Shell
-**Milestone:** MVP
+**Milestone:** Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #19
 

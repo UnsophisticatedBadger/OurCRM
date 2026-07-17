@@ -1,7 +1,7 @@
 # 159 - Restore From Backup
 
 **Capability:** Backup & Recovery
-**Milestone:** Production
+**Milestone:** Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #159
 
@@ -11,7 +11,7 @@ As a real estate agent, I want to restore my CRM data from a backup file so that
 
 ## Dependencies
 
-- #181 — Create Manual Backup
+- #158 — Create Manual Backup
 
 ## Notes
 
@@ -78,8 +78,7 @@ Scenario: Cancelling the confirmation dialog takes no action
 
 ## Manual Tests
 
-**Story:** [#182 — Restore from Backup](../docs/095-restore-from-backup.md)
-
+**Story:** [#159 — Restore from Backup](159-restore-from-backup.md)
 ### Restore section is accessible
 1. Open Settings and navigate to Backup
 2. Confirm a "Restore from Backup" button is present

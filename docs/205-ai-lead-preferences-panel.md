@@ -10,7 +10,7 @@
 As an agent, I want the AI to extract and display a lead's stated preferences in a structured panel, so that I can see their key requirements at a glance without reading through all their notes.
 
 ## Dependencies
-- #191 — AI Lead Summary
+- #198 — AI Lead Summary
 
 ## Acceptance Criteria
 1. An "Extract Preferences" button appears in the lead detail view alongside "Generate Summary"
@@ -61,8 +61,7 @@ Scenario: Real AI provider extracts structured preferences from lead notes
 ```
 
 ## Manual Tests
-**Story:** [#99 — AI Lead Preferences Panel](../docs/190-ai-lead-preferences-panel.md)
-
+**Story:** [#205 — AI Lead Preferences Panel](205-ai-lead-preferences-panel.md)
 ### Preferences are extracted and displayed in a structured panel
 1. Open a lead with notes mentioning budget, location, and property type
 2. Click "Extract Preferences"

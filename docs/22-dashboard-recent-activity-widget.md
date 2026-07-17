@@ -11,9 +11,9 @@ As an agent, I want to see a feed of recent changes on the dashboard, so that I 
 
 ## Dependencies
 - #14 — Home Dashboard
-- #43 — Create a New Contact
-- #115 — Create a Task
-- #117 — Mark Task Complete
+- #56 — Create a New Contact
+- #128 — Create a Task
+- #130 — Mark Task Complete
 
 ## Acceptance Criteria
 1. The dashboard shows a Recent Activity widget listing the last 10 activity events across the app, newest first
@@ -51,8 +51,7 @@ Scenario: Widget refreshes when the main window regains focus
 ```
 
 ## Manual Tests
-**Story:** [#124 — Dashboard Recent Activity Widget](../docs/077-dashboard-recent-activity-widget.md)
-
+**Story:** [#22 — Dashboard Recent Activity Widget](22-dashboard-recent-activity-widget.md)
 ### Widget shows recent tasks and contacts
 1. Create a contact and complete a task
 2. Navigate to the dashboard and verify both appear in the Recent Activity widget, newest first

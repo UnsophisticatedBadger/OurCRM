@@ -11,9 +11,9 @@ As a real estate agent, I want to click a button next to a contact and have Goog
 
 ## Dependencies
 
-- #4 — Create master password on first launch
-- #6 — Encrypt database at rest
-- #10 — Add property owner to call list
+- #3 — Create master password on first launch
+- #5 — Encrypt database at rest
+- #53 — Add property owner to call list
 
 ## Acceptance Criteria
 

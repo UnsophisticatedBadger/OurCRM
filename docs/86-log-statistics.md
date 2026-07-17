@@ -1,7 +1,7 @@
 # 86 - Log Statistics
 
 **Capability:** Infrastructure
-**Milestone:** MVP
+**Milestone:** Production
 **Status:** Not Done
 **GitHub Issue:** #86
 **Priority:** Should Have (deferrable to post-MVP)
@@ -12,16 +12,16 @@ As a real estate agent troubleshooting an issue, I want to see a summary of log 
 
 ## Dependencies
 
-- #157 — View Error Logs
-- #162 — Log File Management
+- #80 — View Error Logs
+- #85 — Log File Management
 
 ## Notes
 
-This story adds a lightweight statistics panel to the log viewer (#157). It surfaces high-level counts derived from the logs already stored by #162 — no new data collection is required. The panel is read-only and refreshes each time it is opened.
+This story adds a lightweight statistics panel to the log viewer (#80). It surfaces high-level counts derived from the logs already stored by #85 — no new data collection is required. The panel is read-only and refreshes each time it is opened.
 
 ## Acceptance Criteria
 
-1. The log viewer (#157) includes a "Statistics" button that opens a summary panel
+1. The log viewer (#80) includes a "Statistics" button that opens a summary panel
 2. The panel shows the total number of log entries within the current retention window, broken down by level: Error, Warning, Info, Debug
 3. The panel shows the top 5 most frequently repeated error messages with their occurrence count, listed highest-count first
 4. The panel shows the total log storage used (sum of all files in the logs folder) in human-readable units (KB or MB)
@@ -58,8 +58,7 @@ Scenario: Panel shows total log storage in human-readable units
 
 ## Manual Tests
 
-**Story:** [#163 — Log Statistics](../docs/112-log-statistics.md)
-
+**Story:** [#86 — Log Statistics](86-log-statistics.md)
 ### Statistics panel opens from the log viewer
 1. Open the log viewer (Help → Error Logs or Settings → Advanced → Error Logs)
 2. Confirm a "Statistics" button is present
@@ -68,7 +67,7 @@ Scenario: Panel shows total log storage in human-readable units
 ### Entry counts by level are shown and accurate
 1. Open the statistics panel
 2. Note the Error, Warning, Info, and Debug counts shown
-3. Cross-check against the level filter counts visible in the log viewer (#157) — confirm they match
+3. Cross-check against the level filter counts visible in the log viewer (#80) — confirm they match
 
 ### Top repeated error messages are listed
 1. If the app has repeated errors, open the statistics panel and locate the "Most frequent errors" section

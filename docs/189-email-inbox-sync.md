@@ -10,9 +10,9 @@
 As an agent, I want received emails from my contacts to appear in OurCRM, so that I have a complete two-way communication history without manually logging inbound messages.
 
 ## Dependencies
-- #142 — Connect Gmail via OAuth (provides inbox read scope for Gmail)
-- #143 — Connect Outlook via OAuth (provides inbox read scope for Outlook)
-- #21 — View Email History in Contact Timeline
+- #187 — Connect Gmail via OAuth (provides inbox read scope for Gmail)
+- #188 — Connect Outlook via OAuth (provides inbox read scope for Outlook)
+- #178 — View Email History in Contact Timeline
 
 ## Acceptance Criteria
 1. User can enable inbox sync from Settings → Email → Inbox Sync (requires Gmail or Outlook OAuth already connected)
@@ -80,8 +80,7 @@ Scenario: Live inbound email from a known contact syncs to their timeline
 ```
 
 ## Manual Tests
-**Story:** [#144 — Email Inbox Sync](../docs/170-email-inbox-sync.md)
-
+**Story:** [#189 — Email Inbox Sync](189-email-inbox-sync.md)
 ### User enables inbox sync and grants inbox-read permission
 1. Ensure Gmail or Outlook is connected via OAuth
 2. Go to Settings → Email → Inbox Sync and enable it

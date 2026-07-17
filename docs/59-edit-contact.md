@@ -11,7 +11,7 @@ As a real estate agent, I want to edit a contact's information, so that I can ke
 
 ## Dependencies
 
-- #45 — View Contact Details
+- #58 — View Contact Details
 
 ## Acceptance Criteria
 
@@ -48,8 +48,7 @@ Scenario: Edited data persists after an application restart
 
 ## Manual Tests
 
-**Story:** [#46 — Edit a Contact](../docs/013-edit-contact.md)
-
+**Story:** [#59 — Edit a Contact](59-edit-contact.md)
 ### User opens the edit form from contact details
 1. Open any contact's details
 2. Click Edit

@@ -10,7 +10,8 @@
 As an agent, I want the OurCRM window to remain usable when resized smaller or larger, so that I can work with the app at any window size without losing access to content.
 
 ## Dependencies
-- #15 — Create the First Window
+
+None — layout behavior of the existing main window, no new story depends on it.
 
 ## Acceptance Criteria
 1. The main window has a minimum size of 800 × 600 px; it cannot be resized below this
@@ -50,8 +51,7 @@ Scenario: Window size and sidebar state are restored on next launch
 ```
 
 ## Manual Tests
-**Story:** [#92 — Resizable and Adaptive Window Layout](../docs/143-mobile-responsive-ui.md)
-
+**Story:** [#35 — Resizable and Adaptive Window Layout](35-mobile-responsive-ui.md)
 ### Window cannot shrink below 800 × 600 px
 1. Drag the window edge to make it as small as possible
 2. Verify the window stops at 800 × 600 px and does not go smaller

@@ -10,7 +10,7 @@
 As an agent, I want to define custom tone labels for AI email drafting, so that I can generate emails that match specific communication styles I use with different clients.
 
 ## Dependencies
-- #190 — Draft Email with AI
+- #197 — Draft Email with AI
 
 ## Acceptance Criteria
 1. Settings → AI → Email Tones lists the three built-in tones (Professional, Friendly, Urgent) and any user-defined custom tones
@@ -49,8 +49,7 @@ Scenario: Built-in tones cannot be deleted
 ```
 
 ## Manual Tests
-**Story:** [#98 — Custom AI Email Tones](../docs/189-custom-ai-email-tones.md)
-
+**Story:** [#204 — Custom AI Email Tones](204-custom-ai-email-tones.md)
 ### Custom tone appears in the tone selector when drafting
 1. Go to Settings → AI → Email Tones and add a custom tone
 2. Open the email compose form and click "Draft with AI"

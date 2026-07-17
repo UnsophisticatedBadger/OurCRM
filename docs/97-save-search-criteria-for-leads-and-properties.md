@@ -1,7 +1,7 @@
 # 97 - Save Search Criteria For Leads And Properties
 
 **Capability:** leads
-**Milestone:** MVP
+**Milestone:** Production
 **Status:** Not Done
 **GitHub Issue:** #97
 **Priority:** Post-MVP
@@ -10,9 +10,9 @@
 As an agent, I want to save my frequently used search and filter combinations in the Leads and Properties sections, so that I can recall complex queries instantly without re-entering them each time.
 
 ## Dependencies
-- #81 — Save Search Criteria (Contacts)
-- #63 — View Lead List
-- #18 — View Property List
+- #25 — Save Search Criteria (Contacts)
+- #71 — View Lead List
+- #105 — View Property List
 
 ## Notes
 
@@ -51,8 +51,7 @@ Scenario: User saves a property filter and recalls it
 ```
 
 ## Manual Tests
-**Story:** [#34 — Save Search Criteria for Leads and Properties](../docs/153-save-search-criteria-for-leads-and-properties.md)
-
+**Story:** [#97 — Save Search Criteria for Leads and Properties](97-save-search-criteria-for-leads-and-properties.md)
 ### Saving and recalling a lead search
 1. Apply a filter in the Leads section (e.g., Status = Hot, Source = Referral)
 2. Click "Save Search" and name it "Hot Referrals"

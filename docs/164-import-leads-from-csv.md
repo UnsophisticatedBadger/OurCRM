@@ -1,7 +1,7 @@
 # 164 - Import Leads From CSV
 
 **Capability:** Import & Export
-**Milestone:** Production
+**Milestone:** Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #164
 
@@ -11,8 +11,8 @@ As a real estate agent, I want to import leads from a CSV file so that I can mig
 
 ## Dependencies
 
-- #62 — Create a New Lead
-- #153 — Import Contacts from CSV
+- #70 — Create a New Lead
+- #163 — Import Contacts from CSV
 
 ## Acceptance Criteria
 
@@ -67,8 +67,7 @@ Scenario: Duplicate lead email triggers resolution dialog
 
 ## Manual Tests
 
-**Story:** [#154 — Import Leads from CSV](../docs/087-import-leads-from-csv.md)
-
+**Story:** [#164 — Import Leads from CSV](164-import-leads-from-csv.md)
 ### Lead-specific fields appear in mapping dropdowns
 1. Open Import & Export → Import Leads from CSV and select a CSV file
 2. Confirm the mapping dropdowns include status, source, budget minimum/maximum, timeline, property type, and desired location

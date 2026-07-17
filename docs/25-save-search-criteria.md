@@ -12,8 +12,8 @@ As a real estate agent, I want to save frequently used search filters under a na
 
 ## Dependencies
 
-- #51 — Filter Contacts by Tags
-- #52 — Search Contacts
+- #63 — Filter Contacts by Tags
+- #64 — Search Contacts
 
 ## Acceptance Criteria
 
@@ -61,8 +61,7 @@ Scenario: Saved searches persist after application restart
 
 ## Manual Tests
 
-**Story:** [#81 — Save Search Criteria](../docs/117-save-search-criteria.md)
-
+**Story:** [#25 — Save Search Criteria](25-save-search-criteria.md)
 ### Saving a search with active filters
 1. In the Contacts section, apply a search term and one or more tag filters
 2. Click "Save Search" and enter a name

@@ -1,7 +1,7 @@
 # 99 - Re-Sync Property From MLS
 
 **Capability:** mls
-**Milestone:** MVP
+**Milestone:** Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #99
 **Priority:** Post-MVP
@@ -10,7 +10,7 @@
 As an agent, I want to refresh a property that was imported from MLS with the latest listing data, so that my property record stays up to date without re-importing manually.
 
 ## Dependencies
-- #133 — Import MLS Listing as Property
+- #79 — Import MLS Listing as Property
 
 ## Acceptance Criteria
 1. A "Refresh from MLS" button appears on the detail view of any property that was originally imported from an MLS listing
@@ -51,8 +51,7 @@ Scenario: Real MLS refresh updates a property from a live listing
 ```
 
 ## Manual Tests
-**Story:** [#187 — Re-Sync Property from MLS](../docs/179-resync-property-from-mls.md)
-
+**Story:** [#99 — Re-Sync Property from MLS](99-resync-property-from-mls.md)
 ### Refresh from MLS updates the list price
 1. Open a property that was imported from MLS
 2. Click "Refresh from MLS"

@@ -11,8 +11,8 @@ As a real estate agent, I want to send an email with optional file attachments t
 
 ## Dependencies
 
-- #125 — Configure Email Settings
-- #45 — View Contact Details
+- #175 — Configure Email Settings
+- #58 — View Contact Details
 
 ## Notes
 
@@ -104,8 +104,7 @@ Scenario: SMTP error keeps the form open for retry
 
 ## Manual Tests
 
-**Story:** [#126 — Send Email to Contact](../docs/079-send-email-to-contact.md)
-
+**Story:** [#176 — Send Email to Contact](176-send-email-to-contact.md)
 ### Compose form opens with recipient pre-filled
 1. Open any contact's detail view that has an email address
 2. Click "Send Email"

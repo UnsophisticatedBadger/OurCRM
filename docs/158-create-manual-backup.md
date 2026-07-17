@@ -1,7 +1,7 @@
 # 158 - Create Manual Backup
 
 **Capability:** Backup & Recovery
-**Milestone:** Production
+**Milestone:** Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #158
 
@@ -61,8 +61,7 @@ Scenario: Unwritable save location shows a clear error message
 
 ## Manual Tests
 
-**Story:** [#181 — Create Manual Backup](../docs/007-create-manual-backup.md)
-
+**Story:** [#158 — Create Manual Backup](158-create-manual-backup.md)
 ### Backup section is accessible
 1. Open Settings and navigate to Backup
 2. Confirm a "Create Backup" button is present

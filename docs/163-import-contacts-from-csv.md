@@ -1,7 +1,7 @@
 # 163 - Import Contacts From CSV
 
 **Capability:** Import & Export
-**Milestone:** Production
+**Milestone:** Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #163
 
@@ -11,8 +11,8 @@ As a real estate agent, I want to import contacts from a CSV file so that I can 
 
 ## Dependencies
 
-- #43 — Create a New Contact
-- #183 — Handle Duplicate Contacts During Import
+- #56 — Create a New Contact
+- #161 — Handle Duplicate Contacts During Import
 
 ## Notes
 
@@ -74,8 +74,7 @@ Scenario: Import summary is shown after completion
 
 ## Manual Tests
 
-**Story:** [#153 — Import Contacts from CSV](../docs/102-import-contacts-from-csv.md)
-
+**Story:** [#163 — Import Contacts from CSV](163-import-contacts-from-csv.md)
 ### Field mapping panel appears with correct data
 1. Open Import & Export → Import from CSV and select a CSV file
 2. Confirm each column header is shown with a sample value and a "Skip" dropdown

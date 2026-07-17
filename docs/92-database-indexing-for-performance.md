@@ -1,7 +1,7 @@
 # 92 - Database Indexing For Performance
 
 **Capability:** infrastructure
-**Milestone:** MVP
+**Milestone:** Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #92
 **Priority:** Post-MVP
@@ -45,8 +45,7 @@ Scenario: Rebuild Indexes completes without altering records
 ```
 
 ## Manual Tests
-**Story:** [#91 — Database Indexing for Performance](../docs/117-database-0indexing-for-performance.md)
-
+**Story:** [#92 — Database Indexing for Performance](92-database-indexing-for-performance.md)
 ### Search returns quickly with a large dataset
 1. Import or create at least 5,000 contacts
 2. Search for a contact name and time the response

@@ -11,7 +11,7 @@ As a real estate agent, I want to mark a task as complete so that I can track my
 
 ## Dependencies
 
-- #116 — View Task List
+- #129 — View Task List
 
 ## Acceptance Criteria
 
@@ -56,8 +56,7 @@ Scenario: Completion state persists after application restart
 
 ## Manual Tests
 
-**Story:** [#117 — Mark Task Complete](../docs/070-mark-task-complete.md)
-
+**Story:** [#130 — Mark Task Complete](130-mark-task-complete.md)
 ### Marking complete from the task list
 1. View the task list
 2. Click the checkbox on an active task

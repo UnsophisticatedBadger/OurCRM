@@ -10,8 +10,8 @@
 As an agent, I want to be prompted to create a follow-up task when I complete a showing, so that I never forget to follow up with a buyer after a visit.
 
 ## Dependencies
-- #79 — Mark Showing Completed
-- #115 — Create a Task
+- #124 — Mark Showing Completed
+- #128 — Create a Task
 
 ## Acceptance Criteria
 1. After confirming a showing completion, a prompt asks "Create a follow-up task?" with Yes and No options
@@ -44,8 +44,7 @@ Scenario: Choosing No dismisses the prompt without creating a task
 ```
 
 ## Manual Tests
-**Story:** [#140 — Create Follow-Up Task After Completing a Showing](../docs/166-follow-up-task-after-showing.md)
-
+**Story:** [#151 — Create Follow-Up Task After Completing a Showing](151-follow-up-task-after-showing.md)
 ### Follow-up task prompt appears after showing completion
 1. Complete a showing linked to a contact
 2. Verify the "Create a follow-up task?" prompt appears

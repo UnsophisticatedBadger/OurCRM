@@ -11,8 +11,8 @@ As a real estate agent, I want to change the priority of an existing task so tha
 
 ## Dependencies
 
-- #115 — Create a Task
-- #116 — View Task List
+- #128 — Create a Task
+- #129 — View Task List
 
 ## Acceptance Criteria
 
@@ -41,8 +41,7 @@ Scenario: Updated priority persists after application restart
 
 ## Manual Tests
 
-**Story:** [#118 — Change Task Priority](../docs/080-set-task-priority.md)
-
+**Story:** [#131 — Change Task Priority](131-set-task-priority.md)
 ### Priority can be changed from the detail view
 1. Open a task with priority Medium
 2. Edit the priority field and select Urgent

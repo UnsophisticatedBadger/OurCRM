@@ -12,8 +12,8 @@ As a real estate agent, I want to export all my data to a single JSON file so th
 
 ## Dependencies
 
-- #155 — Export Contacts to vCard
-- #156 — Export Contacts to CSV
+- #165 — Export Contacts to vCard
+- #166 — Export Contacts to CSV
 
 ## Notes
 
@@ -66,8 +66,7 @@ Scenario: Success message shows the file path and size
 
 ## Manual Tests
 
-**Story:** [#89 — Export to JSON (Full Backup)](../docs/119-export-to-json.md)
-
+**Story:** [#172 — Export to JSON (Full Backup)](172-export-to-json.md)
 ### Export option is accessible
 1. Open the app and locate the Export or File menu
 2. Confirm "Full Backup (JSON)" is listed

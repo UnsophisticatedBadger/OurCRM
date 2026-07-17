@@ -11,7 +11,7 @@ As a real estate agent, I want the AI qualification result to be displayed clear
 
 ## Dependencies
 
-- #136 — Qualify a Lead with AI
+- #182 — Qualify a Lead with AI
 
 ## Notes
 
@@ -67,8 +67,7 @@ Scenario: Lead list shows AI status badges for qualified leads
 
 ## Manual Tests
 
-**Story:** [#22 — View AI Qualification Results](../docs/023-view-ai-qualification-results.md)
-
+**Story:** [#183 — View AI Qualification Results](183-view-ai-qualification-results.md)
 ### Qualification panel shows score, colour-coded status, reasoning, and date
 1. Qualify a lead and view its detail page
 2. Confirm the score is shown as a number with a colour-coded bar next to it

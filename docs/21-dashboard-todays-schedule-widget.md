@@ -11,9 +11,9 @@ As an agent, I want to see today's calendar events and showings on the dashboard
 
 ## Dependencies
 - #14 — Home Dashboard
-- #109 — Create a Calendar Event
-- #108 — View Calendar
-- #110 — Schedule a Showing
+- #121 — Create a Calendar Event
+- #120 — View Calendar
+- #122 — Schedule a Showing
 
 ## Acceptance Criteria
 1. The dashboard shows a Today's Schedule widget listing all calendar events and showings for today in chronological order
@@ -47,8 +47,7 @@ Scenario: Clicking an event in the widget navigates to the Calendar section
 ```
 
 ## Manual Tests
-**Story:** [#114 — Dashboard Today's Schedule Widget](../docs/067-dashboard-todays-schedule-widget.md)
-
+**Story:** [#21 — Dashboard Today's Schedule Widget](21-dashboard-todays-schedule-widget.md)
 ### Widget shows today's events in time order
 1. Create a calendar event for today at 10:00 AM and a showing at 2:00 PM
 2. Navigate to the dashboard and verify both appear in the Today's Schedule widget in chronological order

@@ -11,7 +11,7 @@ As a real estate agent, I want to delete a contact I no longer work with, so tha
 
 ## Dependencies
 
-- #45 — View Contact Details
+- #58 — View Contact Details
 
 ## Acceptance Criteria
 
@@ -48,8 +48,7 @@ Scenario: Deleted contact does not reappear after restart
 
 ## Manual Tests
 
-**Story:** [#47 — Delete a Contact](../docs/020-delete-contact.md)
-
+**Story:** [#60 — Delete a Contact](60-delete-contact.md)
 ### User deletes a contact via the details view
 1. Open any contact's details
 2. Click Delete

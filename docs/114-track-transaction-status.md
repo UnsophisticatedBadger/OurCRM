@@ -11,7 +11,7 @@ As a real estate agent, I want to change a transaction's status to reflect where
 
 ## Dependencies
 
-- #76 — View Transaction Details
+- #113 — View Transaction Details
 
 ## Acceptance Criteria
 
@@ -60,8 +60,7 @@ Scenario: Status change persists after an application restart
 
 ## Manual Tests
 
-**Story:** [#77 — Change Transaction Status](../docs/061-track-transaction-status.md)
-
+**Story:** [#114 — Change Transaction Status](114-track-transaction-status.md)
 ### User changes status in the details view
 1. Open any Under Contract transaction's details
 2. Click the status field and select "Pending"

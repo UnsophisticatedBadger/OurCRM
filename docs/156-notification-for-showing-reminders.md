@@ -1,7 +1,7 @@
 # 156 - Notification For Showing Reminders
 
 **Capability:** Notifications
-**Milestone:** Production
+**Milestone:** Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #156
 
@@ -11,10 +11,10 @@ As a real estate agent, I want to receive a reminder notification before a sched
 
 ## Dependencies
 
-- #110 — Schedule a Showing
-- #176 — Desktop Notifications for New Leads
-- #177 — In-App Notifications
-- #178 — Notification Preferences
+- #122 — Schedule a Showing
+- #153 — Desktop Notifications for New Leads
+- #154 — In-App Notifications
+- #155 — Notification Preferences
 
 ## Notes
 
@@ -97,8 +97,7 @@ Scenario: Showing Reminder toggle off suppresses all showing reminders
 
 ## Manual Tests
 
-**Story:** [#179 — Notification for Showing Reminders](../docs/096-notification-for-showing-reminders.md)
-
+**Story:** [#156 — Notification for Showing Reminders](156-notification-for-showing-reminders.md)
 ### Reminder fires at the right time
 1. Confirm the preference is set to 60 minutes
 2. Schedule a showing for 1 hour and 5 minutes from now

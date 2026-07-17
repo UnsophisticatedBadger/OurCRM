@@ -1,7 +1,7 @@
 # 93 - Auto-Install Updates
 
 **Capability:** infrastructure
-**Milestone:** MVP
+**Milestone:** Production
 **Status:** Not Done
 **GitHub Issue:** #93
 **Priority:** Post-MVP
@@ -10,7 +10,7 @@
 As a user, I want updates to download and install automatically, so that I'm always on the latest version without having to initiate updates manually.
 
 ## Dependencies
-- #164 — Check for and Install Application Updates
+- #87 — Check for and Install Application Updates
 
 ## Acceptance Criteria
 1. Settings → General → Updates includes an "Automatically install updates" toggle (off by default)
@@ -52,8 +52,7 @@ Scenario: Disabling auto-install reverts to manual update flow
 ```
 
 ## Manual Tests
-**Story:** [#185 — Auto-Install Updates](../docs/133-auto-install-updates.md)
-
+**Story:** [#93 — Auto-Install Updates](93-auto-install-updates.md)
 ### Auto-install is off by default on a fresh install
 1. Open Settings → General → Updates
 2. Verify "Automatically install updates" is off

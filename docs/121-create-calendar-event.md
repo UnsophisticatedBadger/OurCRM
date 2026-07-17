@@ -12,7 +12,7 @@ As a real estate agent, I want to create calendar events for showings, meetings,
 ## Dependencies
 
 - #6 — Log In with Master Password *(SQLAlchemy session factory must be in DI container before events can be persisted)*
-- #108 — View Calendar *(events must be visible after creation)*
+- #120 — View Calendar *(events must be visible after creation)*
 
 ## Acceptance Criteria
 
@@ -37,8 +37,7 @@ Scenario: Calendar event survives an application restart
 
 ## Manual Tests
 
-**Story:** [#109 — Create a Calendar Event](../docs/030-create-calendar-event.md)
-
+**Story:** [#121 — Create a Calendar Event](121-create-calendar-event.md)
 ### User creates an event and it appears in the calendar
 1. Open the app and authenticate
 2. Navigate to the Calendar section

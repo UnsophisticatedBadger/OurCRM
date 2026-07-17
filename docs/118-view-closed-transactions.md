@@ -11,7 +11,7 @@ As a real estate agent, I want to view all my closed transactions with commissio
 
 ## Dependencies
 
-- #20 — Record Closing Date
+- #115 — Record Closing Date
 
 ## Acceptance Criteria
 
@@ -59,8 +59,7 @@ Scenario: Double-clicking a closed transaction opens its details
 
 ## Manual Tests
 
-**Story:** [#106 — View Closed Transactions](../docs/057-view-closed-transactions.md)
-
+**Story:** [#118 — View Closed Transactions](118-view-closed-transactions.md)
 ### User filters the transaction list to show only closed transactions
 1. Close a few transactions; leave others active
 2. Select "Closed" from the status filter

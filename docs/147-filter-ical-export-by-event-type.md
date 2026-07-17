@@ -10,7 +10,7 @@
 As an agent, I want to choose which types of events are included in my iCal export file, so that I can share only relevant events with external calendars.
 
 ## Dependencies
-- #38 — Export Calendar as iCal File
+- #142 — Export Calendar as iCal File
 
 ## Acceptance Criteria
 1. Settings → Calendar → iCal Export includes checkboxes for event types: Calendar Events, Showings, Task Due Dates
@@ -44,8 +44,7 @@ Scenario: Re-selecting a type adds those events back to the .ics file
 ```
 
 ## Manual Tests
-**Story:** [#95 — Filter iCal Export by Event Type](../docs/162-filter-ical-export-by-event-type.md)
-
+**Story:** [#147 — Filter iCal Export by Event Type](147-filter-ical-export-by-event-type.md)
 ### All event types are included by default
 1. Enable iCal export for the first time
 2. Open the .ics file and verify it contains calendar events, showings, and task due dates

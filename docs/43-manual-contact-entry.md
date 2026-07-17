@@ -11,8 +11,8 @@ As a real estate agent, I want to add a property owner to my call list by typing
 
 ## Dependencies
 
-- #4 — Create master password on first launch
-- #6 — Encrypt database at rest
+- #3 — Create master password on first launch
+- #5 — Encrypt database at rest
 
 ## Acceptance Criteria
 

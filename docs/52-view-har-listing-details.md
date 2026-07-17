@@ -11,7 +11,7 @@ As a real estate agent, I want to view the full details of a specific HAR listin
 
 ## Dependencies
 
-- #131 — Fetch HAR MLS Listings
+- #78 — Fetch HAR MLS Listings
 
 ## Acceptance Criteria
 
@@ -21,7 +21,7 @@ As a real estate agent, I want to view the full details of a specific HAR listin
 4. The full property description is displayed as readable text
 5. Features and amenities from the HAR API response are shown as a list
 6. Days on market is calculated from the listing date (today minus listing date, in whole days) and labelled "N days on market"
-7. An "Import as Property" button is present and triggers the import flow defined in #133
+7. An "Import as Property" button is present and triggers the import flow defined in #79
 8. A "Schedule Showing" button is present and navigates to the showing creation form with the listing address pre-filled
 9. A Back button returns to the listings list, preserving the previous scroll position and any active search criteria
 
@@ -52,7 +52,7 @@ Scenario: Detail view shows no-photos message when a listing has no photos
 Scenario: Import as Property button starts the import flow
   Given the user is viewing a HAR listing's detail
   When the user clicks "Import as Property"
-  Then the import flow defined in #133 begins for that listing
+  Then the import flow defined in #79 begins for that listing
 
 @story_52
 Scenario: Back button returns to the listings list at the same scroll position
@@ -63,8 +63,7 @@ Scenario: Back button returns to the listings list at the same scroll position
 
 ## Manual Tests
 
-**Story:** [#134 — View HAR Listing Details](../docs/088-view-har-listing-details.md)
-
+**Story:** [#52 — View HAR Listing Details](52-view-har-listing-details.md)
 ### All MLS fields are displayed
 1. Fetch listings and click any listing row
 2. Confirm the detail view shows: full address, price, beds, baths, sqft, lot size, year built, property type, MLS number, listing date, days on market, agent name, and brokerage
@@ -85,7 +84,7 @@ Scenario: Back button returns to the listings list at the same scroll position
 
 ### Import as Property
 1. View a listing's detail and click "Import as Property"
-2. Confirm the import flow starts (per #133 — a success confirmation appears)
+2. Confirm the import flow starts (per #79 — a success confirmation appears)
 
 ### Schedule Showing
 1. View a listing's detail and click "Schedule Showing"

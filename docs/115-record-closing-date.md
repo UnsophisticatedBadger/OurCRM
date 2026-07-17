@@ -11,7 +11,7 @@ As a real estate agent, I want to record the actual closing date when a deal clo
 
 ## Dependencies
 
-- #76 — View Transaction Details
+- #113 — View Transaction Details
 
 ## Acceptance Criteria
 
@@ -61,8 +61,7 @@ Scenario: Record Closing Date button is not shown on already-closed transactions
 
 ## Manual Tests
 
-**Story:** [#20 — Record Closing Date](../docs/057-record-closing-date.md)
-
+**Story:** [#115 — Record Closing Date](115-record-closing-date.md)
 ### Record Closing Date button visible on active transactions
 1. Open any Under Contract or Pending transaction
 2. Confirm "Record Closing Date" button is visible

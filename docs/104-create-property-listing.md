@@ -13,7 +13,7 @@ As a real estate agent, I want to create a new property listing with its details
 
 - #6 — Log In and Out (session factory registered in DI)
 - #10 — Navigate Between Sections
-- #43 — Create a New Contact (contact model used for seller linking)
+- #56 — Create a New Contact (contact model used for seller linking)
 
 ## Acceptance Criteria
 
@@ -64,8 +64,7 @@ Scenario: Property persists after an application restart
 
 ## Manual Tests
 
-**Story:** [#17 — Create a New Property Listing](../docs/043-create-property-listing.md)
-
+**Story:** [#104 — Create a New Property Listing](104-create-property-listing.md)
 ### User opens the new property form and sees all fields
 1. Navigate to the Properties section and click "New Property"
 2. Confirm the form shows all fields: type, address, city, state, ZIP, beds, baths, sq ft, lot size, year built, price, status, MLS number, and description

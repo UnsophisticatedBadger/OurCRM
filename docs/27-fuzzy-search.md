@@ -10,8 +10,8 @@
 As an agent, I want search to find records even when I misspell a name or term, so that I can locate people and records quickly without worrying about exact spelling.
 
 ## Dependencies
-- #52 — Search Contacts
-- #58 — Search Contacts Globally
+- #64 — Search Contacts
+- #16 — Search Contacts Globally
 
 ## Acceptance Criteria
 1. Search tolerates up to 2 character substitutions, insertions, or deletions (edit distance ≤ 2) and still returns the matching record
@@ -60,8 +60,7 @@ Scenario: Threshold set to Strict requires a closer match
 ```
 
 ## Manual Tests
-**Story:** [#137 — Fuzzy Search](../docs/128-fuzzy-search.md)
-
+**Story:** [#27 — Fuzzy Search](27-fuzzy-search.md)
 ### One-character typo still finds the contact
 1. Create a contact named "Johnson"
 2. Search for "Jonson"

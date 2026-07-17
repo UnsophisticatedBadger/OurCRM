@@ -10,8 +10,8 @@
 As an agent, I want to generate a property listing description using AI, so that I can produce compelling copy quickly without writing from scratch.
 
 ## Dependencies
-- #135 — Configure AI Settings
-- #17 — Create a Property Listing
+- #181 — Configure AI Settings
+- #104 — Create a Property Listing
 
 ## Acceptance Criteria
 1. A "Generate Description" button appears in the property create and edit forms
@@ -62,8 +62,7 @@ Scenario: Real AI provider generates a description from property details
 ```
 
 ## Manual Tests
-**Story:** [#192 — Generate Property Description with AI](../docs/077-ai-property-description-generation.md)
-
+**Story:** [#199 — Generate Property Description with AI](199-ai-property-description-generation.md)
 ### User generates a description and inserts it into the property form
 1. Open a property with details filled in
 2. Click "Generate Description," select "Luxury" tone and "Standard" length, click "Generate"

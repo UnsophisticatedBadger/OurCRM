@@ -10,8 +10,8 @@
 As an agent, I want to be notified when the same calendar event was edited in both OurCRM and an external calendar at the same time, so that I can choose which version to keep.
 
 ## Dependencies
-- #36 — Sync with Google Calendar
-- #37 — Sync with Outlook Calendar
+- #140 — Sync with Google Calendar
+- #141 — Sync with Outlook Calendar
 
 ## Acceptance Criteria
 1. When sync detects that an event was edited in both OurCRM and the external calendar since the last sync, a conflict notification appears
@@ -56,8 +56,7 @@ Scenario: Multiple conflicts are shown as a queue
 ```
 
 ## Manual Tests
-**Story:** [#40 — Resolve Calendar Sync Conflict](../docs/159-resolve-calendar-sync-conflict.md)
-
+**Story:** [#144 — Resolve Calendar Sync Conflict](144-resolve-calendar-sync-conflict.md)
 ### Conflict notification appears when the same event is edited in both systems
 1. Edit an event's title in OurCRM
 2. Before syncing, edit the same event's title in Google Calendar

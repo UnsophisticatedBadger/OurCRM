@@ -1,7 +1,7 @@
 # 98 - Bulk Import MLS Listings As Properties
 
 **Capability:** mls
-**Milestone:** MVP
+**Milestone:** Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #98
 **Priority:** Post-MVP
@@ -10,7 +10,7 @@
 As an agent, I want to select multiple MLS listings and import them all as properties at once, so that I can populate my property list quickly without importing one at a time.
 
 ## Dependencies
-- #133 — Import MLS Listing as Property
+- #79 — Import MLS Listing as Property
 
 ## Acceptance Criteria
 1. In the MLS listings view, each row has a checkbox; a "Select All" checkbox in the header selects all visible listings
@@ -43,8 +43,7 @@ Scenario: Already-imported listings are skipped in bulk import
 ```
 
 ## Manual Tests
-**Story:** [#152 — Bulk Import MLS Listings as Properties](../docs/159-bulk-import-mls-listings.md)
-
+**Story:** [#98 — Bulk Import MLS Listings as Properties](98-bulk-import-mls-listings.md)
 ### Selecting listings and importing them
 1. Select three listings using the checkboxes
 2. Click "Import Selected" and confirm

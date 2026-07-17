@@ -11,8 +11,8 @@ As a real estate agent, I want to attach documents already linked to a contact d
 
 ## Dependencies
 
-- #126 — Send Email to Contact
-- #54 — Upload Document to Contact
+- #176 — Send Email to Contact
+- #66 — Upload Document to Contact
 
 ## Notes
 
@@ -56,8 +56,7 @@ Scenario: Contact with no linked documents shows an empty state
 
 ## Manual Tests
 
-**Story:** [#129 — Attach Contact Documents to Email](../docs/083-attach-contact-documents-to-email.md)
-
+**Story:** [#180 — Attach Contact Documents to Email](180-attach-contact-documents-to-email.md)
 ### Document picker lists the contact's linked documents
 1. Link at least two documents to a contact via the document management feature
 2. Open the email compose form for that contact

@@ -10,8 +10,8 @@
 As an agent, I want to generate an AI-drafted reply directly from an email in the contact timeline, so that I can respond quickly without switching to the compose form manually.
 
 ## Dependencies
-- #190 — Draft Email with AI
-- #144 — Email Inbox Sync
+- #197 — Draft Email with AI
+- #189 — Email Inbox Sync
 
 ## Acceptance Criteria
 1. Each email entry in the contact timeline includes a "Reply with AI" button
@@ -48,8 +48,7 @@ Scenario: "Reply with AI" is disabled when AI is not configured
 ```
 
 ## Manual Tests
-**Story:** [#195 — Reply to Email with AI Draft](../docs/187-reply-to-email-with-ai-draft.md)
-
+**Story:** [#202 — Reply to Email with AI Draft](202-reply-to-email-with-ai-draft.md)
 ### Clicking "Reply with AI" opens the compose form pre-filled
 1. View an email in a contact's timeline
 2. Click "Reply with AI"

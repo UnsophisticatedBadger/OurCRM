@@ -1,7 +1,7 @@
 # 84 - Export Logs For Support
 
 **Capability:** Infrastructure
-**Milestone:** MVP
+**Milestone:** Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #84
 
@@ -11,7 +11,7 @@ As a user who needs technical support, I want to export my application logs and 
 
 ## Dependencies
 
-- #157 — View Error Logs
+- #80 — View Error Logs
 
 ## Notes
 
@@ -19,7 +19,7 @@ The export is a diagnostic package intended to be emailed or attached to a bug r
 
 ## Acceptance Criteria
 
-1. "Export Logs for Support" is accessible from Help → Export Logs for Support and from the error log viewer (#157)
+1. "Export Logs for Support" is accessible from Help → Export Logs for Support and from the error log viewer (#80)
 2. The export includes: all Error and Warning log entries from the last 30 days, plus a system information file containing OS name and version, app version, and approximate available memory
 3. The exported file is a ZIP archive; the default filename is `ourcrm_logs_YYYY-MM-DD.zip`; an OS save dialog opens defaulting to the user's Documents folder
 4. A privacy notice is shown before the export proceeds: "This file contains application error logs and system information. It does not include your contacts, notes, or any personal data."
@@ -59,8 +59,7 @@ Scenario: Success message shows file path and an Open Folder button
 
 ## Manual Tests
 
-**Story:** [#161 — Export Logs for Support](../docs/085-export-logs-for-support.md)
-
+**Story:** [#84 — Export Logs for Support](84-export-logs-for-support.md)
 ### Export saves a ZIP to the Documents folder by default
 1. Open Help → Export Logs for Support
 2. Confirm the privacy notice is displayed before the save dialog

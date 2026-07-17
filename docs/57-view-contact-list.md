@@ -11,7 +11,7 @@ As a real estate agent, I want to see all my contacts in a sortable list, so tha
 
 ## Dependencies
 
-- #43 — Create a New Contact
+- #56 — Create a New Contact
 
 ## Acceptance Criteria
 
@@ -63,8 +63,7 @@ Scenario: Sort order is preserved when the user navigates away and back
 
 ## Manual Tests
 
-**Story:** [#44 — View Contact List](../docs/011-view-contact-list.md)
-
+**Story:** [#57 — View Contact List](57-view-contact-list.md)
 ### User sees all contacts in the list
 1. Create 5 contacts with varied names
 2. Navigate to the Contacts section

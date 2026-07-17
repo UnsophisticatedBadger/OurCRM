@@ -10,8 +10,8 @@
 As an agent, I want to connect more than one Gmail or Outlook account, so that I can send emails from any of my addresses within OurCRM.
 
 ## Dependencies
-- #142 — Connect Gmail via OAuth
-- #143 — Connect Outlook via OAuth
+- #187 — Connect Gmail via OAuth
+- #188 — Connect Outlook via OAuth
 
 ## Acceptance Criteria
 1. Settings → Email → Gmail includes an "Add another Gmail account" button; additional accounts connect via the same OAuth flow
@@ -51,8 +51,7 @@ Scenario: Disconnecting one account does not affect the other
 ```
 
 ## Manual Tests
-**Story:** [#145 — Connect Multiple Email Accounts](../docs/067-connect-multiple-email-accounts.md)
-
+**Story:** [#190 — Connect Multiple Email Accounts](190-connect-multiple-email-accounts.md)
 ### User connects a second Gmail account and sees both in Settings
 1. Connect a first Gmail account
 2. Click "Add another Gmail account" and complete OAuth for a second account

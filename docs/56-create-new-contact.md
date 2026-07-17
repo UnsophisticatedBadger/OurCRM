@@ -64,8 +64,7 @@ Scenario: Contact created in one session is visible after restart
 
 ## Manual Tests
 
-**Story:** [#43 — Create a New Contact](../docs/016-create-new-contact.md)
-
+**Story:** [#56 — Create a New Contact](56-create-new-contact.md)
 ### User opens the new contact form
 1. Navigate to the Contacts section
 2. Click "New Contact"

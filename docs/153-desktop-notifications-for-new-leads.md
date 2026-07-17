@@ -1,7 +1,7 @@
 # 153 - Desktop Notifications For New Leads
 
 **Capability:** Notifications
-**Milestone:** Production
+**Milestone:** Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #153
 
@@ -11,7 +11,7 @@ As a real estate agent, I want to receive a desktop notification when a new lead
 
 ## Dependencies
 
-- #62 — Create a New Lead
+- #70 — Create a New Lead
 
 ## Notes
 
@@ -71,8 +71,7 @@ Scenario: No notification fires when new-lead notifications are disabled
 
 ## Manual Tests
 
-**Story:** [#176 — Desktop Notifications for New Leads](../docs/093-desktop-notifications-for-new-leads.md)
-
+**Story:** [#153 — Desktop Notifications for New Leads](153-desktop-notifications-for-new-leads.md)
 ### Notification fires when a new lead is created
 1. Ensure new-lead notifications are enabled in preferences
 2. Create a new lead with a name and a lead source

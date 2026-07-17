@@ -47,8 +47,7 @@ Scenario: Task created with all fields persists after restart
 
 ## Manual Tests
 
-**Story:** [#115 — Create a Task](../docs/106-create-a-task.md)
-
+**Story:** [#128 — Create a Task](128-create-a-task.md)
 ### New Task form is accessible and contains all expected fields
 1. Navigate to the Tasks section
 2. Click "New Task"

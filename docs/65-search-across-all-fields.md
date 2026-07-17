@@ -1,7 +1,7 @@
 # 65 - Search Contacts Across All Fields
 
 **Capability:** Contacts
-**Milestone:** MVP
+**Milestone:** Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #65
 
@@ -11,9 +11,9 @@ As a real estate agent, I want the contact search to also look through notes, ta
 
 ## Dependencies
 
-- #52 — Search Contacts
+- #64 — Search Contacts
 - #61 — Add Notes to a Contact
-- #50 — Tag Contacts
+- #62 — Tag Contacts
 
 ## Acceptance Criteria
 
@@ -54,8 +54,7 @@ Scenario: Name matches rank above note matches
 
 ## Manual Tests
 
-**Story:** [#53 — Search Contacts Across All Fields](../docs/025-search-across-all-fields.md)
-
+**Story:** [#65 — Search Contacts Across All Fields](65-search-across-all-fields.md)
 ### User finds a contact via a note keyword
 1. Add the note "Met at Houston conference" to a contact
 2. Search for "conference"

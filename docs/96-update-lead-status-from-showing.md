@@ -1,7 +1,7 @@
 # 96 - Update Lead Status From Showing Outcome
 
 **Capability:** leads
-**Milestone:** MVP
+**Milestone:** Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #96
 **Priority:** Post-MVP
@@ -10,8 +10,8 @@
 As an agent, I want the option to update a linked lead's status when I mark a showing as completed, so that my pipeline reflects the outcome without a separate manual step.
 
 ## Dependencies
-- #79 — Mark Showing Completed
-- #64 — Assign Lead Status
+- #124 — Mark Showing Completed
+- #72 — Assign Lead Status
 
 ## Acceptance Criteria
 1. After the user selects an outcome when completing a showing, the completion form offers a suggested lead status update based on the outcome: Interested → Hot; Not Interested → Cold; Considering → Warm
@@ -49,8 +49,7 @@ Scenario: No status update option is shown when the showing has no linked lead
 ```
 
 ## Manual Tests
-**Story:** [#33 — Update Lead Status from Showing Outcome](../docs/185-update-lead-status-from-showing.md)
-
+**Story:** [#96 — Update Lead Status from Showing Outcome](96-update-lead-status-from-showing.md)
 ### Lead status update is offered after completing a showing
 1. Complete a showing linked to a lead, selecting "Interested" as the outcome
 2. Verify a pre-checked "Update lead status to Hot" option appears

@@ -10,8 +10,8 @@
 As an agent, I want calendar event times to be stored in UTC and displayed in my local time zone, so that events show the correct local time wherever I am working.
 
 ## Dependencies
-- #109 — Create a Calendar Event
-- #108 — View Calendar
+- #121 — Create a Calendar Event
+- #120 — View Calendar
 
 ## Acceptance Criteria
 1. All event times are stored in UTC in the database; displayed times are always converted to the user's current time zone
@@ -53,8 +53,7 @@ Scenario: DST boundary is handled correctly
 ```
 
 ## Manual Tests
-**Story:** [#39 — Time Zone Support for Calendar Events](../docs/111-display-times-in-different-time-zones.md)
-
+**Story:** [#143 — Time Zone Support for Calendar Events](143-display-times-in-different-time-zones.md)
 ### Events display in the OS time zone by default
 1. Create a calendar event at 3:00 PM
 2. View the event in the calendar and verify it shows 3:00 PM

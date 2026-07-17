@@ -10,8 +10,8 @@
 As an agent, I want sent and received emails on the same subject to be grouped into a thread in the contact timeline, so that I can follow a full conversation without scrolling through individual entries.
 
 ## Dependencies
-- #144 — Email Inbox Sync
-- #21 — View Email History in Contact Timeline
+- #189 — Email Inbox Sync
+- #178 — View Email History in Contact Timeline
 
 ## Acceptance Criteria
 1. Emails sharing the same thread ID (or matching subject after stripping Re:/Fwd: prefixes) are grouped under a single thread entry in the contact timeline
@@ -46,8 +46,7 @@ Scenario: New message added to a thread updates the count badge
 ```
 
 ## Manual Tests
-**Story:** [#147 — View Email Threads](../docs/001-view-email-threads.md)
-
+**Story:** [#192 — View Email Threads](192-view-email-threads.md)
 ### Sent and received emails on the same subject are grouped
 1. Send an email to a contact
 2. Receive a reply from the same contact (with inbox sync enabled)

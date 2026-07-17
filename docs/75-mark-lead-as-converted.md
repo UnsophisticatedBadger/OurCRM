@@ -11,7 +11,7 @@ As a real estate agent, I want to mark a lead as converted when they become a cl
 
 ## Dependencies
 
-- #65 — Move Lead Through Pipeline
+- #73 — Move Lead Through Pipeline
 
 ## Acceptance Criteria
 
@@ -61,8 +61,7 @@ Scenario: Reverting a converted lead requires extra confirmation
 
 ## Manual Tests
 
-**Story:** [#67 — Mark Lead as Converted](../docs/047-mark-lead-as-converted.md)
-
+**Story:** [#75 — Mark Lead as Converted](75-mark-lead-as-converted.md)
 ### User sees the Mark as Converted button in lead details
 1. Open any active (non-converted) lead
 2. Confirm "Mark as Converted" button is visible

@@ -1,7 +1,7 @@
 # 160 - Scheduled Automatic Backups
 
 **Capability:** backup
-**Milestone:** Production
+**Milestone:** Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #160
 **Priority:** Post-MVP
@@ -10,7 +10,7 @@
 As an agent, I want OurCRM to create backups automatically on a schedule, so that my data is protected without requiring me to remember to back up manually.
 
 ## Dependencies
-- #181 — Create Manual Backup
+- #158 — Create Manual Backup
 
 ## Acceptance Criteria
 1. Settings → Backup → Automatic Backups includes a toggle to enable or disable scheduled backups; disabled by default
@@ -52,8 +52,7 @@ Scenario: Oldest automatic backup is deleted when the 10-backup limit is reached
 ```
 
 ## Manual Tests
-**Story:** [#101 — Scheduled Automatic Backups](../docs/192-scheduled-automatic-backups.md)
-
+**Story:** [#160 — Scheduled Automatic Backups](160-scheduled-automatic-backups.md)
 ### Daily backup runs at the configured time
 1. Enable automatic backups and set a schedule for a time 2 minutes from now
 2. Wait for the time to pass and verify a backup file is created

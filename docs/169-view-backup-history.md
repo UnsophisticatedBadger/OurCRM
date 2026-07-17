@@ -12,8 +12,8 @@ As a real estate agent, I want to see a list of backups I have created so that I
 
 ## Dependencies
 
-- #181 — Create Manual Backup
-- #182 — Restore from Backup
+- #158 — Create Manual Backup
+- #159 — Restore from Backup
 
 ## Acceptance Criteria
 
@@ -65,8 +65,7 @@ Scenario: Empty state is shown before any backups are created
 
 ## Manual Tests
 
-**Story:** [#24 — View Backup History](../docs/127-view-backup-history.md)
-
+**Story:** [#169 — View Backup History](169-view-backup-history.md)
 ### History list is shown in the Backup section
 1. Create two or three backups at different times
 2. Open Settings → Backup

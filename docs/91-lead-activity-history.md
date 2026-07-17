@@ -1,7 +1,7 @@
 # 91 - Lead Activity History
 
 **Capability:** Leads
-**Milestone:** MVP
+**Milestone:** Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #91
 **Priority:** Should Have (deferrable to post-MVP)
@@ -12,8 +12,8 @@ As a real estate agent, I want to see a chronological activity log on each lead 
 
 ## Dependencies
 
-- #62 — Create a New Lead
-- #63 — View Lead List
+- #70 — Create a New Lead
+- #71 — View Lead List
 
 ## Notes
 
@@ -72,8 +72,7 @@ Scenario: Activity entries have no delete or edit control
 
 ## Manual Tests
 
-**Story:** [#85 — Lead Activity History](../docs/121-lead-activity-history.md)
-
+**Story:** [#91 — Lead Activity History](91-lead-activity-history.md)
 ### Activity log is visible on the lead detail view
 1. Open any lead's detail view and confirm an Activity section is present
 2. Confirm at minimum a "Lead created" entry exists with a timestamp

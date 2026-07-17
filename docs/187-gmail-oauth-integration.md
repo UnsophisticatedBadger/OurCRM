@@ -10,8 +10,8 @@
 As an agent, I want to connect my Gmail account via OAuth, so that I can send emails from OurCRM through my Gmail account without storing my password.
 
 ## Dependencies
-- #126 — Send Email to Contact
-- #125 — Configure Email Settings
+- #176 — Send Email to Contact
+- #175 — Configure Email Settings
 
 ## Acceptance Criteria
 1. User can connect their Gmail account via Google OAuth 2.0 from Settings → Email → Gmail
@@ -68,8 +68,7 @@ Scenario: App completes real Google OAuth flow and obtains a send-capable token
 ```
 
 ## Manual Tests
-**Story:** [#142 — Connect Gmail via OAuth](../docs/144-gmail-oauth-integration.md)
-
+**Story:** [#187 — Connect Gmail via OAuth](187-gmail-oauth-integration.md)
 ### User connects Gmail and sees it show as connected
 1. Go to Settings → Email → Gmail
 2. Click "Connect Gmail" and complete the Google OAuth consent screen

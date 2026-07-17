@@ -1,7 +1,7 @@
 # 81 - Report Bug With Error Logs
 
 **Capability:** Infrastructure
-**Milestone:** MVP
+**Milestone:** Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #81
 
@@ -11,7 +11,7 @@ As a user who has encountered a bug, I want to report it with relevant diagnosti
 
 ## Dependencies
 
-- #157 — View Error Logs
+- #80 — View Error Logs
 
 ## Notes
 
@@ -23,10 +23,10 @@ Privacy boundary: no contact records, notes content, or personally identifiable 
 
 1. Help → Report a Bug opens the bug report dialog from any screen in the app
 2. The form has required fields: Category (Crash / Performance / UI / Data Loss / Feature Not Working / Other), Title, Description; and optional fields: Steps to Reproduce, Email address for follow-up
-3. The dialog automatically attaches the 20 most recent error log entries from #157, shown in a collapsible "Diagnostic Logs" section; the user can remove individual entries before submitting
+3. The dialog automatically attaches the 20 most recent error log entries from #80, shown in a collapsible "Diagnostic Logs" section; the user can remove individual entries before submitting
 4. System information is automatically collected and shown in a collapsible section: OS version, app version, approximate memory usage; no contact data is included
 5. A privacy notice is visible in the dialog before submission, stating what data will be sent
-6. Clicking "Report Bug" on an error log entry in #157 opens the dialog with that entry pre-selected in the Diagnostic Logs section
+6. Clicking "Report Bug" on an error log entry in #80 opens the dialog with that entry pre-selected in the Diagnostic Logs section
 7. On successful submission the dialog shows a confirmation message with a report ID that the user can copy
 
 ## BDD Scenarios
@@ -72,8 +72,7 @@ Scenario: Successful submission shows a confirmation with a report ID
 
 ## Manual Tests
 
-**Story:** [#158 — Report Bug with Error Logs](../docs/107-report-bug-with-error-logs.md)
-
+**Story:** [#81 — Report Bug with Error Logs](81-report-bug-with-error-logs.md)
 ### Bug report dialog opens from Help menu
 1. From any screen, open Help → Report a Bug
 2. Confirm the dialog opens with Category, Title, and Description as required fields

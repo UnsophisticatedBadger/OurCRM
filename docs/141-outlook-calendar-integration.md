@@ -10,8 +10,8 @@
 As an agent, I want to sync my OurCRM calendar with Outlook Calendar, so that I can manage all my appointments from Outlook without maintaining two separate calendars.
 
 ## Dependencies
-- #109 — Create a Calendar Event
-- #108 — View Calendar
+- #121 — Create a Calendar Event
+- #120 — View Calendar
 
 ## Acceptance Criteria
 1. User can connect their Microsoft account via OAuth 2.0 from Settings → Calendar → Outlook Calendar
@@ -80,8 +80,7 @@ Scenario: App authenticates with Microsoft OAuth and retrieves the calendar list
 ```
 
 ## Manual Tests
-**Story:** [#37 — Sync with Outlook Calendar](../docs/137-outlook-caldendar-integration.md)
-
+**Story:** [#141 — Sync with Outlook Calendar](141-outlook-calendar-integration.md)
 ### User connects Outlook Calendar and sees it show as connected
 1. Go to Settings → Calendar → Outlook Calendar
 2. Click "Connect Outlook Calendar" and complete the Microsoft OAuth flow

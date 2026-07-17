@@ -10,11 +10,11 @@
 As an agent, I want to search my data using natural language, so that I can find records without knowing exact field names or filter options.
 
 ## Dependencies
-- #135 — Configure AI Settings
-- #58 — Search Contacts Globally
+- #181 — Configure AI Settings
+- #16 — Search Contacts Globally
 
 ## Acceptance Criteria
-1. The global search overlay (#58) accepts natural language queries in addition to keyword search
+1. The global search overlay (#16) accepts natural language queries in addition to keyword search
 2. The AI parses the query and translates it into structured filters applied across contacts, leads, properties, and transactions
 3. Supported query patterns include: date ranges ("added last month"), status ("hot leads"), source ("from Zillow"), and activity ("emailed this week")
 4. Results are grouped by entity type (Contacts, Leads, Properties, Transactions) and displayed in the search overlay
@@ -62,8 +62,7 @@ Scenario: Real AI provider parses a natural language query and returns filtered 
 ```
 
 ## Manual Tests
-**Story:** [#194 — Search with Natural Language](../docs/174-natural-language-queries.md)
-
+**Story:** [#201 — Search with Natural Language](201-natural-language-queries.md)
 ### Date range query returns records from the correct period
 1. Open the global search overlay
 2. Type "contacts added last month" and submit

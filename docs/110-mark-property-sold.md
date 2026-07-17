@@ -11,8 +11,8 @@ As a real estate agent, I want to mark a property as sold and record the sale de
 
 ## Dependencies
 
-- #19 — View Property Details
-- #43 — Create a New Contact (contact model used for buyer linking)
+- #106 — View Property Details
+- #56 — Create a New Contact (contact model used for buyer linking)
 
 ## Acceptance Criteria
 
@@ -62,8 +62,7 @@ Scenario: Reverting a sold property's status requires extra confirmation
 
 ## Manual Tests
 
-**Story:** [#73 — Mark Property as Sold](../docs/049-mark-property-sold.md)
-
+**Story:** [#110 — Mark Property as Sold](110-mark-property-sold.md)
 ### Mark as Sold button is visible on active properties
 1. Open any Active or Pending property's details
 2. Confirm "Mark as Sold" button is visible

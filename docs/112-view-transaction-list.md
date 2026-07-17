@@ -11,7 +11,7 @@ As a real estate agent, I want to see all my transactions in a sortable, filtera
 
 ## Dependencies
 
-- #74 — Create a New Transaction
+- #111 — Create a New Transaction
 
 ## Acceptance Criteria
 
@@ -63,8 +63,7 @@ Scenario: Status filter is preserved after navigating away and back
 
 ## Manual Tests
 
-**Story:** [#75 — View Transaction List](../docs/057-view-transaction-list.md)
-
+**Story:** [#112 — View Transaction List](112-view-transaction-list.md)
 ### User sees all transactions with correct columns
 1. Create transactions with varied data
 2. Open the Transactions section and confirm all transactions appear

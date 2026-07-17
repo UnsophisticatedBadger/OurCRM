@@ -10,8 +10,8 @@
 As an agent, I want to email an MLS listing's details to a contact from within the listing detail view, so that I can share properties with buyers without copying and pasting information manually.
 
 ## Dependencies
-- #134 — View MLS Listing Details
-- #126 — Send Email to Contact
+- #52 — View MLS Listing Details
+- #176 — Send Email to Contact
 
 ## Acceptance Criteria
 1. A "Share with Buyer" button appears on the MLS listing detail view
@@ -38,8 +38,7 @@ Scenario: User can edit the pre-filled compose form before sending
 ```
 
 ## Manual Tests
-**Story:** [#151 — Share MLS Listing with Buyer](../docs/177-share-listing-with-buyer.md)
-
+**Story:** [#196 — Share MLS Listing with Buyer](196-share-listing-with-buyer.md)
 ### Compose form is pre-filled with listing details
 1. Open an MLS listing detail and click "Share with Buyer"
 2. Verify the subject contains the address and the body contains price and property details

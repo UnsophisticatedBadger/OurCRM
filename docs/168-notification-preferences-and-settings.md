@@ -12,7 +12,7 @@ As a real estate agent, I want fine-grained control over how and when I receive 
 
 ## Dependencies
 
-- #178 — Notification Preferences
+- #155 — Notification Preferences
 
 ## Notes
 
@@ -111,8 +111,7 @@ Scenario: Send Test Notification fires a sample through all active channels
 
 ## Manual Tests
 
-**Story:** [#23 — Advanced Notification Preferences](../docs/085-notification-preferences-and-settings.md)
-
+**Story:** [#168 — Advanced Notification Preferences](168-notification-preferences-and-settings.md)
 ### Channel selectors appear alongside existing toggles
 1. Open Settings → Notifications
 2. Confirm each event type row now has a channel selector (Desktop only / In-App only / Both)

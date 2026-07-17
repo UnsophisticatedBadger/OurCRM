@@ -10,7 +10,7 @@
 As an agent, I want to drag a calendar event to a new time slot to reschedule it, so that I can adjust my schedule quickly without opening the edit form.
 
 ## Dependencies
-- #112 — Edit a Calendar Event
+- #126 — Edit a Calendar Event
 
 ## Acceptance Criteria
 1. In the Week and Day calendar views, events can be dragged vertically to a new time slot within the same day
@@ -44,8 +44,7 @@ Scenario: Overlap warning is shown after a conflicting drag
 ```
 
 ## Manual Tests
-**Story:** [#139 — Drag-and-Drop Event Rescheduling](../docs/143-drag-drop-event-rescheduling.md)
-
+**Story:** [#150 — Drag-and-Drop Event Rescheduling](150-drag-drop-event-rescheduling.md)
 ### Dragging an event reschedules it
 1. Open the Week view
 2. Drag an event to a different time slot

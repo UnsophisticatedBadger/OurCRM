@@ -1,7 +1,7 @@
 # 77 - Track Conversion Rate
 
 **Capability:** Leads
-**Milestone:** MVP
+**Milestone:** Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #77
 
@@ -11,8 +11,8 @@ As a real estate agent, I want to see my lead conversion rate, so that I can mea
 
 ## Dependencies
 
-- #67 — Mark Lead as Converted
-- #68 — View Converted Leads
+- #75 — Mark Lead as Converted
+- #76 — View Converted Leads
 
 ## Acceptance Criteria
 
@@ -60,8 +60,7 @@ Scenario: Summary bar shows zero gracefully with no conversions
 
 ## Manual Tests
 
-**Story:** [#69 — Track Conversion Rate](../docs/047-track-conversion-rate.md)
-
+**Story:** [#77 — Track Conversion Rate](77-track-conversion-rate.md)
 ### Summary bar shows correct totals and rate
 1. Create 10 leads and convert 3
 2. Navigate to the Leads section

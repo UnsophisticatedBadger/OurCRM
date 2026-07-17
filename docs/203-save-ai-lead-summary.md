@@ -10,7 +10,7 @@
 As an agent, I want to save an AI-generated lead summary to the lead record, so that I can refer back to it without having to regenerate it each time.
 
 ## Dependencies
-- #191 — AI Lead Summary
+- #198 — AI Lead Summary
 
 ## Acceptance Criteria
 1. A "Save Summary" button appears alongside "Copy to Clipboard" after a summary is generated
@@ -45,8 +45,7 @@ Scenario: Saving a new summary replaces the previous one
 ```
 
 ## Manual Tests
-**Story:** [#196 — Save AI Lead Summary to Lead Record](../docs/187-save-ai-lead-summary.md)
-
+**Story:** [#203 — Save AI Lead Summary to Lead Record](203-save-ai-lead-summary.md)
 ### Saved summary appears in the lead detail with the save date
 1. Generate a lead summary and click "Save Summary"
 2. Close and reopen the lead detail

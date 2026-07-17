@@ -1,7 +1,7 @@
 # 90 - Edit And Delete Contact Notes
 
 **Capability:** contacts
-**Milestone:** MVP
+**Milestone:** Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #90
 **Priority:** Should Have
@@ -44,8 +44,7 @@ Scenario: Cancelling the delete prompt leaves the note unchanged
 ```
 
 ## Manual Tests
-**Story:** [#84 — Edit and Delete Contact Notes](../docs/120-edit-delete-contact-notes.md)
-
+**Story:** [#90 — Edit and Delete Contact Notes](90-edit-delete-contact-notes.md)
 ### Editing a note updates its content
 1. Click Edit on a contact note and change the text
 2. Save and verify the updated text is shown

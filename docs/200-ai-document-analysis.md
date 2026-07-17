@@ -10,8 +10,8 @@
 As an agent, I want to use AI to analyse uploaded contracts and disclosures, so that I can quickly extract key dates, amounts, parties, and obligations without reading every page.
 
 ## Dependencies
-- #135 — Configure AI Settings
-- #54 — Upload Document to Contact
+- #181 — Configure AI Settings
+- #66 — Upload Document to Contact
 
 ## Acceptance Criteria
 1. An "Analyse with AI" button appears on each document entry in the contact's document list
@@ -66,8 +66,7 @@ Scenario: Real AI provider extracts key dates and amounts from a contract PDF
 ```
 
 ## Manual Tests
-**Story:** [#193 — Analyse Document with AI](../docs/185-ai-document-analysis.md)
-
+**Story:** [#200 — Analyse Document with AI](200-ai-document-analysis.md)
 ### User analyses a contract and sees structured results
 1. Upload a contract PDF to a contact
 2. Click "Analyse with AI" on the document entry

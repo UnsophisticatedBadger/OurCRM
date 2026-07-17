@@ -12,8 +12,8 @@ As a real estate agent, I want to import contacts from an Excel file so that I c
 
 ## Dependencies
 
-- #153 — Import Contacts from CSV
-- #183 — Handle Duplicate Contacts During Import
+- #163 — Import Contacts from CSV
+- #161 — Handle Duplicate Contacts During Import
 
 ## Notes
 
@@ -67,8 +67,7 @@ Scenario: Import summary reports contacts added and blank rows skipped
 
 ## Manual Tests
 
-**Story:** [#25 — Import Contacts from Excel](../docs/128-import-from-excel.md)
-
+**Story:** [#170 — Import Contacts from Excel](170-import-from-excel.md)
 ### Excel import option appears in the import menu
 1. Open the Contacts section and find the Import menu
 2. Confirm "From Excel (.xlsx)" is listed alongside vCard and CSV options

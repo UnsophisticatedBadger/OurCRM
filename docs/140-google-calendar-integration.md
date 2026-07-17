@@ -10,8 +10,8 @@
 As an agent, I want to sync my OurCRM calendar with Google Calendar, so that I can see all my appointments in one place without managing two calendars.
 
 ## Dependencies
-- #109 — Create a Calendar Event
-- #108 — View Calendar
+- #121 — Create a Calendar Event
+- #120 — View Calendar
 
 ## Acceptance Criteria
 1. User can connect their Google account via OAuth 2.0 from Settings → Calendar → Google Calendar
@@ -79,8 +79,7 @@ Scenario: App authenticates with Google OAuth and retrieves the calendar list
 ```
 
 ## Manual Tests
-**Story:** [#36 — Sync with Google Calendar](../docs/155-google-calendar-integration.md)
-
+**Story:** [#140 — Sync with Google Calendar](140-google-calendar-integration.md)
 ### User connects Google Calendar and sees it show as connected
 1. Go to Settings → Calendar → Google Calendar
 2. Click "Connect Google Calendar" and complete the OAuth flow

@@ -1,7 +1,7 @@
 # 66 - Upload Document To Contact
 
 **Capability:** Contacts
-**Milestone:** MVP
+**Milestone:** Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #66
 
@@ -11,7 +11,7 @@ As a real estate agent, I want to upload documents to a contact's record so that
 
 ## Dependencies
 
-- #45 — View Contact Details
+- #58 — View Contact Details
 
 ## Notes
 
@@ -65,8 +65,7 @@ Scenario: Uploaded documents persist after application restart
 
 ## Manual Tests
 
-**Story:** [#54 — Upload Document to Contact](../docs/026-upload-document-to-contact.md)
-
+**Story:** [#66 — Upload Document to Contact](66-upload-document-to-contact.md)
 ### Upload button is present and opens a file picker
 1. Open any contact's detail view
 2. Confirm an "Upload Document" button is visible

@@ -11,8 +11,8 @@ As a real estate agent, I want to trigger AI qualification on a lead and receive
 
 ## Dependencies
 
-- #135 — Configure AI Settings
-- #62 — Create a New Lead
+- #181 — Configure AI Settings
+- #70 — Create a New Lead
 
 ## Notes
 
@@ -73,8 +73,7 @@ Scenario: Qualify with AI button is hidden when AI is disabled
 
 ## Manual Tests
 
-**Story:** [#136 — Qualify a Lead with AI](../docs/026-qualify-a-lead-with-ai.md)
-
+**Story:** [#182 — Qualify a Lead with AI](182-qualify-a-lead-with-ai.md)
 ### User qualifies a lead and receives a structured result
 1. Configure an AI provider in Settings → AI (Ollama or OpenAI)
 2. Create a lead with complete data (budget, timeline, notes, current status)

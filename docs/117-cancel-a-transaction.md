@@ -11,7 +11,7 @@ As a real estate agent, I want to cancel a transaction when a deal falls through
 
 ## Dependencies
 
-- #76 — View Transaction Details
+- #113 — View Transaction Details
 
 ## Acceptance Criteria
 
@@ -62,8 +62,7 @@ Scenario: Cancel button is not shown for Closed transactions
 
 ## Manual Tests
 
-**Story:** [#105 — Cancel a Transaction](../docs/061-cancel-a-transaction.md)
-
+**Story:** [#117 — Cancel a Transaction](117-cancel-a-transaction.md)
 ### Cancel Transaction button visible on active transactions
 1. Open any Under Contract or Pending transaction
 2. Confirm "Cancel Transaction" button is visible

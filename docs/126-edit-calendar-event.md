@@ -11,7 +11,7 @@ As a real estate agent, I want to edit a calendar event when plans change, so th
 
 ## Dependencies
 
-- #109 — Create a Calendar Event
+- #121 — Create a Calendar Event
 
 ## Acceptance Criteria
 
@@ -61,8 +61,7 @@ Scenario: Edited event persists after the application restarts
 
 ## Manual Tests
 
-**Story:** [#112 — Edit Calendar Event](../docs/065-edit-calendar-event.md)
-
+**Story:** [#126 — Edit Calendar Event](126-edit-calendar-event.md)
 ### Edit form opens pre-populated
 1. Create a calendar event with a title, date, time, description, and location
 2. Double-click the event in the calendar

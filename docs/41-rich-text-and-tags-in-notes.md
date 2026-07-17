@@ -10,7 +10,7 @@
 As an agent, I want to format my notes with basic rich text and tag them with keywords, so that my notes are easier to read and easier to find later.
 
 ## Dependencies
-- #27 — Create Note
+- #38 — Create Note
 
 ## Acceptance Criteria
 1. The note editor includes a toolbar with Bold, Italic, Bulleted List, and Numbered List formatting
@@ -43,8 +43,7 @@ Scenario: Filtering notes by tag shows only matching notes
 ```
 
 ## Manual Tests
-**Story:** [#30 — Rich Text and Tags in Notes](../docs/149-rich-text-and-tags-in-notes.md)
-
+**Story:** [#41 — Rich Text and Tags in Notes](41-rich-text-and-tags-in-notes.md)
 ### Bold and list formatting is preserved
 1. Create a note with bold text and a bulleted list
 2. Save and reopen the note

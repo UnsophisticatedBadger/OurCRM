@@ -10,8 +10,8 @@
 As an agent, I want to generate an AI summary of a lead's history, so that I can quickly understand their background before a call or meeting without reading every note and email.
 
 ## Dependencies
-- #135 — Configure AI Settings
-- #62 — Create a New Lead
+- #181 — Configure AI Settings
+- #70 — Create a New Lead
 
 ## Acceptance Criteria
 1. A "Generate Summary" button appears in the lead detail view
@@ -69,8 +69,7 @@ Scenario: User generates a summary using a real AI provider
 ```
 
 ## Manual Tests
-**Story:** [#191 — AI Lead Summary](../docs/183-ai-lead-summarization.md)
-
+**Story:** [#198 — AI Lead Summary](198-ai-lead-summarization.md)
 ### User generates a brief and full summary and sees different lengths
 1. Open a lead with notes, emails, and a showing
 2. Click "Generate Summary", select "Brief", and verify 2–3 sentences appear

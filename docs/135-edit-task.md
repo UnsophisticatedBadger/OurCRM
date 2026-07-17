@@ -11,8 +11,8 @@ As a real estate agent, I want to edit a task's details when plans change so tha
 
 ## Dependencies
 
-- #115 — Create a Task
-- #116 — View Task List
+- #128 — Create a Task
+- #129 — View Task List
 
 ## Acceptance Criteria
 
@@ -63,8 +63,7 @@ Scenario: Edited task persists after application restart
 
 ## Manual Tests
 
-**Story:** [#122 — Edit a Task](../docs/075-edit-task.md)
-
+**Story:** [#135 — Edit a Task](135-edit-task.md)
 ### Edit form opens pre-populated
 1. Create a task with title, description, priority, and due date
 2. Double-click the task in the list

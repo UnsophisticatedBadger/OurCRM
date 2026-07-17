@@ -1,7 +1,7 @@
 # 95 - Lead Conversion Report
 
 **Capability:** leads
-**Milestone:** MVP
+**Milestone:** Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #95
 **Priority:** Post-MVP
@@ -10,8 +10,8 @@
 As an agent, I want a report showing my lead conversion rates, so that I can measure my sales performance and identify where leads are dropping off.
 
 ## Dependencies
-- #67 — Mark Lead as Converted
-- #69 — Track Conversion Rate
+- #75 — Mark Lead as Converted
+- #77 — Track Conversion Rate
 
 ## Acceptance Criteria
 1. A Lead Conversion Report is accessible from the Leads section; it shows for the selected period: total leads, converted leads, and conversion rate as a percentage
@@ -64,8 +64,7 @@ Scenario: Report can be exported to PDF
 ```
 
 ## Manual Tests
-**Story:** [#32 — Lead Conversion Report](../docs/077-lead-conversion-report.md)
-
+**Story:** [#95 — Lead Conversion Report](95-lead-conversion-report.md)
 ### Report shows correct totals and conversion rate
 1. Open the Lead Conversion Report for the current month
 2. Count leads and conversions manually from the Leads list

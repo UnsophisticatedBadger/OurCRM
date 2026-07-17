@@ -11,7 +11,7 @@ As a real estate agent, I want to view all my upcoming showings in chronological
 
 ## Dependencies
 
-- #110 — Schedule a Showing
+- #122 — Schedule a Showing
 
 ## Acceptance Criteria
 
@@ -67,8 +67,7 @@ Scenario: Time range filter limits the list to the selected window
 
 ## Manual Tests
 
-**Story:** [#78 — View Upcoming Showings](../docs/032-view-upcoming-showings.md)
-
+**Story:** [#123 — View Upcoming Showings](123-view-upcoming-showings.md)
 ### Upcoming showings appear sorted and grouped by day
 1. Schedule three showings: two tomorrow at different times, one next week
 2. Open the Upcoming Showings view

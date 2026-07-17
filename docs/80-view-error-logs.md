@@ -1,7 +1,7 @@
 # 80 - View Error Logs
 
 **Capability:** Infrastructure
-**Milestone:** MVP
+**Milestone:** Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #80
 

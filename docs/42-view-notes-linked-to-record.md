@@ -10,7 +10,7 @@
 As an agent, I want to see notes that are linked to a contact, lead, or property directly on that record's detail view, so that I don't have to go to the Notes section to find relevant context.
 
 ## Dependencies
-- #27 — Create Note
+- #38 — Create Note
 
 ## Acceptance Criteria
 1. When creating or editing a note, the user can optionally link it to a contact, a lead, or a property via a record picker
@@ -44,8 +44,7 @@ Scenario: Clicking a linked note opens it in the Notes section
 ```
 
 ## Manual Tests
-**Story:** [#31 — View Notes Linked to a Record](../docs/183-view-notes-linked-to-record.md)
-
+**Story:** [#42 — View Notes Linked to a Record](42-view-notes-linked-to-record.md)
 ### Linked note appears on the record's Notes tab
 1. Create a note and link it to a contact
 2. Open that contact's detail view

@@ -11,8 +11,8 @@ As a real estate agent, I want to view a summary analytics report of my closed t
 
 ## Dependencies
 
-- #106 — View Closed Transactions
-- #20 — Record Closing Date
+- #118 — View Closed Transactions
+- #115 — Record Closing Date
 
 ## Acceptance Criteria
 
@@ -66,8 +66,7 @@ Scenario: Commission breakdown panel shows accurate figures
 
 ## Manual Tests
 
-**Story:** [#107 — View Closed Transactions Report](../docs/033-view-closed-transactions-report.md)
-
+**Story:** [#119 — View Closed Transactions Report](119-view-closed-transactions-report.md)
 ### User opens the report and sees accurate metrics
 1. Close two transactions with known sale prices and commissions (e.g., $400k / $12k and $600k / $18k)
 2. Open the Closed Transactions Report

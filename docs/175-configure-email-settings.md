@@ -77,8 +77,7 @@ Scenario: Send Test Email shows a clear error with invalid credentials
 
 ## Manual Tests
 
-**Story:** [#125 — Configure Email Settings](../docs/078-configure-email-settings.md)
-
+**Story:** [#175 — Configure Email Settings](175-configure-email-settings.md)
 ### Email section is accessible in Settings
 1. Open the Settings window and click the "Email" category
 2. Confirm fields for SMTP host, port, username, password, and TLS/SSL toggle are shown

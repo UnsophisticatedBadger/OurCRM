@@ -60,8 +60,7 @@ Scenario: Cancelling the save dialog takes no action
 
 ## Manual Tests
 
-**Story:** [#155 — Export Contacts to vCard](../docs/088-export-contacts-to-vcard.md)
-
+**Story:** [#165 — Export Contacts to vCard](165-export-contacts-to-vcard.md)
 ### Export All creates a complete file
 1. Ensure several contacts exist
 2. Click Export → Export All in the Contacts section

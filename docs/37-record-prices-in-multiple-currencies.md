@@ -10,7 +10,7 @@
 As an agent, I want to record prices and budgets in different currencies on individual records, so that I can accurately represent international clients and foreign-currency properties.
 
 ## Dependencies
-- #172 — Currency Format by Locale
+- #33 — Currency Format by Locale
 
 ## Acceptance Criteria
 1. Budget fields on leads and price fields on properties and transactions include a currency selector (USD, EUR, GBP, CAD, AUD) alongside the numeric input; USD is the default
@@ -44,8 +44,7 @@ Scenario: Changing the currency on a record updates the symbol without altering 
 ```
 
 ## Manual Tests
-**Story:** [#94 — Record Prices in Multiple Currencies](../docs/145-record-prices-in-multiple-currencies.md)
-
+**Story:** [#37 — Record Prices in Multiple Currencies](37-record-prices-in-multiple-currencies.md)
 ### Budget recorded in EUR displays the euro symbol
 1. Create a new lead, select EUR from the currency selector, and enter 350000
 2. Save the lead and verify the budget shows "€350,000.00" in the lead detail

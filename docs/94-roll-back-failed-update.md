@@ -1,7 +1,7 @@
 # 94 - Roll Back A Failed Update
 
 **Capability:** infrastructure
-**Milestone:** MVP
+**Milestone:** Production
 **Status:** Not Done
 **GitHub Issue:** #94
 **Priority:** Post-MVP
@@ -10,8 +10,8 @@
 As a user, I want the app to restore the previous version if an update fails to install, so that I'm never left with a broken installation.
 
 ## Dependencies
-- #164 — Check for and Install Application Updates
-- #181 — Create a Backup
+- #87 — Check for and Install Application Updates
+- #158 — Create a Backup
 
 ## Acceptance Criteria
 1. If the installer exits with an error during a manual or auto update, the pre-update backup created in #164 AC #6 is used to restore the previous version automatically
@@ -47,8 +47,7 @@ Scenario: User is shown manual recovery path if rollback itself fails
 ```
 
 ## Manual Tests
-**Story:** [#186 — Roll Back a Failed Update](../docs/116-roll-back-failed-update.md)
-
+**Story:** [#94 — Roll Back a Failed Update](94-roll-back-failed-update.md)
 ### Failed update triggers rollback and the previous version is restored
 1. Simulate an installer failure (e.g., corrupt package in a test build)
 2. Verify a rollback notification appears

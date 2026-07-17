@@ -10,7 +10,7 @@
 As an agent, I want to export my OurCRM calendar as an iCal file, so that I can subscribe to it from Apple Calendar, Thunderbird, or any iCalendar-compatible app.
 
 ## Dependencies
-- #108 — View Calendar
+- #120 — View Calendar
 
 ## Notes
 OurCRM is a standalone desktop app with no cloud backend. A subscribable HTTP endpoint would require a persistent local server (port conflicts, firewall prompts, significant complexity). Instead, OurCRM writes a static `.ics` file to a user-chosen folder and updates it whenever events change. Apple Calendar and Thunderbird support `file://` subscriptions; the user subscribes using the file path.
@@ -69,8 +69,7 @@ Scenario: User disables iCal export and the file stops updating
 ```
 
 ## Manual Tests
-**Story:** [#38 — Export Calendar as iCal File](../docs/138-ical-feed-support.md)
-
+**Story:** [#142 — Export Calendar as iCal File](142-ical-feed-support.md)
 ### User enables iCal export and the file is created
 1. Go to Settings → Calendar → iCal Export
 2. Enable the toggle and select a destination folder

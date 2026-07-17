@@ -1,7 +1,7 @@
 # 154 - In-App Notifications
 
 **Capability:** Notifications
-**Milestone:** Production
+**Milestone:** Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #154
 
@@ -11,7 +11,7 @@ As a real estate agent, I want to see notifications inside OurCRM so that I am a
 
 ## Dependencies
 
-- #176 — Desktop Notifications for New Leads
+- #153 — Desktop Notifications for New Leads
 
 ## Notes
 
@@ -81,8 +81,7 @@ Scenario: Deleting a read notification does not change the badge count
 
 ## Manual Tests
 
-**Story:** [#177 — In-App Notifications](../docs/007-in-app-notifications.md)
-
+**Story:** [#154 — In-App Notifications](154-in-app-notifications.md)
 ### Toast appears and auto-dismisses
 1. With OurCRM in the foreground, create a new lead
 2. Confirm a toast notification appears in the top-right corner with the lead's name

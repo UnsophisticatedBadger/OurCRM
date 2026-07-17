@@ -11,7 +11,7 @@ As a real estate agent, I want to see all my tasks due today so that I can plan 
 
 ## Dependencies
 
-- #116 — View Task List
+- #129 — View Task List
 
 ## Acceptance Criteria
 
@@ -54,8 +54,7 @@ Scenario: Empty state when no tasks are due today or overdue
 
 ## Manual Tests
 
-**Story:** [#121 — View Today's Tasks](../docs/074-view-todays-tasks.md)
-
+**Story:** [#134 — View Today's Tasks](134-view-todays-tasks.md)
 ### Today filter shows today's tasks and overdue tasks
 1. Create one task due today and one task due yesterday (both incomplete)
 2. Select the Today filter

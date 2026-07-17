@@ -12,8 +12,8 @@ As a real estate agent, I want to save my field mappings from a CSV or Excel imp
 
 ## Dependencies
 
-- #153 — Import Contacts from CSV
-- #25 — Import Contacts from Excel
+- #163 — Import Contacts from CSV
+- #170 — Import Contacts from Excel
 
 ## Notes
 
@@ -67,8 +67,7 @@ Scenario: Saved mappings persist after application restart
 
 ## Manual Tests
 
-**Story:** [#26 — Save Field Mappings for Import](../docs/129-save-field-mappings-for-import.md)
-
+**Story:** [#171 — Save Field Mappings for Import](171-save-field-mappings-for-import.md)
 ### Saving a field mapping
 1. Start a CSV import (#153) and complete the column mapping step
 2. Click "Save Mapping" and enter a name

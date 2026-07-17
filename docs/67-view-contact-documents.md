@@ -1,7 +1,7 @@
 # 67 - View Contact Documents
 
 **Capability:** Contacts
-**Milestone:** MVP
+**Milestone:** Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #67
 
@@ -11,7 +11,7 @@ As a real estate agent, I want to view all documents associated with a contact s
 
 ## Dependencies
 
-- #54 — Upload Document to Contact
+- #66 — Upload Document to Contact
 
 ## Acceptance Criteria
 
@@ -54,8 +54,7 @@ Scenario: Empty state appears when a contact has no documents
 
 ## Manual Tests
 
-**Story:** [#55 — View Contact Documents](../docs/023-view-contact-documents.md)
-
+**Story:** [#67 — View Contact Documents](67-view-contact-documents.md)
 ### Documents section shows all uploaded documents
 1. Upload two documents (one Contract, one Photo) to a contact
 2. Open that contact's detail view

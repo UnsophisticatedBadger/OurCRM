@@ -13,8 +13,8 @@ As a real estate agent, I want to create a transaction to track a deal from cont
 
 - #6 — Log In and Out (session factory registered in DI)
 - #10 — Navigate Between Sections
-- #43 — Create a New Contact (contact model used for buyer/seller linking)
-- #17 — Create a New Property Listing (property model used for property linking)
+- #56 — Create a New Contact (contact model used for buyer/seller linking)
+- #104 — Create a New Property Listing (property model used for property linking)
 
 ## Acceptance Criteria
 
@@ -64,8 +64,7 @@ Scenario: Transaction persists after an application restart
 
 ## Manual Tests
 
-**Story:** [#74 — Create a New Transaction](../docs/050-create-new-transaction.md)
-
+**Story:** [#111 — Create a New Transaction](111-create-new-transaction.md)
 ### User opens the new transaction form and sees all fields
 1. Navigate to the Transactions section and click "New Transaction"
 2. Confirm the form shows: type, property, buyer, seller, contract date, closing date, sale price, commission %, status, and notes

@@ -1,7 +1,7 @@
 # 68 - Download Document
 
 **Capability:** Contacts
-**Milestone:** MVP
+**Milestone:** Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #68
 
@@ -11,7 +11,7 @@ As a real estate agent, I want to download a contact's document to my computer s
 
 ## Dependencies
 
-- #55 — View Contact Documents
+- #67 — View Contact Documents
 
 ## Acceptance Criteria
 
@@ -46,8 +46,7 @@ Scenario: Cancelling the save dialog writes no file
 
 ## Manual Tests
 
-**Story:** [#56 — Download Document](../docs/028-download-document.md)
-
+**Story:** [#68 — Download Document](68-download-document.md)
 ### Save dialog opens with the original filename
 1. Upload a file named "purchase_agreement.pdf" to a contact
 2. Click that document row in the Documents section

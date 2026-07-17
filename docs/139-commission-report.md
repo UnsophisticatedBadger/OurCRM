@@ -10,8 +10,8 @@
 As an agent, I want a report of my commission earnings by period, property type, and source, so that I can track my income and plan my finances.
 
 ## Dependencies
-- #73 — Mark Property as Sold
-- #74 — Create a New Transaction
+- #110 — Mark Property as Sold
+- #111 — Create a New Transaction
 
 ## Acceptance Criteria
 1. A Commission Report is accessible from the Transactions section; it shows for the selected period: total commission earned from closed transactions
@@ -65,8 +65,7 @@ Scenario: Report can be exported to PDF
 ```
 
 ## Manual Tests
-**Story:** [#35 — Commission Report](../docs/128-commision-report.md)
-
+**Story:** [#139 — Commission Report](139-commission-report.md)
 ### Report shows correct earned and pending commission
 1. Open the Commission Report for the current period
 2. Cross-check the totals against the Transactions list manually

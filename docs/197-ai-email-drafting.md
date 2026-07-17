@@ -10,8 +10,8 @@
 As an agent, I want to generate an AI-drafted email from the compose form, so that I can send professional messages faster without writing from scratch.
 
 ## Dependencies
-- #135 — Configure AI Settings
-- #126 — Send Email to Contact
+- #181 — Configure AI Settings
+- #176 — Send Email to Contact
 
 ## Acceptance Criteria
 1. A "Draft with AI" button appears in the email compose form
@@ -70,8 +70,7 @@ Scenario: User generates a draft using a real AI provider
 ```
 
 ## Manual Tests
-**Story:** [#190 — Draft Email with AI](../docs/163-ai-email-drafting.md)
-
+**Story:** [#197 — Draft Email with AI](197-ai-email-drafting.md)
 ### User generates an email draft and uses it
 1. Open the email compose form with a recipient selected
 2. Click "Draft with AI"

@@ -58,8 +58,7 @@ Scenario: Switching back to English restores English text
 ```
 
 ## Manual Tests
-**Story:** [#171 — Additional Language Support](../docs/112-additional-language-translations.md)
-
+**Story:** [#32 — Additional Language Support](32-additional-language-translations.md)
 ### Switching to Spanish translates the full UI
 1. Open Settings → General → Language, select "Español," and save
 2. Navigate to the Contacts, Leads, and Settings screens

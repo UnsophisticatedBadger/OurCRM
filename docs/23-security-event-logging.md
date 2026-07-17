@@ -11,7 +11,7 @@ As an agent, I want security-relevant events to be written to a persistent audit
 
 ## Dependencies
 - #5 — Create Encrypted Database
-- #25 — Generate Recovery Password
+- #4 — Generate Recovery Password
 
 ## Acceptance Criteria
 1. A `security_events` table is created via Alembic migration during database initialisation; it stores: event type, timestamp, outcome (success/failure), and failure reason when applicable
@@ -19,7 +19,7 @@ As an agent, I want security-relevant events to be written to a persistent audit
 3. Every logout event is written to the table with timestamp
 4. Every password change is written to the table with timestamp
 5. Every recovery password generation attempt — successful or failed — is written to the table with timestamp and outcome
-6. Security events are displayed in the audit log view (#157) in reverse chronological order
+6. Security events are displayed in the audit log view (#80) in reverse chronological order
 
 ## BDD Scenarios
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/authentication.feature`.
@@ -57,8 +57,7 @@ Scenario: Security events appear in the audit log view in reverse chronological 
 ```
 
 ## Manual Tests
-**Story:** [#166 — Security Event Logging](../docs/105-security-event-logging.md)
-
+**Story:** [#23 — Security Event Logging](23-security-event-logging.md)
 ### Failed and successful logins are logged
 1. Enter the wrong password at the login screen
 2. Open the audit log view and verify a failed login event appears

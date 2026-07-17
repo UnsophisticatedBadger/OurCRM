@@ -1,7 +1,7 @@
 # 87 - Check For And Install Application Updates
 
 **Capability:** infrastructure
-**Milestone:** MVP
+**Milestone:** Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #87
 **Priority:** Should Have
@@ -10,7 +10,7 @@
 As a user, I want to check for and install application updates, so that I can keep the app current with new features and bug fixes.
 
 ## Dependencies
-- #181 — Create a Backup
+- #158 — Create a Backup
 
 ## Acceptance Criteria
 1. Help → Check for Updates triggers an update check against GitHub Releases
@@ -85,8 +85,7 @@ Scenario: User downloads and installs a release artifact from GitHub
 ```
 
 ## Manual Tests
-**Story:** [#164 — Check for and Install Application Updates](../docs/087-check-for-application-updates.md)
-
+**Story:** [#87 — Check for and Install Application Updates](87-check-for-application-updates.md)
 ### User opens Help → Check for Updates and a new version is available
 1. Ensure a newer release exists on GitHub (or mock the response)
 2. Click Help → Check for Updates

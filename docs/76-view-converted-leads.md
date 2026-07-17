@@ -1,7 +1,7 @@
 # 76 - View Converted Leads
 
 **Capability:** Leads
-**Milestone:** MVP
+**Milestone:** Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #76
 
@@ -11,7 +11,7 @@ As a real estate agent, I want to view all my converted leads in one place, so t
 
 ## Dependencies
 
-- #67 — Mark Lead as Converted
+- #75 — Mark Lead as Converted
 
 ## Acceptance Criteria
 
@@ -52,8 +52,7 @@ Scenario: Double-clicking a converted lead opens its details
 
 ## Manual Tests
 
-**Story:** [#68 — View Converted Leads](../docs/040-view-converted-leads.md)
-
+**Story:** [#76 — View Converted Leads](76-view-converted-leads.md)
 ### User filters the lead list to show only converted leads
 1. Convert a few leads, leaving others active
 2. Select "Converted" from the status filter

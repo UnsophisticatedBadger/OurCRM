@@ -13,7 +13,7 @@ As a real estate agent, I want to create a new lead with their details and prefe
 
 - #6 — Log In and Out (session factory registered in DI)
 - #10 — Navigate Between Sections
-- #43 — Create a New Contact (contact model used for lead-contact linking)
+- #56 — Create a New Contact (contact model used for lead-contact linking)
 
 ## Acceptance Criteria
 
@@ -62,8 +62,7 @@ Scenario: Lead persists after an application restart
 
 ## Manual Tests
 
-**Story:** [#62 — Create a New Lead](../docs/034-create-new-lead.md)
-
+**Story:** [#70 — Create a New Lead](70-create-new-lead.md)
 ### User opens the new lead form and sees all fields
 1. Navigate to the Leads section and click "New Lead"
 2. Confirm the form shows fields for name, email, phone, status, source, budget min/max, desired location, property type, timeline, and notes

@@ -1,7 +1,7 @@
 # 69 - Delete Document
 
 **Capability:** Contacts
-**Milestone:** MVP
+**Milestone:** Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #69
 
@@ -11,7 +11,7 @@ As a real estate agent, I want to delete a document from a contact's record so t
 
 ## Dependencies
 
-- #55 — View Contact Documents
+- #67 — View Contact Documents
 
 ## Acceptance Criteria
 
@@ -54,8 +54,7 @@ Scenario: Deleted document is absent after application restart
 
 ## Manual Tests
 
-**Story:** [#57 — Delete Document](../docs/025-delete-document.md)
-
+**Story:** [#69 — Delete Document](69-delete-document.md)
 ### Delete action is accessible from the documents list
 1. Open a contact that has at least one document
 2. Confirm a Delete button or icon is visible on each document row

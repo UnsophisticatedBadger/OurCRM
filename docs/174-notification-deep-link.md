@@ -10,7 +10,7 @@
 As an agent, I want clicking a desktop notification to take me directly to the related record in OurCRM, so that I can act on a notification without having to find the record manually.
 
 ## Dependencies
-- #176 — Desktop Notifications for New Leads
+- #153 — Desktop Notifications for New Leads
 
 ## Acceptance Criteria
 1. Clicking a "New lead" desktop notification navigates to that lead's detail view in OurCRM and brings the app window to the foreground
@@ -44,8 +44,7 @@ Scenario: Clicking a notification when the app is closed launches the app and na
 ```
 
 ## Manual Tests
-**Story:** [#100 — Navigate from Notification to Related Record](../docs/191-notification-deep-link.md)
-
+**Story:** [#174 — Navigate from Notification to Related Record](174-notification-deep-link.md)
 ### Clicking a notification opens the related record
 1. Trigger a new lead notification
 2. Click the notification

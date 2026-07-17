@@ -11,8 +11,8 @@ As a real estate agent, I want to import contacts from a vCard file (.vcf) so th
 
 ## Dependencies
 
-- #43 — Create a New Contact
-- #183 — Handle Duplicate Contacts During Import
+- #56 — Create a New Contact
+- #161 — Handle Duplicate Contacts During Import
 
 ## Notes
 
@@ -65,8 +65,7 @@ Scenario: Import summary is shown after completion
 
 ## Manual Tests
 
-**Story:** [#184 — Import Contacts from vCard](../docs/085-import-contacts-from-vcard.md)
-
+**Story:** [#162 — Import Contacts from vCard](162-import-contacts-from-vcard.md)
 ### Preview is shown before importing
 1. Open Import & Export → Import from vCard
 2. Select a .vcf file with several contacts

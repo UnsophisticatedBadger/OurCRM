@@ -11,8 +11,8 @@ As a real estate agent, I want to schedule a showing for a contact at a property
 
 ## Dependencies
 
-- #43 — Create a Contact
-- #17 — Create a Property Listing
+- #56 — Create a Contact
+- #104 — Create a Property Listing
 
 ## Acceptance Criteria
 
@@ -66,8 +66,7 @@ Scenario: User tries to save without a required field and sees a validation erro
 
 ## Manual Tests
 
-**Story:** [#110 — Schedule a Showing](../docs/061-schedule-a-showing.md)
-
+**Story:** [#122 — Schedule a Showing](122-schedule-a-showing.md)
 ### User schedules a showing from the Calendar section
 1. Open the Calendar section
 2. Click "Schedule Showing"

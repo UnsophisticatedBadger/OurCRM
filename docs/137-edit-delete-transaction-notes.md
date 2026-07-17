@@ -10,7 +10,7 @@
 As an agent, I want to edit and delete notes on a transaction, so that I can correct mistakes and keep the transaction record accurate.
 
 ## Dependencies
-- #104 — Add Transaction Notes
+- #116 — Add Transaction Notes
 
 ## Acceptance Criteria
 1. Each note entry in the transaction's notes list shows an Edit button and a Delete button
@@ -44,8 +44,7 @@ Scenario: Cancelling delete preserves the note
 ```
 
 ## Manual Tests
-**Story:** [#87 — Edit and Delete Transaction Notes](../docs/124-edit-delete-transaction-notes.md)
-
+**Story:** [#137 — Edit and Delete Transaction Notes](137-edit-delete-transaction-notes.md)
 ### Editing a transaction note updates its content
 1. Click Edit on a transaction note and change the text
 2. Save and verify the updated text is shown with an edited timestamp

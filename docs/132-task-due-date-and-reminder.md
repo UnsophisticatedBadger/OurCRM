@@ -11,8 +11,8 @@ As a real estate agent, I want to set a due date and reminder for a task so that
 
 ## Dependencies
 
-- #115 — Create a Task
-- #191 — Desktop Notifications
+- #128 — Create a Task
+- #153 — Desktop Notifications For New Leads
 
 ## Acceptance Criteria
 
@@ -57,8 +57,7 @@ Scenario: Clearing the due date cancels the scheduled reminder
 
 ## Manual Tests
 
-**Story:** [#119 — Set Task Due Date and Reminder](../docs/072-task-due-date-and-reminder.md)
-
+**Story:** [#132 — Set Task Due Date and Reminder](132-task-due-date-and-reminder.md)
 ### Due time field and reminder options are present
 1. Open the task creation form
 2. Set a due date and confirm a time-of-day field appears alongside it

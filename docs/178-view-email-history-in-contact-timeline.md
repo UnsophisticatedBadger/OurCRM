@@ -11,7 +11,7 @@ As a real estate agent, I want to see all emails sent to a contact in their deta
 
 ## Dependencies
 
-- #126 — Send Email to Contact
+- #176 — Send Email to Contact
 
 ## Acceptance Criteria
 
@@ -61,8 +61,7 @@ Scenario: Contact with no emails shows an empty state
 
 ## Manual Tests
 
-**Story:** [#21 — View Email History in Contact Timeline](../docs/081-view-email-history-in-contact-timeline.md)
-
+**Story:** [#178 — View Email History in Contact Timeline](178-view-email-history-in-contact-timeline.md)
 ### Sent emails appear in the history section sorted newest first
 1. Send three emails to a contact at different times
 2. Open the contact's detail view

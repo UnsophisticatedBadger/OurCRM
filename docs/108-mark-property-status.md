@@ -11,7 +11,7 @@ As a real estate agent, I want to change a property's status directly from the p
 
 ## Dependencies
 
-- #18 — View Property List
+- #105 — View Property List
 
 ## Acceptance Criteria
 
@@ -46,8 +46,7 @@ Scenario: Status change persists after an application restart
 
 ## Manual Tests
 
-**Story:** [#71 — Change Property Status from the List](../docs/047-mark-property-status.md)
-
+**Story:** [#108 — Change Property Status from the List](108-mark-property-status.md)
 ### User changes status via right-click without opening the edit form
 1. Right-click a property in the list and select "Change Status"
 2. Confirm a small status picker appears (Active / Pending / Sold / Withdrawn)

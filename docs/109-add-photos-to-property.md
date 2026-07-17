@@ -11,7 +11,7 @@ As a real estate agent, I want to attach photos to a property listing, so that I
 
 ## Dependencies
 
-- #19 — View Property Details
+- #106 — View Property Details
 
 ## Acceptance Criteria
 
@@ -61,8 +61,7 @@ Scenario: Photos persist after an application restart
 
 ## Manual Tests
 
-**Story:** [#72 — Add Photos to a Property](../docs/048-add-photos-to-property.md)
-
+**Story:** [#109 — Add Photos to a Property](109-add-photos-to-property.md)
 ### User adds a single photo via the file picker
 1. Open any property's details and click "Add Photos"
 2. Select a valid JPEG image

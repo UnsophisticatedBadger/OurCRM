@@ -11,7 +11,7 @@ As a real estate agent, I want to search through my notes by keyword so that I c
 
 ## Dependencies
 
-- #28 — View Notes List
+- #39 — View Notes List
 
 ## Acceptance Criteria
 
@@ -52,8 +52,7 @@ Scenario: No matching notes shows an empty-results message
 
 ## Manual Tests
 
-**Story:** [#29 — Search Notes](../docs/170-search-notes.md)
-
+**Story:** [#40 — Search Notes](40-search-notes.md)
 ### Search filters by title
 1. Create notes "Market observation" and "Client follow-up"
 2. Type "market" in the search field

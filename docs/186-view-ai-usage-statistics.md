@@ -11,8 +11,8 @@ As a real estate agent, I want to see how many leads I have qualified with AI an
 
 ## Dependencies
 
-- #136 — Qualify a Lead with AI
-- #135 — Configure AI Settings
+- #182 — Qualify a Lead with AI
+- #181 — Configure AI Settings
 
 ## Acceptance Criteria
 
@@ -51,8 +51,7 @@ Scenario: No usage yet shows appropriate empty state
 
 ## Manual Tests
 
-**Story:** [#167 — View AI Usage Statistics](../docs/107-view-ai-usage-statistics.md)
-
+**Story:** [#186 — View AI Usage Statistics](186-view-ai-usage-statistics.md)
 ### Statistics show accurate counts
 1. Qualify five leads using AI
 2. Manually override two of them

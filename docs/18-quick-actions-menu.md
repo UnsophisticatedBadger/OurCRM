@@ -1,7 +1,7 @@
 # 18 - Quick Actions In Global Search
 
 **Capability:** App Shell
-**Milestone:** MVP
+**Milestone:** Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #18
 

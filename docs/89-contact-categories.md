@@ -1,7 +1,7 @@
 # 89 - Contact Categories
 
 **Capability:** Contacts
-**Milestone:** MVP
+**Milestone:** Production
 **Status:** Not Done
 **GitHub Issue:** #89
 **Priority:** Should Have (deferrable to post-MVP)
@@ -12,7 +12,7 @@ As a real estate agent, I want to assign each contact to a category so that I ca
 
 ## Dependencies
 
-- #43 — Create a New Contact
+- #56 — Create a New Contact
 - #44 — View Contact List
 
 ## Notes
@@ -83,8 +83,7 @@ Scenario: Deleting a category with no assigned contacts needs no confirmation
 
 ## Manual Tests
 
-**Story:** [#83 — Contact Categories](../docs/119-contact-categories.md)
-
+**Story:** [#89 — Contact Categories](89-contact-categories.md)
 ### Default categories are available on a fresh install
 1. On a fresh install, open the Create Contact form
 2. Confirm the Category dropdown lists: Past Client, Current Client, Prospect, Vendor, Referral Partner, Other

@@ -11,8 +11,8 @@ As a real estate agent, I want to view the full history of a lead's AI qualifica
 
 ## Dependencies
 
-- #136 — Qualify a Lead with AI
-- #175 — Override AI Qualification
+- #182 — Qualify a Lead with AI
+- #184 — Override AI Qualification
 
 ## Acceptance Criteria
 
@@ -51,8 +51,7 @@ Scenario: Lead with no history shows an appropriate message
 
 ## Manual Tests
 
-**Story:** [#86 — View Qualification History](../docs/106-view-qualification-history.md)
-
+**Story:** [#185 — View Qualification History](185-view-qualification-history.md)
 ### History shows all events in reverse chronological order
 1. Qualify a lead, note the time and result
 2. Override the qualification, note the time and chosen status

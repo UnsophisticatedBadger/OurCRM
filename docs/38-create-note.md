@@ -62,8 +62,7 @@ Scenario: Created note persists after application restart
 
 ## Manual Tests
 
-**Story:** [#27 — Create a Standalone Note](../docs/146-create-note.md)
-
+**Story:** [#38 — Create a Standalone Note](38-create-note.md)
 ### Notes section is accessible from navigation
 1. Log in to the application
 2. Confirm a "Notes" item appears in the main navigation sidebar

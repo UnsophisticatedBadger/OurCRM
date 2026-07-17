@@ -11,7 +11,7 @@ As a real estate agent, I want to fetch active property listings from the HAR ML
 
 ## Dependencies
 
-- #130 — Configure HAR MLS Credentials
+- #49 — Configure HAR MLS Credentials
 
 ## Notes
 
@@ -71,8 +71,7 @@ Scenario: Invalid credentials show an authentication error
 
 ## Manual Tests
 
-**Story:** [#131 — Fetch HAR MLS Listings](../docs/085-fetch-harmls-listing.md)
-
+**Story:** [#78 — Fetch HAR MLS Listings](78-fetch-harmls-listing.md)
 ### No credentials shows setup prompt
 1. Open the MLS section without configuring credentials
 2. Confirm a message prompts the user to configure credentials in Settings

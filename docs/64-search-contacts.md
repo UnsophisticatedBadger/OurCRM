@@ -11,7 +11,7 @@ As a real estate agent, I want to search my contacts by name, email, or phone as
 
 ## Dependencies
 
-- #44 — View Contact List
+- #57 — View Contact List
 
 ## Acceptance Criteria
 
@@ -64,8 +64,7 @@ Scenario: Clearing the search restores the full contact list
 
 ## Manual Tests
 
-**Story:** [#52 — Search Contacts](../docs/020-search-contacts.md)
-
+**Story:** [#64 — Search Contacts](64-search-contacts.md)
 ### User searches by name and sees filtered results
 1. Create contacts with varied names
 2. Type part of a name in the search box

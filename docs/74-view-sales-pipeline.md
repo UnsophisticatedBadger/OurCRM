@@ -11,7 +11,7 @@ As a real estate agent, I want to see all my leads in a kanban board organised b
 
 ## Dependencies
 
-- #65 — Move Lead Through Pipeline
+- #73 — Move Lead Through Pipeline
 
 ## Acceptance Criteria
 
@@ -62,8 +62,7 @@ Scenario: User drags a lead card to another column and the stage updates
 
 ## Manual Tests
 
-**Story:** [#66 — View Sales Pipeline](../docs/038-view-sales-pipeline.md)
-
+**Story:** [#74 — View Sales Pipeline](74-view-sales-pipeline.md)
 ### User switches between list view and pipeline view
 1. Navigate to the Leads section (list view by default)
 2. Click the "Pipeline" toggle

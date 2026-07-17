@@ -11,7 +11,7 @@ As a real estate agent, I want to move a lead through pipeline stages as our rel
 
 ## Dependencies
 
-- #63 — View Lead List
+- #71 — View Lead List
 
 ## Acceptance Criteria
 
@@ -60,8 +60,7 @@ Scenario: Stage change persists after an application restart
 
 ## Manual Tests
 
-**Story:** [#65 — Move Lead Through Pipeline](../docs/037-move-lead-through-pipeline.md)
-
+**Story:** [#73 — Move Lead Through Pipeline](73-move-lead-through-pipeline.md)
 ### User sees the current pipeline stage in lead details
 1. Open any lead's details view
 2. Confirm a stage field is visible showing one of the eight defined stages

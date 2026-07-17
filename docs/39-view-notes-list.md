@@ -11,7 +11,7 @@ As a real estate agent, I want to view a list of all my standalone notes so that
 
 ## Dependencies
 
-- #27 — Create a Standalone Note
+- #38 — Create a Standalone Note
 
 ## Acceptance Criteria
 
@@ -54,8 +54,7 @@ Scenario: Empty state appears when no notes have been created
 
 ## Manual Tests
 
-**Story:** [#28 — View Notes List](../docs/147-view-notes-list.md)
-
+**Story:** [#39 — View Notes List](39-view-notes-list.md)
 ### Notes list shows correct columns
 1. Create two notes — one linked to a contact, one standalone
 2. Navigate to the Notes section

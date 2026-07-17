@@ -10,7 +10,7 @@
 As an agent, I want to maintain multiple iCal export files with different event-type filters, so that I can share different calendar views with different audiences.
 
 ## Dependencies
-- #95 — Filter iCal Export by Event Type
+- #147 — Filter iCal Export by Event Type
 
 ## Acceptance Criteria
 1. Settings → Calendar → iCal Export includes an "Add Profile" button; each profile has a name, a destination folder, and its own event-type filter
@@ -45,8 +45,7 @@ Scenario: Deleting a profile removes its .ics file
 ```
 
 ## Manual Tests
-**Story:** [#96 — Manage Multiple iCal Export Profiles](../docs/163-multiple-ical-export-profiles.md)
-
+**Story:** [#148 — Manage Multiple iCal Export Profiles](148-multiple-ical-export-profiles.md)
 ### User creates a second profile with a different event-type filter
 1. Click "Add Profile," name it "Clients," select a folder, and check only "Showings"
 2. Verify `ourcrm-Clients.ics` is created in the chosen folder

@@ -11,7 +11,7 @@ As a real estate agent, I want to delete a cancelled or unnecessary calendar eve
 
 ## Dependencies
 
-- #109 — Create a Calendar Event
+- #121 — Create a Calendar Event
 
 ## Acceptance Criteria
 
@@ -54,8 +54,7 @@ Scenario: Deleted event is absent after the application restarts
 
 ## Manual Tests
 
-**Story:** [#113 — Delete Calendar Event](../docs/066-delete-calendar-event.md)
-
+**Story:** [#127 — Delete Calendar Event](127-delete-calendar-event.md)
 ### Delete action is reachable from calendar and detail view
 1. Right-click (or click) a calendar event to open its context menu
 2. Confirm a "Delete" option is present

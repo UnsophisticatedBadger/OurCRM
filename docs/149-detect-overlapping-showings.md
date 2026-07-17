@@ -10,7 +10,7 @@
 As an agent, I want a warning when I schedule a showing that overlaps with an existing one, so that I can avoid double-booking without having to manually check my calendar.
 
 ## Dependencies
-- #110 — Schedule a Showing
+- #122 — Schedule a Showing
 
 ## Acceptance Criteria
 1. When the user saves a showing, the app checks for any existing showings whose time range overlaps the new showing's time range
@@ -42,8 +42,7 @@ Scenario: Non-overlapping showing saves without a warning
 ```
 
 ## Manual Tests
-**Story:** [#97 — Detect Overlapping Showings](../docs/142-detect-overlapping-showings.md)
-
+**Story:** [#149 — Detect Overlapping Showings](149-detect-overlapping-showings.md)
 ### Overlap warning is shown for a conflicting time
 1. Schedule a showing from 2:00 PM to 3:00 PM
 2. Schedule another showing from 2:30 PM to 3:30 PM

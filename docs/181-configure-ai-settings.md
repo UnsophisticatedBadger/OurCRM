@@ -78,8 +78,7 @@ Scenario: AI settings persist after the application restarts
 
 ## Manual Tests
 
-**Story:** [#135 — Configure AI Settings](../docs/146-configure-ai-settings.md)
-
+**Story:** [#181 — Configure AI Settings](181-configure-ai-settings.md)
 ### AI section is accessible in Settings
 1. Open the Settings window
 2. Click the "AI" category

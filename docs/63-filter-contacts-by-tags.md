@@ -1,7 +1,7 @@
 # 63 - Filter Contacts By Tags
 
 **Capability:** Contacts
-**Milestone:** MVP
+**Milestone:** Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #63
 
@@ -11,8 +11,8 @@ As a real estate agent, I want to filter my contact list by tag, so that I can f
 
 ## Dependencies
 
-- #50 — Tag Contacts
-- #44 — View Contact List
+- #62 — Tag Contacts
+- #57 — View Contact List
 
 ## Acceptance Criteria
 
@@ -62,8 +62,7 @@ Scenario: Active filter is preserved after navigating away and back
 
 ## Manual Tests
 
-**Story:** [#51 — Filter Contacts by Tags](../docs/023-filter-contacts-by-tags.md)
-
+**Story:** [#63 — Filter Contacts by Tags](63-filter-contacts-by-tags.md)
 ### User sees all tags listed with correct counts
 1. Create 3 contacts tagged "buyer" and 2 tagged "seller"
 2. Open the Contacts section

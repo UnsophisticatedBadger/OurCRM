@@ -11,7 +11,7 @@ As a real estate agent, I want to add timestamped notes to a showing at any time
 
 ## Dependencies
 
-- #110 — Schedule a Showing
+- #122 — Schedule a Showing
 
 ## Acceptance Criteria
 
@@ -54,8 +54,7 @@ Scenario: Notes persist after the application restarts
 
 ## Manual Tests
 
-**Story:** [#111 — Add Notes to a Showing](../docs/064-add-notes-to-showing.md)
-
+**Story:** [#125 — Add Notes to a Showing](125-add-notes-to-showing.md)
 ### User adds a note to an upcoming showing
 1. Open any upcoming showing's detail view
 2. Click "Add Note"

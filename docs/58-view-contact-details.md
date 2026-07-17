@@ -11,7 +11,7 @@ As a real estate agent, I want to open a contact and see all their information o
 
 ## Dependencies
 
-- #44 — View Contact List
+- #57 — View Contact List
 
 ## Acceptance Criteria
 
@@ -52,8 +52,7 @@ Scenario: User returns to the list and the same contact is still selected
 
 ## Manual Tests
 
-**Story:** [#45 — View Contact Details](../docs/012-view-contact-details.md)
-
+**Story:** [#58 — View Contact Details](58-view-contact-details.md)
 ### User opens a contact and sees all their data
 1. Create a contact with all fields filled
 2. Double-click the contact in the list

@@ -11,8 +11,8 @@ As a real estate agent, I want to mark a showing as completed and record the buy
 
 ## Dependencies
 
-- #110 — Schedule a Showing
-- #78 — View Upcoming Showings
+- #122 — Schedule a Showing
+- #123 — View Upcoming Showings
 
 ## Notes
 
@@ -64,8 +64,7 @@ Scenario: User edits the outcome of a completed showing
 
 ## Manual Tests
 
-**Story:** [#79 — Mark Showing as Completed](../docs/033-mark-showing-completed.md)
-
+**Story:** [#124 — Mark Showing as Completed](124-mark-showing-completed.md)
 ### User completes a past showing and records an outcome
 1. Create a showing for yesterday (or wait until a scheduled showing has passed)
 2. Open its detail view

@@ -10,8 +10,8 @@
 As an agent, I want to select multiple tasks and mark them all complete or delete them at once, so that I can clear completed work quickly without acting on each task individually.
 
 ## Dependencies
-- #117 — Mark Task Complete
-- #123 — Delete Task
+- #130 — Mark Task Complete
+- #136 — Delete Task
 
 ## Acceptance Criteria
 1. Each row in the task list has a checkbox; a "Select All" checkbox in the header selects all visible tasks
@@ -50,8 +50,7 @@ Scenario: Select All checkbox selects every visible task
 ```
 
 ## Manual Tests
-**Story:** [#141 — Bulk Task Operations](../docs/117-bulk-task-operations.md)
-
+**Story:** [#152 — Bulk Task Operations](152-bulk-task-operations.md)
 ### Selecting tasks shows the bulk action toolbar
 1. Check the boxes for two tasks in the task list
 2. Verify a toolbar appears with "Mark Complete" and "Delete" buttons

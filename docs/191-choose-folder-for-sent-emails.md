@@ -10,8 +10,8 @@
 As an agent, I want to choose which Gmail label or Outlook folder OurCRM-sent emails are filed under, so that my sent email stays organised.
 
 ## Dependencies
-- #142 — Connect Gmail via OAuth
-- #143 — Connect Outlook via OAuth
+- #187 — Connect Gmail via OAuth
+- #188 — Connect Outlook via OAuth
 
 ## Acceptance Criteria
 1. Settings → Email → Gmail includes a "Sent emails label" dropdown listing the user's Gmail labels; the Gmail Sent folder is pre-selected
@@ -45,8 +45,7 @@ Scenario: Changing the label does not move previously sent emails
 ```
 
 ## Manual Tests
-**Story:** [#146 — Choose Folder for Sent Emails](../docs/077-choose-folder-for-sent-emails.md)
-
+**Story:** [#191 — Choose Folder for Sent Emails](191-choose-folder-for-sent-emails.md)
 ### Sent emails are filed in the default folder
 1. Connect Gmail and send an email from OurCRM
 2. Check Gmail and verify the email is in the Sent folder

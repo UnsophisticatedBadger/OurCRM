@@ -11,11 +11,11 @@ As a real estate agent, I want to search through fetched HAR listings by specifi
 
 ## Dependencies
 
-- #131 — Fetch HAR MLS Listings
+- #78 — Fetch HAR MLS Listings
 
 ## Notes
 
-Search operates on the locally cached listings retrieved by #131 — no additional API call is made. If the cache is empty, the search section shows the same "Fetch listings first" prompt as #131.
+Search operates on the locally cached listings retrieved by #78 — no additional API call is made. If the cache is empty, the search section shows the same "Fetch listings first" prompt as #78.
 
 ## Acceptance Criteria
 
@@ -70,8 +70,7 @@ Scenario: Clearing criteria and searching restores the full cached set
 
 ## Manual Tests
 
-**Story:** [#132 — Search HAR MLS Listings](../docs/074-search-harmls-listings.md)
-
+**Story:** [#51 — Search HAR MLS Listings](51-search-harmls-listings.md)
 ### Search by single criterion
 1. Fetch listings so the cache is populated
 2. Enter a city name and click "Search"

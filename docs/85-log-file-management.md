@@ -1,7 +1,7 @@
 # 85 - Log File Management
 
 **Capability:** Infrastructure
-**Milestone:** MVP
+**Milestone:** Production
 **Status:** Not Done
 **GitHub Issue:** #85
 **Priority:** Should Have (deferrable to post-MVP)
@@ -12,8 +12,8 @@ As a real estate agent, I want log files to be managed automatically so that the
 
 ## Dependencies
 
-- #157 — View Error Logs
-- #160 — Clear Old Logs
+- #80 — View Error Logs
+- #83 — Clear Old Logs
 
 ## Notes
 
@@ -59,8 +59,7 @@ Scenario: Log retention period is configurable in Settings
 
 ## Manual Tests
 
-**Story:** [#162 — Log File Management](../docs/111-log-file-management.md)
-
+**Story:** [#85 — Log File Management](85-log-file-management.md)
 ### Log files exist in a dedicated folder with correct names
 1. Run the app and generate some activity (open a few screens, trigger a contact search, etc.)
 2. Navigate to the app-data directory and open the logs folder

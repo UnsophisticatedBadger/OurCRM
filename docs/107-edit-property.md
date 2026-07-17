@@ -11,7 +11,7 @@ As a real estate agent, I want to edit a property's information at any time, so 
 
 ## Dependencies
 
-- #19 — View Property Details
+- #106 — View Property Details
 
 ## Acceptance Criteria
 
@@ -55,8 +55,7 @@ Scenario: User cancels an edit and the original data is unchanged
 
 ## Manual Tests
 
-**Story:** [#70 — Edit a Property](../docs/046-edit-propety.md)
-
+**Story:** [#107 — Edit a Property](107-edit-property.md)
 ### User opens the edit form and sees all fields pre-populated
 1. Open any property's details and click Edit
 2. Confirm every field is pre-populated with the property's current data

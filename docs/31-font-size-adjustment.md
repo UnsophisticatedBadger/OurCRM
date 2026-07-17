@@ -56,8 +56,7 @@ Scenario: Reset to Default restores Medium size
 ```
 
 ## Manual Tests
-**Story:** [#170 — Font Size Adjustment](../docs/111-font-size-adjustment.md)
-
+**Story:** [#31 — Font Size Adjustment](31-font-size-adjustment.md)
 ### All text scales when font size is changed
 1. Open Settings → General → Appearance → Font Size
 2. Select "Large" and save

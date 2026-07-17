@@ -10,8 +10,8 @@
 As an agent, I want to connect email providers beyond Gmail and Outlook using IMAP, so that I can use OurCRM's inbox sync features with any standard email account.
 
 ## Dependencies
-- #125 — Configure Email Settings
-- #144 — Email Inbox Sync
+- #175 — Configure Email Settings
+- #189 — Email Inbox Sync
 
 ## Acceptance Criteria
 1. Settings → Email → Add Account includes an "Other (IMAP)" option
@@ -53,8 +53,7 @@ Scenario: Disconnecting the IMAP account stops inbox sync
 ```
 
 ## Manual Tests
-**Story:** [#149 — Connect Other Email Providers via IMAP](../docs/175-connect-other-email-providers.md)
-
+**Story:** [#194 — Connect Other Email Providers via IMAP](194-connect-other-email-providers.md)
 ### User connects an IMAP account and it appears in Settings
 1. Go to Settings → Email → Add Account → Other (IMAP)
 2. Enter valid IMAP server, port, username, and password

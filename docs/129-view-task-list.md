@@ -11,7 +11,7 @@ As a real estate agent, I want to view a list of all my tasks so that I can see 
 
 ## Dependencies
 
-- #115 — Create a Task
+- #128 — Create a Task
 
 ## Acceptance Criteria
 
@@ -61,8 +61,7 @@ Scenario: Empty state appears when no tasks have been created
 
 ## Manual Tests
 
-**Story:** [#116 — View Task List](../docs/107-view-task-list.md)
-
+**Story:** [#129 — View Task List](129-view-task-list.md)
 ### Task list shows all expected columns
 1. Create tasks with varying priorities and due dates
 2. Navigate to the Tasks section

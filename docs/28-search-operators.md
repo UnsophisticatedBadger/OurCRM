@@ -10,8 +10,8 @@
 As an agent, I want to use AND, OR, NOT, and phrase operators in search, so that I can construct precise queries when simple keyword search isn't specific enough.
 
 ## Dependencies
-- #52 — Search Contacts
-- #58 — Search Contacts Globally
+- #64 — Search Contacts
+- #16 — Search Contacts Globally
 
 ## Acceptance Criteria
 1. Search supports the AND operator: `John AND Smith` returns records containing both terms
@@ -65,8 +65,7 @@ Scenario: Search tips link opens operator documentation
 ```
 
 ## Manual Tests
-**Story:** [#138 — Search Operators](../docs/129-search-operators.md)
-
+**Story:** [#28 — Search Operators](28-search-operators.md)
 ### AND operator returns only records matching both terms
 1. Search for "John AND Smith"
 2. Verify only records containing both "John" and "Smith" appear

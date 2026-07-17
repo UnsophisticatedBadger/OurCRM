@@ -11,7 +11,7 @@ As a real estate agent, I want to quickly see all my overdue tasks so that I can
 
 ## Dependencies
 
-- #116 — View Task List
+- #129 — View Task List
 
 ## Acceptance Criteria
 
@@ -59,8 +59,7 @@ Scenario: Empty state when no tasks are overdue
 
 ## Manual Tests
 
-**Story:** [#120 — View Overdue Tasks](../docs/078-view-overdue-tasks.md)
-
+**Story:** [#133 — View Overdue Tasks](133-view-overdue-tasks.md)
 ### Overdue filter shows only past-due incomplete tasks
 1. Create one task due yesterday (incomplete), one due tomorrow, and one due yesterday but marked complete
 2. Select the Overdue filter

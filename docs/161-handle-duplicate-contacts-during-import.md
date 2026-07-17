@@ -11,7 +11,7 @@ As a real estate agent, I want to choose how duplicate contacts are handled duri
 
 ## Dependencies
 
-- #43 — Create a New Contact
+- #56 — Create a New Contact
 
 ## Notes
 
@@ -77,8 +77,7 @@ Scenario: Cancelling the resolution dialog cancels the entire import
 
 ## Manual Tests
 
-**Story:** [#183 — Handle Duplicate Contacts During Import](../docs/084-handle-duplicate-contacts-during-import.md)
-
+**Story:** [#161 — Handle Duplicate Contacts During Import](161-handle-duplicate-contacts-during-import.md)
 ### Resolution dialog appears when duplicates are found
 1. Ensure a contact with email "test@example.com" exists
 2. Import a vCard or CSV that includes a contact with the same email

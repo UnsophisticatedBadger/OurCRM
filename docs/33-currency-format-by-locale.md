@@ -10,7 +10,7 @@
 As an agent, I want monetary values to be formatted according to my locale, so that prices and amounts are immediately readable without mental conversion.
 
 ## Dependencies
-- #171 — Additional Language Support
+- #32 — Additional Language Support
 
 ## Acceptance Criteria
 1. All monetary values throughout the app (budgets, property prices, transaction amounts) are formatted using the currency convention for the locale selected in #171
@@ -49,8 +49,7 @@ Scenario: Currency format persists after app restart
 ```
 
 ## Manual Tests
-**Story:** [#172 — Currency Format by Locale](../docs/141-currency-format-by-locale.md)
-
+**Story:** [#33 — Currency Format by Locale](33-currency-format-by-locale.md)
 ### Monetary values use the US locale format
 1. Set the locale to English (US)
 2. View a lead's budget field

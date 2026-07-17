@@ -11,11 +11,11 @@ As a real estate agent, I want to receive a notification when a contact emails m
 
 ## Dependencies
 
-- #126 — Send Email to Contact
-- #125 — Configure Email Settings
-- #176 — Desktop Notifications for New Leads
-- #177 — In-App Notifications
-- #178 — Notification Preferences
+- #176 — Send Email to Contact
+- #175 — Configure Email Settings
+- #153 — Desktop Notifications for New Leads
+- #154 — In-App Notifications
+- #155 — Notification Preferences
 
 ## Notes
 
@@ -67,8 +67,7 @@ Scenario: No notification fires when Email Received preference is disabled
 
 ## Manual Tests
 
-**Story:** [#180 — Notification for Email Received](../docs/093-notification-for-email-received.md)
-
+**Story:** [#157 — Notification for Email Received](157-notification-for-email-received.md)
 ### New email from a contact triggers a notification
 1. Configure an email account in Settings
 2. Have a contact whose email address matches an account you can send from

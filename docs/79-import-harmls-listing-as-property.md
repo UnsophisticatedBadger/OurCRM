@@ -1,7 +1,7 @@
 # 79 - Import HAR Listing As Property
 
 **Capability:** MLS Integration
-**Milestone:** MVP
+**Milestone:** Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #79
 
@@ -11,8 +11,8 @@ As a real estate agent, I want to import a HAR listing into my Properties so tha
 
 ## Dependencies
 
-- #131 — Fetch HAR MLS Listings
-- #17 — Create a New Property Listing
+- #78 — Fetch HAR MLS Listings
+- #104 — Create a New Property Listing
 
 ## Notes
 
@@ -63,8 +63,7 @@ Scenario: Imported property is editable after import
 
 ## Manual Tests
 
-**Story:** [#133 — Import HAR Listing as Property](../docs/087-import-harmls-listing-as-property.md)
-
+**Story:** [#79 — Import HAR Listing as Property](79-import-harmls-listing-as-property.md)
 ### Import from the listing row
 1. Fetch or search HAR listings
 2. Click "Import as Property" on any listing row

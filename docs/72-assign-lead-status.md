@@ -11,7 +11,7 @@ As a real estate agent, I want to edit a lead's information at any time, so that
 
 ## Dependencies
 
-- #63 — View Lead List
+- #71 — View Lead List
 
 ## Acceptance Criteria
 
@@ -74,8 +74,7 @@ Scenario: All edits persist after an application restart
 
 ## Manual Tests
 
-**Story:** [#64 — Edit a Lead](../docs/038-assign-lead-status.md)
-
+**Story:** [#72 — Edit a Lead](72-assign-lead-status.md)
 ### User opens the edit form and sees all fields pre-populated
 1. Open any lead's details and click Edit
 2. Confirm every field is pre-populated with the lead's current data

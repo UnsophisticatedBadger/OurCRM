@@ -1,7 +1,7 @@
 # 166 - Export Contacts To CSV
 
 **Capability:** Import & Export
-**Milestone:** Production
+**Milestone:** Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #166
 
@@ -73,8 +73,7 @@ Scenario: Cancelling the save dialog takes no action
 
 ## Manual Tests
 
-**Story:** [#156 — Export Contacts to CSV](../docs/105-export-contacts-to-csv.md)
-
+**Story:** [#166 — Export Contacts to CSV](166-export-contacts-to-csv.md)
 ### Export All produces a complete file
 1. Ensure several contacts exist
 2. Click Export → Export to CSV in the Contacts section

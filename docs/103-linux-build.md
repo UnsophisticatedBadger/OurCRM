@@ -1,7 +1,7 @@
 # 103 - Linux Build On Tag
 
 **Capability:** infrastructure
-**Milestone:** Post-Production
+**Milestone:** Production
 **Status:** Not Started
 **GitHub Issue:** #103
 **Priority:** Low — Linux is not required by the primary user or either development platform
@@ -12,7 +12,7 @@ As a developer, I want a Linux executable built and published automatically alon
 
 ## Dependencies
 
-- #3 — macOS Build on Tag
+- #55 — macOS Build on Tag
 
 ## Acceptance Criteria
 

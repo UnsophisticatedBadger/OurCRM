@@ -11,8 +11,8 @@ As a real estate agent, I want to delete tasks that are no longer relevant so th
 
 ## Dependencies
 
-- #115 — Create a Task
-- #116 — View Task List
+- #128 — Create a Task
+- #129 — View Task List
 
 ## Acceptance Criteria
 
@@ -63,8 +63,7 @@ Scenario: Deleted task is absent after application restart
 
 ## Manual Tests
 
-**Story:** [#123 — Delete a Task](../docs/030-delete-task.md)
-
+**Story:** [#136 — Delete a Task](136-delete-task.md)
 ### Delete action is reachable from detail view and context menu
 1. Open a task's detail view and confirm a "Delete" button is present
 2. Return to the task list, right-click a task, and confirm "Delete" is in the context menu

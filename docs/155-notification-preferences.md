@@ -11,8 +11,8 @@ As a real estate agent, I want to control which notifications I receive so that 
 
 ## Dependencies
 
-- #176 — Desktop Notifications for New Leads
-- #177 — In-App Notifications
+- #153 — Desktop Notifications for New Leads
+- #154 — In-App Notifications
 
 ## Notes
 
@@ -59,8 +59,7 @@ Scenario: Notification preferences persist after application restart
 
 ## Manual Tests
 
-**Story:** [#178 — Notification Preferences](../docs/095-notification-preferences.md)
-
+**Story:** [#155 — Notification Preferences](155-notification-preferences.md)
 ### Notification preferences section is accessible
 1. Open Settings and navigate to Notifications
 2. Confirm toggles for New Lead, Task Reminder, Showing Reminder, and Email Received are present

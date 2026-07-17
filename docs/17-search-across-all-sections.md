@@ -1,7 +1,7 @@
 # 17 - Search Across All Sections
 
 **Capability:** App Shell
-**Milestone:** MVP
+**Milestone:** Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #17
 

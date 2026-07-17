@@ -11,7 +11,7 @@ As a real estate agent, I want to see all my leads in a sortable, filterable lis
 
 ## Dependencies
 
-- #62 — Create a New Lead
+- #70 — Create a New Lead
 
 ## Acceptance Criteria
 
@@ -63,8 +63,7 @@ Scenario: Status filter is preserved after navigating away and back
 
 ## Manual Tests
 
-**Story:** [#63 — View Lead List](../docs/035-view-lead-list.md)
-
+**Story:** [#71 — View Lead List](71-view-lead-list.md)
 ### User sees all leads with correct columns
 1. Create leads with varied data (name, status, source, budget, timeline)
 2. Open the Leads section and confirm all leads appear

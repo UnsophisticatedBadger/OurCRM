@@ -11,7 +11,7 @@ As a real estate agent, I want to view my calendar in day, week, and month views
 
 ## Dependencies
 
-- #109 — Create a Calendar Event
+- #121 — Create a Calendar Event
 
 ## Acceptance Criteria
 

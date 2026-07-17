@@ -1,7 +1,7 @@
 # 101 - Map View For MLS Listing
 
 **Capability:** mls
-**Milestone:** MVP
+**Milestone:** Production
 **Status:** Not Done
 **GitHub Issue:** #101
 **Priority:** Post-MVP
@@ -10,7 +10,7 @@
 As an agent, I want to see a map showing an MLS listing's location, so that I can quickly judge the property's neighbourhood context without leaving OurCRM.
 
 ## Dependencies
-- #134 — View MLS Listing Details
+- #52 — View MLS Listing Details
 
 ## Acceptance Criteria
 1. The MLS listing detail view includes a Map tab alongside the Photos tab
@@ -37,8 +37,7 @@ Scenario: Map tab shows a fallback message when the address cannot be geocoded
 ```
 
 ## Manual Tests
-**Story:** [#189 — Map View for MLS Listing](../docs/181-map-view-for-listing.md)
-
+**Story:** [#101 — Map View for MLS Listing](101-map-view-for-listing.md)
 ### Map shows the listing location
 1. Open an MLS listing detail for a property with a valid address
 2. Click the Map tab

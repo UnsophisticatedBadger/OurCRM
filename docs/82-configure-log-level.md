@@ -1,7 +1,7 @@
 # 82 - Configure Log Level
 
 **Capability:** Infrastructure
-**Milestone:** MVP
+**Milestone:** Production
 **Status:** Not Done
 **GitHub Issue:** #82
 
@@ -11,11 +11,11 @@ As a user troubleshooting an issue, I want to control how verbose the applicatio
 
 ## Dependencies
 
-- #157 — View Error Logs
+- #80 — View Error Logs
 
 ## Notes
 
-The log level controls what is written to the log file; the viewer (#157) displays what has been written. The default level is Warning, which keeps logs small in normal use. Debug can produce large files quickly — a warning is shown when it is selected.
+The log level controls what is written to the log file; the viewer (#80) displays what has been written. The default level is Warning, which keeps logs small in normal use. Debug can produce large files quickly — a warning is shown when it is selected.
 
 ## Acceptance Criteria
 
@@ -58,8 +58,7 @@ Scenario: Selecting Debug shows a warning about large log files
 
 ## Manual Tests
 
-**Story:** [#159 — Configure Log Level](../docs/108-configure-log-level.md)
-
+**Story:** [#82 — Configure Log Level](82-configure-log-level.md)
 ### Log level setting is accessible and defaults to Warning
 1. Open Settings → Advanced → Log Level
 2. Confirm the current level is displayed
@@ -69,7 +68,7 @@ Scenario: Selecting Debug shows a warning about large log files
 ### Changing the level takes effect immediately
 1. Set the level to Info
 2. Perform any action in the app (e.g., open a contact)
-3. Open Help → Error Logs (#157)
+3. Open Help → Error Logs (#80)
 4. Confirm Info-level entries appear without having restarted the app
 
 ### Debug level shows a warning

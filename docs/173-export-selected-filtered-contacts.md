@@ -12,13 +12,13 @@ As a real estate agent, I want to export only a selected subset of contacts so t
 
 ## Dependencies
 
-- #44 — View Contact List
-- #155 — Export Contacts to vCard
-- #156 — Export Contacts to CSV
+- #57 — View Contact List
+- #165 — Export Contacts to vCard
+- #166 — Export Contacts to CSV
 
 ## Notes
 
-#155 and #156 already export all contacts. This story adds a scoping layer: selection (manual multi-pick from the list) and filtering (export the contacts currently visible through the active filter). The resulting file format is identical to #155/#156 — only the scope changes.
+#165 and #166 already export all contacts. This story adds a scoping layer: selection (manual multi-pick from the list) and filtering (export the contacts currently visible through the active filter). The resulting file format is identical to #165/#166 — only the scope changes.
 
 "Export Filtered" exports all contacts matching the active filter, not just the visible page if the list is paginated.
 
@@ -68,8 +68,7 @@ Scenario: Exported CSV contains only the selected contacts
 
 ## Manual Tests
 
-**Story:** [#90 — Export Selected or Filtered Contacts](../docs/121-export-selected-filtered-contacts.md)
-
+**Story:** [#173 — Export Selected or Filtered Contacts](173-export-selected-filtered-contacts.md)
 ### Checkboxes appear on the contact list
 1. Open the contact list
 2. Confirm each row has a checkbox and a header checkbox is present at the top of the list

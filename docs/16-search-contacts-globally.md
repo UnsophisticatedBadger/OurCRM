@@ -1,7 +1,7 @@
 # 16 - Search Contacts Globally
 
 **Capability:** App Shell
-**Milestone:** MVP
+**Milestone:** Extended CRM
 **Status:** Not Done
 **GitHub Issue:** #16
 
