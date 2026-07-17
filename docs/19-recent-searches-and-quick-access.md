@@ -1,7 +1,7 @@
 # 19 - Recent Searches And Quick Access
 
 **Capability:** App Shell
-**Milestone:** Secure Shell
+**Milestone:** MVP
 **Status:** Not Done
 **GitHub Issue:** #19
 
@@ -11,8 +11,8 @@ As a real estate agent, I want to see my recent search terms and recently viewed
 
 ## Dependencies
 
-- #58 — Search Contacts Globally
-- #59 — Search Across All Sections
+- #16 — Search Contacts Globally
+- #17 — Search Across All Sections
 
 ## Acceptance Criteria
 
@@ -70,8 +70,6 @@ Scenario: Recent list is capped at 10 entries
 ```
 
 ## Manual Tests
-
-**Story:** [#61 — Recent Searches and Quick Access](../docs/033-recent-searches-and-quick-access.md)
 
 ### Recent search terms appear in reverse chronological order
 1. Perform three searches: "Alice", "Bob", then "Carol"

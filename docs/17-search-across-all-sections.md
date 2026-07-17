@@ -1,7 +1,7 @@
 # 17 - Search Across All Sections
 
 **Capability:** App Shell
-**Milestone:** Secure Shell
+**Milestone:** MVP
 **Status:** Not Done
 **GitHub Issue:** #17
 
@@ -11,7 +11,7 @@ As a real estate agent, I want the global search to find contacts, leads, proper
 
 ## Dependencies
 
-- #58 — Search Contacts Globally
+- #16 — Search Contacts Globally
 
 ## Acceptance Criteria
 
@@ -66,8 +66,6 @@ Scenario: User types a term matching no records across any section
 ```
 
 ## Manual Tests
-
-**Story:** [#59 — Search Across All Sections](../docs/035-search-across-all-sections.md)
 
 ### Results are grouped by section and only non-empty sections appear
 1. Create at least one contact, one lead, one property, and one transaction that all share a keyword (e.g., "Smith")

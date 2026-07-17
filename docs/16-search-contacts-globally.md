@@ -1,7 +1,7 @@
 # 16 - Search Contacts Globally
 
 **Capability:** App Shell
-**Milestone:** Secure Shell
+**Milestone:** MVP
 **Status:** Not Done
 **GitHub Issue:** #16
 
@@ -11,11 +11,11 @@ As a real estate agent, I want to open a global search overlay from anywhere in 
 
 ## Dependencies
 
-- #52 — Search Contacts
+- #64 — Search Contacts
 
 ## Notes
 
-#58 establishes the global search infrastructure: the Ctrl+K overlay, keyboard navigation, and Escape-to-close behaviour. #59 extends it to search leads, properties, and transactions. Any future search story builds on top of this one.
+This story establishes the global search infrastructure: the Ctrl+K overlay, keyboard navigation, and Escape-to-close behaviour. #17 extends it to search leads, properties, and transactions. Any future search story builds on top of this one.
 
 ## Acceptance Criteria
 
@@ -68,8 +68,6 @@ Scenario: User searches for a term with no matching contacts
 ```
 
 ## Manual Tests
-
-**Story:** [#58 — Search Contacts Globally](../docs/030-search-contacts-globally.md)
 
 ### User opens global search from different sections and sees the focused input
 1. Navigate to the Leads section

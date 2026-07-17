@@ -1,7 +1,7 @@
 # 18 - Quick Actions In Global Search
 
 **Capability:** App Shell
-**Milestone:** Secure Shell
+**Milestone:** MVP
 **Status:** Not Done
 **GitHub Issue:** #18
 
@@ -11,8 +11,8 @@ As a real estate agent, I want to type action commands into the global search to
 
 ## Dependencies
 
-- #58 — Search Contacts Globally
-- #59 — Search Across All Sections
+- #16 — Search Contacts Globally
+- #17 — Search Across All Sections
 
 ## Acceptance Criteria
 
@@ -70,8 +70,6 @@ Scenario: Quick actions and record results appear together with actions separate
 
 ## Manual Tests
 
-**Story:** [#60 — Quick Actions in Global Search](../docs/032-quick-actions-menu.md)
-
 ### Creation quick actions appear when typing "new" or "create"
 1. Open global search (Ctrl+K)
 2. Type "new"
@@ -105,8 +103,8 @@ Scenario: Quick actions and record results appear together with actions separate
 |----------|------|
 | BDD feature | `tests/bdd/features/shell.feature` |
 | BDD step defs | `tests/bdd/test_shell.py` |
-| Unit tests | `tests/unit/shell/test_quick_actions.py` |
-| Manual tests | `tests/manual/shell/quick_actions.md` |
+| Unit tests | `tests/unit/shell/test_global_search_quick_actions.py` |
+| Manual tests | `tests/manual/shell/global_search_quick_actions.md` |
 
 ## Definition of Done
 
