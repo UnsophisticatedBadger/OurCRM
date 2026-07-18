@@ -108,5 +108,5 @@ Scenario: Sort order is preserved when the user navigates away and back
 - [x] BDD scenarios pass end-to-end
 - [x] Feature reachable from the running app
 - [x] `ruff`, `mypy --strict` clean
-- [ ] Manual tests documented and verified
+- [x] Manual tests documented and verified
 - [x] Wiki documentation written, or marked N/A with a reason
