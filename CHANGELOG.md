@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v0.16.0 (2026-07-18)
+
+### Features
+
+- Add View Contact List ([#57](https://github.com/UnsophisticatedBadger/OurCRM/pull/57),
+  [`e90e318`](https://github.com/UnsophisticatedBadger/OurCRM/commit/e90e318286532c41b162e00fe291f93b0fd7520c))
+
+
 ## v0.15.0 (2026-07-18)
 
 ### Documentation
