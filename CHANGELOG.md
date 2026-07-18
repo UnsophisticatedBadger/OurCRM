@@ -2,6 +2,33 @@
 
 <!-- version list -->
 
+## v0.15.0 (2026-07-18)
+
+### Documentation
+
+- Fix stale cross-references and move search stories to MVP milestone
+  ([`f0de938`](https://github.com/UnsophisticatedBadger/OurCRM/commit/f0de93875fa155af3560b74965c3d4e671943a9a))
+
+- Move Secure Shell stories into their correct milestone (MVP/Extended CRM/Production) by necessity
+  ([`061f2df`](https://github.com/UnsophisticatedBadger/OurCRM/commit/061f2df75818c8c6ee08b1889f687012cfb481dc))
+
+- Reclassify 46 stories from MVP/Production into their correct milestone, resolve #48 duplicate and
+  cross-reference drift
+  ([`36a1c91`](https://github.com/UnsophisticatedBadger/OurCRM/commit/36a1c91147a9f97f46d05f28bf55a92e2926207b))
+
+- Remove duplicate #48 dashboard story, fix stale #48 cross-refs to #61
+  ([`9f74c7b`](https://github.com/UnsophisticatedBadger/OurCRM/commit/9f74c7b26f1b77f3f2702445451a891a472dfe96))
+
+- Replace GitHub-issue-number ordering with dependency/application-flow ordering, remove stale
+  Post-Production reference
+  ([`4be977d`](https://github.com/UnsophisticatedBadger/OurCRM/commit/4be977dc9dfc608f99e68a3e0f2364a1dd515542))
+
+### Features
+
+- Add Create a New Contact ([#56](https://github.com/UnsophisticatedBadger/OurCRM/pull/56),
+  [`4aee1ec`](https://github.com/UnsophisticatedBadger/OurCRM/commit/4aee1ec26aaee7249e609add8df0e803f83722a8))
+
+
 ## v0.14.0 (2026-07-17)
 
 ### Features
