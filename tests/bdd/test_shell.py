@@ -1151,7 +1151,11 @@ def every_stat_tile_shows_zero(main_window: MainWindow) -> None:
 
 @when(parsers.parse('I click the "{label}" quick action button'))
 def click_quick_action(main_window: MainWindow, label: str, qtbot: QtBot) -> None:
-    buttons = main_window.findChildren(QPushButton)
+    from ourcrm.ui.dashboard_page import DashboardPage
+
+    page = main_window.findChild(DashboardPage)
+    assert page is not None, "DashboardPage not found in main window"
+    buttons = page.findChildren(QPushButton)
     target = next((b for b in buttons if b.text() == label), None)
     assert target is not None, f"Quick action button '{label}' not found"
     qtbot.mouseClick(target, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]

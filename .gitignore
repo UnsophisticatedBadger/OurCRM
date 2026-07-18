@@ -48,4 +48,7 @@ Thumbs.db
 backups/
 config/config.toml
 
+# Scratchpad notes (local working docs, not formal story docs)
+SCRATCHPAD-*.md
+
 

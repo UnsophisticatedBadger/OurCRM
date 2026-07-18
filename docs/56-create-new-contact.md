@@ -2,7 +2,7 @@
 
 **Capability:** Contacts
 **Milestone:** MVP
-**Status:** Not Done
+**Status:** Done
 **GitHub Issue:** #56
 
 ## User Story
@@ -106,13 +106,13 @@ Scenario: Contact created in one session is visible after restart
 |----------|------|
 | BDD feature | `tests/bdd/features/contacts.feature` |
 | BDD step defs | `tests/bdd/test_contacts.py` |
-| Unit tests | `tests/unit/contacts/test_contact_form.py`, `test_contact_repository.py` |
+| Unit tests | `tests/unit/contacts/test_contact_form.py`, `test_contact_repository.py`, `test_contact_validator.py`, `test_contacts_page.py` |
 | Manual tests | `tests/manual/contacts/create_contact.md` |
 
 ## Definition of Done
 
-- [ ] BDD scenarios pass end-to-end
-- [ ] Feature reachable from the running app
-- [ ] `ruff`, `mypy --strict` clean
+- [x] BDD scenarios pass end-to-end
+- [x] Feature reachable from the running app
+- [x] `ruff`, `mypy --strict` clean
 - [ ] Manual tests documented and verified
-- [ ] Wiki documentation written, or marked N/A with a reason
+- [x] Wiki documentation written, or marked N/A with a reason

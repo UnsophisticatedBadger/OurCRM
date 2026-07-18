@@ -14,6 +14,7 @@ from ourcrm.core.container import ApplicationContainer
 from ourcrm.core.crash_handler import format_crash_entry, write_crash_log
 from ourcrm.core.security.password_validator import PasswordValidator
 from ourcrm.core.security.recovery_generator import RecoveryPasswordGenerator
+from ourcrm.crm.contacts.repository import ContactRepository
 from ourcrm.database.encrypted_database import EncryptedDatabase
 from ourcrm.database.manager import DatabaseManager
 from ourcrm.ui.crash_dialog import CrashDialog
@@ -254,6 +255,7 @@ def main() -> None:
         auth_service=auth_service,
         auto_lock_timeout_seconds=resolve_auto_lock_seconds(config),
         calendar_repository=calendar_repository,
+        contact_repository=ContactRepository(session_factory),
         encrypted_db=db,
         session_factory=session_factory,
     )
