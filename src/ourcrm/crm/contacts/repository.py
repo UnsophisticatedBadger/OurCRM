@@ -16,6 +16,14 @@ class ContactRepositoryProtocol(Protocol):
     def list_all(self) -> list[Contact]: ...
 
 
+def _split_tags(tags: str) -> list[str]:
+    return [t for t in tags.split(",") if t]
+
+
+def _join_tags(tags: list[str]) -> str:
+    return ",".join(tags)
+
+
 def _to_domain(row: ContactRow) -> Contact:
     return Contact(
         first_name=row.first_name,
@@ -27,6 +35,7 @@ def _to_domain(row: ContactRow) -> Contact:
         address_state=row.address_state,
         address_zip=row.address_zip,
         notes=row.notes,
+        tags=_split_tags(row.tags),
         id=row.id,
     )
 
@@ -47,6 +56,7 @@ class ContactRepository:
                 address_state=contact.address_state,
                 address_zip=contact.address_zip,
                 notes=contact.notes,
+                tags=_join_tags(contact.tags),
             )
             session.add(row)
             session.commit()

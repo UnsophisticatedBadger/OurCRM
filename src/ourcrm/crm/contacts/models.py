@@ -1,4 +1,4 @@
-"""Domain models for the contacts slice — US-056."""
+"""Domain models for the contacts slice — US-056/057."""
 
 from __future__ import annotations
 
@@ -16,4 +16,5 @@ class Contact:
     address_state: str = field(default="")
     address_zip: str = field(default="")
     notes: str = field(default="")
+    tags: list[str] = field(default_factory=list)
     id: int | None = field(default=None)

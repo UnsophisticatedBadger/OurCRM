@@ -66,6 +66,16 @@ def test_created_contact_appears_in_list_all(repository: ContactRepository) -> N
     assert saved in repository.list_all()
 
 
+def test_create_preserves_tags(repository: ContactRepository) -> None:
+    saved = repository.create(Contact(first_name="Jane", last_name="Smith", tags=["buyer", "vip"]))
+    assert saved.tags == ["buyer", "vip"]
+
+
+def test_create_with_no_tags_returns_empty_list(repository: ContactRepository) -> None:
+    saved = repository.create(Contact(first_name="Jane", last_name="Smith"))
+    assert saved.tags == []
+
+
 def test_contact_created_in_one_session_is_visible_in_a_new_session_on_the_same_engine(
     engine: Engine,
 ) -> None:

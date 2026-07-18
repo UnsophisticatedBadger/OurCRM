@@ -32,3 +32,38 @@ Feature: Contacts
     Given the user has created a contact "Jane Smith"
     When the application is restarted and the user opens the Contacts section
     Then "Jane Smith" appears in the contact list
+
+  @story_57
+  Scenario: User with contacts sees them listed in the Contacts section
+    Given the user has created contacts "Alice Brown" and "Bob Carter"
+    When the user opens the Contacts section
+    Then the list shows "Alice Brown" and "Bob Carter"
+    And the list is sorted by last name by default
+
+  @story_57
+  Scenario: User with no contacts sees an empty state
+    Given the user has no contacts
+    When the user opens the Contacts section
+    Then "No contacts yet" is shown
+    And a "Create Your First Contact" button is visible
+
+  @story_57
+  Scenario: User sorts the contact list by clicking a column header
+    Given the user is viewing a contact list with multiple contacts
+    When the user clicks the "Last Name" column header
+    Then the contacts are sorted by last name descending
+    When the user clicks the "Last Name" column header again
+    Then the contacts are sorted alphabetically by last name ascending
+
+  @story_57
+  Scenario: User double-clicks a contact and sees its details
+    Given the user is viewing the contact list
+    When the user double-clicks "Alice Brown"
+    Then the contact details view opens for "Alice Brown"
+
+  @story_57
+  Scenario: Sort order is preserved when the user navigates away and back
+    Given the user has sorted the contact list by email ascending
+    When the user navigates to the Leads section and back to Contacts
+    Then the list is still sorted by email ascending
+    And the scroll position is unchanged

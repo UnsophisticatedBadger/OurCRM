@@ -2,14 +2,18 @@
 
 from __future__ import annotations
 
+from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
+    QAbstractItemView,
     QDialog,
     QFormLayout,
     QHBoxLayout,
     QLabel,
     QLineEdit,
-    QListWidget,
     QPushButton,
+    QStackedWidget,
+    QTableWidget,
+    QTableWidgetItem,
     QTextEdit,
     QVBoxLayout,
     QWidget,
@@ -117,6 +121,63 @@ class ContactForm(QDialog):
         self.accept()
 
 
+class ContactDetailDialog(QDialog):
+    def __init__(self, contact: Contact, parent: QWidget | None = None) -> None:
+        super().__init__(parent)
+        self.setWindowTitle("Contact Details")
+        layout = QVBoxLayout(self)
+
+        name_label = QLabel(f"{contact.first_name} {contact.last_name}".strip())
+        name_label.setObjectName("contact_name_label")
+        layout.addWidget(name_label)
+
+        address = ", ".join(
+            part
+            for part in (
+                contact.address_street,
+                contact.address_city,
+                contact.address_state,
+                contact.address_zip,
+            )
+            if part
+        )
+
+        self._add_if_present(layout, contact.email, "Email")
+        self._add_if_present(layout, contact.phone, "Phone")
+        self._add_if_present(layout, address, "Address")
+        self._add_if_present(layout, contact.notes, "Notes")
+        self._add_if_present(layout, ", ".join(contact.tags), "Tags")
+
+        close_btn = QPushButton("Close")
+        close_btn.setObjectName("close_button")
+        close_btn.clicked.connect(self.accept)
+        layout.addWidget(close_btn)
+        self.adjustSize()
+
+    @staticmethod
+    def _add_if_present(layout: QVBoxLayout, value: str, label: str) -> None:
+        if value:
+            layout.addWidget(QLabel(f"{label}: {value}"))
+
+
+_COLUMN_HEADERS = [
+    "First Name",
+    "Last Name",
+    "Street Address",
+    "City",
+    "Email",
+    "Phone",
+    "Tags",
+]
+_COL_FIRST_NAME = 0
+_COL_LAST_NAME = 1
+_COL_STREET = 2
+_COL_CITY = 3
+_COL_EMAIL = 4
+_COL_PHONE = 5
+_COL_TAGS = 6
+
+
 class ContactsPage(QWidget):
     def __init__(
         self,
@@ -126,28 +187,69 @@ class ContactsPage(QWidget):
         super().__init__(parent)
         self._repository = repository
         self._contact_form: ContactForm | None = None
+        self._contact_detail_dialog: ContactDetailDialog | None = None
         self._setup_ui()
 
     def _setup_ui(self) -> None:
         layout = QVBoxLayout(self)
 
-        self._contact_list = QListWidget()
-        self._contact_list.setObjectName("contact_list")
-        layout.addWidget(self._contact_list)
+        self._contact_table = QTableWidget(0, len(_COLUMN_HEADERS))
+        self._contact_table.setObjectName("contact_list")
+        self._contact_table.setHorizontalHeaderLabels(_COLUMN_HEADERS)
+        self._contact_table.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
+        self._contact_table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
+
+        self._empty_state = QWidget()
+        self._empty_state.setObjectName("empty_state")
+        empty_layout = QVBoxLayout(self._empty_state)
+        self._empty_state_label = QLabel("No contacts yet")
+        self._empty_state_label.setObjectName("empty_state_label")
+        empty_layout.addWidget(self._empty_state_label)
+        self._create_first_contact_btn = QPushButton("Create Your First Contact")
+        self._create_first_contact_btn.setObjectName("create_first_contact_button")
+        empty_layout.addWidget(self._create_first_contact_btn)
+        self._create_first_contact_btn.clicked.connect(self._open_contact_form)
+
+        self._stack = QStackedWidget()
+        self._stack.addWidget(self._contact_table)
+        self._stack.addWidget(self._empty_state)
+        layout.addWidget(self._stack)
 
         self._new_contact_btn = QPushButton("New Contact")
         self._new_contact_btn.setObjectName("new_contact_button")
         layout.addWidget(self._new_contact_btn)
 
         self._new_contact_btn.clicked.connect(self._open_contact_form)
+        self._contact_table.cellDoubleClicked.connect(self._open_contact_detail)
         self._refresh_list()
 
     def _refresh_list(self) -> None:
-        self._contact_list.clear()
-        if self._repository is None:
-            return
-        for contact in self._repository.list_all():
-            self._contact_list.addItem(f"{contact.first_name} {contact.last_name}".strip())
+        self._contact_table.setSortingEnabled(False)
+        self._contact_table.setRowCount(0)
+        if self._repository is not None:
+            for contact in self._repository.list_all():
+                self._add_row(contact)
+        self._contact_table.sortItems(_COL_LAST_NAME, Qt.SortOrder.AscendingOrder)
+        self._contact_table.setSortingEnabled(True)
+        self._stack.setCurrentWidget(
+            self._empty_state if self._contact_table.rowCount() == 0 else self._contact_table
+        )
+
+    def _set_cell(self, row: int, column: int, value: str) -> None:
+        self._contact_table.setItem(row, column, QTableWidgetItem(value))
+
+    def _add_row(self, contact: Contact) -> None:
+        row = self._contact_table.rowCount()
+        self._contact_table.insertRow(row)
+        first_item = QTableWidgetItem(contact.first_name)
+        first_item.setData(Qt.ItemDataRole.UserRole, contact)
+        self._contact_table.setItem(row, _COL_FIRST_NAME, first_item)
+        self._set_cell(row, _COL_LAST_NAME, contact.last_name)
+        self._set_cell(row, _COL_STREET, contact.address_street)
+        self._set_cell(row, _COL_CITY, contact.address_city)
+        self._set_cell(row, _COL_EMAIL, contact.email)
+        self._set_cell(row, _COL_PHONE, contact.phone)
+        self._set_cell(row, _COL_TAGS, ",".join(contact.tags))
 
     def _open_contact_form(self) -> None:
         if self._repository is None:
@@ -156,3 +258,14 @@ class ContactsPage(QWidget):
         form.accepted.connect(self._refresh_list)
         self._contact_form = form
         form.show()
+
+    def _open_contact_detail(self, row: int, _column: int) -> None:
+        item = self._contact_table.item(row, 0)
+        if item is None:
+            return
+        contact = item.data(Qt.ItemDataRole.UserRole)
+        if not isinstance(contact, Contact):
+            return
+        dialog = ContactDetailDialog(contact, parent=self)
+        self._contact_detail_dialog = dialog
+        dialog.show()

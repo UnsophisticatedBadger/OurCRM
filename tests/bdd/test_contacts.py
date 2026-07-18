@@ -2,10 +2,16 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, cast
 
-from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QApplication, QLabel, QLineEdit, QListWidget, QPushButton
+from PySide6.QtCore import QPoint, Qt
+from PySide6.QtWidgets import (
+    QApplication,
+    QLabel,
+    QLineEdit,
+    QPushButton,
+    QTableWidget,
+)
 from pytest_bdd import given, parsers, scenarios, then, when
 from pytestqt.qtbot import QtBot
 from sqlalchemy import create_engine
@@ -14,7 +20,7 @@ from sqlalchemy.orm import sessionmaker
 from ourcrm.crm.contacts.models import Contact
 from ourcrm.crm.contacts.repository import ContactRepository
 from ourcrm.database.manager import DatabaseManager
-from ourcrm.ui.contacts_page import ContactForm, ContactsPage
+from ourcrm.ui.contacts_page import ContactDetailDialog, ContactForm, ContactsPage
 from ourcrm.ui.main_window import MainWindow
 from ourcrm.ui.navigation import Section
 
@@ -37,6 +43,52 @@ def _contacts_page(window: MainWindow) -> ContactsPage:
     page = window.findChild(ContactsPage)
     assert page is not None, "ContactsPage not found"
     return page
+
+
+def _contact_table(window: MainWindow) -> QTableWidget:
+    table = _contacts_page(window).findChild(QTableWidget, "contact_list")
+    assert table is not None, "contact table not found"
+    return table
+
+
+def _cell_text(table: QTableWidget, row: int, column: int) -> str:
+    item = table.item(row, column)
+    assert item is not None
+    return item.text()
+
+
+def _contact_names(window: MainWindow) -> list[str]:
+    table = _contact_table(window)
+    return [
+        f"{_cell_text(table, row, 0)} {_cell_text(table, row, 1)}".strip()
+        for row in range(table.rowCount())
+    ]
+
+
+def _last_names(window: MainWindow) -> list[str]:
+    table = _contact_table(window)
+    return [_cell_text(table, row, 1) for row in range(table.rowCount())]
+
+
+def _header_texts(table: QTableWidget) -> list[str]:
+    texts: list[str] = []
+    for i in range(table.columnCount()):
+        item = table.horizontalHeaderItem(i)
+        assert item is not None
+        texts.append(item.text())
+    return texts
+
+
+def _click_column_header(window: MainWindow, column: str, qtbot: QtBot) -> None:
+    table = _contact_table(window)
+    header = table.horizontalHeader()
+    index = _header_texts(table).index(column)
+    x = header.sectionViewportPosition(index) + header.sectionSize(index) // 2
+    qtbot.mouseClick(  # type: ignore[no-untyped-call]
+        header.viewport(),
+        Qt.MouseButton.LeftButton,
+        pos=QPoint(x, header.height() // 2),
+    )
 
 
 # ── Givens ────────────────────────────────────────────────────────────────────
@@ -183,10 +235,7 @@ def app_restarted(contacts_ctx: dict[str, Any], qtbot: QtBot) -> MainWindow:
 
 @then(parsers.parse('the contact list shows "{name}"'))
 def contact_list_shows(main_window: MainWindow, name: str) -> None:
-    list_widget = _contacts_page(main_window).findChild(QListWidget, "contact_list")
-    assert list_widget is not None, "contact_list not found"
-    items = [list_widget.item(i).text() for i in range(list_widget.count())]
-    assert name in items
+    assert name in _contact_names(main_window)
 
 
 @then(parsers.parse('the error "{message}" is shown'))
@@ -216,14 +265,193 @@ def inline_email_error_shown() -> None:
 @then("the form closes and the contact does not appear in the contact list")
 def form_closed_no_contact(main_window: MainWindow) -> None:
     assert not _visible_contact_forms(), "ContactForm still open"
-    list_widget = _contacts_page(main_window).findChild(QListWidget, "contact_list")
-    assert list_widget is not None, "contact_list not found"
-    assert list_widget.count() == 0
+    assert _contact_table(main_window).rowCount() == 0
 
 
 @then(parsers.parse('"{name}" appears in the contact list'))
 def name_appears_in_list(main_window: MainWindow, name: str) -> None:
-    list_widget = _contacts_page(main_window).findChild(QListWidget, "contact_list")
-    assert list_widget is not None, "contact_list not found"
-    items = [list_widget.item(i).text() for i in range(list_widget.count())]
-    assert name in items
+    assert name in _contact_names(main_window)
+
+
+# ── Story #57: View Contact List ────────────────────────────────────────────
+
+# ── Givens ────────────────────────────────────────────────────────────────────
+
+
+@given(
+    parsers.parse('the user has created contacts "{name1}" and "{name2}"'),
+    target_fixture="main_window",
+)
+def created_two_contacts(name1: str, name2: str, qtbot: QtBot) -> MainWindow:
+    repo = _make_repository()
+    for name in (name1, name2):
+        first, last = name.split(" ", 1)
+        repo.create(Contact(first_name=first, last_name=last))
+    window = MainWindow(contact_repository=repo)
+    qtbot.addWidget(window)
+    window.show()
+    return window
+
+
+@given("the user has no contacts", target_fixture="main_window")
+def no_contacts(qtbot: QtBot) -> MainWindow:
+    window = MainWindow(contact_repository=_make_repository())
+    qtbot.addWidget(window)
+    window.show()
+    return window
+
+
+@given("the user is viewing a contact list with multiple contacts", target_fixture="main_window")
+def viewing_list_with_multiple_contacts(qtbot: QtBot) -> MainWindow:
+    repo = _make_repository()
+    for first, last in (("Carol", "Diaz"), ("Alice", "Brown"), ("Bob", "Carter")):
+        repo.create(Contact(first_name=first, last_name=last))
+    window = MainWindow(contact_repository=repo)
+    qtbot.addWidget(window)
+    window.show()
+    window.navigate_to(Section.CONTACTS)
+    return window
+
+
+@given("the user is viewing the contact list", target_fixture="main_window")
+def viewing_contact_list(qtbot: QtBot) -> MainWindow:
+    repo = _make_repository()
+    repo.create(Contact(first_name="Alice", last_name="Brown"))
+    window = MainWindow(contact_repository=repo)
+    qtbot.addWidget(window)
+    window.show()
+    window.navigate_to(Section.CONTACTS)
+    return window
+
+
+@given("the user has sorted the contact list by email ascending", target_fixture="contacts_ctx")
+def sorted_list_by_email(qtbot: QtBot) -> dict[str, Any]:
+    repo = _make_repository()
+    for i in range(20):
+        repo.create(
+            Contact(first_name=f"Person{i:02d}", last_name="Test", email=f"p{i:02d}@example.com")
+        )
+    window = MainWindow(contact_repository=repo)
+    qtbot.addWidget(window)
+    window.show()
+    window.navigate_to(Section.CONTACTS)
+
+    table = _contact_table(window)
+    table.setFixedHeight(150)
+    _click_column_header(window, "Email", qtbot)
+
+    table.verticalScrollBar().setValue(5)
+    scroll_value = table.verticalScrollBar().value()
+    assert scroll_value > 0, "scrollbar did not accept a nonzero value — not enough rows to scroll"
+
+    return {"main_window": window, "scroll_value": scroll_value}
+
+
+# ── Whens ─────────────────────────────────────────────────────────────────────
+
+
+@when("the user opens the Contacts section")
+def opens_contacts_section(main_window: MainWindow) -> None:
+    main_window.navigate_to(Section.CONTACTS)
+
+
+@when(parsers.parse('the user clicks the "{column}" column header'))
+def clicks_column_header(main_window: MainWindow, column: str, qtbot: QtBot) -> None:
+    _click_column_header(main_window, column, qtbot)
+
+
+@when(parsers.parse('the user clicks the "{column}" column header again'))
+def clicks_column_header_again(main_window: MainWindow, column: str, qtbot: QtBot) -> None:
+    _click_column_header(main_window, column, qtbot)
+
+
+@when(parsers.parse('the user double-clicks "{name}"'))
+def double_clicks_contact(main_window: MainWindow, name: str) -> None:
+    table = _contact_table(main_window)
+    row = _contact_names(main_window).index(name)
+    assert table.item(row, 0) is not None
+    # Real double-click delivery via qtbot.mouseDClick is unreliable under the
+    # offscreen QPA platform (see test_contacts_page.py); emitting the signal
+    # directly exercises the same production wiring reliably.
+    table.cellDoubleClicked.emit(row, 0)
+
+
+@when(
+    "the user navigates to the Leads section and back to Contacts",
+    target_fixture="main_window",
+)
+def navigates_away_and_back(contacts_ctx: dict[str, Any]) -> MainWindow:
+    window = cast("MainWindow", contacts_ctx["main_window"])
+    window.navigate_to(Section.LEADS)
+    window.navigate_to(Section.CONTACTS)
+    return window
+
+
+# ── Thens ─────────────────────────────────────────────────────────────────────
+
+
+@then(parsers.parse('the list shows "{name1}" and "{name2}"'))
+def list_shows_two_names(main_window: MainWindow, name1: str, name2: str) -> None:
+    names = _contact_names(main_window)
+    assert name1 in names
+    assert name2 in names
+
+
+@then("the list is sorted by last name by default")
+def list_sorted_by_last_name_default(main_window: MainWindow) -> None:
+    last_names = _last_names(main_window)
+    assert last_names == sorted(last_names)
+
+
+@then(parsers.parse('"{message}" is shown'))
+def message_is_shown(main_window: MainWindow, message: str) -> None:
+    label = _contacts_page(main_window).findChild(QLabel, "empty_state_label")
+    assert label is not None, "empty_state_label not found"
+    assert label.isVisible()
+    assert label.text() == message
+
+
+@then(parsers.parse('a "{label}" button is visible'))
+def create_first_contact_button_visible(main_window: MainWindow, label: str) -> None:
+    btn = _contacts_page(main_window).findChild(QPushButton, "create_first_contact_button")
+    assert btn is not None, "create_first_contact_button not found"
+    assert btn.isVisible()
+    assert btn.text() == label
+
+
+@then("the contacts are sorted alphabetically by last name ascending")
+def sorted_last_name_ascending(main_window: MainWindow) -> None:
+    last_names = _last_names(main_window)
+    assert last_names == sorted(last_names)
+
+
+@then("the contacts are sorted by last name descending")
+def sorted_last_name_descending(main_window: MainWindow) -> None:
+    last_names = _last_names(main_window)
+    assert last_names == sorted(last_names, reverse=True)
+
+
+@then(parsers.parse('the contact details view opens for "{name}"'))
+def details_view_opens_for(name: str) -> None:
+    dialogs = [
+        w
+        for w in QApplication.topLevelWidgets()
+        if isinstance(w, ContactDetailDialog) and w.isVisible()
+    ]
+    assert dialogs, "ContactDetailDialog not shown"
+    label = dialogs[0].findChild(QLabel, "contact_name_label")
+    assert label is not None, "contact_name_label not found"
+    assert name in label.text()
+
+
+@then("the list is still sorted by email ascending")
+def list_still_sorted_by_email(main_window: MainWindow) -> None:
+    table = _contact_table(main_window)
+    emails = [_cell_text(table, row, 4) for row in range(table.rowCount())]
+    assert emails == sorted(emails)
+
+
+@then("the scroll position is unchanged")
+def scroll_position_unchanged(main_window: MainWindow, contacts_ctx: dict[str, Any]) -> None:
+    table = _contact_table(main_window)
+    assert table.verticalScrollBar().value() == contacts_ctx["scroll_value"]

@@ -23,3 +23,4 @@ class ContactRow(Base):
     address_state: Mapped[str] = mapped_column(String, default="")
     address_zip: Mapped[str] = mapped_column(String, default="")
     notes: Mapped[str] = mapped_column(Text, default="")
+    tags: Mapped[str] = mapped_column(Text, default="")
