@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
-from PySide6.QtCore import Qt
+from typing import override
+
+from PySide6.QtCore import Qt, Signal
+from PySide6.QtGui import QKeyEvent
 from PySide6.QtWidgets import (
     QAbstractItemView,
     QDialog,
@@ -121,43 +124,95 @@ class ContactForm(QDialog):
         self.accept()
 
 
-class ContactDetailDialog(QDialog):
-    def __init__(self, contact: Contact, parent: QWidget | None = None) -> None:
+class ContactDetailView(QWidget):
+    back_to_list = Signal()
+    previous_requested = Signal()
+    next_requested = Signal()
+
+    def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
-        self.setWindowTitle("Contact Details")
+        self.setObjectName("contact_detail_view")
         layout = QVBoxLayout(self)
+        self._field_labels: list[QLabel] = []
 
-        name_label = QLabel(f"{contact.first_name} {contact.last_name}".strip())
-        name_label.setObjectName("contact_name_label")
-        layout.addWidget(name_label)
+        self._name_label = QLabel()
+        self._name_label.setObjectName("contact_name_label")
+        layout.addWidget(self._name_label)
 
-        address = ", ".join(
-            part
-            for part in (
-                contact.address_street,
-                contact.address_city,
-                contact.address_state,
-                contact.address_zip,
-            )
-            if part
-        )
+        self._fields_layout = QVBoxLayout()
+        layout.addLayout(self._fields_layout)
 
-        self._add_if_present(layout, contact.email, "Email")
-        self._add_if_present(layout, contact.phone, "Phone")
-        self._add_if_present(layout, address, "Address")
-        self._add_if_present(layout, contact.notes, "Notes")
-        self._add_if_present(layout, ", ".join(contact.tags), "Tags")
+        nav_row = QHBoxLayout()
+        self._previous_btn = QPushButton("Previous")
+        self._previous_btn.setObjectName("previous_button")
+        self._previous_btn.clicked.connect(self.previous_requested.emit)
+        nav_row.addWidget(self._previous_btn)
 
-        close_btn = QPushButton("Close")
-        close_btn.setObjectName("close_button")
-        close_btn.clicked.connect(self.accept)
-        layout.addWidget(close_btn)
-        self.adjustSize()
+        self._next_btn = QPushButton("Next")
+        self._next_btn.setObjectName("next_button")
+        self._next_btn.clicked.connect(self.next_requested.emit)
+        nav_row.addWidget(self._next_btn)
+        layout.addLayout(nav_row)
 
-    @staticmethod
-    def _add_if_present(layout: QVBoxLayout, value: str, label: str) -> None:
-        if value:
-            layout.addWidget(QLabel(f"{label}: {value}"))
+        action_row = QHBoxLayout()
+        self._edit_btn = QPushButton("Edit")
+        self._edit_btn.setObjectName("edit_button")
+        self._edit_btn.clicked.connect(self._on_edit)
+        action_row.addWidget(self._edit_btn)
+
+        self._delete_btn = QPushButton("Delete")
+        self._delete_btn.setObjectName("delete_button")
+        self._delete_btn.clicked.connect(self._on_delete)
+        action_row.addWidget(self._delete_btn)
+
+        self._add_note_btn = QPushButton("Add Note")
+        self._add_note_btn.setObjectName("add_note_button")
+        self._add_note_btn.clicked.connect(self._on_add_note)
+        action_row.addWidget(self._add_note_btn)
+        layout.addLayout(action_row)
+
+        self._back_btn = QPushButton("Back to List")
+        self._back_btn.setObjectName("back_to_list_button")
+        self._back_btn.clicked.connect(self.back_to_list.emit)
+        layout.addWidget(self._back_btn)
+
+    def _on_edit(self) -> None:
+        pass  # Placeholder until #59 (Edit A Contact) implements this flow.
+
+    def _on_delete(self) -> None:
+        pass  # Placeholder until #60 (Delete A Contact) implements this flow.
+
+    def _on_add_note(self) -> None:
+        pass  # Placeholder until #61 (Add Notes To A Contact) implements this flow.
+
+    def show_contact(self, contact: Contact) -> None:
+        self._name_label.setText(f"{contact.first_name} {contact.last_name}".strip())
+
+        for label in self._field_labels:
+            self._fields_layout.removeWidget(label)
+            label.deleteLater()
+        self._field_labels.clear()
+
+        self._add_field(contact.email, "Email")
+        self._add_field(contact.phone, "Phone")
+        self._add_field(contact.address_street, "Street")
+        self._add_field(contact.address_city, "City")
+        self._add_field(contact.address_state, "State")
+        self._add_field(contact.address_zip, "ZIP")
+        self._add_field(contact.notes, "Notes")
+        self._add_field(", ".join(contact.tags), "Tags")
+
+    def _add_field(self, value: str, label: str) -> None:
+        field_label = QLabel(f"{label}: {value or 'Not provided'}")
+        self._field_labels.append(field_label)
+        self._fields_layout.addWidget(field_label)
+
+    @override
+    def keyPressEvent(self, event: QKeyEvent) -> None:
+        if event.key() == Qt.Key.Key_Escape:
+            self.back_to_list.emit()
+        else:
+            super().keyPressEvent(event)
 
 
 _COLUMN_HEADERS = [
@@ -187,7 +242,8 @@ class ContactsPage(QWidget):
         super().__init__(parent)
         self._repository = repository
         self._contact_form: ContactForm | None = None
-        self._contact_detail_dialog: ContactDetailDialog | None = None
+        self._current_contacts: list[Contact] = []
+        self._current_index: int = 0
         self._setup_ui()
 
     def _setup_ui(self) -> None:
@@ -210,9 +266,15 @@ class ContactsPage(QWidget):
         empty_layout.addWidget(self._create_first_contact_btn)
         self._create_first_contact_btn.clicked.connect(self._open_contact_form)
 
+        self._detail_view = ContactDetailView()
+        self._detail_view.back_to_list.connect(self._show_contact_list)
+        self._detail_view.next_requested.connect(self._show_next_contact)
+        self._detail_view.previous_requested.connect(self._show_previous_contact)
+
         self._stack = QStackedWidget()
         self._stack.addWidget(self._contact_table)
         self._stack.addWidget(self._empty_state)
+        self._stack.addWidget(self._detail_view)
         layout.addWidget(self._stack)
 
         self._new_contact_btn = QPushButton("New Contact")
@@ -266,6 +328,33 @@ class ContactsPage(QWidget):
         contact = item.data(Qt.ItemDataRole.UserRole)
         if not isinstance(contact, Contact):
             return
-        dialog = ContactDetailDialog(contact, parent=self)
-        self._contact_detail_dialog = dialog
-        dialog.show()
+        self._current_contacts = self._contacts_in_table_order()
+        self._show_contact_at(row)
+
+    def _contacts_in_table_order(self) -> list[Contact]:
+        contacts: list[Contact] = []
+        for row in range(self._contact_table.rowCount()):
+            item = self._contact_table.item(row, 0)
+            contact = item.data(Qt.ItemDataRole.UserRole) if item is not None else None
+            if isinstance(contact, Contact):
+                contacts.append(contact)
+        return contacts
+
+    def _show_contact_at(self, index: int) -> None:
+        self._current_index = index
+        self._detail_view.show_contact(self._current_contacts[index])
+        self._stack.setCurrentWidget(self._detail_view)
+
+    def _show_next_contact(self) -> None:
+        if not self._current_contacts:
+            return
+        self._show_contact_at((self._current_index + 1) % len(self._current_contacts))
+
+    def _show_previous_contact(self) -> None:
+        if not self._current_contacts:
+            return
+        self._show_contact_at((self._current_index - 1) % len(self._current_contacts))
+
+    def _show_contact_list(self) -> None:
+        self._contact_table.selectRow(self._current_index)
+        self._stack.setCurrentWidget(self._contact_table)

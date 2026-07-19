@@ -12,7 +12,7 @@ from sqlalchemy.orm import sessionmaker
 from ourcrm.crm.contacts.models import Contact
 from ourcrm.crm.contacts.repository import ContactRepository
 from ourcrm.database.manager import DatabaseManager
-from ourcrm.ui.contacts_page import ContactDetailDialog, ContactForm, ContactsPage
+from ourcrm.ui.contacts_page import ContactForm, ContactsPage
 
 # ── Fixtures ─────────────────────────────────────────────────────────────────
 
@@ -259,9 +259,7 @@ def test_clicking_last_name_header_twice_returns_to_ascending(
 # ── Double-click details ─────────────────────────────────────────────────────
 
 
-def test_double_clicking_row_opens_detail_dialog(
-    repository: ContactRepository, qtbot: QtBot
-) -> None:
+def test_double_clicking_row_opens_detail_view(repository: ContactRepository, qtbot: QtBot) -> None:
     repository.create(Contact(first_name="Jane", last_name="Smith"))
     page, table = _build_page_and_table(repository, qtbot)
     assert table.item(0, 0) is not None
@@ -269,13 +267,10 @@ def test_double_clicking_row_opens_detail_dialog(
     page._open_contact_detail(0, 0)
     QApplication.processEvents()
 
-    dialogs = [
-        w
-        for w in QApplication.topLevelWidgets()
-        if isinstance(w, ContactDetailDialog) and w.isVisible()
-    ]
-    assert dialogs, "ContactDetailDialog not shown"
-    label = dialogs[0].findChild(QLabel, "contact_name_label")
+    view = page.findChild(QWidget, "contact_detail_view")
+    assert view is not None, "contact_detail_view not shown"
+    assert view.isVisible()
+    label = view.findChild(QLabel, "contact_name_label")
     assert label is not None
     assert label.text() == "Jane Smith"
 
@@ -284,16 +279,91 @@ def test_cell_double_click_signal_is_wired_to_detail_handler(
     repository: ContactRepository, qtbot: QtBot
 ) -> None:
     repository.create(Contact(first_name="Jane", last_name="Smith"))
-    _, table = _build_page_and_table(repository, qtbot)
+    page, table = _build_page_and_table(repository, qtbot)
     table.cellDoubleClicked.emit(0, 0)
     QApplication.processEvents()
 
-    dialogs = [
-        w
-        for w in QApplication.topLevelWidgets()
-        if isinstance(w, ContactDetailDialog) and w.isVisible()
-    ]
-    assert dialogs, "cellDoubleClicked did not open the detail dialog"
+    view = page.findChild(QWidget, "contact_detail_view")
+    assert view is not None, "cellDoubleClicked did not open the detail view"
+    assert view.isVisible()
+
+
+def _detail_name(page: ContactsPage) -> str:
+    view = page.findChild(QWidget, "contact_detail_view")
+    assert view is not None, "contact_detail_view not shown"
+    label = view.findChild(QLabel, "contact_name_label")
+    assert label is not None
+    return label.text()
+
+
+def test_next_button_shows_the_next_contact_in_table_order(
+    repository: ContactRepository, qtbot: QtBot
+) -> None:
+    for first, last in (("Alice", "Brown"), ("Bob", "Carter")):
+        repository.create(Contact(first_name=first, last_name=last))
+    page, _table = _build_page_and_table(repository, qtbot)
+    page._open_contact_detail(0, 0)
+    QApplication.processEvents()
+
+    next_btn = page.findChild(QPushButton, "next_button")
+    assert next_btn is not None
+    next_btn.click()
+    QApplication.processEvents()
+
+    assert _detail_name(page) == "Bob Carter"
+
+
+def test_next_button_wraps_from_the_last_contact_to_the_first(
+    repository: ContactRepository, qtbot: QtBot
+) -> None:
+    for first, last in (("Alice", "Brown"), ("Bob", "Carter")):
+        repository.create(Contact(first_name=first, last_name=last))
+    page, _table = _build_page_and_table(repository, qtbot)
+    page._open_contact_detail(1, 0)
+    QApplication.processEvents()
+
+    next_btn = page.findChild(QPushButton, "next_button")
+    assert next_btn is not None
+    next_btn.click()
+    QApplication.processEvents()
+
+    assert _detail_name(page) == "Alice Brown"
+
+
+def test_previous_button_wraps_from_the_first_contact_to_the_last(
+    repository: ContactRepository, qtbot: QtBot
+) -> None:
+    for first, last in (("Alice", "Brown"), ("Bob", "Carter")):
+        repository.create(Contact(first_name=first, last_name=last))
+    page, _table = _build_page_and_table(repository, qtbot)
+    page._open_contact_detail(0, 0)
+    QApplication.processEvents()
+
+    previous_btn = page.findChild(QPushButton, "previous_button")
+    assert previous_btn is not None
+    previous_btn.click()
+    QApplication.processEvents()
+
+    assert _detail_name(page) == "Bob Carter"
+
+
+def test_back_to_list_selects_the_previously_viewed_contact_row(
+    repository: ContactRepository, qtbot: QtBot
+) -> None:
+    for first, last in (("Alice", "Brown"), ("Bob", "Carter")):
+        repository.create(Contact(first_name=first, last_name=last))
+    page, table = _build_page_and_table(repository, qtbot)
+    page._open_contact_detail(1, 0)
+    QApplication.processEvents()
+
+    back_btn = page.findChild(QPushButton, "back_to_list_button")
+    assert back_btn is not None
+    back_btn.click()
+    QApplication.processEvents()
+
+    assert table.isVisible()
+    selected_rows = {idx.row() for idx in table.selectedIndexes()}
+    assert selected_rows == {1}
 
 
 # ── New Contact button ───────────────────────────────────────────────────────

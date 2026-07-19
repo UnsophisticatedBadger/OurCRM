@@ -2,7 +2,7 @@
 
 **Capability:** Contacts
 **Milestone:** MVP
-**Status:** Not Done
+**Status:** Done
 **GitHub Issue:** #58
 
 ## User Story
@@ -17,7 +17,7 @@ As a real estate agent, I want to open a contact and see all their information o
 
 1. Double-clicking a contact in the list opens a details view showing all stored fields; fields with no data show "Not provided"
 2. The details view has Edit, Delete, and Add Note action buttons
-3. Previous and Next buttons navigate between contacts in the current list order
+3. Previous and Next buttons navigate between contacts in the current list order; Next on the last contact wraps to the first, and Previous on the first contact wraps to the last
 4. "Back to List" button and the Escape key return to the contact list with the same contact still selected
 
 ## BDD Scenarios
@@ -44,9 +44,27 @@ Scenario: User navigates to the next contact
   Then the details for "Bob Carter" are shown
 
 @story_58
+Scenario: User navigates to the previous contact
+  Given the user is viewing details for "Bob Carter" with "Alice Brown" previous in list order
+  When the user clicks Previous
+  Then the details for "Alice Brown" are shown
+
+@story_58
+Scenario: User clicks Next on the last contact and wraps to the first
+  Given the user is viewing details for the last contact in list order, "Carol Diaz", with "Alice Brown" first
+  When the user clicks Next
+  Then the details for "Alice Brown" are shown
+
+@story_58
 Scenario: User returns to the list and the same contact is still selected
   Given the user is viewing the details for "Alice Brown"
   When the user clicks Back to List
+  Then the contact list is shown with "Alice Brown" still selected
+
+@story_58
+Scenario: User presses Escape and the same contact is still selected
+  Given the user is viewing the details for "Alice Brown"
+  When the user presses Escape
   Then the contact list is shown with "Alice Brown" still selected
 ```
 
@@ -65,6 +83,8 @@ Scenario: User returns to the list and the same contact is still selected
 3. Click Next — confirm contact B is shown
 4. Click Next — confirm contact C is shown
 5. Click Previous — confirm contact B is shown again
+6. From contact A, click Previous — confirm it wraps to contact C
+7. From contact C, click Next — confirm it wraps back to contact A
 
 ### User returns to the list with the same contact selected
 1. Open the details for a contact
@@ -75,8 +95,8 @@ Scenario: User returns to the list and the same contact is still selected
 
 ### Edit, Delete, and Add Note buttons are present
 1. Open any contact's details
-2. Confirm Edit, Delete, and Add Note buttons are visible
-3. Click each and confirm they open the expected flow (edit form, delete confirmation, note input)
+2. Confirm Edit, Delete, and Add Note buttons are visible and enabled
+3. Click each and confirm it responds without error (full edit/delete/note flows are built and verified separately under #59, #60, and #61)
 
 ## Test Locations
 
@@ -89,8 +109,8 @@ Scenario: User returns to the list and the same contact is still selected
 
 ## Definition of Done
 
-- [ ] BDD scenarios pass end-to-end
-- [ ] Feature reachable from the running app
-- [ ] `ruff`, `mypy --strict` clean
-- [ ] Manual tests documented and verified
-- [ ] Wiki documentation written, or marked N/A with a reason
+- [x] BDD scenarios pass end-to-end
+- [x] Feature reachable from the running app
+- [x] `ruff`, `mypy --strict` clean
+- [x] Manual tests documented and verified
+- [x] Wiki documentation written, or marked N/A with a reason

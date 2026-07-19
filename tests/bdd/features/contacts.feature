@@ -67,3 +67,45 @@ Feature: Contacts
     When the user navigates to the Leads section and back to Contacts
     Then the list is still sorted by email ascending
     And the scroll position is unchanged
+
+  @story_58
+  Scenario: User opens a contact and sees all stored fields
+    Given a contact "Jane Smith" exists with email "jane@example.com" and phone "555-1234"
+    When the user double-clicks "Jane Smith"
+    Then the details view shows "jane@example.com" and "555-1234"
+
+  @story_58
+  Scenario: User sees "Not provided" for empty optional fields
+    Given a contact "Bob Carter" exists with only a name
+    When the user opens the details for "Bob Carter"
+    Then empty optional fields show "Not provided"
+
+  @story_58
+  Scenario: User navigates to the next contact
+    Given the user is viewing details for "Alice Brown" with "Bob Carter" next in list order
+    When the user clicks Next
+    Then the details for "Bob Carter" are shown
+
+  @story_58
+  Scenario: User navigates to the previous contact
+    Given the user is viewing details for "Bob Carter" with "Alice Brown" previous in list order
+    When the user clicks Previous
+    Then the details for "Alice Brown" are shown
+
+  @story_58
+  Scenario: User clicks Next on the last contact and wraps to the first
+    Given the user is viewing details for the last contact in list order, "Carol Diaz", with "Alice Brown" first
+    When the user clicks Next
+    Then the details for "Alice Brown" are shown
+
+  @story_58
+  Scenario: User returns to the list and the same contact is still selected
+    Given the user is viewing the details for "Alice Brown"
+    When the user clicks Back to List
+    Then the contact list is shown with "Alice Brown" still selected
+
+  @story_58
+  Scenario: User presses Escape and the same contact is still selected
+    Given the user is viewing the details for "Alice Brown"
+    When the user presses Escape
+    Then the contact list is shown with "Alice Brown" still selected

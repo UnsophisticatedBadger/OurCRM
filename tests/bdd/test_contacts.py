@@ -11,6 +11,7 @@ from PySide6.QtWidgets import (
     QLineEdit,
     QPushButton,
     QTableWidget,
+    QWidget,
 )
 from pytest_bdd import given, parsers, scenarios, then, when
 from pytestqt.qtbot import QtBot
@@ -20,7 +21,7 @@ from sqlalchemy.orm import sessionmaker
 from ourcrm.crm.contacts.models import Contact
 from ourcrm.crm.contacts.repository import ContactRepository
 from ourcrm.database.manager import DatabaseManager
-from ourcrm.ui.contacts_page import ContactDetailDialog, ContactForm, ContactsPage
+from ourcrm.ui.contacts_page import ContactForm, ContactsPage
 from ourcrm.ui.main_window import MainWindow
 from ourcrm.ui.navigation import Section
 
@@ -432,14 +433,9 @@ def sorted_last_name_descending(main_window: MainWindow) -> None:
 
 
 @then(parsers.parse('the contact details view opens for "{name}"'))
-def details_view_opens_for(name: str) -> None:
-    dialogs = [
-        w
-        for w in QApplication.topLevelWidgets()
-        if isinstance(w, ContactDetailDialog) and w.isVisible()
-    ]
-    assert dialogs, "ContactDetailDialog not shown"
-    label = dialogs[0].findChild(QLabel, "contact_name_label")
+def details_view_opens_for(main_window: MainWindow, name: str) -> None:
+    view = _active_detail_view(main_window)
+    label = view.findChild(QLabel, "contact_name_label")
     assert label is not None, "contact_name_label not found"
     assert name in label.text()
 
@@ -455,3 +451,168 @@ def list_still_sorted_by_email(main_window: MainWindow) -> None:
 def scroll_position_unchanged(main_window: MainWindow, contacts_ctx: dict[str, Any]) -> None:
     table = _contact_table(main_window)
     assert table.verticalScrollBar().value() == contacts_ctx["scroll_value"]
+
+
+# ── Story #58: View Contact Details ─────────────────────────────────────────
+
+# ── Givens ────────────────────────────────────────────────────────────────────
+
+
+def _window_with_contacts(names: list[str], qtbot: QtBot) -> MainWindow:
+    repo = _make_repository()
+    for name in names:
+        first, last = name.split(" ", 1)
+        repo.create(Contact(first_name=first, last_name=last))
+    window = MainWindow(contact_repository=repo)
+    qtbot.addWidget(window)
+    window.show()
+    window.navigate_to(Section.CONTACTS)
+    return window
+
+
+def _open_details(window: MainWindow, name: str) -> None:
+    table = _contact_table(window)
+    row = _contact_names(window).index(name)
+    table.cellDoubleClicked.emit(row, 0)
+    QApplication.processEvents()
+
+
+def _active_detail_view(window: MainWindow) -> QWidget:
+    view = _contacts_page(window).findChild(QWidget, "contact_detail_view")
+    assert view is not None, "contact_detail_view not found"
+    assert view.isVisible(), "contact_detail_view not visible"
+    return view
+
+
+@given(
+    parsers.parse('a contact "{name}" exists with email "{email}" and phone "{phone}"'),
+    target_fixture="main_window",
+)
+def contact_exists_with_email_and_phone(
+    name: str, email: str, phone: str, qtbot: QtBot
+) -> MainWindow:
+    repo = _make_repository()
+    first, last = name.split(" ", 1)
+    repo.create(Contact(first_name=first, last_name=last, email=email, phone=phone))
+    window = MainWindow(contact_repository=repo)
+    qtbot.addWidget(window)
+    window.show()
+    window.navigate_to(Section.CONTACTS)
+    return window
+
+
+@given(parsers.parse('a contact "{name}" exists with only a name'), target_fixture="main_window")
+def contact_exists_with_only_a_name(name: str, qtbot: QtBot) -> MainWindow:
+    return _window_with_contacts([name], qtbot)
+
+
+@given(
+    parsers.parse('the user is viewing details for "{name}" with "{other}" next in list order'),
+    target_fixture="main_window",
+)
+def viewing_details_with_next_contact(name: str, other: str, qtbot: QtBot) -> MainWindow:
+    window = _window_with_contacts([name, other], qtbot)
+    _open_details(window, name)
+    return window
+
+
+@given(
+    parsers.parse('the user is viewing details for "{name}" with "{other}" previous in list order'),
+    target_fixture="main_window",
+)
+def viewing_details_with_previous_contact(name: str, other: str, qtbot: QtBot) -> MainWindow:
+    window = _window_with_contacts([other, name], qtbot)
+    _open_details(window, name)
+    return window
+
+
+@given(
+    parsers.parse(
+        'the user is viewing details for the last contact in list order, "{name}", '
+        'with "{first}" first'
+    ),
+    target_fixture="main_window",
+)
+def viewing_details_for_last_contact(name: str, first: str, qtbot: QtBot) -> MainWindow:
+    window = _window_with_contacts([first, "Bob Carter", name], qtbot)
+    _open_details(window, name)
+    return window
+
+
+@given(parsers.parse('the user is viewing the details for "{name}"'), target_fixture="main_window")
+def viewing_the_details_for(name: str, qtbot: QtBot) -> MainWindow:
+    window = _window_with_contacts([name], qtbot)
+    _open_details(window, name)
+    return window
+
+
+# ── Whens ─────────────────────────────────────────────────────────────────────
+
+
+@when(parsers.parse('the user opens the details for "{name}"'))
+def user_opens_details_for(main_window: MainWindow, name: str) -> None:
+    _open_details(main_window, name)
+
+
+@when("the user clicks Next")
+def clicks_next(main_window: MainWindow, qtbot: QtBot) -> None:
+    btn = _contacts_page(main_window).findChild(QPushButton, "next_button")
+    assert btn is not None, "next_button not found"
+    qtbot.mouseClick(btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+
+
+@when("the user clicks Previous")
+def clicks_previous(main_window: MainWindow, qtbot: QtBot) -> None:
+    btn = _contacts_page(main_window).findChild(QPushButton, "previous_button")
+    assert btn is not None, "previous_button not found"
+    qtbot.mouseClick(btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+
+
+@when("the user clicks Back to List")
+def clicks_back_to_list(main_window: MainWindow, qtbot: QtBot) -> None:
+    btn = _contacts_page(main_window).findChild(QPushButton, "back_to_list_button")
+    assert btn is not None, "back_to_list_button not found"
+    qtbot.mouseClick(btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+
+
+@when("the user presses Escape")
+def presses_escape(main_window: MainWindow, qtbot: QtBot) -> None:
+    view = _active_detail_view(main_window)
+    qtbot.keyClick(view, Qt.Key.Key_Escape)  # type: ignore[no-untyped-call]
+
+
+# ── Thens ─────────────────────────────────────────────────────────────────────
+
+
+@then(parsers.parse('the details view shows "{value1}" and "{value2}"'))
+def details_view_shows_two_values(main_window: MainWindow, value1: str, value2: str) -> None:
+    view = _active_detail_view(main_window)
+    labels = [lbl.text() for lbl in view.findChildren(QLabel)]
+    assert any(value1 in text for text in labels)
+    assert any(value2 in text for text in labels)
+
+
+@then('empty optional fields show "Not provided"')
+def empty_optional_fields_show_not_provided(main_window: MainWindow) -> None:
+    view = _active_detail_view(main_window)
+    labels = [lbl.text() for lbl in view.findChildren(QLabel)]
+    for field_label in ("Email", "Phone", "Street", "City", "State", "ZIP", "Notes", "Tags"):
+        assert f"{field_label}: Not provided" in labels, f"{field_label} not shown as Not provided"
+
+
+@then(parsers.parse('the details for "{name}" are shown'))
+def details_for_name_are_shown(main_window: MainWindow, name: str) -> None:
+    view = _active_detail_view(main_window)
+    label = view.findChild(QLabel, "contact_name_label")
+    assert label is not None, "contact_name_label not found"
+    assert label.text() == name
+
+
+@then(parsers.parse('the contact list is shown with "{name}" still selected'))
+def contact_list_shown_with_selected(main_window: MainWindow, name: str) -> None:
+    table = _contact_table(main_window)
+    assert table.isVisible(), "contact list is not the active view"
+    selected_rows = {idx.row() for idx in table.selectedIndexes()}
+    assert len(selected_rows) == 1, f"expected exactly one selected row, got {selected_rows}"
+    row = next(iter(selected_rows))
+    assert f"{_cell_text(table, row, 0)} {_cell_text(table, row, 1)}".strip() == name
