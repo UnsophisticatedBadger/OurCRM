@@ -2,6 +2,19 @@
 
 <!-- version list -->
 
+## v0.17.0 (2026-07-19)
+
+### Documentation
+
+- Mark manual tests verified for #57
+  ([`cd199b6`](https://github.com/UnsophisticatedBadger/OurCRM/commit/cd199b6606c120ecbc13e1db20f60d1f198eaf9c))
+
+### Features
+
+- Add View Contact Details ([#58](https://github.com/UnsophisticatedBadger/OurCRM/pull/58),
+  [`6f7ff04`](https://github.com/UnsophisticatedBadger/OurCRM/commit/6f7ff0457ea1ebe3765510f012cba049e87bb0d8))
+
+
 ## v0.16.0 (2026-07-18)
 
 ### Features
