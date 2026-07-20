@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v0.18.0 (2026-07-20)
+
+### Features
+
+- Add Edit A Contact ([#59](https://github.com/UnsophisticatedBadger/OurCRM/pull/59),
+  [`1aee957`](https://github.com/UnsophisticatedBadger/OurCRM/commit/1aee9578a75f18a28b16fb4f16208690b015d148))
+
+
 ## v0.17.0 (2026-07-19)
 
 ### Documentation
