@@ -616,3 +616,157 @@ def contact_list_shown_with_selected(main_window: MainWindow, name: str) -> None
     assert len(selected_rows) == 1, f"expected exactly one selected row, got {selected_rows}"
     row = next(iter(selected_rows))
     assert f"{_cell_text(table, row, 0)} {_cell_text(table, row, 1)}".strip() == name
+
+
+# ── Story #59: Edit A Contact ───────────────────────────────────────────────
+
+# ── Givens ────────────────────────────────────────────────────────────────────
+
+
+def _click_edit_button(main_window: MainWindow, qtbot: QtBot) -> ContactForm:
+    view = _active_detail_view(main_window)
+    btn = view.findChild(QPushButton, "edit_button")
+    assert btn is not None, "edit_button not found"
+    qtbot.mouseClick(btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+    QApplication.processEvents()
+    forms = _visible_contact_forms()
+    assert forms, "edit ContactForm did not open"
+    qtbot.addWidget(forms[0])
+    return forms[0]
+
+
+def _set_field_text(field: QLineEdit, value: str, qtbot: QtBot) -> None:
+    field.clear()
+    qtbot.keyClicks(field, value)  # type: ignore[no-untyped-call]
+
+
+@given(
+    parsers.parse('the user is viewing the details for "{name}" with phone "{phone}"'),
+    target_fixture="main_window",
+)
+def viewing_details_with_phone(name: str, phone: str, qtbot: QtBot) -> MainWindow:
+    repo = _make_repository()
+    first, last = name.split(" ", 1)
+    repo.create(Contact(first_name=first, last_name=last, phone=phone))
+    window = MainWindow(contact_repository=repo)
+    qtbot.addWidget(window)
+    window.show()
+    window.navigate_to(Section.CONTACTS)
+    _open_details(window, name)
+    return window
+
+
+@given(
+    parsers.parse('the edit form is open for "{name}" with email "{email}"'),
+    target_fixture="main_window",
+)
+def edit_form_open_with_email(name: str, email: str, qtbot: QtBot) -> MainWindow:
+    repo = _make_repository()
+    first, last = name.split(" ", 1)
+    repo.create(Contact(first_name=first, last_name=last, email=email))
+    window = MainWindow(contact_repository=repo)
+    qtbot.addWidget(window)
+    window.show()
+    window.navigate_to(Section.CONTACTS)
+    _open_details(window, name)
+    _click_edit_button(window, qtbot)
+    return window
+
+
+@given(
+    parsers.parse('the user has edited "{name}" phone to "{phone}" and saved'),
+    target_fixture="contacts_ctx",
+)
+def edited_phone_and_saved(name: str, phone: str, qtbot: QtBot) -> dict[str, Any]:
+    engine = create_engine("sqlite:///:memory:")
+    DatabaseManager(engine).initialize_schema()
+    session_factory = sessionmaker(bind=engine)
+    repo = ContactRepository(session_factory)
+    first, last = name.split(" ", 1)
+    repo.create(Contact(first_name=first, last_name=last))
+
+    window = MainWindow(contact_repository=repo)
+    qtbot.addWidget(window)
+    window.show()
+    window.navigate_to(Section.CONTACTS)
+    _open_details(window, name)
+    form = _click_edit_button(window, qtbot)
+    phone_field = form.findChild(QLineEdit, "phone_field")
+    assert phone_field is not None, "phone_field not found"
+    _set_field_text(phone_field, phone, qtbot)
+    save_btn = form.findChild(QPushButton, "save_button")
+    assert save_btn is not None, "save_button not found"
+    qtbot.mouseClick(save_btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+    QApplication.processEvents()
+
+    return {"main_window": window, "engine": engine}
+
+
+# ── Whens ─────────────────────────────────────────────────────────────────────
+
+
+@when(parsers.parse('the user clicks Edit, changes the phone to "{phone}", and clicks Save'))
+def clicks_edit_changes_phone_and_saves(main_window: MainWindow, phone: str, qtbot: QtBot) -> None:
+    form = _click_edit_button(main_window, qtbot)
+    phone_field = form.findChild(QLineEdit, "phone_field")
+    assert phone_field is not None, "phone_field not found"
+    _set_field_text(phone_field, phone, qtbot)
+    save_btn = form.findChild(QPushButton, "save_button")
+    assert save_btn is not None, "save_button not found"
+    qtbot.mouseClick(save_btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+    QApplication.processEvents()
+
+
+@when(parsers.parse('the user changes the email to "{email}" and clicks Cancel'))
+def changes_email_and_cancels(main_window: MainWindow, email: str, qtbot: QtBot) -> None:
+    forms = _visible_contact_forms()
+    assert forms, "edit ContactForm not open"
+    form = forms[0]
+    email_field = form.findChild(QLineEdit, "email_field")
+    assert email_field is not None, "email_field not found"
+    _set_field_text(email_field, email, qtbot)
+    cancel_btn = form.findChild(QPushButton, "cancel_button")
+    assert cancel_btn is not None, "cancel_button not found"
+    qtbot.mouseClick(cancel_btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+    QApplication.processEvents()
+
+
+@when(
+    parsers.parse('the application is restarted and the user opens "{name}"'),
+    target_fixture="main_window",
+)
+def app_restarted_and_opens_contact(
+    contacts_ctx: dict[str, Any], name: str, qtbot: QtBot
+) -> MainWindow:
+    session_factory = sessionmaker(bind=contacts_ctx["engine"])
+    repo = ContactRepository(session_factory)
+    window = MainWindow(contact_repository=repo)
+    qtbot.addWidget(window)
+    window.show()
+    window.navigate_to(Section.CONTACTS)
+    _open_details(window, name)
+    return window
+
+
+# ── Thens ─────────────────────────────────────────────────────────────────────
+
+
+@then(parsers.parse('the details view shows the phone "{phone}"'))
+def details_view_shows_phone(main_window: MainWindow, phone: str) -> None:
+    view = _active_detail_view(main_window)
+    labels = [lbl.text() for lbl in view.findChildren(QLabel)]
+    assert f"Phone: {phone}" in labels
+
+
+@then(parsers.parse('the details view still shows "{value}"'))
+def details_view_still_shows(main_window: MainWindow, value: str) -> None:
+    view = _active_detail_view(main_window)
+    labels = [lbl.text() for lbl in view.findChildren(QLabel)]
+    assert any(value in text for text in labels)
+
+
+@then(parsers.parse('the phone "{phone}" is shown'))
+def phone_is_shown(main_window: MainWindow, phone: str) -> None:
+    view = _active_detail_view(main_window)
+    labels = [lbl.text() for lbl in view.findChildren(QLabel)]
+    assert f"Phone: {phone}" in labels

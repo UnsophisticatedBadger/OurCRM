@@ -2,11 +2,14 @@
 
 from __future__ import annotations
 
+from collections.abc import Generator
+
 import pytest
 from PySide6.QtCore import QPoint, Qt
 from PySide6.QtWidgets import QApplication, QLabel, QLineEdit, QPushButton, QTableWidget, QWidget
 from pytestqt.qtbot import QtBot
 from sqlalchemy import create_engine
+from sqlalchemy.engine import Engine
 from sqlalchemy.orm import sessionmaker
 
 from ourcrm.crm.contacts.models import Contact
@@ -17,10 +20,16 @@ from ourcrm.ui.contacts_page import ContactForm, ContactsPage
 # ── Fixtures ─────────────────────────────────────────────────────────────────
 
 
+@pytest.fixture
+def engine() -> Generator[Engine]:
+    eng = create_engine("sqlite:///:memory:")
+    DatabaseManager(eng).initialize_schema()
+    yield eng
+    eng.dispose()
+
+
 @pytest.fixture()
-def repository() -> ContactRepository:
-    engine = create_engine("sqlite:///:memory:")
-    DatabaseManager(engine).initialize_schema()
+def repository(engine: Engine) -> ContactRepository:
     return ContactRepository(sessionmaker(bind=engine))
 
 

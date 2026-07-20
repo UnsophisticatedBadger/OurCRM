@@ -14,6 +14,7 @@ from ourcrm.database.models import ContactRow
 class ContactRepositoryProtocol(Protocol):
     def create(self, contact: Contact) -> Contact: ...
     def list_all(self) -> list[Contact]: ...
+    def update(self, contact: Contact) -> Contact: ...
 
 
 def _split_tags(tags: str) -> list[str]:
@@ -40,24 +41,27 @@ def _to_domain(row: ContactRow) -> Contact:
     )
 
 
+def _apply_to_row(row: ContactRow, contact: Contact) -> None:
+    row.first_name = contact.first_name
+    row.last_name = contact.last_name
+    row.email = contact.email
+    row.phone = contact.phone
+    row.address_street = contact.address_street
+    row.address_city = contact.address_city
+    row.address_state = contact.address_state
+    row.address_zip = contact.address_zip
+    row.notes = contact.notes
+    row.tags = _join_tags(contact.tags)
+
+
 class ContactRepository:
     def __init__(self, session_factory: sessionmaker[Session]) -> None:
         self._session_factory = session_factory
 
     def create(self, contact: Contact) -> Contact:
         with self._session_factory() as session:
-            row = ContactRow(
-                first_name=contact.first_name,
-                last_name=contact.last_name,
-                email=contact.email,
-                phone=contact.phone,
-                address_street=contact.address_street,
-                address_city=contact.address_city,
-                address_state=contact.address_state,
-                address_zip=contact.address_zip,
-                notes=contact.notes,
-                tags=_join_tags(contact.tags),
-            )
+            row = ContactRow()
+            _apply_to_row(row, contact)
             session.add(row)
             session.commit()
             session.refresh(row)
@@ -67,3 +71,11 @@ class ContactRepository:
         with self._session_factory() as session:
             rows = session.execute(select(ContactRow)).scalars().all()
             return [_to_domain(row) for row in rows]
+
+    def update(self, contact: Contact) -> Contact:
+        with self._session_factory() as session:
+            row = session.get_one(ContactRow, contact.id)
+            _apply_to_row(row, contact)
+            session.commit()
+            session.refresh(row)
+            return _to_domain(row)

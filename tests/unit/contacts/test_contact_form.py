@@ -1,9 +1,12 @@
 """Unit tests for ContactForm (US-056)."""
 
+from collections.abc import Generator
+
 import pytest
 from PySide6.QtWidgets import QApplication, QLabel, QLineEdit, QPushButton, QTextEdit
 from pytestqt.qtbot import QtBot
 from sqlalchemy import create_engine
+from sqlalchemy.engine import Engine
 from sqlalchemy.orm import sessionmaker
 
 from ourcrm.crm.contacts.repository import ContactRepository
@@ -13,10 +16,16 @@ from ourcrm.ui.contacts_page import ContactForm
 # ── Fixtures ─────────────────────────────────────────────────────────────────
 
 
+@pytest.fixture
+def engine() -> Generator[Engine]:
+    eng = create_engine("sqlite:///:memory:")
+    DatabaseManager(eng).initialize_schema()
+    yield eng
+    eng.dispose()
+
+
 @pytest.fixture()
-def repository() -> ContactRepository:
-    engine = create_engine("sqlite:///:memory:")
-    DatabaseManager(engine).initialize_schema()
+def repository(engine: Engine) -> ContactRepository:
     return ContactRepository(sessionmaker(bind=engine))
 
 

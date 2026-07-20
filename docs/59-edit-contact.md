@@ -2,7 +2,7 @@
 
 **Capability:** Contacts
 **Milestone:** MVP
-**Status:** Not Done
+**Status:** Done
 **GitHub Issue:** #59
 
 ## User Story
@@ -16,7 +16,7 @@ As a real estate agent, I want to edit a contact's information, so that I can ke
 ## Acceptance Criteria
 
 1. The Edit button on the contact details view opens an edit form pre-populated with the contact's current data
-2. All fields can be changed; validation rules match the create form (#43)
+2. All fields can be changed; validation rules match the create form (#56)
 3. Saving updates the contact in the database, returns to the details view, and shows the updated values immediately
 4. Cancel discards all changes and returns to the details view with the original data unchanged
 5. Edited data persists across application restarts
@@ -93,8 +93,8 @@ Scenario: Edited data persists after an application restart
 
 ## Definition of Done
 
-- [ ] BDD scenarios pass end-to-end
-- [ ] Feature reachable from the running app
-- [ ] `ruff`, `mypy --strict` clean
-- [ ] Manual tests documented and verified
-- [ ] Wiki documentation written, or marked N/A with a reason
+- [x] BDD scenarios pass end-to-end
+- [x] Feature reachable from the running app
+- [x] `ruff`, `mypy --strict` clean
+- [x] Manual tests documented and verified
+- [x] Wiki documentation written, or marked N/A with a reason

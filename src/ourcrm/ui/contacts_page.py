@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from typing import override
 
-from PySide6.QtCore import Qt, Signal
-from PySide6.QtGui import QKeyEvent
+from PySide6.QtCore import QPoint, Qt, Signal
+from PySide6.QtGui import QKeyEvent, QKeySequence, QShortcut
 from PySide6.QtWidgets import (
     QAbstractItemView,
     QDialog,
@@ -13,6 +13,7 @@ from PySide6.QtWidgets import (
     QHBoxLayout,
     QLabel,
     QLineEdit,
+    QMenu,
     QPushButton,
     QStackedWidget,
     QTableWidget,
@@ -32,13 +33,28 @@ class ContactForm(QDialog):
         self,
         repository: ContactRepositoryProtocol,
         validator: ContactValidator | None = None,
+        contact: Contact | None = None,
         parent: QWidget | None = None,
     ) -> None:
         super().__init__(parent)
-        self.setWindowTitle("New Contact")
         self._repository = repository
         self._validator = validator if validator is not None else ContactValidator()
+        self._editing_contact = contact
         self._setup_ui()
+
+        if contact is not None:
+            self.setWindowTitle("Edit Contact")
+            self._first_name.setText(contact.first_name)
+            self._last_name.setText(contact.last_name)
+            self._email.setText(contact.email)
+            self._phone.setText(contact.phone)
+            self._street.setText(contact.address_street)
+            self._city.setText(contact.address_city)
+            self._state.setText(contact.address_state)
+            self._zip.setText(contact.address_zip)
+            self._notes.setPlainText(contact.notes)
+        else:
+            self.setWindowTitle("New Contact")
 
     @staticmethod
     def _add_field(form: QFormLayout, name: str, label: str) -> QLineEdit:
@@ -109,6 +125,8 @@ class ContactForm(QDialog):
             address_state=self._state.text(),
             address_zip=self._zip.text(),
             notes=self._notes.toPlainText(),
+            tags=self._editing_contact.tags if self._editing_contact is not None else [],
+            id=self._editing_contact.id if self._editing_contact is not None else None,
         )
 
         result = self._validator.validate(contact)
@@ -120,7 +138,10 @@ class ContactForm(QDialog):
         if not result.is_valid:
             return
 
-        self._repository.create(contact)
+        if self._editing_contact is not None:
+            self._repository.update(contact)
+        else:
+            self._repository.create(contact)
         self.accept()
 
 
@@ -128,6 +149,7 @@ class ContactDetailView(QWidget):
     back_to_list = Signal()
     previous_requested = Signal()
     next_requested = Signal()
+    edit_requested = Signal()
 
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
@@ -157,7 +179,7 @@ class ContactDetailView(QWidget):
         action_row = QHBoxLayout()
         self._edit_btn = QPushButton("Edit")
         self._edit_btn.setObjectName("edit_button")
-        self._edit_btn.clicked.connect(self._on_edit)
+        self._edit_btn.clicked.connect(self.edit_requested.emit)
         action_row.addWidget(self._edit_btn)
 
         self._delete_btn = QPushButton("Delete")
@@ -175,9 +197,6 @@ class ContactDetailView(QWidget):
         self._back_btn.setObjectName("back_to_list_button")
         self._back_btn.clicked.connect(self.back_to_list.emit)
         layout.addWidget(self._back_btn)
-
-    def _on_edit(self) -> None:
-        pass  # Placeholder until #59 (Edit A Contact) implements this flow.
 
     def _on_delete(self) -> None:
         pass  # Placeholder until #60 (Delete A Contact) implements this flow.
@@ -254,6 +273,7 @@ class ContactsPage(QWidget):
         self._contact_table.setHorizontalHeaderLabels(_COLUMN_HEADERS)
         self._contact_table.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
         self._contact_table.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
+        self._contact_table.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
 
         self._empty_state = QWidget()
         self._empty_state.setObjectName("empty_state")
@@ -270,6 +290,7 @@ class ContactsPage(QWidget):
         self._detail_view.back_to_list.connect(self._show_contact_list)
         self._detail_view.next_requested.connect(self._show_next_contact)
         self._detail_view.previous_requested.connect(self._show_previous_contact)
+        self._detail_view.edit_requested.connect(self._on_edit_requested)
 
         self._stack = QStackedWidget()
         self._stack.addWidget(self._contact_table)
@@ -283,6 +304,11 @@ class ContactsPage(QWidget):
 
         self._new_contact_btn.clicked.connect(self._open_contact_form)
         self._contact_table.cellDoubleClicked.connect(self._open_contact_detail)
+        self._contact_table.customContextMenuRequested.connect(self._show_context_menu)
+
+        self._edit_shortcut = QShortcut(QKeySequence("Ctrl+E"), self._contact_table)
+        self._edit_shortcut.activated.connect(self._edit_selected_row)
+
         self._refresh_list()
 
     def _refresh_list(self) -> None:
@@ -320,6 +346,49 @@ class ContactsPage(QWidget):
         form.accepted.connect(self._refresh_list)
         self._contact_form = form
         form.show()
+
+    def _on_edit_requested(self) -> None:
+        if not self._current_contacts:
+            return
+        self._open_edit_form(self._current_contacts[self._current_index])
+
+    def _edit_selected_row(self) -> None:
+        row = self._contact_table.currentRow()
+        item = self._contact_table.item(row, 0)
+        if item is None:
+            return
+        contact = item.data(Qt.ItemDataRole.UserRole)
+        if not isinstance(contact, Contact):
+            return
+        self._open_edit_form(contact)
+
+    def _show_context_menu(self, pos: QPoint) -> None:
+        row = self._contact_table.rowAt(pos.y())
+        if row < 0:
+            return
+        self._contact_table.selectRow(row)
+
+        menu = QMenu(self._contact_table)
+        edit_action = menu.addAction("Edit")
+        edit_action.triggered.connect(self._edit_selected_row)
+        menu.popup(self._contact_table.viewport().mapToGlobal(pos))
+
+    def _open_edit_form(self, contact: Contact) -> None:
+        if self._repository is None:
+            return
+        form = ContactForm(self._repository, contact=contact)
+        form.accepted.connect(lambda: self._on_edit_saved(contact.id))
+        self._contact_form = form
+        form.show()
+
+    def _on_edit_saved(self, contact_id: int | None) -> None:
+        self._refresh_list()
+        if self._repository is None or contact_id is None:
+            return
+        self._current_contacts = self._contacts_in_table_order()
+        index = next((i for i, c in enumerate(self._current_contacts) if c.id == contact_id), None)
+        if index is not None:
+            self._show_contact_at(index)
 
     def _open_contact_detail(self, row: int, _column: int) -> None:
         item = self._contact_table.item(row, 0)
