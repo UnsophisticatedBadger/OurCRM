@@ -870,3 +870,181 @@ def name_no_longer_appears(main_window: MainWindow, name: str) -> None:
 @then(parsers.parse('"{name}" is not in the list'))
 def name_is_not_in_list(main_window: MainWindow, name: str) -> None:
     assert name not in _contact_names(main_window)
+
+
+# ── Story #64: Search Contacts ──────────────────────────────────────────────
+
+# ── Givens ────────────────────────────────────────────────────────────────────
+
+
+def _split_name(name: str) -> tuple[str, str]:
+    if " " in name:
+        first, last = name.split(" ", 1)
+        return first, last
+    return name, ""
+
+
+def _search_box(main_window: MainWindow) -> QLineEdit:
+    box = _contacts_page(main_window).findChild(QLineEdit, "search_box")
+    assert box is not None, "search_box not found"
+    return box
+
+
+@given(
+    parsers.parse('contacts "{name1}" and "{name2}" exist'),
+    target_fixture="main_window",
+)
+def contacts_exist(name1: str, name2: str, qtbot: QtBot) -> MainWindow:
+    repo = _make_repository()
+    for name in (name1, name2):
+        first, last = _split_name(name)
+        repo.create(Contact(first_name=first, last_name=last))
+    window = MainWindow(contact_repository=repo)
+    qtbot.addWidget(window)
+    window.show()
+    window.navigate_to(Section.CONTACTS)
+    return window
+
+
+@given(parsers.parse('a contact "{name}" exists'), target_fixture="main_window")
+def a_contact_exists(name: str, qtbot: QtBot) -> MainWindow:
+    repo = _make_repository()
+    first, last = _split_name(name)
+    repo.create(Contact(first_name=first, last_name=last))
+    window = MainWindow(contact_repository=repo)
+    qtbot.addWidget(window)
+    window.show()
+    window.navigate_to(Section.CONTACTS)
+    return window
+
+
+@given(
+    parsers.parse('a contact with email "{email}" exists'),
+    target_fixture="main_window",
+)
+def a_contact_with_email_exists(email: str, qtbot: QtBot) -> MainWindow:
+    repo = _make_repository()
+    repo.create(Contact(first_name="Jane", last_name="Contact", email=email))
+    window = MainWindow(contact_repository=repo)
+    qtbot.addWidget(window)
+    window.show()
+    window.navigate_to(Section.CONTACTS)
+    return window
+
+
+@given(
+    parsers.parse('a contact with phone "{phone}" exists'),
+    target_fixture="main_window",
+)
+def a_contact_with_phone_exists(phone: str, qtbot: QtBot) -> MainWindow:
+    repo = _make_repository()
+    repo.create(Contact(first_name="Jane", last_name="Contact", phone=phone))
+    window = MainWindow(contact_repository=repo)
+    qtbot.addWidget(window)
+    window.show()
+    window.navigate_to(Section.CONTACTS)
+    return window
+
+
+@given(
+    parsers.parse('a contact with street address "{street}" exists'),
+    target_fixture="main_window",
+)
+def a_contact_with_street_exists(street: str, qtbot: QtBot) -> MainWindow:
+    repo = _make_repository()
+    repo.create(Contact(first_name="Jane", last_name="Contact", address_street=street))
+    window = MainWindow(contact_repository=repo)
+    qtbot.addWidget(window)
+    window.show()
+    window.navigate_to(Section.CONTACTS)
+    return window
+
+
+@given(
+    parsers.parse('a contact with city "{city}" exists'),
+    target_fixture="main_window",
+)
+def a_contact_with_city_exists(city: str, qtbot: QtBot) -> MainWindow:
+    repo = _make_repository()
+    repo.create(Contact(first_name="Jane", last_name="Contact", address_city=city))
+    window = MainWindow(contact_repository=repo)
+    qtbot.addWidget(window)
+    window.show()
+    window.navigate_to(Section.CONTACTS)
+    return window
+
+
+@given(
+    parsers.parse('a contact tagged "{tag}" exists'),
+    target_fixture="main_window",
+)
+def a_contact_tagged_exists(tag: str, qtbot: QtBot) -> MainWindow:
+    repo = _make_repository()
+    repo.create(Contact(first_name="Jane", last_name="Contact", tags=[tag]))
+    window = MainWindow(contact_repository=repo)
+    qtbot.addWidget(window)
+    window.show()
+    window.navigate_to(Section.CONTACTS)
+    return window
+
+
+@given(
+    parsers.parse('contacts "{name1}" and "{name2}" exist and the user has searched for "{query}"'),
+    target_fixture="main_window",
+)
+def contacts_exist_and_user_has_searched(
+    name1: str, name2: str, query: str, qtbot: QtBot
+) -> MainWindow:
+    window = contacts_exist(name1, name2, qtbot)
+    qtbot.keyClicks(_search_box(window), query)  # type: ignore[no-untyped-call]
+    QApplication.processEvents()
+    return window
+
+
+# ── Whens ─────────────────────────────────────────────────────────────────────
+
+
+@when(parsers.parse('the user types "{query}" in the search box'))
+@when(parsers.parse('the user searches for "{query}"'))
+def user_searches_for(main_window: MainWindow, query: str, qtbot: QtBot) -> None:
+    qtbot.keyClicks(_search_box(main_window), query)  # type: ignore[no-untyped-call]
+    QApplication.processEvents()
+
+
+@when("the user clears the search box")
+def user_clears_search_box(main_window: MainWindow) -> None:
+    _search_box(main_window).clear()
+    QApplication.processEvents()
+
+
+# ── Thens ─────────────────────────────────────────────────────────────────────
+
+
+@then(parsers.parse('only "{name}" is shown'))
+def only_name_is_shown(main_window: MainWindow, name: str) -> None:
+    assert _contact_names(main_window) == [name]
+
+
+@then(parsers.parse('"{name}" appears in results'))
+def name_appears_in_results(main_window: MainWindow, name: str) -> None:
+    assert name in _contact_names(main_window)
+
+
+@then("that contact is shown in results")
+def that_contact_is_shown_in_results(main_window: MainWindow) -> None:
+    assert _contact_table(main_window).rowCount() == 1
+
+
+@then('a "No contacts found" message is shown')
+def no_contacts_found_is_shown(main_window: MainWindow) -> None:
+    label = _contacts_page(main_window).findChild(QLabel, "no_results_label")
+    assert label is not None, "no_results_label not found"
+    assert label.isVisible()
+    assert label.text() == "No contacts found"
+
+
+@then("all contacts are shown again")
+def all_contacts_are_shown_again(main_window: MainWindow) -> None:
+    names = _contact_names(main_window)
+    assert "John Smith" in names
+    assert "Jane Doe" in names

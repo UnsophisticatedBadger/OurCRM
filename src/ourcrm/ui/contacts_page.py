@@ -25,6 +25,7 @@ from PySide6.QtWidgets import (
 
 from ourcrm.crm.contacts.models import Contact
 from ourcrm.crm.contacts.repository import ContactRepositoryProtocol
+from ourcrm.crm.contacts.search import contact_matches
 from ourcrm.crm.contacts.validator import ContactValidator
 
 
@@ -292,6 +293,11 @@ class ContactsPage(QWidget):
     def _setup_ui(self) -> None:
         layout = QVBoxLayout(self)
 
+        self._search_box = QLineEdit()
+        self._search_box.setObjectName("search_box")
+        self._search_box.setPlaceholderText("Search contacts...")
+        layout.addWidget(self._search_box)
+
         self._contact_table = QTableWidget(0, len(_COLUMN_HEADERS))
         self._contact_table.setObjectName("contact_list")
         self._contact_table.setHorizontalHeaderLabels(_COLUMN_HEADERS)
@@ -310,6 +316,17 @@ class ContactsPage(QWidget):
         empty_layout.addWidget(self._create_first_contact_btn)
         self._create_first_contact_btn.clicked.connect(self._open_contact_form)
 
+        self._no_results_state = QWidget()
+        self._no_results_state.setObjectName("no_results_state")
+        no_results_layout = QVBoxLayout(self._no_results_state)
+        self._no_results_label = QLabel("No contacts found")
+        self._no_results_label.setObjectName("no_results_label")
+        no_results_layout.addWidget(self._no_results_label)
+        self._clear_search_btn = QPushButton("Clear Search")
+        self._clear_search_btn.setObjectName("clear_search_button")
+        no_results_layout.addWidget(self._clear_search_btn)
+        self._clear_search_btn.clicked.connect(self._search_box.clear)
+
         self._detail_view = ContactDetailView()
         self._detail_view.back_to_list.connect(self._show_contact_list)
         self._detail_view.next_requested.connect(self._show_next_contact)
@@ -320,6 +337,7 @@ class ContactsPage(QWidget):
         self._stack = QStackedWidget()
         self._stack.addWidget(self._contact_table)
         self._stack.addWidget(self._empty_state)
+        self._stack.addWidget(self._no_results_state)
         self._stack.addWidget(self._detail_view)
         layout.addWidget(self._stack)
 
@@ -337,19 +355,32 @@ class ContactsPage(QWidget):
         self._delete_shortcut = QShortcut(QKeySequence(Qt.Key.Key_Delete), self._contact_table)
         self._delete_shortcut.activated.connect(self._delete_selected_row)
 
+        self._search_shortcut = QShortcut(QKeySequence("Ctrl+F"), self)
+        self._search_shortcut.setObjectName("search_shortcut")
+        self._search_shortcut.activated.connect(self._search_box.setFocus)
+
+        self._search_box.textChanged.connect(self._refresh_list)
+
         self._refresh_list()
 
     def _refresh_list(self) -> None:
         self._contact_table.setSortingEnabled(False)
         self._contact_table.setRowCount(0)
+        query = self._search_box.text()
         if self._repository is not None:
             for contact in self._repository.list_all():
-                self._add_row(contact)
+                if contact_matches(contact, query):
+                    self._add_row(contact)
         self._contact_table.sortItems(_COL_LAST_NAME, Qt.SortOrder.AscendingOrder)
         self._contact_table.setSortingEnabled(True)
-        self._stack.setCurrentWidget(
-            self._empty_state if self._contact_table.rowCount() == 0 else self._contact_table
-        )
+        self._stack.setCurrentWidget(self._list_state_widget(query))
+
+    def _list_state_widget(self, query: str) -> QWidget:
+        if self._contact_table.rowCount() > 0:
+            return self._contact_table
+        if query:
+            return self._no_results_state
+        return self._empty_state
 
     def _set_cell(self, row: int, column: int, value: str) -> None:
         self._contact_table.setItem(row, column, QTableWidgetItem(value))
