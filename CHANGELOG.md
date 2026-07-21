@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v0.19.0 (2026-07-21)
+
+### Features
+
+- Add Delete A Contact ([#60](https://github.com/UnsophisticatedBadger/OurCRM/pull/60),
+  [`de6d1a6`](https://github.com/UnsophisticatedBadger/OurCRM/commit/de6d1a6e5a7a825d7fb149566c5ecb0bb73804d3))
+
+
 ## v0.18.0 (2026-07-20)
 
 ### Features
