@@ -12,6 +12,7 @@ As a real estate agent, I want to schedule a showing for a contact at a property
 ## Dependencies
 
 - #56 — Create a Contact
+- #60 — Delete A Contact (contact deletion must respect the showing link introduced by this story)
 - #104 — Create a Property Listing
 
 ## Acceptance Criteria
@@ -24,6 +25,7 @@ As a real estate agent, I want to schedule a showing for a contact at a property
 6. Attempting to save without contact, property, date, or start time is rejected with a validation error identifying the missing field
 7. A saved showing appears in the calendar view at the correct date and time, labelled with the contact's name and property address
 8. A saved showing persists across application restarts
+9. A contact linked to a showing cannot be deleted while the link exists (extends #60 — Delete A Contact with a showing-tie check, implemented via a DI-injected guard interface so the Contacts capability does not import from Calendar & Showings)
 
 ## BDD Scenarios
 

@@ -2,7 +2,7 @@
 
 **Capability:** Contacts
 **Milestone:** MVP
-**Status:** Not Done
+**Status:** Done
 **GitHub Issue:** #60
 
 ## User Story
@@ -17,10 +17,10 @@ As a real estate agent, I want to delete a contact I no longer work with, so tha
 
 1. The Delete button on the contact details view opens a confirmation dialog that names the contact and warns the action cannot be undone
 2. Confirming deletion removes the contact from the database, returns to the contact list, and the contact no longer appears
-3. Cancelling the dialog leaves the contact unchanged and returns to the details view
+3. Cancelling the dialog leaves the contact unchanged and returns to whichever view initiated the delete (details view or contact list)
 4. Deletion persists across application restarts
 5. A contact can also be deleted from the contact list via the Delete key or right-click > Delete
-6. If the contact has related data (transactions, showings), the confirmation dialog warns what will also be removed
+6. Contacts linked to a transaction or showing cannot be deleted while the link exists — not enforced by this story since Transactions and Calendar & Showings don't exist yet; the check activates once #111 (AC8) and #122 (AC9) ship
 
 ## BDD Scenarios
 
@@ -35,9 +35,9 @@ Scenario: User deletes a contact and it is removed from the list
 
 @story_60
 Scenario: User cancels deletion and the contact remains
-  Given the delete confirmation dialog is open for "Jane Smith"
-  When the user clicks Cancel
-  Then "Jane Smith" is still in the contact list
+  Given the delete confirmation dialog is open for "Jane Smith" from the details view
+  When the user clicks Cancel in the delete confirmation dialog
+  Then the details view still shows "Jane Smith"
 
 @story_60
 Scenario: Deleted contact does not reappear after restart
@@ -69,14 +69,10 @@ Scenario: Deleted contact does not reappear after restart
 
 ### Delete from the contact list
 1. Select a contact in the list and press the Delete key
-2. Confirm the confirmation dialog appears
+2. Confirm the confirmation dialog appears over the list (not the details view)
 3. Confirm the deletion
 4. Test the same flow via right-click > Delete
-
-### Warning appears when contact has related data
-1. Create a contact and associate a transaction with them
-2. Attempt to delete the contact
-3. Confirm the dialog warns about related data being removed
+5. Repeat, but click Cancel in the dialog — confirm it closes and you're still on the contact list with the contact unchanged
 
 ## Test Locations
 
@@ -89,8 +85,8 @@ Scenario: Deleted contact does not reappear after restart
 
 ## Definition of Done
 
-- [ ] BDD scenarios pass end-to-end
-- [ ] Feature reachable from the running app
-- [ ] `ruff`, `mypy --strict` clean
-- [ ] Manual tests documented and verified
-- [ ] Wiki documentation written, or marked N/A with a reason
+- [x] BDD scenarios pass end-to-end
+- [x] Feature reachable from the running app
+- [x] `ruff`, `mypy --strict` clean
+- [x] Manual tests documented and verified
+- [x] Wiki documentation written, or marked N/A with a reason

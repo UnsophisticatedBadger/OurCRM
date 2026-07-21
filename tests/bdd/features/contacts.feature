@@ -127,3 +127,21 @@ Feature: Contacts
     Given the user has edited "Jane Smith" phone to "555-9999" and saved
     When the application is restarted and the user opens "Jane Smith"
     Then the phone "555-9999" is shown
+
+  @story_60
+  Scenario: User deletes a contact and it is removed from the list
+    Given the user is viewing the details for "Jane Smith"
+    When the user clicks Delete and confirms
+    Then "Jane Smith" no longer appears in the contact list
+
+  @story_60
+  Scenario: User cancels deletion and the contact remains
+    Given the delete confirmation dialog is open for "Jane Smith" from the details view
+    When the user clicks Cancel in the delete confirmation dialog
+    Then the details view still shows "Jane Smith"
+
+  @story_60
+  Scenario: Deleted contact does not reappear after restart
+    Given the user has deleted "Jane Smith"
+    When the application is restarted and the user opens the Contacts section
+    Then "Jane Smith" is not in the list

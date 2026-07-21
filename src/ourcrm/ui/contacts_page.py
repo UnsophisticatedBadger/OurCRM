@@ -145,11 +145,37 @@ class ContactForm(QDialog):
         self.accept()
 
 
+class DeleteConfirmationDialog(QDialog):
+    def __init__(self, contact: Contact, parent: QWidget | None = None) -> None:
+        super().__init__(parent)
+        self.setWindowTitle("Delete Contact")
+        layout = QVBoxLayout(self)
+
+        name = f"{contact.first_name} {contact.last_name}".strip()
+        message = QLabel(f"Delete {name}? This action cannot be undone.")
+        message.setObjectName("delete_warning_label")
+        message.setWordWrap(True)
+        layout.addWidget(message)
+
+        btn_row = QHBoxLayout()
+        self._confirm_btn = QPushButton("Delete")
+        self._confirm_btn.setObjectName("confirm_delete_button")
+        self._cancel_btn = QPushButton("Cancel")
+        self._cancel_btn.setObjectName("cancel_delete_button")
+        btn_row.addWidget(self._confirm_btn)
+        btn_row.addWidget(self._cancel_btn)
+        layout.addLayout(btn_row)
+
+        self._confirm_btn.clicked.connect(self.accept)
+        self._cancel_btn.clicked.connect(self.reject)
+
+
 class ContactDetailView(QWidget):
     back_to_list = Signal()
     previous_requested = Signal()
     next_requested = Signal()
     edit_requested = Signal()
+    delete_requested = Signal()
 
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
@@ -184,7 +210,7 @@ class ContactDetailView(QWidget):
 
         self._delete_btn = QPushButton("Delete")
         self._delete_btn.setObjectName("delete_button")
-        self._delete_btn.clicked.connect(self._on_delete)
+        self._delete_btn.clicked.connect(self.delete_requested.emit)
         action_row.addWidget(self._delete_btn)
 
         self._add_note_btn = QPushButton("Add Note")
@@ -197,9 +223,6 @@ class ContactDetailView(QWidget):
         self._back_btn.setObjectName("back_to_list_button")
         self._back_btn.clicked.connect(self.back_to_list.emit)
         layout.addWidget(self._back_btn)
-
-    def _on_delete(self) -> None:
-        pass  # Placeholder until #60 (Delete A Contact) implements this flow.
 
     def _on_add_note(self) -> None:
         pass  # Placeholder until #61 (Add Notes To A Contact) implements this flow.
@@ -261,6 +284,7 @@ class ContactsPage(QWidget):
         super().__init__(parent)
         self._repository = repository
         self._contact_form: ContactForm | None = None
+        self._delete_dialog: DeleteConfirmationDialog | None = None
         self._current_contacts: list[Contact] = []
         self._current_index: int = 0
         self._setup_ui()
@@ -291,6 +315,7 @@ class ContactsPage(QWidget):
         self._detail_view.next_requested.connect(self._show_next_contact)
         self._detail_view.previous_requested.connect(self._show_previous_contact)
         self._detail_view.edit_requested.connect(self._on_edit_requested)
+        self._detail_view.delete_requested.connect(self._on_delete_requested)
 
         self._stack = QStackedWidget()
         self._stack.addWidget(self._contact_table)
@@ -308,6 +333,9 @@ class ContactsPage(QWidget):
 
         self._edit_shortcut = QShortcut(QKeySequence("Ctrl+E"), self._contact_table)
         self._edit_shortcut.activated.connect(self._edit_selected_row)
+
+        self._delete_shortcut = QShortcut(QKeySequence(Qt.Key.Key_Delete), self._contact_table)
+        self._delete_shortcut.activated.connect(self._delete_selected_row)
 
         self._refresh_list()
 
@@ -352,6 +380,25 @@ class ContactsPage(QWidget):
             return
         self._open_edit_form(self._current_contacts[self._current_index])
 
+    def _on_delete_requested(self) -> None:
+        if not self._current_contacts:
+            return
+        self._open_delete_dialog(self._current_contacts[self._current_index])
+
+    def _open_delete_dialog(self, contact: Contact) -> None:
+        if self._repository is None:
+            return
+        dialog = DeleteConfirmationDialog(contact)
+        dialog.accepted.connect(lambda: self._on_delete_confirmed(contact.id))
+        self._delete_dialog = dialog
+        dialog.show()
+
+    def _on_delete_confirmed(self, contact_id: int | None) -> None:
+        if self._repository is None or contact_id is None:
+            return
+        self._repository.delete(contact_id)
+        self._refresh_list()
+
     def _edit_selected_row(self) -> None:
         row = self._contact_table.currentRow()
         item = self._contact_table.item(row, 0)
@@ -362,6 +409,16 @@ class ContactsPage(QWidget):
             return
         self._open_edit_form(contact)
 
+    def _delete_selected_row(self) -> None:
+        row = self._contact_table.currentRow()
+        item = self._contact_table.item(row, 0)
+        if item is None:
+            return
+        contact = item.data(Qt.ItemDataRole.UserRole)
+        if not isinstance(contact, Contact):
+            return
+        self._open_delete_dialog(contact)
+
     def _show_context_menu(self, pos: QPoint) -> None:
         row = self._contact_table.rowAt(pos.y())
         if row < 0:
@@ -371,6 +428,8 @@ class ContactsPage(QWidget):
         menu = QMenu(self._contact_table)
         edit_action = menu.addAction("Edit")
         edit_action.triggered.connect(self._edit_selected_row)
+        delete_action = menu.addAction("Delete")
+        delete_action.triggered.connect(self._delete_selected_row)
         menu.popup(self._contact_table.viewport().mapToGlobal(pos))
 
     def _open_edit_form(self, contact: Contact) -> None:

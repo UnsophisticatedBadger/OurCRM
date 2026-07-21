@@ -15,6 +15,7 @@ class ContactRepositoryProtocol(Protocol):
     def create(self, contact: Contact) -> Contact: ...
     def list_all(self) -> list[Contact]: ...
     def update(self, contact: Contact) -> Contact: ...
+    def delete(self, contact_id: int) -> None: ...
 
 
 def _split_tags(tags: str) -> list[str]:
@@ -79,3 +80,9 @@ class ContactRepository:
             session.commit()
             session.refresh(row)
             return _to_domain(row)
+
+    def delete(self, contact_id: int) -> None:
+        with self._session_factory() as session:
+            row = session.get_one(ContactRow, contact_id)
+            session.delete(row)
+            session.commit()

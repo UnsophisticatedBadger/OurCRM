@@ -14,6 +14,7 @@ As a real estate agent, I want to create a transaction to track a deal from cont
 - #6 — Log In and Out (session factory registered in DI)
 - #10 — Navigate Between Sections
 - #56 — Create a New Contact (contact model used for buyer/seller linking)
+- #60 — Delete A Contact (contact deletion must respect the transaction link introduced by this story)
 - #104 — Create a New Property Listing (property model used for property linking)
 
 ## Acceptance Criteria
@@ -25,6 +26,7 @@ As a real estate agent, I want to create a transaction to track a deal from cont
 5. Saving a valid transaction creates it, returns to the transaction list, and the new transaction appears in it
 6. Cancel closes the form without saving
 7. Transactions persist across application restarts
+8. A contact linked to this transaction as buyer or seller cannot be deleted while the link exists (extends #60 — Delete A Contact with a transaction-tie check, implemented via a DI-injected guard interface so the Contacts capability does not import from Transactions)
 
 ## BDD Scenarios
 

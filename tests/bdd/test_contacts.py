@@ -7,6 +7,7 @@ from typing import Any, cast
 from PySide6.QtCore import QPoint, Qt
 from PySide6.QtWidgets import (
     QApplication,
+    QDialog,
     QLabel,
     QLineEdit,
     QPushButton,
@@ -770,3 +771,102 @@ def phone_is_shown(main_window: MainWindow, phone: str) -> None:
     view = _active_detail_view(main_window)
     labels = [lbl.text() for lbl in view.findChildren(QLabel)]
     assert f"Phone: {phone}" in labels
+
+
+# ── Story #60: Delete A Contact ─────────────────────────────────────────────
+
+# ── Givens ────────────────────────────────────────────────────────────────────
+
+
+def _visible_delete_dialogs() -> list[QDialog]:
+    return [
+        w
+        for w in QApplication.topLevelWidgets()
+        if isinstance(w, QDialog)
+        and w.isVisible()
+        and w.findChild(QPushButton, "confirm_delete_button") is not None
+    ]
+
+
+def _click_delete_button_on_details(main_window: MainWindow, qtbot: QtBot) -> None:
+    view = _active_detail_view(main_window)
+    btn = view.findChild(QPushButton, "delete_button")
+    assert btn is not None, "delete_button not found"
+    qtbot.mouseClick(btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+    QApplication.processEvents()
+
+
+@given(
+    parsers.parse('the delete confirmation dialog is open for "{name}" from the details view'),
+    target_fixture="main_window",
+)
+def delete_dialog_open_from_details(name: str, qtbot: QtBot) -> MainWindow:
+    window = _window_with_contacts([name], qtbot)
+    _open_details(window, name)
+    _click_delete_button_on_details(window, qtbot)
+    return window
+
+
+@given(parsers.parse('the user has deleted "{name}"'), target_fixture="contacts_ctx")
+def user_has_deleted(name: str, qtbot: QtBot) -> dict[str, Any]:
+    engine = create_engine("sqlite:///:memory:")
+    DatabaseManager(engine).initialize_schema()
+    session_factory = sessionmaker(bind=engine)
+    repo = ContactRepository(session_factory)
+    first, last = name.split(" ", 1)
+    repo.create(Contact(first_name=first, last_name=last))
+
+    window = MainWindow(contact_repository=repo)
+    qtbot.addWidget(window)
+    window.show()
+    window.navigate_to(Section.CONTACTS)
+    _open_details(window, name)
+    _click_delete_button_on_details(window, qtbot)
+
+    dialogs = _visible_delete_dialogs()
+    assert dialogs, "delete confirmation dialog did not open"
+    qtbot.addWidget(dialogs[0])
+    confirm_btn = dialogs[0].findChild(QPushButton, "confirm_delete_button")
+    assert confirm_btn is not None, "confirm_delete_button not found"
+    qtbot.mouseClick(confirm_btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+    QApplication.processEvents()
+
+    return {"main_window": window, "engine": engine}
+
+
+# ── Whens ─────────────────────────────────────────────────────────────────────
+
+
+@when("the user clicks Delete and confirms")
+def clicks_delete_and_confirms(main_window: MainWindow, qtbot: QtBot) -> None:
+    _click_delete_button_on_details(main_window, qtbot)
+    dialogs = _visible_delete_dialogs()
+    assert dialogs, "delete confirmation dialog did not open"
+    qtbot.addWidget(dialogs[0])
+    confirm_btn = dialogs[0].findChild(QPushButton, "confirm_delete_button")
+    assert confirm_btn is not None, "confirm_delete_button not found"
+    qtbot.mouseClick(confirm_btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+    QApplication.processEvents()
+
+
+@when("the user clicks Cancel in the delete confirmation dialog")
+def clicks_cancel_in_delete_dialog(qtbot: QtBot) -> None:
+    dialogs = _visible_delete_dialogs()
+    assert dialogs, "delete confirmation dialog not open"
+    cancel_btn = dialogs[0].findChild(QPushButton, "cancel_delete_button")
+    assert cancel_btn is not None, "cancel_delete_button not found"
+    qtbot.mouseClick(cancel_btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+    QApplication.processEvents()
+
+
+# ── Thens ─────────────────────────────────────────────────────────────────────
+
+
+@then(parsers.parse('"{name}" no longer appears in the contact list'))
+def name_no_longer_appears(main_window: MainWindow, name: str) -> None:
+    assert name not in _contact_names(main_window)
+
+
+@then(parsers.parse('"{name}" is not in the list'))
+def name_is_not_in_list(main_window: MainWindow, name: str) -> None:
+    assert name not in _contact_names(main_window)
