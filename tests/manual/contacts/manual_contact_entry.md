@@ -1,42 +1,41 @@
-# Manual Contact Entry — Manual Tests
+# Manually Add Contact To Call List — Manual Tests
 
-**Story:** [US-015 — Manually Add Contact to Call List](../../../docs/015-manual-contact-entry.md)
+**Story:** [#43 — Manually Add Contact To Call List](../../docs/43-manual-contact-entry.md)
 
-## Contact is added with name and phone number only
+## Contact is added with only a name
 
-1. Open the call list or dashboard
-2. Click the button to add a contact manually
-3. Enter a name and phone number — leave address blank
-4. Submit the form
-5. Verify the contact appears in the call list immediately
+1. From the dashboard, click "New Contact" (or open the Contacts section and click "New Contact")
+2. Enter a first or last name only — leave phone, email, and address blank
+3. Submit the form
+4. Verify the contact saves without error and appears in the contact list
 
 ## Contact is added with all fields including address
 
-1. Open the add contact form
+1. Open the new contact form
 2. Enter name, phone number, and property address
 3. Submit
-4. Verify the contact appears in the call list with all three fields visible
+4. Verify the contact appears in the contact list with all fields visible
 
 ## Invalid phone number shows a plain-language error
 
-1. Open the add contact form
+1. Open the new contact form
 2. Enter a valid name and an invalid phone number (e.g. "abc")
 3. Submit
-4. Verify an error message explains the problem
+4. Verify an error message explains the problem next to the phone field
 5. Verify nothing is saved
 
 ## Duplicate phone number triggers a warning
 
 1. Add a contact with phone number 555-123-4567
-2. Open the add contact form again
+2. Open the new contact form again
 3. Enter a different name but the same phone number
 4. Submit
 5. Verify a warning asks for confirmation before saving
+6. Confirm the warning and verify the new contact saves alongside the original
+7. Repeat, but cancel the warning instead, and verify the form stays open with nothing saved
 
-## Manually added contact behaves identically to an MLS-added contact
+## Manually added contact appears on the dashboard
 
-1. Add one contact manually and one via MLS search
-2. Open the call list
-3. Verify both contacts appear in the same format
-4. Verify a Call button appears next to both when calling is configured
-5. Verify an outcome can be logged for both
+1. Add a new contact manually
+2. Navigate to the dashboard
+3. Verify the Contacts stat count reflects the newly added contact

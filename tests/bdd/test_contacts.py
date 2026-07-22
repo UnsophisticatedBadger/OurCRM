@@ -1048,3 +1048,83 @@ def all_contacts_are_shown_again(main_window: MainWindow) -> None:
     names = _contact_names(main_window)
     assert "John Smith" in names
     assert "Jane Doe" in names
+
+
+# ── Story #43: Manually Add Contact To Call List ────────────────────────────
+
+# ── Givens ────────────────────────────────────────────────────────────────────
+
+
+@given(
+    parsers.parse(
+        'a contact "{name}" exists with phone "{phone}" and the new contact form is open'
+    ),
+    target_fixture="main_window",
+)
+def contact_with_phone_and_form_open(name: str, phone: str, qtbot: QtBot) -> MainWindow:
+    repo = _make_repository()
+    first, last = name.split(" ", 1)
+    repo.create(Contact(first_name=first, last_name=last, phone=phone))
+    window = MainWindow(contact_repository=repo)
+    qtbot.addWidget(window)
+    window.show()
+    window.navigate_to(Section.CONTACTS)
+    _open_new_contact_form(window, qtbot)
+    return window
+
+
+# ── Whens ─────────────────────────────────────────────────────────────────────
+
+
+@when(parsers.parse('fills in phone "{phone}"'))
+def fill_phone_field(phone: str, qtbot: QtBot) -> None:
+    forms = _visible_contact_forms()
+    assert forms, "ContactForm not open"
+    field = forms[0].findChild(QLineEdit, "phone_field")
+    assert field is not None, "phone_field not found"
+    qtbot.keyClicks(field, phone)  # type: ignore[no-untyped-call]
+
+
+def _visible_duplicate_phone_dialogs() -> list[QDialog]:
+    return [
+        w
+        for w in QApplication.topLevelWidgets()
+        if isinstance(w, QDialog)
+        and w.isVisible()
+        and w.findChild(QPushButton, "confirm_duplicate_button") is not None
+    ]
+
+
+@when("the user confirms the duplicate phone warning")
+def confirms_duplicate_phone_warning(qtbot: QtBot) -> None:
+    dialogs = _visible_duplicate_phone_dialogs()
+    assert dialogs, "duplicate phone warning dialog not open"
+    qtbot.addWidget(dialogs[0])
+    btn = dialogs[0].findChild(QPushButton, "confirm_duplicate_button")
+    assert btn is not None, "confirm_duplicate_button not found"
+    qtbot.mouseClick(btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+    QApplication.processEvents()
+
+
+@when("the user cancels the duplicate phone warning")
+def cancels_duplicate_phone_warning(qtbot: QtBot) -> None:
+    dialogs = _visible_duplicate_phone_dialogs()
+    assert dialogs, "duplicate phone warning dialog not open"
+    btn = dialogs[0].findChild(QPushButton, "cancel_duplicate_button")
+    assert btn is not None, "cancel_duplicate_button not found"
+    qtbot.mouseClick(btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+    QApplication.processEvents()
+
+
+# ── Thens ─────────────────────────────────────────────────────────────────────
+
+
+@then("a duplicate phone warning is shown")
+def duplicate_phone_warning_shown() -> None:
+    dialogs = _visible_duplicate_phone_dialogs()
+    assert dialogs, "duplicate phone warning dialog did not open"
+
+
+@then(parsers.parse('"{name}" does not appear in the contact list'))
+def name_does_not_appear_in_list(main_window: MainWindow, name: str) -> None:
+    assert name not in _contact_names(main_window)

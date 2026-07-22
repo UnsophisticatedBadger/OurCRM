@@ -205,3 +205,24 @@ Feature: Contacts
     Given contacts "John Smith" and "Jane Doe" exist and the user has searched for "John"
     When the user clears the search box
     Then all contacts are shown again
+
+  @story_43
+  Scenario: User saves a new contact whose phone number matches an existing contact and confirms anyway
+    Given a contact "Alice Brown" exists with phone "555-0100" and the new contact form is open
+    When fills in first name "Bob" and last name "Carter"
+    And fills in phone "555-0100"
+    And clicks Save
+    Then a duplicate phone warning is shown
+    When the user confirms the duplicate phone warning
+    Then the contact list shows "Bob Carter"
+
+  @story_43
+  Scenario: User saves a new contact whose phone number matches an existing contact and cancels
+    Given a contact "Alice Brown" exists with phone "555-0100" and the new contact form is open
+    When fills in first name "Bob" and last name "Carter"
+    And fills in phone "555-0100"
+    And clicks Save
+    Then a duplicate phone warning is shown
+    When the user cancels the duplicate phone warning
+    Then the form stays open
+    And "Bob Carter" does not appear in the contact list

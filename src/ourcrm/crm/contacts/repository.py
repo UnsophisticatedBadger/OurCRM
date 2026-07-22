@@ -16,6 +16,7 @@ class ContactRepositoryProtocol(Protocol):
     def list_all(self) -> list[Contact]: ...
     def update(self, contact: Contact) -> Contact: ...
     def delete(self, contact_id: int) -> None: ...
+    def phone_exists(self, phone: str, exclude_id: int | None = None) -> bool: ...
 
 
 def _split_tags(tags: str) -> list[str]:
@@ -86,3 +87,10 @@ class ContactRepository:
             row = session.get_one(ContactRow, contact_id)
             session.delete(row)
             session.commit()
+
+    def phone_exists(self, phone: str, exclude_id: int | None = None) -> bool:
+        with self._session_factory() as session:
+            query = select(ContactRow).where(ContactRow.phone == phone)
+            if exclude_id is not None:
+                query = query.where(ContactRow.id != exclude_id)
+            return session.execute(query).scalars().first() is not None

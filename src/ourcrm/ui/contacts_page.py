@@ -41,6 +41,7 @@ class ContactForm(QDialog):
         self._repository = repository
         self._validator = validator if validator is not None else ContactValidator()
         self._editing_contact = contact
+        self._duplicate_dialog: DuplicatePhoneDialog | None = None
         self._setup_ui()
 
         if contact is not None:
@@ -139,6 +140,17 @@ class ContactForm(QDialog):
         if not result.is_valid:
             return
 
+        exclude_id = self._editing_contact.id if self._editing_contact is not None else None
+        if contact.phone.strip() and self._repository.phone_exists(contact.phone, exclude_id):
+            dialog = DuplicatePhoneDialog(self)
+            dialog.accepted.connect(lambda: self._save_contact(contact))
+            self._duplicate_dialog = dialog
+            dialog.show()
+            return
+
+        self._save_contact(contact)
+
+    def _save_contact(self, contact: Contact) -> None:
         if self._editing_contact is not None:
             self._repository.update(contact)
         else:
@@ -163,6 +175,30 @@ class DeleteConfirmationDialog(QDialog):
         self._confirm_btn.setObjectName("confirm_delete_button")
         self._cancel_btn = QPushButton("Cancel")
         self._cancel_btn.setObjectName("cancel_delete_button")
+        btn_row.addWidget(self._confirm_btn)
+        btn_row.addWidget(self._cancel_btn)
+        layout.addLayout(btn_row)
+
+        self._confirm_btn.clicked.connect(self.accept)
+        self._cancel_btn.clicked.connect(self.reject)
+
+
+class DuplicatePhoneDialog(QDialog):
+    def __init__(self, parent: QWidget | None = None) -> None:
+        super().__init__(parent)
+        self.setWindowTitle("Duplicate Phone Number")
+        layout = QVBoxLayout(self)
+
+        message = QLabel("A contact with this phone number already exists. Save anyway?")
+        message.setObjectName("duplicate_phone_warning_label")
+        message.setWordWrap(True)
+        layout.addWidget(message)
+
+        btn_row = QHBoxLayout()
+        self._confirm_btn = QPushButton("Save Anyway")
+        self._confirm_btn.setObjectName("confirm_duplicate_button")
+        self._cancel_btn = QPushButton("Cancel")
+        self._cancel_btn.setObjectName("cancel_duplicate_button")
         btn_row.addWidget(self._confirm_btn)
         btn_row.addWidget(self._cancel_btn)
         layout.addLayout(btn_row)

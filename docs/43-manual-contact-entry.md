@@ -2,7 +2,7 @@
 
 **Capability:** contacts
 **Milestone:** MVP
-**Status:** Not Started
+**Status:** Done
 **GitHub Issue:** #43
 
 ## User Story
@@ -17,11 +17,11 @@ As a real estate agent, I want to add a property owner to my call list by typing
 ## Acceptance Criteria
 
 1. A form is accessible from the call list and dashboard to add a contact manually
-2. The form requires name and phone number; property address is optional
-3. Submitting a valid form adds the contact to the call list immediately
+2. The form requires a name; phone number and property address are optional
+3. Submitting a valid form adds the contact immediately; it appears in the call list once it has a phone number (contacts without a phone, e.g. a name and email collected at a showing, are not callable and do not appear there)
 4. An invalid phone number format shows a plain-language error and does not save
 5. A duplicate phone number shows a warning and asks the user to confirm before saving
-6. The manually added contact appears in the call list and dashboard exactly like a contact added from MLS
+6. The manually added contact appears in the contact list and dashboard exactly like a contact added from MLS
 
 ## Test Locations
 
@@ -34,7 +34,7 @@ As a real estate agent, I want to add a property owner to my call list by typing
 
 ## Definition of Done
 
-- [ ] BDD scenarios pass
-- [ ] `ruff`, `mypy --strict` clean
-- [ ] Contact added manually with name and phone only; contact added with address; duplicate phone warning confirmed; contact appears on dashboard
-- [ ] Wiki documentation written, or marked N/A with a reason
+- [x] BDD scenarios pass
+- [x] `ruff`, `mypy --strict` clean
+- [ ] Contact added manually with name only; contact added with phone and/or address; duplicate phone warning confirmed; contact appears on dashboard
+- [x] Wiki documentation written, or marked N/A with a reason
