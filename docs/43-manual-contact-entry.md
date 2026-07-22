@@ -36,5 +36,5 @@ As a real estate agent, I want to add a property owner to my call list by typing
 
 - [x] BDD scenarios pass
 - [x] `ruff`, `mypy --strict` clean
-- [ ] Contact added manually with name only; contact added with phone and/or address; duplicate phone warning confirmed; contact appears on dashboard
+- [x] Contact added manually with name only; contact added with phone and/or address; duplicate phone warning confirmed; contact appears on dashboard
 - [x] Wiki documentation written, or marked N/A with a reason

@@ -34,8 +34,9 @@
 6. Confirm the warning and verify the new contact saves alongside the original
 7. Repeat, but cancel the warning instead, and verify the form stays open with nothing saved
 
-## Manually added contact appears on the dashboard
+## New Contact is reachable from the dashboard
 
-1. Add a new contact manually
-2. Navigate to the dashboard
-3. Verify the Contacts stat count reflects the newly added contact
+1. From the dashboard, click the "New Contact" quick action
+2. Verify it navigates to the Contacts section with the new contact form reachable
+
+Note: the dashboard's Contacts stat tile does not yet reflect live counts — that's story #20 (Dashboard Stats Widget), not this story.
