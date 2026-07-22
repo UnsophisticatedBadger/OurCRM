@@ -2,6 +2,20 @@
 
 <!-- version list -->
 
+## v0.20.0 (2026-07-22)
+
+### Documentation
+
+- Document Search Contacts ([#64](https://github.com/UnsophisticatedBadger/OurCRM/pull/64),
+  [`f7d48b3`](https://github.com/UnsophisticatedBadger/OurCRM/commit/f7d48b335f0051f4ebe21b602c8b6b4c0224c67c))
+
+### Features
+
+- Add Manually Add Contact To Call List
+  ([#43](https://github.com/UnsophisticatedBadger/OurCRM/pull/43),
+  [`7f0afda`](https://github.com/UnsophisticatedBadger/OurCRM/commit/7f0afda805434e17d996468571793286f3598d69))
+
+
 ## v0.19.0 (2026-07-21)
 
 ### Features
