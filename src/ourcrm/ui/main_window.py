@@ -197,7 +197,7 @@ class MainWindow(QMainWindow):
 
     def _create_section_widget(self, section: Section) -> QWidget:
         if section == Section.DASHBOARD:
-            return DashboardPage(navigate_to=self.navigate_to)
+            return DashboardPage(navigate_to=self.navigate_to, open_call_list=self._open_call_list)
         if section == Section.CALENDAR:
             general = self._app_config.load_general() if self._app_config is not None else None
             return CalendarPage(repository=self._calendar_repository, general_settings=general)
@@ -212,6 +212,12 @@ class MainWindow(QMainWindow):
 
     def _setup_status_bar(self) -> None:
         self.statusBar().showMessage("Ready")
+
+    def _open_call_list(self) -> None:
+        self.navigate_to(Section.CONTACTS)
+        page = self.findChild(ContactsPage)
+        if page is not None:
+            page.show_call_list()
 
     def _logout(self) -> None:
         if self._auth_service is None:

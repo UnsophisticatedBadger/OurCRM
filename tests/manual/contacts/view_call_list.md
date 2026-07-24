@@ -1,21 +1,32 @@
 # View Call List — Manual Tests
 
-**Story:** [US-017 — View Call List](../../../docs/017-view-call-list.md)
+**Story:** [#44 — View Call List](../../docs/44-view-call-list.md)
 
-## Call list opens and shows contacts sorted by priority
+## Toggling to the Call List shows only contacts with a phone number
 
-1. Add several contacts with different states: one overdue callback, one with a callback due today, one with a callback due later this week, one new contact with no callback set, and one marked Not Interested
-2. Open the call list view
-3. Confirm overdue callbacks appear first, followed by due-today callbacks, then due-this-week callbacks, then new contacts
-4. Confirm the Not Interested contact does not appear in the list
+1. Add a contact with only a name (no phone) and a contact with a phone number
+2. Open the Contacts section
+3. Click the "Call List" toggle
+4. Confirm only the contact with a phone number appears
 
-## Each row shows the expected fields
+## Toggling back to All Contacts restores the full list
 
-1. Open the call list with at least one contact visible
-2. Confirm each row displays: contact name, phone number, property address, and next callback date (or "New" if no callback set)
+1. From the Call List view, click the "All Contacts" toggle
+2. Confirm every contact reappears, including ones without a phone number
 
-## Empty state when no contacts exist
+## Call list row shows name, phone, and property address
 
-1. Open the app with no contacts added
-2. Open the call list view
-3. Confirm an appropriate empty state message is shown rather than a blank screen
+1. Add a contact with a phone number and a street address
+2. Switch to the Call List view
+3. Confirm the row shows the contact's name, phone number, and address
+
+## Newly added contact appears in the call list immediately
+
+1. Switch to the Call List view
+2. Add a new contact with a phone number
+3. Confirm the new contact appears in the list right away, without needing to reopen the section
+
+## Dashboard Call List quick action opens the call list directly
+
+1. From the dashboard, click the "Call List" quick action
+2. Confirm the Contacts section opens with the Call List toggle already active (not All Contacts)

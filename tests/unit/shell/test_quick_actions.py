@@ -55,6 +55,14 @@ def test_new_task_calls_navigate_with_calendar(qtbot: QtBot) -> None:
     assert calls == [Section.CALENDAR]
 
 
+def test_call_list_calls_open_call_list(qtbot: QtBot) -> None:
+    calls: list[bool] = []
+    widget = QuickActionsWidget(open_call_list=lambda: calls.append(True))
+    qtbot.addWidget(widget)
+    _click(widget, "Call List", qtbot)
+    assert calls == [True]
+
+
 # ── DashboardPage propagates callback ────────────────────────────────────────
 
 
@@ -64,6 +72,14 @@ def test_dashboard_page_propagates_navigate_callback(qtbot: QtBot) -> None:
     qtbot.addWidget(page)
     _click(page, "New Lead", qtbot)
     assert calls == [Section.LEADS]
+
+
+def test_dashboard_page_propagates_open_call_list_callback(qtbot: QtBot) -> None:
+    calls: list[bool] = []
+    page = DashboardPage(open_call_list=lambda: calls.append(True))
+    qtbot.addWidget(page)
+    _click(page, "Call List", qtbot)
+    assert calls == [True]
 
 
 # ── Import direction (AC2: no direct MainWindow import) ────────────────────────

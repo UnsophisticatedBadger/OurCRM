@@ -19,7 +19,8 @@ As a real estate agent, I want to set a vague callback timeframe when someone as
 2. Timeframe options are: This Week, Next Week, In Two Weeks, This Month
 3. Selecting a timeframe saves a target callback date range on the contact
 4. The contact is removed from the active call list and placed in the callback queue
-5. When the target date range arrives, the contact reappears in the call list sorted above new contacts
+5. When the target date range arrives, the contact reappears in the call list, with its next callback due date shown
+6. The call list's full priority order is: overdue callbacks first (most overdue at top), then callbacks due today, then callbacks due this week, then new contacts not yet called, then contacts with no callback set
 
 ## Test Locations
 
@@ -34,5 +35,5 @@ As a real estate agent, I want to set a vague callback timeframe when someone as
 
 - [ ] BDD scenarios pass
 - [ ] `ruff`, `mypy --strict` clean
-- [ ] Callback set for next week; contact disappears from active list; after simulating date change contact reappears above new contacts
+- [ ] Callback set for next week; contact disappears from active list; after simulating date change contact reappears with due date shown, sorted ahead of new contacts; full overdue/due-today/due-this-week/new/no-callback priority order verified by inspection
 - [ ] Wiki documentation written, or marked N/A with a reason

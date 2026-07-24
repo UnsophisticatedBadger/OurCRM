@@ -53,6 +53,7 @@ _QUICK_ACTION_TOOLTIPS: dict[str, str] = {
     "New Lead": "Add a new lead to your pipeline",
     "New Property": "Add a new property listing",
     "New Task": "Create a new task or reminder",
+    "Call List": "Jump straight to your call list",
 }
 
 _QUICK_ACTION_SECTIONS: dict[str, Section] = {
@@ -67,6 +68,7 @@ class QuickActionsWidget(QWidget):
     def __init__(
         self,
         navigate_to: Callable[[Section], None] | None = None,
+        open_call_list: Callable[[], None] | None = None,
         parent: QWidget | None = None,
     ) -> None:
         super().__init__(parent)
@@ -79,11 +81,18 @@ class QuickActionsWidget(QWidget):
                 btn.clicked.connect(lambda _checked=False, s=section: navigate_to(s))
             layout.addWidget(btn)
 
+        call_list_btn = QPushButton("Call List")
+        call_list_btn.setToolTip(_QUICK_ACTION_TOOLTIPS["Call List"])
+        if open_call_list is not None:
+            call_list_btn.clicked.connect(lambda _checked=False: open_call_list())
+        layout.addWidget(call_list_btn)
+
 
 class DashboardPage(QWidget):
     def __init__(
         self,
         navigate_to: Callable[[Section], None] | None = None,
+        open_call_list: Callable[[], None] | None = None,
         parent: QWidget | None = None,
     ) -> None:
         super().__init__(parent)
@@ -94,4 +103,4 @@ class DashboardPage(QWidget):
         stats = StatsWidget()
         stats.setObjectName("stats_region")
         layout.addWidget(stats)
-        layout.addWidget(QuickActionsWidget(navigate_to=navigate_to))
+        layout.addWidget(QuickActionsWidget(navigate_to=navigate_to, open_call_list=open_call_list))

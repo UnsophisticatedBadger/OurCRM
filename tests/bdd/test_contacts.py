@@ -23,6 +23,7 @@ from ourcrm.crm.contacts.models import Contact
 from ourcrm.crm.contacts.repository import ContactRepository
 from ourcrm.database.manager import DatabaseManager
 from ourcrm.ui.contacts_page import ContactForm, ContactsPage
+from ourcrm.ui.dashboard_page import DashboardPage
 from ourcrm.ui.main_window import MainWindow
 from ourcrm.ui.navigation import Section
 
@@ -1128,3 +1129,110 @@ def duplicate_phone_warning_shown() -> None:
 @then(parsers.parse('"{name}" does not appear in the contact list'))
 def name_does_not_appear_in_list(main_window: MainWindow, name: str) -> None:
     assert name not in _contact_names(main_window)
+
+
+# ── Story #44: View Call List ───────────────────────────────────────────────
+
+# ── Givens ────────────────────────────────────────────────────────────────────
+
+
+def _dashboard_page(window: MainWindow) -> DashboardPage:
+    page = window.findChild(DashboardPage)
+    assert page is not None, "DashboardPage not found"
+    return page
+
+
+def _toggle_button_name(label: str) -> str:
+    return "call_list_toggle_button" if label == "Call List" else "all_contacts_toggle_button"
+
+
+@given(
+    parsers.parse('contacts "{name1}" with no phone and "{name2}" with phone "{phone}" exist'),
+    target_fixture="main_window",
+)
+def contacts_with_and_without_phone(name1: str, name2: str, phone: str, qtbot: QtBot) -> MainWindow:
+    repo = _make_repository()
+    first1, last1 = name1.split(" ", 1)
+    repo.create(Contact(first_name=first1, last_name=last1))
+    first2, last2 = name2.split(" ", 1)
+    repo.create(Contact(first_name=first2, last_name=last2, phone=phone))
+    window = MainWindow(contact_repository=repo)
+    qtbot.addWidget(window)
+    window.show()
+    window.navigate_to(Section.CONTACTS)
+    return window
+
+
+@given(
+    parsers.parse('a contact "{name}" exists with phone "{phone}" and street address "{street}"'),
+    target_fixture="main_window",
+)
+def contact_with_phone_and_street(name: str, phone: str, street: str, qtbot: QtBot) -> MainWindow:
+    repo = _make_repository()
+    first, last = name.split(" ", 1)
+    repo.create(Contact(first_name=first, last_name=last, phone=phone, address_street=street))
+    window = MainWindow(contact_repository=repo)
+    qtbot.addWidget(window)
+    window.show()
+    window.navigate_to(Section.CONTACTS)
+    return window
+
+
+@given('the user has no contacts and clicks the "Call List" toggle', target_fixture="main_window")
+def no_contacts_and_clicks_call_list_toggle(qtbot: QtBot) -> MainWindow:
+    window = MainWindow(contact_repository=_make_repository())
+    qtbot.addWidget(window)
+    window.show()
+    window.navigate_to(Section.CONTACTS)
+    btn = _contacts_page(window).findChild(QPushButton, "call_list_toggle_button")
+    assert btn is not None, "call_list_toggle_button not found"
+    qtbot.mouseClick(btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+    QApplication.processEvents()
+    return window
+
+
+@given("the user is on the dashboard", target_fixture="main_window")
+def user_is_on_dashboard(qtbot: QtBot) -> MainWindow:
+    window = MainWindow(contact_repository=_make_repository())
+    qtbot.addWidget(window)
+    window.show()
+    return window
+
+
+# ── Whens ─────────────────────────────────────────────────────────────────────
+
+
+@when(parsers.parse('the user clicks the "{label}" toggle'))
+def clicks_toggle(main_window: MainWindow, label: str, qtbot: QtBot) -> None:
+    btn = _contacts_page(main_window).findChild(QPushButton, _toggle_button_name(label))
+    assert btn is not None, f"{_toggle_button_name(label)} not found"
+    qtbot.mouseClick(btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+    QApplication.processEvents()
+
+
+@when('the user clicks the "Call List" quick action')
+def clicks_call_list_quick_action(main_window: MainWindow, qtbot: QtBot) -> None:
+    page = _dashboard_page(main_window)
+    btn = next((b for b in page.findChildren(QPushButton) if b.text() == "Call List"), None)
+    assert btn is not None, "Call List quick action button not found"
+    qtbot.mouseClick(btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+    QApplication.processEvents()
+
+
+# ── Thens ─────────────────────────────────────────────────────────────────────
+
+
+@then(parsers.parse('the row for "{name}" shows phone "{phone}" and street "{street}"'))
+def row_shows_phone_and_street(main_window: MainWindow, name: str, phone: str, street: str) -> None:
+    table = _contact_table(main_window)
+    row = _contact_names(main_window).index(name)
+    assert _cell_text(table, row, 5) == phone
+    assert _cell_text(table, row, 2) == street
+
+
+@then("the Contacts section is shown with the Call List toggle active")
+def contacts_section_shown_with_call_list_toggle_active(main_window: MainWindow) -> None:
+    assert main_window.current_section() == Section.CONTACTS
+    toggle = _contacts_page(main_window).findChild(QPushButton, "call_list_toggle_button")
+    assert toggle is not None, "call_list_toggle_button not found"
+    assert toggle.isChecked()

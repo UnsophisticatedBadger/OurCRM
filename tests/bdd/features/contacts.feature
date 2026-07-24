@@ -226,3 +226,37 @@ Feature: Contacts
     When the user cancels the duplicate phone warning
     Then the form stays open
     And "Bob Carter" does not appear in the contact list
+
+  @story_44
+  Scenario: User toggles to the Call List and sees only contacts with a phone number
+    Given contacts "Ann NoPhone" with no phone and "Bob HasPhone" with phone "555-0100" exist
+    When the user clicks the "Call List" toggle
+    Then only "Bob HasPhone" is shown
+
+  @story_44
+  Scenario: User toggles back to All Contacts and sees every contact again
+    Given contacts "Ann NoPhone" with no phone and "Bob HasPhone" with phone "555-0100" exist
+    When the user clicks the "Call List" toggle
+    And the user clicks the "All Contacts" toggle
+    Then the list shows "Ann NoPhone" and "Bob HasPhone"
+
+  @story_44
+  Scenario: Call list row shows the contact's phone number and street address
+    Given a contact "Bob HasPhone" exists with phone "555-0100" and street address "123 Main St"
+    When the user clicks the "Call List" toggle
+    Then the row for "Bob HasPhone" shows phone "555-0100" and street "123 Main St"
+
+  @story_44
+  Scenario: A newly added contact with a phone number appears in the call list immediately
+    Given the user has no contacts and clicks the "Call List" toggle
+    When the user clicks "New Contact"
+    And fills in first name "Carl" and last name "New"
+    And fills in phone "555-0200"
+    And clicks Save
+    Then "Carl New" appears in the contact list
+
+  @story_44
+  Scenario: Clicking the dashboard Call List quick action opens the call list directly
+    Given the user is on the dashboard
+    When the user clicks the "Call List" quick action
+    Then the Contacts section is shown with the Call List toggle active

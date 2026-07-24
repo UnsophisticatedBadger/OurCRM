@@ -8,6 +8,7 @@ from PySide6.QtCore import QPoint, Qt, Signal
 from PySide6.QtGui import QKeyEvent, QKeySequence, QShortcut
 from PySide6.QtWidgets import (
     QAbstractItemView,
+    QButtonGroup,
     QDialog,
     QFormLayout,
     QHBoxLayout,
@@ -324,10 +325,30 @@ class ContactsPage(QWidget):
         self._delete_dialog: DeleteConfirmationDialog | None = None
         self._current_contacts: list[Contact] = []
         self._current_index: int = 0
+        self._call_list_mode: bool = False
         self._setup_ui()
 
     def _setup_ui(self) -> None:
         layout = QVBoxLayout(self)
+
+        toggle_row = QHBoxLayout()
+        self._all_contacts_toggle_btn = QPushButton("All Contacts")
+        self._all_contacts_toggle_btn.setObjectName("all_contacts_toggle_button")
+        self._all_contacts_toggle_btn.setCheckable(True)
+        self._all_contacts_toggle_btn.setChecked(True)
+        self._call_list_toggle_btn = QPushButton("Call List")
+        self._call_list_toggle_btn.setObjectName("call_list_toggle_button")
+        self._call_list_toggle_btn.setCheckable(True)
+        self._toggle_group = QButtonGroup(self)
+        self._toggle_group.setExclusive(True)
+        self._toggle_group.addButton(self._all_contacts_toggle_btn)
+        self._toggle_group.addButton(self._call_list_toggle_btn)
+        toggle_row.addWidget(self._all_contacts_toggle_btn)
+        toggle_row.addWidget(self._call_list_toggle_btn)
+        layout.addLayout(toggle_row)
+
+        self._all_contacts_toggle_btn.clicked.connect(self.show_all_contacts)
+        self._call_list_toggle_btn.clicked.connect(self.show_call_list)
 
         self._search_box = QLineEdit()
         self._search_box.setObjectName("search_box")
@@ -399,14 +420,27 @@ class ContactsPage(QWidget):
 
         self._refresh_list()
 
+    def show_call_list(self) -> None:
+        self._call_list_toggle_btn.setChecked(True)
+        self._call_list_mode = True
+        self._refresh_list()
+
+    def show_all_contacts(self) -> None:
+        self._all_contacts_toggle_btn.setChecked(True)
+        self._call_list_mode = False
+        self._refresh_list()
+
     def _refresh_list(self) -> None:
         self._contact_table.setSortingEnabled(False)
         self._contact_table.setRowCount(0)
         query = self._search_box.text()
         if self._repository is not None:
             for contact in self._repository.list_all():
-                if contact_matches(contact, query):
-                    self._add_row(contact)
+                if not contact_matches(contact, query):
+                    continue
+                if self._call_list_mode and not contact.phone.strip():
+                    continue
+                self._add_row(contact)
         self._contact_table.sortItems(_COL_LAST_NAME, Qt.SortOrder.AscendingOrder)
         self._contact_table.setSortingEnabled(True)
         self._stack.setCurrentWidget(self._list_state_widget(query))
