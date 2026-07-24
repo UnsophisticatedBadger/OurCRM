@@ -1,10 +1,10 @@
 # 89 - Contact Categories
 
 **Capability:** Contacts
-**Milestone:** Production
-**Status:** Not Done
+**Milestone:** MVP
+**Status:** Done
 **GitHub Issue:** #89
-**Priority:** Should Have (deferrable to post-MVP)
+**Priority:** Must Have (moved up from Production — required by #45's client badge / client section)
 
 ## User Story
 
@@ -13,23 +13,23 @@ As a real estate agent, I want to assign each contact to a category so that I ca
 ## Dependencies
 
 - #56 — Create a New Contact
-- #44 — View Contact List
+- #57 — View Contact List
 
 ## Notes
 
-Categories are a distinct field from tags (#49). Tags are flexible many-per-contact labels; a category is a single structured classification per contact. A contact may have many tags and one category (or none).
+Categories are a distinct field from tags (#62). Tags are flexible many-per-contact labels; a category is a single structured classification per contact. A contact may have many tags and one category (or none).
 
 Default categories are pre-seeded on a fresh install and can be renamed or deleted like any other category.
 
 ## Acceptance Criteria
 
-1. A "Category" dropdown field is available on the Create Contact (#43) and Edit Contact (#46) forms; the field is optional and defaults to no selection
+1. A "Category" dropdown field is available on the Create Contact (#56) and Edit Contact (#59) forms; the field is optional and defaults to no selection
 2. The following default categories are pre-seeded on a fresh install: Past Client, Current Client, Prospect, Vendor, Referral Partner, Other
 3. A "Manage Categories" action in the Contacts section opens a panel where users can create new categories (name only) and see all existing categories
 4. Any category can be renamed; the new name is reflected immediately on all contacts assigned to that category
 5. Any category can be deleted; if contacts are assigned to it, a confirmation prompt asks to move affected contacts to "Other" or cancel; if no contacts are assigned, deletion proceeds without a prompt
 6. A contact's category is shown in the contact detail view and as a column in the contact list
-7. The contact list supports filtering by category (single selection); a category filter can be combined with an active tag filter (#51) to narrow results further
+7. The contact list supports filtering by category (single selection); a category filter can be combined with an active tag filter (#63) to narrow results further
 
 ## BDD Scenarios
 
@@ -129,8 +129,8 @@ Scenario: Deleting a category with no assigned contacts needs no confirmation
 
 ## Definition of Done
 
-- [ ] BDD scenarios pass end-to-end
-- [ ] Feature reachable from the running app
-- [ ] `ruff`, `mypy --strict` clean
-- [ ] Manual tests documented and verified
-- [ ] Wiki documentation written, or marked N/A with a reason
+- [x] BDD scenarios pass end-to-end
+- [x] Feature reachable from the running app
+- [x] `ruff`, `mypy --strict` clean
+- [x] Manual tests documented and verified
+- [x] Wiki documentation written, or marked N/A with a reason

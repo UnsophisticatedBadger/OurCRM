@@ -8,7 +8,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session, sessionmaker
 
 from ourcrm.crm.contacts.models import Contact
-from ourcrm.database.models import ContactRow
+from ourcrm.database.models import CategoryRow, ContactRow
 
 
 class ContactRepositoryProtocol(Protocol):
@@ -27,7 +27,12 @@ def _join_tags(tags: list[str]) -> str:
     return ",".join(tags)
 
 
-def _to_domain(row: ContactRow) -> Contact:
+def _to_domain(row: ContactRow, session: Session) -> Contact:
+    category_name = ""
+    if row.category_id is not None:
+        category_row = session.get(CategoryRow, row.category_id)
+        if category_row is not None:
+            category_name = category_row.name
     return Contact(
         first_name=row.first_name,
         last_name=row.last_name,
@@ -39,11 +44,12 @@ def _to_domain(row: ContactRow) -> Contact:
         address_zip=row.address_zip,
         notes=row.notes,
         tags=_split_tags(row.tags),
+        category=category_name,
         id=row.id,
     )
 
 
-def _apply_to_row(row: ContactRow, contact: Contact) -> None:
+def _apply_to_row(row: ContactRow, contact: Contact, session: Session) -> None:
     row.first_name = contact.first_name
     row.last_name = contact.last_name
     row.email = contact.email
@@ -54,6 +60,12 @@ def _apply_to_row(row: ContactRow, contact: Contact) -> None:
     row.address_zip = contact.address_zip
     row.notes = contact.notes
     row.tags = _join_tags(contact.tags)
+    row.category_id = None
+    if contact.category:
+        category_row = session.execute(
+            select(CategoryRow).where(CategoryRow.name == contact.category)
+        ).scalar_one_or_none()
+        row.category_id = category_row.id if category_row is not None else None
 
 
 class ContactRepository:
@@ -63,24 +75,24 @@ class ContactRepository:
     def create(self, contact: Contact) -> Contact:
         with self._session_factory() as session:
             row = ContactRow()
-            _apply_to_row(row, contact)
+            _apply_to_row(row, contact, session)
             session.add(row)
             session.commit()
             session.refresh(row)
-            return _to_domain(row)
+            return _to_domain(row, session)
 
     def list_all(self) -> list[Contact]:
         with self._session_factory() as session:
             rows = session.execute(select(ContactRow)).scalars().all()
-            return [_to_domain(row) for row in rows]
+            return [_to_domain(row, session) for row in rows]
 
     def update(self, contact: Contact) -> Contact:
         with self._session_factory() as session:
             row = session.get_one(ContactRow, contact.id)
-            _apply_to_row(row, contact)
+            _apply_to_row(row, contact, session)
             session.commit()
             session.refresh(row)
-            return _to_domain(row)
+            return _to_domain(row, session)
 
     def delete(self, contact_id: int) -> None:
         with self._session_factory() as session:

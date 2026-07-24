@@ -260,3 +260,52 @@ Feature: Contacts
     Given the user is on the dashboard
     When the user clicks the "Call List" quick action
     Then the Contacts section is shown with the Call List toggle active
+
+  @story_89
+  Scenario: New contact can be assigned a category
+    Given the new contact form is open
+    When fills in first name "Jane" and last name "Doe"
+    And selects "Prospect" from the Category dropdown
+    And clicks Save
+    And the user double-clicks "Jane Doe"
+    Then the details view still shows "Prospect"
+
+  @story_89
+  Scenario: Category is visible as a column in the contact list
+    Given contacts "Alice Brown" and "Bob Carter" exist with categories "Prospect" and "Past Client"
+    Then the category column shows "Prospect" for "Alice Brown"
+    And the category column shows "Past Client" for "Bob Carter"
+
+  @story_89
+  Scenario: Filtering by category shows only matching contacts
+    Given contacts "Alice Brown" and "Bob Carter" exist with categories "Prospect" and "Past Client"
+    When the user filters the contact list by category "Prospect"
+    Then only "Alice Brown" is shown
+
+  @story_89
+  Scenario: Creating a new category makes it available on contact forms
+    Given the user is in the Contacts section
+    When the user opens Manage Categories and creates a category "Investor"
+    And the user clicks "New Contact"
+    Then "Investor" is available in the Category dropdown
+
+  @story_89
+  Scenario: Renaming a category updates all assigned contacts
+    Given 3 contacts are assigned category "Prospect"
+    When the user renames category "Prospect" to "Active Lead"
+    Then all 3 contacts show category "Active Lead"
+
+  @story_89
+  Scenario: Deleting a category with assigned contacts requires confirmation
+    Given a contact is assigned to category "Vendor"
+    When the user deletes category "Vendor"
+    Then a reassign-or-cancel confirmation is shown
+    When the user confirms moving contacts to "Other"
+    Then the contact shows category "Other"
+
+  @story_89
+  Scenario: Deleting a category with no contacts needs no confirmation
+    Given the user has opened Manage Categories
+    When the user deletes category "Referral Partner"
+    Then no confirmation prompt is shown
+    And "Referral Partner" is no longer listed

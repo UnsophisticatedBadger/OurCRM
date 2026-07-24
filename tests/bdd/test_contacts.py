@@ -7,9 +7,11 @@ from typing import Any, cast
 from PySide6.QtCore import QPoint, Qt
 from PySide6.QtWidgets import (
     QApplication,
+    QComboBox,
     QDialog,
     QLabel,
     QLineEdit,
+    QListWidget,
     QPushButton,
     QTableWidget,
     QWidget,
@@ -17,8 +19,9 @@ from PySide6.QtWidgets import (
 from pytest_bdd import given, parsers, scenarios, then, when
 from pytestqt.qtbot import QtBot
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import Session, sessionmaker
 
+from ourcrm.crm.contacts.category_repository import CategoryRepository
 from ourcrm.crm.contacts.models import Contact
 from ourcrm.crm.contacts.repository import ContactRepository
 from ourcrm.database.manager import DatabaseManager
@@ -34,6 +37,13 @@ def _make_repository() -> ContactRepository:
     engine = create_engine("sqlite:///:memory:")
     DatabaseManager(engine).initialize_schema()
     return ContactRepository(sessionmaker(bind=engine))
+
+
+def _make_repositories() -> tuple[ContactRepository, CategoryRepository]:
+    engine = create_engine("sqlite:///:memory:")
+    DatabaseManager(engine).initialize_schema()
+    session_factory: sessionmaker[Session] = sessionmaker(bind=engine)
+    return ContactRepository(session_factory), CategoryRepository(session_factory)
 
 
 def _visible_contact_forms() -> list[ContactForm]:
@@ -99,7 +109,8 @@ def _click_column_header(window: MainWindow, column: str, qtbot: QtBot) -> None:
 
 @given("the user is in the Contacts section", target_fixture="main_window")
 def user_in_contacts_section(qtbot: QtBot) -> MainWindow:
-    window = MainWindow(contact_repository=_make_repository())
+    contact_repo, category_repo = _make_repositories()
+    window = MainWindow(contact_repository=contact_repo, category_repository=category_repo)
     qtbot.addWidget(window)
     window.show()
     window.navigate_to(Section.CONTACTS)
@@ -119,7 +130,8 @@ def _open_new_contact_form(window: MainWindow, qtbot: QtBot) -> ContactForm:
 
 @given("the new contact form is open", target_fixture="main_window")
 def new_contact_form_open(qtbot: QtBot) -> MainWindow:
-    window = MainWindow(contact_repository=_make_repository())
+    contact_repo, category_repo = _make_repositories()
+    window = MainWindow(contact_repository=contact_repo, category_repository=category_repo)
     qtbot.addWidget(window)
     window.show()
     window.navigate_to(Section.CONTACTS)
@@ -1236,3 +1248,252 @@ def contacts_section_shown_with_call_list_toggle_active(main_window: MainWindow)
     toggle = _contacts_page(main_window).findChild(QPushButton, "call_list_toggle_button")
     assert toggle is not None, "call_list_toggle_button not found"
     assert toggle.isChecked()
+
+
+# ── Story #89: Contact Categories ───────────────────────────────────────────
+
+# ── Givens ────────────────────────────────────────────────────────────────────
+
+
+def _manage_categories_dialogs() -> list[QDialog]:
+    return [
+        w
+        for w in QApplication.topLevelWidgets()
+        if isinstance(w, QDialog) and w.isVisible() and w.objectName() == "manage_categories_dialog"
+    ]
+
+
+def _open_manage_categories(window: MainWindow, qtbot: QtBot) -> QDialog:
+    dialogs = _manage_categories_dialogs()
+    if dialogs:
+        return dialogs[0]
+    btn = _contacts_page(window).findChild(QPushButton, "manage_categories_button")
+    assert btn is not None, "manage_categories_button not found"
+    qtbot.mouseClick(btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+    QApplication.processEvents()
+    dialogs = _manage_categories_dialogs()
+    assert dialogs, "manage_categories_dialog did not open"
+    qtbot.addWidget(dialogs[0])
+    return dialogs[0]
+
+
+@given(
+    parsers.parse('contacts "{name1}" and "{name2}" exist with categories "{cat1}" and "{cat2}"'),
+    target_fixture="main_window",
+)
+def contacts_exist_with_categories(
+    name1: str, name2: str, cat1: str, cat2: str, qtbot: QtBot
+) -> MainWindow:
+    contact_repo, category_repo = _make_repositories()
+    first1, last1 = name1.split(" ", 1)
+    contact_repo.create(Contact(first_name=first1, last_name=last1, category=cat1))
+    first2, last2 = name2.split(" ", 1)
+    contact_repo.create(Contact(first_name=first2, last_name=last2, category=cat2))
+    window = MainWindow(contact_repository=contact_repo, category_repository=category_repo)
+    qtbot.addWidget(window)
+    window.show()
+    window.navigate_to(Section.CONTACTS)
+    return window
+
+
+@given(
+    parsers.parse('3 contacts are assigned category "{category}"'),
+    target_fixture="main_window",
+)
+def three_contacts_assigned_category(category: str, qtbot: QtBot) -> MainWindow:
+    contact_repo, category_repo = _make_repositories()
+    for first, last in (("Ann", "One"), ("Bob", "Two"), ("Cara", "Three")):
+        contact_repo.create(Contact(first_name=first, last_name=last, category=category))
+    window = MainWindow(contact_repository=contact_repo, category_repository=category_repo)
+    qtbot.addWidget(window)
+    window.show()
+    window.navigate_to(Section.CONTACTS)
+    return window
+
+
+@given(
+    parsers.parse('a contact is assigned to category "{category}"'),
+    target_fixture="main_window",
+)
+def a_contact_assigned_category(category: str, qtbot: QtBot) -> MainWindow:
+    contact_repo, category_repo = _make_repositories()
+    contact_repo.create(Contact(first_name="Deb", last_name="Vendor", category=category))
+    window = MainWindow(contact_repository=contact_repo, category_repository=category_repo)
+    qtbot.addWidget(window)
+    window.show()
+    window.navigate_to(Section.CONTACTS)
+    return window
+
+
+@given("the user has opened Manage Categories", target_fixture="main_window")
+def user_has_opened_manage_categories(qtbot: QtBot) -> MainWindow:
+    contact_repo, category_repo = _make_repositories()
+    window = MainWindow(contact_repository=contact_repo, category_repository=category_repo)
+    qtbot.addWidget(window)
+    window.show()
+    window.navigate_to(Section.CONTACTS)
+    _open_manage_categories(window, qtbot)
+    return window
+
+
+# ── Whens ─────────────────────────────────────────────────────────────────────
+
+
+@when(parsers.parse('selects "{category}" from the Category dropdown'))
+def selects_category(category: str) -> None:
+    forms = _visible_contact_forms()
+    assert forms, "ContactForm not open"
+    combo = forms[0].findChild(QComboBox, "category_field")
+    assert combo is not None, "category_field not found"
+    combo.setCurrentText(category)
+
+
+@when(parsers.parse('the user filters the contact list by category "{category}"'))
+def filters_by_category(main_window: MainWindow, category: str) -> None:
+    combo = _contacts_page(main_window).findChild(QComboBox, "category_filter")
+    assert combo is not None, "category_filter not found"
+    combo.setCurrentIndex(combo.findText(category))
+    QApplication.processEvents()
+
+
+@when(parsers.parse('the user opens Manage Categories and creates a category "{name}"'))
+def opens_manage_categories_and_creates(main_window: MainWindow, name: str, qtbot: QtBot) -> None:
+    dialog = _open_manage_categories(main_window, qtbot)
+    field = dialog.findChild(QLineEdit, "new_category_field")
+    assert field is not None, "new_category_field not found"
+    qtbot.keyClicks(field, name)  # type: ignore[no-untyped-call]
+    add_btn = dialog.findChild(QPushButton, "add_category_button")
+    assert add_btn is not None, "add_category_button not found"
+    qtbot.mouseClick(add_btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+    QApplication.processEvents()
+    dialog.accept()
+    QApplication.processEvents()
+
+
+def _select_category_in_list(dialog: QDialog, category: str) -> None:
+    list_widget = dialog.findChild(QListWidget, "category_list")
+    assert list_widget is not None, "category_list not found"
+    items = [list_widget.item(i) for i in range(list_widget.count())]
+    item = next((i for i in items if i is not None and i.text() == category), None)
+    assert item is not None, f"category '{category}' not found in list"
+    list_widget.setCurrentItem(item)
+
+
+@when(parsers.parse('the user renames category "{old}" to "{new}"'))
+def renames_category(main_window: MainWindow, old: str, new: str, qtbot: QtBot) -> None:
+    dialog = _open_manage_categories(main_window, qtbot)
+    _select_category_in_list(dialog, old)
+    rename_btn = dialog.findChild(QPushButton, "rename_category_button")
+    assert rename_btn is not None, "rename_category_button not found"
+    qtbot.mouseClick(rename_btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+    QApplication.processEvents()
+    rename_dialogs = [
+        w
+        for w in QApplication.topLevelWidgets()
+        if isinstance(w, QDialog) and w.isVisible() and w.objectName() == "rename_category_dialog"
+    ]
+    assert rename_dialogs, "rename_category_dialog did not open"
+    rename_dialog = rename_dialogs[0]
+    qtbot.addWidget(rename_dialog)
+    field = rename_dialog.findChild(QLineEdit, "rename_category_field")
+    assert field is not None, "rename_category_field not found"
+    field.clear()
+    qtbot.keyClicks(field, new)  # type: ignore[no-untyped-call]
+    save_btn = rename_dialog.findChild(QPushButton, "save_rename_button")
+    assert save_btn is not None, "save_rename_button not found"
+    qtbot.mouseClick(save_btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+    QApplication.processEvents()
+    dialog.accept()
+    QApplication.processEvents()
+
+
+@when(parsers.parse('the user deletes category "{category}"'))
+def deletes_category(main_window: MainWindow, category: str, qtbot: QtBot) -> None:
+    dialog = _open_manage_categories(main_window, qtbot)
+    _select_category_in_list(dialog, category)
+    delete_btn = dialog.findChild(QPushButton, "delete_category_button")
+    assert delete_btn is not None, "delete_category_button not found"
+    qtbot.mouseClick(delete_btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+    QApplication.processEvents()
+
+
+@when(parsers.parse('the user confirms moving contacts to "{category}"'))
+def confirms_move_to_category(qtbot: QtBot) -> None:
+    dialogs = [
+        w
+        for w in QApplication.topLevelWidgets()
+        if isinstance(w, QDialog) and w.isVisible() and w.objectName() == "reassign_category_dialog"
+    ]
+    assert dialogs, "reassign_category_dialog not open"
+    btn = dialogs[0].findChild(QPushButton, "move_to_other_button")
+    assert btn is not None, "move_to_other_button not found"
+    qtbot.mouseClick(btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+    QApplication.processEvents()
+
+
+# ── Thens ─────────────────────────────────────────────────────────────────────
+
+
+@then(parsers.parse('the category column shows "{category}" for "{name}"'))
+def category_column_shows(main_window: MainWindow, category: str, name: str) -> None:
+    table = _contact_table(main_window)
+    row = _contact_names(main_window).index(name)
+    assert _cell_text(table, row, 7) == category
+
+
+@then(parsers.parse('"{name}" is available in the Category dropdown'))
+def category_available_in_dropdown(name: str) -> None:
+    forms = _visible_contact_forms()
+    assert forms, "ContactForm not open"
+    combo = forms[0].findChild(QComboBox, "category_field")
+    assert combo is not None, "category_field not found"
+    items = [combo.itemText(i) for i in range(combo.count())]
+    assert name in items
+
+
+@then(parsers.parse('all 3 contacts show category "{category}"'))
+def all_contacts_show_category(main_window: MainWindow, category: str) -> None:
+    table = _contact_table(main_window)
+    for row in range(table.rowCount()):
+        assert _cell_text(table, row, 7) == category
+
+
+@then("a reassign-or-cancel confirmation is shown")
+def reassign_confirmation_shown() -> None:
+    dialogs = [
+        w
+        for w in QApplication.topLevelWidgets()
+        if isinstance(w, QDialog) and w.isVisible() and w.objectName() == "reassign_category_dialog"
+    ]
+    assert dialogs, "reassign_category_dialog did not open"
+
+
+@then(parsers.parse('the contact shows category "{category}"'))
+def contact_shows_category(main_window: MainWindow, category: str) -> None:
+    table = _contact_table(main_window)
+    assert table.rowCount() == 1
+    assert _cell_text(table, 0, 7) == category
+
+
+@then("no confirmation prompt is shown")
+def no_reassign_confirmation_shown() -> None:
+    dialogs = [
+        w
+        for w in QApplication.topLevelWidgets()
+        if isinstance(w, QDialog) and w.isVisible() and w.objectName() == "reassign_category_dialog"
+    ]
+    assert not dialogs, "reassign_category_dialog should not have opened"
+
+
+@then(parsers.parse('"{name}" is no longer listed'))
+def category_no_longer_listed(name: str) -> None:
+    dialogs = [
+        w
+        for w in QApplication.topLevelWidgets()
+        if isinstance(w, QDialog) and w.isVisible() and w.objectName() == "manage_categories_dialog"
+    ]
+    assert dialogs, "manage_categories_dialog not open"
+    list_widget = dialogs[0].findChild(QListWidget, "category_list")
+    assert list_widget is not None, "category_list not found"
+    items = [list_widget.item(i).text() for i in range(list_widget.count())]
+    assert name not in items

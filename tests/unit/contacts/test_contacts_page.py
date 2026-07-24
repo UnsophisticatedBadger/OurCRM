@@ -116,10 +116,10 @@ def test_contact_list_is_empty_without_repository(page: ContactsPage) -> None:
     assert table.rowCount() == 0
 
 
-def test_contact_list_has_seven_columns(page: ContactsPage) -> None:
+def test_contact_list_has_eight_columns(page: ContactsPage) -> None:
     table = page.findChild(QTableWidget, "contact_list")
     assert table is not None
-    assert table.columnCount() == 7
+    assert table.columnCount() == 8
 
 
 def test_contact_list_column_headers(page: ContactsPage) -> None:
@@ -133,6 +133,7 @@ def test_contact_list_column_headers(page: ContactsPage) -> None:
         "Email",
         "Phone",
         "Tags",
+        "Category",
     ]
 
 

@@ -2,12 +2,19 @@
 
 from __future__ import annotations
 
-from sqlalchemy import String, Text
+from sqlalchemy import ForeignKey, String, Text
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
 class Base(DeclarativeBase):
     pass
+
+
+class CategoryRow(Base):
+    __tablename__ = "categories"
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    name: Mapped[str] = mapped_column(String, unique=True)
 
 
 class ContactRow(Base):
@@ -24,3 +31,4 @@ class ContactRow(Base):
     address_zip: Mapped[str] = mapped_column(String, default="")
     notes: Mapped[str] = mapped_column(Text, default="")
     tags: Mapped[str] = mapped_column(Text, default="")
+    category_id: Mapped[int | None] = mapped_column(ForeignKey("categories.id"), default=None)

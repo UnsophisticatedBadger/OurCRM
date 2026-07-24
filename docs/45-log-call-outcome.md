@@ -12,6 +12,7 @@ As a real estate agent, I want to log what happened after I call a contact, so t
 ## Dependencies
 
 - #44 — View call list
+- #89 — Contact Categories (needed for Acceptance Criterion 6's client badge / client section)
 
 ## Acceptance Criteria
 

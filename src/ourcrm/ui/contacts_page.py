@@ -9,11 +9,14 @@ from PySide6.QtGui import QKeyEvent, QKeySequence, QShortcut
 from PySide6.QtWidgets import (
     QAbstractItemView,
     QButtonGroup,
+    QComboBox,
     QDialog,
     QFormLayout,
     QHBoxLayout,
     QLabel,
     QLineEdit,
+    QListWidget,
+    QListWidgetItem,
     QMenu,
     QPushButton,
     QStackedWidget,
@@ -24,6 +27,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from ourcrm.crm.contacts.category_repository import Category, CategoryRepositoryProtocol
 from ourcrm.crm.contacts.models import Contact
 from ourcrm.crm.contacts.repository import ContactRepositoryProtocol
 from ourcrm.crm.contacts.search import contact_matches
@@ -36,10 +40,12 @@ class ContactForm(QDialog):
         repository: ContactRepositoryProtocol,
         validator: ContactValidator | None = None,
         contact: Contact | None = None,
+        category_repository: CategoryRepositoryProtocol | None = None,
         parent: QWidget | None = None,
     ) -> None:
         super().__init__(parent)
         self._repository = repository
+        self._category_repository = category_repository
         self._validator = validator if validator is not None else ContactValidator()
         self._editing_contact = contact
         self._duplicate_dialog: DuplicatePhoneDialog | None = None
@@ -56,6 +62,8 @@ class ContactForm(QDialog):
             self._state.setText(contact.address_state)
             self._zip.setText(contact.address_zip)
             self._notes.setPlainText(contact.notes)
+            if contact.category:
+                self._category.setCurrentText(contact.category)
         else:
             self.setWindowTitle("New Contact")
 
@@ -98,6 +106,14 @@ class ContactForm(QDialog):
         self._state = self._add_field(form, "address_state_field", "State")
         self._zip = self._add_field(form, "address_zip_field", "ZIP")
 
+        self._category = QComboBox()
+        self._category.setObjectName("category_field")
+        self._category.addItem("")
+        if self._category_repository is not None:
+            for category in self._category_repository.list_all():
+                self._category.addItem(category.name)
+        form.addRow("Category", self._category)
+
         self._notes = QTextEdit()
         self._notes.setObjectName("notes_field")
         form.addRow("Notes", self._notes)
@@ -129,6 +145,7 @@ class ContactForm(QDialog):
             address_zip=self._zip.text(),
             notes=self._notes.toPlainText(),
             tags=self._editing_contact.tags if self._editing_contact is not None else [],
+            category=self._category.currentText(),
             id=self._editing_contact.id if self._editing_contact is not None else None,
         )
 
@@ -281,6 +298,7 @@ class ContactDetailView(QWidget):
         self._add_field(contact.address_zip, "ZIP")
         self._add_field(contact.notes, "Notes")
         self._add_field(", ".join(contact.tags), "Tags")
+        self._add_field(contact.category, "Category")
 
     def _add_field(self, value: str, label: str) -> None:
         field_label = QLabel(f"{label}: {value or 'Not provided'}")
@@ -303,6 +321,7 @@ _COLUMN_HEADERS = [
     "Email",
     "Phone",
     "Tags",
+    "Category",
 ]
 _COL_FIRST_NAME = 0
 _COL_LAST_NAME = 1
@@ -311,21 +330,196 @@ _COL_CITY = 3
 _COL_EMAIL = 4
 _COL_PHONE = 5
 _COL_TAGS = 6
+_COL_CATEGORY = 7
+
+_OTHER_CATEGORY = "Other"
+_ALL_CATEGORIES_LABEL = "All Categories"
+
+
+class RenameCategoryDialog(QDialog):
+    def __init__(self, current_name: str, parent: QWidget | None = None) -> None:
+        super().__init__(parent)
+        self.setObjectName("rename_category_dialog")
+        self.setWindowTitle("Rename Category")
+        layout = QVBoxLayout(self)
+
+        self._field = QLineEdit(current_name)
+        self._field.setObjectName("rename_category_field")
+        layout.addWidget(self._field)
+
+        btn_row = QHBoxLayout()
+        self._save_btn = QPushButton("Save")
+        self._save_btn.setObjectName("save_rename_button")
+        self._cancel_btn = QPushButton("Cancel")
+        self._cancel_btn.setObjectName("cancel_rename_button")
+        btn_row.addWidget(self._save_btn)
+        btn_row.addWidget(self._cancel_btn)
+        layout.addLayout(btn_row)
+
+        self._save_btn.clicked.connect(self.accept)
+        self._cancel_btn.clicked.connect(self.reject)
+
+    def new_name(self) -> str:
+        return self._field.text()
+
+
+class ReassignCategoryDialog(QDialog):
+    def __init__(self, category_name: str, parent: QWidget | None = None) -> None:
+        super().__init__(parent)
+        self.setObjectName("reassign_category_dialog")
+        self.setWindowTitle("Delete Category")
+        layout = QVBoxLayout(self)
+
+        message = QLabel(
+            f'Contacts are assigned to "{category_name}". '
+            f'Move them to "{_OTHER_CATEGORY}" or cancel?'
+        )
+        message.setObjectName("reassign_message_label")
+        message.setWordWrap(True)
+        layout.addWidget(message)
+
+        btn_row = QHBoxLayout()
+        self._move_btn = QPushButton(f"Move to {_OTHER_CATEGORY}")
+        self._move_btn.setObjectName("move_to_other_button")
+        self._cancel_btn = QPushButton("Cancel")
+        self._cancel_btn.setObjectName("cancel_delete_category_button")
+        btn_row.addWidget(self._move_btn)
+        btn_row.addWidget(self._cancel_btn)
+        layout.addLayout(btn_row)
+
+        self._move_btn.clicked.connect(self.accept)
+        self._cancel_btn.clicked.connect(self.reject)
+
+
+class ManageCategoriesDialog(QDialog):
+    categories_changed = Signal()
+
+    def __init__(
+        self, category_repository: CategoryRepositoryProtocol, parent: QWidget | None = None
+    ) -> None:
+        super().__init__(parent)
+        self.setObjectName("manage_categories_dialog")
+        self.setWindowTitle("Manage Categories")
+        self._category_repository = category_repository
+        self._rename_dialog: RenameCategoryDialog | None = None
+        self._reassign_dialog: ReassignCategoryDialog | None = None
+
+        layout = QVBoxLayout(self)
+
+        self._category_list = QListWidget()
+        self._category_list.setObjectName("category_list")
+        layout.addWidget(self._category_list)
+
+        new_row = QHBoxLayout()
+        self._new_category_field = QLineEdit()
+        self._new_category_field.setObjectName("new_category_field")
+        new_row.addWidget(self._new_category_field)
+        self._add_btn = QPushButton("Add")
+        self._add_btn.setObjectName("add_category_button")
+        new_row.addWidget(self._add_btn)
+        layout.addLayout(new_row)
+
+        action_row = QHBoxLayout()
+        self._rename_btn = QPushButton("Rename")
+        self._rename_btn.setObjectName("rename_category_button")
+        action_row.addWidget(self._rename_btn)
+        self._delete_btn = QPushButton("Delete")
+        self._delete_btn.setObjectName("delete_category_button")
+        action_row.addWidget(self._delete_btn)
+        layout.addLayout(action_row)
+
+        self._close_btn = QPushButton("Close")
+        self._close_btn.setObjectName("close_manage_categories_button")
+        layout.addWidget(self._close_btn)
+
+        self._add_btn.clicked.connect(self._on_add_clicked)
+        self._rename_btn.clicked.connect(self._on_rename_clicked)
+        self._delete_btn.clicked.connect(self._on_delete_clicked)
+        self._close_btn.clicked.connect(self.accept)
+
+        self._refresh_categories()
+
+    def _refresh_categories(self) -> None:
+        self._category_list.clear()
+        for category in self._category_repository.list_all():
+            item = QListWidgetItem(category.name)
+            item.setData(Qt.ItemDataRole.UserRole, category)
+            self._category_list.addItem(item)
+
+    def _selected_category(self) -> Category | None:
+        item = self._category_list.currentItem()
+        if item is None:
+            return None
+        category = item.data(Qt.ItemDataRole.UserRole)
+        assert isinstance(category, Category)
+        return category
+
+    def _on_add_clicked(self) -> None:
+        name = self._new_category_field.text().strip()
+        if not name:
+            return
+        self._category_repository.create(name)
+        self._new_category_field.clear()
+        self._refresh_categories()
+        self.categories_changed.emit()
+
+    def _on_rename_clicked(self) -> None:
+        category = self._selected_category()
+        if category is None or category.id is None:
+            return
+        dialog = RenameCategoryDialog(category.name, self)
+        dialog.accepted.connect(lambda: self._finish_rename(category, dialog))
+        self._rename_dialog = dialog
+        dialog.show()
+
+    def _finish_rename(self, category: Category, dialog: RenameCategoryDialog) -> None:
+        assert category.id is not None
+        self._category_repository.rename(category.id, dialog.new_name())
+        self._refresh_categories()
+        self.categories_changed.emit()
+
+    def _on_delete_clicked(self) -> None:
+        category = self._selected_category()
+        if category is None or category.id is None:
+            return
+        if self._category_repository.has_assigned_contacts(category.id):
+            dialog = ReassignCategoryDialog(category.name, self)
+            dialog.accepted.connect(lambda: self._finish_delete(category, reassign=True))
+            self._reassign_dialog = dialog
+            dialog.show()
+        else:
+            self._finish_delete(category, reassign=False)
+
+    def _finish_delete(self, category: Category, reassign: bool) -> None:
+        assert category.id is not None
+        reassign_to_id = None
+        if reassign:
+            other = next(
+                (c for c in self._category_repository.list_all() if c.name == _OTHER_CATEGORY),
+                None,
+            )
+            reassign_to_id = other.id if other is not None else None
+        self._category_repository.delete(category.id, reassign_to_id=reassign_to_id)
+        self._refresh_categories()
+        self.categories_changed.emit()
 
 
 class ContactsPage(QWidget):
     def __init__(
         self,
         repository: ContactRepositoryProtocol | None = None,
+        category_repository: CategoryRepositoryProtocol | None = None,
         parent: QWidget | None = None,
     ) -> None:
         super().__init__(parent)
         self._repository = repository
+        self._category_repository = category_repository
         self._contact_form: ContactForm | None = None
         self._delete_dialog: DeleteConfirmationDialog | None = None
         self._current_contacts: list[Contact] = []
         self._current_index: int = 0
         self._call_list_mode: bool = False
+        self._manage_categories_dialog: ManageCategoriesDialog | None = None
         self._setup_ui()
 
     def _setup_ui(self) -> None:
@@ -349,6 +543,19 @@ class ContactsPage(QWidget):
 
         self._all_contacts_toggle_btn.clicked.connect(self.show_all_contacts)
         self._call_list_toggle_btn.clicked.connect(self.show_call_list)
+
+        category_row = QHBoxLayout()
+        self._category_filter = QComboBox()
+        self._category_filter.setObjectName("category_filter")
+        self._refresh_category_filter_items()
+        self._category_filter.currentTextChanged.connect(self._refresh_list)
+        category_row.addWidget(self._category_filter)
+
+        self._manage_categories_btn = QPushButton("Manage Categories")
+        self._manage_categories_btn.setObjectName("manage_categories_button")
+        self._manage_categories_btn.clicked.connect(self._open_manage_categories)
+        category_row.addWidget(self._manage_categories_btn)
+        layout.addLayout(category_row)
 
         self._search_box = QLineEdit()
         self._search_box.setObjectName("search_box")
@@ -434,16 +641,43 @@ class ContactsPage(QWidget):
         self._contact_table.setSortingEnabled(False)
         self._contact_table.setRowCount(0)
         query = self._search_box.text()
+        category_filter = self._category_filter.currentText()
         if self._repository is not None:
             for contact in self._repository.list_all():
                 if not contact_matches(contact, query):
                     continue
                 if self._call_list_mode and not contact.phone.strip():
                     continue
+                if category_filter != _ALL_CATEGORIES_LABEL and contact.category != category_filter:
+                    continue
                 self._add_row(contact)
         self._contact_table.sortItems(_COL_LAST_NAME, Qt.SortOrder.AscendingOrder)
         self._contact_table.setSortingEnabled(True)
         self._stack.setCurrentWidget(self._list_state_widget(query))
+
+    def _refresh_category_filter_items(self) -> None:
+        self._category_filter.blockSignals(True)
+        current = self._category_filter.currentText()
+        self._category_filter.clear()
+        self._category_filter.addItem(_ALL_CATEGORIES_LABEL)
+        if self._category_repository is not None:
+            for category in self._category_repository.list_all():
+                self._category_filter.addItem(category.name)
+        index = self._category_filter.findText(current)
+        self._category_filter.setCurrentIndex(index if index >= 0 else 0)
+        self._category_filter.blockSignals(False)
+
+    def _open_manage_categories(self) -> None:
+        if self._category_repository is None:
+            return
+        dialog = ManageCategoriesDialog(self._category_repository, self)
+        dialog.categories_changed.connect(self._on_categories_changed)
+        self._manage_categories_dialog = dialog
+        dialog.show()
+
+    def _on_categories_changed(self) -> None:
+        self._refresh_category_filter_items()
+        self._refresh_list()
 
     def _list_state_widget(self, query: str) -> QWidget:
         if self._contact_table.rowCount() > 0:
@@ -467,11 +701,12 @@ class ContactsPage(QWidget):
         self._set_cell(row, _COL_EMAIL, contact.email)
         self._set_cell(row, _COL_PHONE, contact.phone)
         self._set_cell(row, _COL_TAGS, ",".join(contact.tags))
+        self._set_cell(row, _COL_CATEGORY, contact.category)
 
     def _open_contact_form(self) -> None:
         if self._repository is None:
             return
-        form = ContactForm(self._repository)
+        form = ContactForm(self._repository, category_repository=self._category_repository)
         form.accepted.connect(self._refresh_list)
         self._contact_form = form
         form.show()
@@ -536,7 +771,9 @@ class ContactsPage(QWidget):
     def _open_edit_form(self, contact: Contact) -> None:
         if self._repository is None:
             return
-        form = ContactForm(self._repository, contact=contact)
+        form = ContactForm(
+            self._repository, contact=contact, category_repository=self._category_repository
+        )
         form.accepted.connect(lambda: self._on_edit_saved(contact.id))
         self._contact_form = form
         form.show()

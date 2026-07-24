@@ -17,4 +17,5 @@ class Contact:
     address_zip: str = field(default="")
     notes: str = field(default="")
     tags: list[str] = field(default_factory=list)
+    category: str = field(default="")
     id: int | None = field(default=None)
