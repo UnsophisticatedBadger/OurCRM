@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v0.22.0 (2026-07-24)
+
+### Features
+
+- Add Contact Categories ([#89](https://github.com/UnsophisticatedBadger/OurCRM/pull/89),
+  [`a67645a`](https://github.com/UnsophisticatedBadger/OurCRM/commit/a67645ad847f876f275a5ea875f7303e15008716))
+
+
 ## v0.21.0 (2026-07-24)
 
 ### Documentation
