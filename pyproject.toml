@@ -1,6 +1,6 @@
 [project]
 name = "ourcrm"
-version = "0.20.0"
+version = "0.21.0"
 description = "A desktop CRM for real estate agents."
 readme = "README.md"
 requires-python = ">=3.14"

@@ -2,6 +2,19 @@
 
 <!-- version list -->
 
+## v0.21.0 (2026-07-24)
+
+### Documentation
+
+- Correct dashboard stat claim in Story #43 manual tests after smoke test
+  ([`7b7002f`](https://github.com/UnsophisticatedBadger/OurCRM/commit/7b7002f47153ab98afa1e69d6c16fe7e960ae1b3))
+
+### Features
+
+- Add View Call List ([#44](https://github.com/UnsophisticatedBadger/OurCRM/pull/44),
+  [`a64a6c9`](https://github.com/UnsophisticatedBadger/OurCRM/commit/a64a6c992ceb09da46e55ec9ffe37d9745e8ef62))
+
+
 ## v0.20.0 (2026-07-22)
 
 ### Documentation
