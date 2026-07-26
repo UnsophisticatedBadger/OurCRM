@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v0.23.0 (2026-07-26)
+
+### Features
+
+- Add Log Call Outcome ([#45](https://github.com/UnsophisticatedBadger/OurCRM/pull/45),
+  [`1ed8a5c`](https://github.com/UnsophisticatedBadger/OurCRM/commit/1ed8a5c32f0c7875ff037f1a7c4e5f73dc2eb172))
+
+
 ## v0.22.0 (2026-07-24)
 
 ### Features
