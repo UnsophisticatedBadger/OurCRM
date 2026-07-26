@@ -27,6 +27,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from ourcrm.crm.contacts.call_outcome_repository import CallOutcome, CallOutcomeRepositoryProtocol
 from ourcrm.crm.contacts.category_repository import Category, CategoryRepositoryProtocol
 from ourcrm.crm.contacts.models import Contact
 from ourcrm.crm.contacts.repository import ContactRepositoryProtocol
@@ -225,12 +226,48 @@ class DuplicatePhoneDialog(QDialog):
         self._cancel_btn.clicked.connect(self.reject)
 
 
+_OUTCOME_OPTIONS = ("No Answer", "Call Back", "Became Client", "Not Interested")
+_OUTCOME_OPTION_OBJECT_NAMES = {
+    "No Answer": "outcome_no_answer_button",
+    "Call Back": "outcome_call_back_button",
+    "Became Client": "outcome_became_client_button",
+    "Not Interested": "outcome_not_interested_button",
+}
+
+
+class LogOutcomeDialog(QDialog):
+    def __init__(self, contact: Contact, parent: QWidget | None = None) -> None:
+        super().__init__(parent)
+        self.setObjectName("log_outcome_dialog")
+        self.setWindowTitle("Log Outcome")
+        self._selected_outcome: str | None = None
+        layout = QVBoxLayout(self)
+
+        for outcome in _OUTCOME_OPTIONS:
+            btn = QPushButton(outcome)
+            btn.setObjectName(_OUTCOME_OPTION_OBJECT_NAMES[outcome])
+            btn.clicked.connect(lambda _checked=False, o=outcome: self._select_outcome(o))
+            layout.addWidget(btn)
+
+        self._confirm_btn = QPushButton("Confirm")
+        self._confirm_btn.setObjectName("confirm_outcome_button")
+        self._confirm_btn.clicked.connect(self.accept)
+        layout.addWidget(self._confirm_btn)
+
+    def _select_outcome(self, outcome: str) -> None:
+        self._selected_outcome = outcome
+
+    def selected_outcome(self) -> str | None:
+        return self._selected_outcome
+
+
 class ContactDetailView(QWidget):
     back_to_list = Signal()
     previous_requested = Signal()
     next_requested = Signal()
     edit_requested = Signal()
     delete_requested = Signal()
+    log_outcome_requested = Signal()
 
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
@@ -244,6 +281,10 @@ class ContactDetailView(QWidget):
 
         self._fields_layout = QVBoxLayout()
         layout.addLayout(self._fields_layout)
+
+        self._call_history_list = QListWidget()
+        self._call_history_list.setObjectName("call_history_list")
+        layout.addWidget(self._call_history_list)
 
         nav_row = QHBoxLayout()
         self._previous_btn = QPushButton("Previous")
@@ -272,6 +313,11 @@ class ContactDetailView(QWidget):
         self._add_note_btn.setObjectName("add_note_button")
         self._add_note_btn.clicked.connect(self._on_add_note)
         action_row.addWidget(self._add_note_btn)
+
+        self._log_outcome_btn = QPushButton("Log Outcome")
+        self._log_outcome_btn.setObjectName("log_outcome_button")
+        self._log_outcome_btn.clicked.connect(self.log_outcome_requested.emit)
+        action_row.addWidget(self._log_outcome_btn)
         layout.addLayout(action_row)
 
         self._back_btn = QPushButton("Back to List")
@@ -299,6 +345,12 @@ class ContactDetailView(QWidget):
         self._add_field(contact.notes, "Notes")
         self._add_field(", ".join(contact.tags), "Tags")
         self._add_field(contact.category, "Category")
+
+    def show_call_history(self, entries: list[CallOutcome]) -> None:
+        self._call_history_list.clear()
+        for entry in entries:
+            timestamp = entry.logged_at.strftime("%Y-%m-%d %H:%M")
+            self._call_history_list.addItem(f"{entry.outcome} - {timestamp}")
 
     def _add_field(self, value: str, label: str) -> None:
         field_label = QLabel(f"{label}: {value or 'Not provided'}")
@@ -331,6 +383,10 @@ _COL_EMAIL = 4
 _COL_PHONE = 5
 _COL_TAGS = 6
 _COL_CATEGORY = 7
+
+_CALL_LIST_EXTRA_HEADERS = ["Last Contacted", "Last Outcome"]
+_COL_LAST_CONTACTED = 8
+_COL_LAST_OUTCOME = 9
 
 _OTHER_CATEGORY = "Other"
 _ALL_CATEGORIES_LABEL = "All Categories"
@@ -509,13 +565,16 @@ class ContactsPage(QWidget):
         self,
         repository: ContactRepositoryProtocol | None = None,
         category_repository: CategoryRepositoryProtocol | None = None,
+        call_outcome_repository: CallOutcomeRepositoryProtocol | None = None,
         parent: QWidget | None = None,
     ) -> None:
         super().__init__(parent)
         self._repository = repository
         self._category_repository = category_repository
+        self._call_outcome_repository = call_outcome_repository
         self._contact_form: ContactForm | None = None
         self._delete_dialog: DeleteConfirmationDialog | None = None
+        self._log_outcome_dialog: LogOutcomeDialog | None = None
         self._current_contacts: list[Contact] = []
         self._current_index: int = 0
         self._call_list_mode: bool = False
@@ -597,6 +656,7 @@ class ContactsPage(QWidget):
         self._detail_view.previous_requested.connect(self._show_previous_contact)
         self._detail_view.edit_requested.connect(self._on_edit_requested)
         self._detail_view.delete_requested.connect(self._on_delete_requested)
+        self._detail_view.log_outcome_requested.connect(self._on_log_outcome_requested)
 
         self._stack = QStackedWidget()
         self._stack.addWidget(self._contact_table)
@@ -637,7 +697,15 @@ class ContactsPage(QWidget):
         self._call_list_mode = False
         self._refresh_list()
 
+    def _apply_column_headers(self) -> None:
+        headers = (
+            _COLUMN_HEADERS + _CALL_LIST_EXTRA_HEADERS if self._call_list_mode else _COLUMN_HEADERS
+        )
+        self._contact_table.setColumnCount(len(headers))
+        self._contact_table.setHorizontalHeaderLabels(headers)
+
     def _refresh_list(self) -> None:
+        self._apply_column_headers()
         self._contact_table.setSortingEnabled(False)
         self._contact_table.setRowCount(0)
         query = self._search_box.text()
@@ -647,6 +715,8 @@ class ContactsPage(QWidget):
                 if not contact_matches(contact, query):
                     continue
                 if self._call_list_mode and not contact.phone.strip():
+                    continue
+                if self._call_list_mode and self._is_not_interested(contact):
                     continue
                 if category_filter != _ALL_CATEGORIES_LABEL and contact.category != category_filter:
                     continue
@@ -692,7 +762,10 @@ class ContactsPage(QWidget):
     def _add_row(self, contact: Contact) -> None:
         row = self._contact_table.rowCount()
         self._contact_table.insertRow(row)
-        first_item = QTableWidgetItem(contact.first_name)
+        first_name_text = contact.first_name
+        if contact.category == "Current Client":
+            first_name_text = f"{first_name_text} ★ Client"
+        first_item = QTableWidgetItem(first_name_text)
         first_item.setData(Qt.ItemDataRole.UserRole, contact)
         self._contact_table.setItem(row, _COL_FIRST_NAME, first_item)
         self._set_cell(row, _COL_LAST_NAME, contact.last_name)
@@ -702,6 +775,25 @@ class ContactsPage(QWidget):
         self._set_cell(row, _COL_PHONE, contact.phone)
         self._set_cell(row, _COL_TAGS, ",".join(contact.tags))
         self._set_cell(row, _COL_CATEGORY, contact.category)
+
+        if self._call_list_mode:
+            latest = self._latest_outcome(contact)
+            if latest is not None:
+                contacted_at = latest.logged_at.strftime("%Y-%m-%d %H:%M")
+                self._set_cell(row, _COL_LAST_CONTACTED, contacted_at)
+                self._set_cell(row, _COL_LAST_OUTCOME, latest.outcome)
+            else:
+                self._set_cell(row, _COL_LAST_CONTACTED, "")
+                self._set_cell(row, _COL_LAST_OUTCOME, "")
+
+    def _latest_outcome(self, contact: Contact) -> CallOutcome | None:
+        if self._call_outcome_repository is None or contact.id is None:
+            return None
+        return self._call_outcome_repository.latest_for_contact(contact.id)
+
+    def _is_not_interested(self, contact: Contact) -> bool:
+        latest = self._latest_outcome(contact)
+        return latest is not None and latest.outcome == "Not Interested"
 
     def _open_contact_form(self) -> None:
         if self._repository is None:
@@ -720,6 +812,29 @@ class ContactsPage(QWidget):
         if not self._current_contacts:
             return
         self._open_delete_dialog(self._current_contacts[self._current_index])
+
+    def _on_log_outcome_requested(self) -> None:
+        if not self._current_contacts:
+            return
+        contact = self._current_contacts[self._current_index]
+        dialog = LogOutcomeDialog(contact, self)
+        dialog.accepted.connect(lambda: self._on_log_outcome_confirmed(contact, dialog))
+        self._log_outcome_dialog = dialog
+        dialog.show()
+
+    def _on_log_outcome_confirmed(self, contact: Contact, dialog: LogOutcomeDialog) -> None:
+        outcome = dialog.selected_outcome()
+        if self._call_outcome_repository is None or contact.id is None or outcome is None:
+            return
+        self._call_outcome_repository.log(contact.id, outcome)
+        if outcome == "Became Client" and self._repository is not None:
+            contact.category = "Current Client"
+            self._repository.update(contact)
+        self._refresh_list()
+        self._current_contacts = self._contacts_in_table_order()
+        index = next((i for i, c in enumerate(self._current_contacts) if c.id == contact.id), None)
+        if index is not None:
+            self._show_contact_at(index)
 
     def _open_delete_dialog(self, contact: Contact) -> None:
         if self._repository is None:
@@ -808,7 +923,14 @@ class ContactsPage(QWidget):
 
     def _show_contact_at(self, index: int) -> None:
         self._current_index = index
-        self._detail_view.show_contact(self._current_contacts[index])
+        contact = self._current_contacts[index]
+        self._detail_view.show_contact(contact)
+        history = (
+            self._call_outcome_repository.list_for_contact(contact.id)
+            if self._call_outcome_repository is not None and contact.id is not None
+            else []
+        )
+        self._detail_view.show_call_history(history)
         self._stack.setCurrentWidget(self._detail_view)
 
     def _show_next_contact(self) -> None:

@@ -25,6 +25,7 @@ from ourcrm.calendar.repository import CalendarEventRepositoryProtocol
 from ourcrm.core.auth.auth_service import AuthService
 from ourcrm.core.config import LandingPage, SettingsStoreProtocol, StartupBehavior
 from ourcrm.core.security.recovery_generator import RecoveryPasswordGenerator
+from ourcrm.crm.contacts.call_outcome_repository import CallOutcomeRepositoryProtocol
 from ourcrm.crm.contacts.category_repository import CategoryRepositoryProtocol
 from ourcrm.crm.contacts.repository import ContactRepositoryProtocol
 from ourcrm.database.encrypted_database import EncryptedDatabase
@@ -71,11 +72,13 @@ class MainWindow(QMainWindow):
         calendar_repository: CalendarEventRepositoryProtocol | None = None,
         contact_repository: ContactRepositoryProtocol | None = None,
         category_repository: CategoryRepositoryProtocol | None = None,
+        call_outcome_repository: CallOutcomeRepositoryProtocol | None = None,
         encrypted_db: EncryptedDatabase | None = None,
         session_factory: sessionmaker[Session] | None = None,
     ) -> None:
         super().__init__()
         self._category_repository = category_repository
+        self._call_outcome_repository = call_outcome_repository
         self._settings = settings if settings is not None else QSettings("OurCRM", "OurCRM")
         self._app_config = app_config
         self._qt_app = qt_app
@@ -208,6 +211,7 @@ class MainWindow(QMainWindow):
             return ContactsPage(
                 repository=self._contact_repository,
                 category_repository=self._category_repository,
+                call_outcome_repository=self._call_outcome_repository,
             )
         if section == Section.SETTINGS:
             panel = SettingsPanel(app_config=self._app_config, qt_app=self._qt_app)

@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
-from sqlalchemy import ForeignKey, String, Text
+from datetime import datetime
+
+from sqlalchemy import DateTime, ForeignKey, String, Text
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
@@ -15,6 +17,15 @@ class CategoryRow(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     name: Mapped[str] = mapped_column(String, unique=True)
+
+
+class CallOutcomeRow(Base):
+    __tablename__ = "call_outcomes"
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    contact_id: Mapped[int] = mapped_column(ForeignKey("contacts.id"))
+    outcome: Mapped[str] = mapped_column(String)
+    logged_at: Mapped[datetime] = mapped_column(DateTime)
 
 
 class ContactRow(Base):

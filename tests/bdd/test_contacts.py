@@ -21,6 +21,7 @@ from pytestqt.qtbot import QtBot
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
+from ourcrm.crm.contacts.call_outcome_repository import CallOutcomeRepository
 from ourcrm.crm.contacts.category_repository import CategoryRepository
 from ourcrm.crm.contacts.models import Contact
 from ourcrm.crm.contacts.repository import ContactRepository
@@ -39,11 +40,15 @@ def _make_repository() -> ContactRepository:
     return ContactRepository(sessionmaker(bind=engine))
 
 
-def _make_repositories() -> tuple[ContactRepository, CategoryRepository]:
+def _make_repositories() -> tuple[ContactRepository, CategoryRepository, CallOutcomeRepository]:
     engine = create_engine("sqlite:///:memory:")
     DatabaseManager(engine).initialize_schema()
     session_factory: sessionmaker[Session] = sessionmaker(bind=engine)
-    return ContactRepository(session_factory), CategoryRepository(session_factory)
+    return (
+        ContactRepository(session_factory),
+        CategoryRepository(session_factory),
+        CallOutcomeRepository(session_factory),
+    )
 
 
 def _visible_contact_forms() -> list[ContactForm]:
@@ -109,8 +114,12 @@ def _click_column_header(window: MainWindow, column: str, qtbot: QtBot) -> None:
 
 @given("the user is in the Contacts section", target_fixture="main_window")
 def user_in_contacts_section(qtbot: QtBot) -> MainWindow:
-    contact_repo, category_repo = _make_repositories()
-    window = MainWindow(contact_repository=contact_repo, category_repository=category_repo)
+    contact_repo, category_repo, call_outcome_repo = _make_repositories()
+    window = MainWindow(
+        contact_repository=contact_repo,
+        category_repository=category_repo,
+        call_outcome_repository=call_outcome_repo,
+    )
     qtbot.addWidget(window)
     window.show()
     window.navigate_to(Section.CONTACTS)
@@ -130,8 +139,12 @@ def _open_new_contact_form(window: MainWindow, qtbot: QtBot) -> ContactForm:
 
 @given("the new contact form is open", target_fixture="main_window")
 def new_contact_form_open(qtbot: QtBot) -> MainWindow:
-    contact_repo, category_repo = _make_repositories()
-    window = MainWindow(contact_repository=contact_repo, category_repository=category_repo)
+    contact_repo, category_repo, call_outcome_repo = _make_repositories()
+    window = MainWindow(
+        contact_repository=contact_repo,
+        category_repository=category_repo,
+        call_outcome_repository=call_outcome_repo,
+    )
     qtbot.addWidget(window)
     window.show()
     window.navigate_to(Section.CONTACTS)
@@ -1284,12 +1297,16 @@ def _open_manage_categories(window: MainWindow, qtbot: QtBot) -> QDialog:
 def contacts_exist_with_categories(
     name1: str, name2: str, cat1: str, cat2: str, qtbot: QtBot
 ) -> MainWindow:
-    contact_repo, category_repo = _make_repositories()
+    contact_repo, category_repo, call_outcome_repo = _make_repositories()
     first1, last1 = name1.split(" ", 1)
     contact_repo.create(Contact(first_name=first1, last_name=last1, category=cat1))
     first2, last2 = name2.split(" ", 1)
     contact_repo.create(Contact(first_name=first2, last_name=last2, category=cat2))
-    window = MainWindow(contact_repository=contact_repo, category_repository=category_repo)
+    window = MainWindow(
+        contact_repository=contact_repo,
+        category_repository=category_repo,
+        call_outcome_repository=call_outcome_repo,
+    )
     qtbot.addWidget(window)
     window.show()
     window.navigate_to(Section.CONTACTS)
@@ -1301,10 +1318,14 @@ def contacts_exist_with_categories(
     target_fixture="main_window",
 )
 def three_contacts_assigned_category(category: str, qtbot: QtBot) -> MainWindow:
-    contact_repo, category_repo = _make_repositories()
+    contact_repo, category_repo, call_outcome_repo = _make_repositories()
     for first, last in (("Ann", "One"), ("Bob", "Two"), ("Cara", "Three")):
         contact_repo.create(Contact(first_name=first, last_name=last, category=category))
-    window = MainWindow(contact_repository=contact_repo, category_repository=category_repo)
+    window = MainWindow(
+        contact_repository=contact_repo,
+        category_repository=category_repo,
+        call_outcome_repository=call_outcome_repo,
+    )
     qtbot.addWidget(window)
     window.show()
     window.navigate_to(Section.CONTACTS)
@@ -1316,9 +1337,13 @@ def three_contacts_assigned_category(category: str, qtbot: QtBot) -> MainWindow:
     target_fixture="main_window",
 )
 def a_contact_assigned_category(category: str, qtbot: QtBot) -> MainWindow:
-    contact_repo, category_repo = _make_repositories()
+    contact_repo, category_repo, call_outcome_repo = _make_repositories()
     contact_repo.create(Contact(first_name="Deb", last_name="Vendor", category=category))
-    window = MainWindow(contact_repository=contact_repo, category_repository=category_repo)
+    window = MainWindow(
+        contact_repository=contact_repo,
+        category_repository=category_repo,
+        call_outcome_repository=call_outcome_repo,
+    )
     qtbot.addWidget(window)
     window.show()
     window.navigate_to(Section.CONTACTS)
@@ -1327,8 +1352,12 @@ def a_contact_assigned_category(category: str, qtbot: QtBot) -> MainWindow:
 
 @given("the user has opened Manage Categories", target_fixture="main_window")
 def user_has_opened_manage_categories(qtbot: QtBot) -> MainWindow:
-    contact_repo, category_repo = _make_repositories()
-    window = MainWindow(contact_repository=contact_repo, category_repository=category_repo)
+    contact_repo, category_repo, call_outcome_repo = _make_repositories()
+    window = MainWindow(
+        contact_repository=contact_repo,
+        category_repository=category_repo,
+        call_outcome_repository=call_outcome_repo,
+    )
     qtbot.addWidget(window)
     window.show()
     window.navigate_to(Section.CONTACTS)
@@ -1497,3 +1526,202 @@ def category_no_longer_listed(name: str) -> None:
     assert list_widget is not None, "category_list not found"
     items = [list_widget.item(i).text() for i in range(list_widget.count())]
     assert name not in items
+
+
+# ── Story #45: Log Call Outcome ─────────────────────────────────────────────
+
+_CALL_OUTCOME_CONTACT_NAME = "Jane Caller"
+
+_OUTCOME_BUTTON_NAMES = {
+    "No Answer": "outcome_no_answer_button",
+    "Call Back": "outcome_call_back_button",
+    "Became Client": "outcome_became_client_button",
+    "Not Interested": "outcome_not_interested_button",
+}
+
+# ── Givens ────────────────────────────────────────────────────────────────────
+
+
+def _window_in_call_list_with_contact(qtbot: QtBot) -> MainWindow:
+    contact_repo, category_repo, call_outcome_repo = _make_repositories()
+    first, last = _CALL_OUTCOME_CONTACT_NAME.split(" ", 1)
+    contact_repo.create(Contact(first_name=first, last_name=last, phone="555-0100"))
+    window = MainWindow(
+        contact_repository=contact_repo,
+        category_repository=category_repo,
+        call_outcome_repository=call_outcome_repo,
+    )
+    qtbot.addWidget(window)
+    window.show()
+    window.navigate_to(Section.CONTACTS)
+    _contacts_page(window).show_call_list()
+    return window
+
+
+def _back_to_list(main_window: MainWindow, qtbot: QtBot) -> None:
+    view = _contacts_page(main_window).findChild(QWidget, "contact_detail_view")
+    if view is None or not view.isVisible():
+        return
+    btn = view.findChild(QPushButton, "back_to_list_button")
+    assert btn is not None, "back_to_list_button not found"
+    qtbot.mouseClick(btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+    QApplication.processEvents()
+
+
+def _row_with_last_name(table: QTableWidget, last_name: str) -> int:
+    for row in range(table.rowCount()):
+        if _cell_text(table, row, 1) == last_name:
+            return row
+    raise AssertionError(f"no row with last name '{last_name}'")
+
+
+def _visible_log_outcome_dialogs() -> list[QDialog]:
+    return [
+        w
+        for w in QApplication.topLevelWidgets()
+        if isinstance(w, QDialog) and w.isVisible() and w.objectName() == "log_outcome_dialog"
+    ]
+
+
+def _log_outcome(main_window: MainWindow, outcome: str, qtbot: QtBot) -> None:
+    view = _active_detail_view(main_window)
+    log_btn = view.findChild(QPushButton, "log_outcome_button")
+    assert log_btn is not None, "log_outcome_button not found"
+    qtbot.mouseClick(log_btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+    QApplication.processEvents()
+
+    dialogs = _visible_log_outcome_dialogs()
+    assert dialogs, "log_outcome_dialog did not open"
+    dialog = dialogs[0]
+    qtbot.addWidget(dialog)
+
+    option_name = _OUTCOME_BUTTON_NAMES[outcome]
+    option_btn = dialog.findChild(QPushButton, option_name)
+    assert option_btn is not None, f"{option_name} not found"
+    qtbot.mouseClick(option_btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+    QApplication.processEvents()
+
+    confirm_btn = dialog.findChild(QPushButton, "confirm_outcome_button")
+    assert confirm_btn is not None, "confirm_outcome_button not found"
+    qtbot.mouseClick(confirm_btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+    QApplication.processEvents()
+
+
+@given("a contact is open in the call list detail view", target_fixture="main_window")
+def contact_open_in_call_list_detail_view(qtbot: QtBot) -> MainWindow:
+    window = _window_in_call_list_with_contact(qtbot)
+    _open_details(window, _CALL_OUTCOME_CONTACT_NAME)
+    return window
+
+
+@given(parsers.parse('a contact was logged as "{outcome}"'), target_fixture="main_window")
+def a_contact_was_logged_as(outcome: str, qtbot: QtBot) -> MainWindow:
+    window = _window_in_call_list_with_contact(qtbot)
+    _open_details(window, _CALL_OUTCOME_CONTACT_NAME)
+    _log_outcome(window, outcome, qtbot)
+    _back_to_list(window, qtbot)
+    return window
+
+
+@given(
+    parsers.parse('a contact has been logged with the outcome "{outcome}"'),
+    target_fixture="main_window",
+)
+def a_contact_has_been_logged_with_outcome(outcome: str, qtbot: QtBot) -> MainWindow:
+    window = _window_in_call_list_with_contact(qtbot)
+    _open_details(window, _CALL_OUTCOME_CONTACT_NAME)
+    _log_outcome(window, outcome, qtbot)
+    return window
+
+
+# ── Whens ─────────────────────────────────────────────────────────────────────
+
+
+@when(parsers.parse('the user logs the outcome "{outcome}"'), target_fixture="logged_outcome")
+def user_logs_outcome(main_window: MainWindow, outcome: str, qtbot: QtBot) -> str:
+    _log_outcome(main_window, outcome, qtbot)
+    return outcome
+
+
+@when(parsers.parse('the user logs a second outcome "{outcome}" for the same contact'))
+def logs_second_outcome_for_same_contact(
+    main_window: MainWindow, outcome: str, qtbot: QtBot
+) -> None:
+    _log_outcome(main_window, outcome, qtbot)
+
+
+# ── Thens ─────────────────────────────────────────────────────────────────────
+
+
+@then("a Log Outcome button is shown")
+def log_outcome_button_is_shown(main_window: MainWindow) -> None:
+    view = _active_detail_view(main_window)
+    btn = view.findChild(QPushButton, "log_outcome_button")
+    assert btn is not None, "log_outcome_button not found"
+    assert btn.isVisible()
+
+
+@then("the contact's last-contacted date and outcome are updated in the call list")
+def last_contacted_and_outcome_updated(
+    main_window: MainWindow, logged_outcome: str, qtbot: QtBot
+) -> None:
+    _back_to_list(main_window, qtbot)
+    table = _contact_table(main_window)
+    headers = _header_texts(table)
+    assert "Last Contacted" in headers, "Last Contacted column not found"
+    assert "Last Outcome" in headers, "Last Outcome column not found"
+    row = _row_with_last_name(table, "Caller")
+    contacted_col = headers.index("Last Contacted")
+    outcome_col = headers.index("Last Outcome")
+    assert _cell_text(table, row, contacted_col) != ""
+    assert _cell_text(table, row, outcome_col) == logged_outcome
+
+
+@then("the contact no longer appears in the call list")
+def contact_no_longer_appears_in_call_list(main_window: MainWindow, qtbot: QtBot) -> None:
+    _back_to_list(main_window, qtbot)
+    assert _CALL_OUTCOME_CONTACT_NAME not in _contact_names(main_window)
+
+
+@then("the contact is shown with a client badge")
+def contact_shown_with_client_badge(main_window: MainWindow, qtbot: QtBot) -> None:
+    _back_to_list(main_window, qtbot)
+    table = _contact_table(main_window)
+    row = _row_with_last_name(table, "Caller")
+    assert "★" in _cell_text(table, row, 0), "client badge not shown in First Name cell"
+
+
+@then(parsers.parse('the contact\'s category becomes "{category}"'))
+def contacts_category_becomes(main_window: MainWindow, category: str, qtbot: QtBot) -> None:
+    _back_to_list(main_window, qtbot)
+    table = _contact_table(main_window)
+    row = _row_with_last_name(table, "Caller")
+    assert _cell_text(table, row, 7) == category
+
+
+@then("the contact still appears in the call list")
+def contact_still_appears_in_call_list(main_window: MainWindow, qtbot: QtBot) -> None:
+    _back_to_list(main_window, qtbot)
+    table = _contact_table(main_window)
+    assert any(_cell_text(table, row, 1) == "Caller" for row in range(table.rowCount()))
+
+
+@then("that contact is shown in the filtered list")
+def contact_shown_in_filtered_list(main_window: MainWindow) -> None:
+    table = _contact_table(main_window)
+    assert any(_cell_text(table, row, 1) == "Caller" for row in range(table.rowCount()))
+
+
+@then("both outcomes appear in the contact's call history with their timestamps")
+def both_outcomes_appear_in_call_history(main_window: MainWindow) -> None:
+    view = _active_detail_view(main_window)
+    history_list = view.findChild(QListWidget, "call_history_list")
+    assert history_list is not None, "call_history_list not found"
+    items_text = [
+        item.text()
+        for item in (history_list.item(i) for i in range(history_list.count()))
+        if item is not None
+    ]
+    assert len(items_text) == 2, f"expected 2 history entries, got {len(items_text)}"
+    assert any("No Answer" in text for text in items_text)
+    assert any("Call Back" in text for text in items_text)

@@ -309,3 +309,46 @@ Feature: Contacts
     When the user deletes category "Referral Partner"
     Then no confirmation prompt is shown
     And "Referral Partner" is no longer listed
+
+  @story_45
+  Scenario: Contact detail view offers a Log Outcome action
+    Given a contact is open in the call list detail view
+    Then a Log Outcome button is shown
+
+  @story_45
+  Scenario: Logging No Answer updates the call list
+    Given a contact is open in the call list detail view
+    When the user logs the outcome "No Answer"
+    Then the contact's last-contacted date and outcome are updated in the call list
+
+  @story_45
+  Scenario: Logging Call Back updates the call list
+    Given a contact is open in the call list detail view
+    When the user logs the outcome "Call Back"
+    Then the contact's last-contacted date and outcome are updated in the call list
+
+  @story_45
+  Scenario: Logging Not Interested removes the contact from the call list
+    Given a contact is open in the call list detail view
+    When the user logs the outcome "Not Interested"
+    Then the contact no longer appears in the call list
+
+  @story_45
+  Scenario: Logging Became Client shows a client badge
+    Given a contact is open in the call list detail view
+    When the user logs the outcome "Became Client"
+    Then the contact is shown with a client badge
+    And the contact's category becomes "Current Client"
+    And the contact still appears in the call list
+
+  @story_45
+  Scenario: Filtering by the Current Client category shows contacts moved to the client section
+    Given a contact was logged as "Became Client"
+    When the user filters the contact list by category "Current Client"
+    Then that contact is shown in the filtered list
+
+  @story_45
+  Scenario: Multiple logged outcomes are kept as history
+    Given a contact has been logged with the outcome "No Answer"
+    When the user logs a second outcome "Call Back" for the same contact
+    Then both outcomes appear in the contact's call history with their timestamps
