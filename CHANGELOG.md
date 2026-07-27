@@ -2,6 +2,15 @@
 
 <!-- version list -->
 
+## v0.25.2 (2026-07-27)
+
+### Bug Fixes
+
+- Relabel New Contact button to Create Your First Contact when empty, instead of showing a second
+  button
+  ([`e29b5ad`](https://github.com/UnsophisticatedBadger/OurCRM/commit/e29b5ad8f49dbc3d771d6edbb7caf1fedaa835c8))
+
+
 ## v0.25.1 (2026-07-27)
 
 ### Bug Fixes
