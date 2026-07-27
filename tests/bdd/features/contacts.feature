@@ -352,3 +352,50 @@ Feature: Contacts
     Given a contact has been logged with the outcome "No Answer"
     When the user logs a second outcome "Call Back" for the same contact
     Then both outcomes appear in the contact's call history with their timestamps
+
+  @story_46
+  Scenario: Selecting Call Back shows a timeframe picker
+    Given a contact is open in the call list detail view
+    When the user selects the outcome "Call Back"
+    Then a timeframe picker is shown with options "This Week", "Next Week", "In Two Weeks", and "This Month"
+
+  @story_46
+  Scenario: Choosing a timeframe and confirming saves a callback date range
+    Given a contact is open in the call list detail view
+    When the user logs the outcome "Call Back" with timeframe "Next Week" selected
+    Then the contact's callback date range is saved for next week
+
+  @story_46
+  Scenario: Logging Call Back removes the contact from the active call list
+    Given a contact is open in the call list detail view
+    When the user logs the outcome "Call Back" with timeframe "Next Week" selected
+    Then the contact no longer appears in the call list
+
+  @story_46
+  Scenario: A callback due this week keeps the contact visible with its due date shown
+    Given a contact has a callback due this week
+    When the user opens the call list
+    Then the contact appears in the call list
+    And its next callback due date is shown
+
+  @story_46
+  Scenario: A callback whose window has just started reappears in the call list
+    Given a contact has a callback starting today
+    When the user opens the call list
+    Then the contact appears in the call list
+
+  @story_46
+  Scenario: Overdue callbacks sort to the top, most overdue first
+    Given a contact "Alice Overdue" has a callback that was due 5 days ago
+    And a contact "Bob Overdue" has a callback that was due 1 day ago
+    When the user opens the call list
+    Then "Alice Overdue" appears above "Bob Overdue"
+
+  @story_46
+  Scenario: The call list priority order places overdue, then due today, then due this week, then everyone else
+    Given a contact "Carol Overdue" has an overdue callback
+    And a contact "Dana Today" has a callback due today
+    And a contact "Erin ThisWeek" has a callback due later this week
+    And a contact "Frank NoCallback" has no callback set
+    When the user opens the call list
+    Then the contacts appear in the order "Carol Overdue", "Dana Today", "Erin ThisWeek", "Frank NoCallback"

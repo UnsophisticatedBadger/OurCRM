@@ -1,27 +1,23 @@
 # Set Callback Timeframe — Manual Tests
 
-**Story:** [US-019 — Set Callback Timeframe](../../../docs/019-set-callback-timeframe.md)
+**Story:** [#46 — Set Callback Timeframe](../../../docs/46-set-callback-timeframe.md)
 
-## Callback timeframe picker appears after selecting Call Back
+## Logging Call Back opens a timeframe picker
+1. Open a contact from the call list and click Log Outcome
+2. Select "Call Back"
+3. Confirm a timeframe picker appears with options This Week, Next Week, In Two Weeks, and This Month
 
-1. Open the call list and select a contact
-2. Choose the "Call Back" outcome
-3. Confirm a timeframe picker appears before the outcome is confirmed
-4. Confirm the options shown are: This Week, Next Week, In Two Weeks, This Month
+## Setting a callback removes the contact from the active call list
+1. Log "Call Back" on a contact and choose "Next Week"
+2. Confirm the contact disappears from the Call List view
+3. Confirm the contact still appears in the All Contacts view
 
-## Selecting a timeframe removes the contact from the active call list
+## A callback reappears in the call list once its window arrives
+1. Log "Call Back" and choose "This Week" (a window that starts today)
+2. Confirm the contact still appears in the Call List view with its callback due date shown
+3. For a callback set with a later timeframe (e.g. "Next Week"), confirm it stays hidden from the Call List until its start date arrives, then reappears with its due date shown
 
-1. Choose "Call Back" and select "Next Week"
-2. Confirm the contact no longer appears in the active call list
-3. Confirm the contact is not deleted — it exists in the system with a callback scheduled
-
-## Contact reappears when the timeframe arrives
-
-1. Set a callback for "This Week" (or simulate a date change to the target week)
-2. Confirm the contact reappears in the call list sorted above new contacts
-
-## Cancelling the timeframe picker does not save the outcome
-
-1. Choose "Call Back"
-2. When the timeframe picker appears, dismiss or cancel it
-3. Confirm no outcome is saved and the contact remains in the active list unchanged
+## Call list priority order
+1. Arrange several contacts with an overdue callback, a callback due today, a callback due this week, and no callback set
+2. Open the Call List view
+3. Confirm the order is: most overdue first, then due today, then due this week, then everyone else

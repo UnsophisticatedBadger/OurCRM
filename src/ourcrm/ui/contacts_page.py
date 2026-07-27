@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from datetime import date
 from typing import override
 
 from PySide6.QtCore import QPoint, Qt, Signal
@@ -28,6 +29,7 @@ from PySide6.QtWidgets import (
 )
 
 from ourcrm.crm.contacts.call_outcome_repository import CallOutcome, CallOutcomeRepositoryProtocol
+from ourcrm.crm.contacts.callback_timeframe import timeframe_to_range
 from ourcrm.crm.contacts.category_repository import Category, CategoryRepositoryProtocol
 from ourcrm.crm.contacts.models import Contact
 from ourcrm.crm.contacts.repository import ContactRepositoryProtocol
@@ -234,6 +236,14 @@ _OUTCOME_OPTION_OBJECT_NAMES = {
     "Not Interested": "outcome_not_interested_button",
 }
 
+_TIMEFRAME_OPTIONS = ("This Week", "Next Week", "In Two Weeks", "This Month")
+_TIMEFRAME_OPTION_OBJECT_NAMES = {
+    "This Week": "timeframe_this_week_button",
+    "Next Week": "timeframe_next_week_button",
+    "In Two Weeks": "timeframe_in_two_weeks_button",
+    "This Month": "timeframe_this_month_button",
+}
+
 
 class LogOutcomeDialog(QDialog):
     def __init__(self, contact: Contact, parent: QWidget | None = None) -> None:
@@ -249,6 +259,16 @@ class LogOutcomeDialog(QDialog):
             btn.clicked.connect(lambda _checked=False, o=outcome: self._select_outcome(o))
             layout.addWidget(btn)
 
+        self._selected_timeframe: str | None = None
+        self._timeframe_buttons: list[QPushButton] = []
+        for timeframe in _TIMEFRAME_OPTIONS:
+            tf_btn = QPushButton(timeframe)
+            tf_btn.setObjectName(_TIMEFRAME_OPTION_OBJECT_NAMES[timeframe])
+            tf_btn.setVisible(False)
+            tf_btn.clicked.connect(lambda _checked=False, t=timeframe: self._select_timeframe(t))
+            layout.addWidget(tf_btn)
+            self._timeframe_buttons.append(tf_btn)
+
         self._confirm_btn = QPushButton("Confirm")
         self._confirm_btn.setObjectName("confirm_outcome_button")
         self._confirm_btn.clicked.connect(self.accept)
@@ -256,9 +276,17 @@ class LogOutcomeDialog(QDialog):
 
     def _select_outcome(self, outcome: str) -> None:
         self._selected_outcome = outcome
+        for btn in self._timeframe_buttons:
+            btn.setVisible(outcome == "Call Back")
 
     def selected_outcome(self) -> str | None:
         return self._selected_outcome
+
+    def _select_timeframe(self, timeframe: str) -> None:
+        self._selected_timeframe = timeframe
+
+    def selected_timeframe(self) -> str | None:
+        return self._selected_timeframe
 
 
 class ContactDetailView(QWidget):
@@ -710,6 +738,7 @@ class ContactsPage(QWidget):
         self._contact_table.setRowCount(0)
         query = self._search_box.text()
         category_filter = self._category_filter.currentText()
+        matching_contacts: list[Contact] = []
         if self._repository is not None:
             for contact in self._repository.list_all():
                 if not contact_matches(contact, query):
@@ -718,10 +747,19 @@ class ContactsPage(QWidget):
                     continue
                 if self._call_list_mode and self._is_not_interested(contact):
                     continue
+                if self._call_list_mode and self._callback_not_yet_due(contact):
+                    continue
                 if category_filter != _ALL_CATEGORIES_LABEL and contact.category != category_filter:
                     continue
-                self._add_row(contact)
-        self._contact_table.sortItems(_COL_LAST_NAME, Qt.SortOrder.AscendingOrder)
+                matching_contacts.append(contact)
+        if self._call_list_mode:
+            matching_contacts.sort(key=self._callback_sort_key)
+        for contact in matching_contacts:
+            self._add_row(contact)
+        if self._call_list_mode:
+            self._contact_table.horizontalHeader().setSortIndicator(-1, Qt.SortOrder.AscendingOrder)
+        else:
+            self._contact_table.sortItems(_COL_LAST_NAME, Qt.SortOrder.AscendingOrder)
         self._contact_table.setSortingEnabled(True)
         self._stack.setCurrentWidget(self._list_state_widget(query))
 
@@ -781,10 +819,16 @@ class ContactsPage(QWidget):
             if latest is not None:
                 contacted_at = latest.logged_at.strftime("%Y-%m-%d %H:%M")
                 self._set_cell(row, _COL_LAST_CONTACTED, contacted_at)
-                self._set_cell(row, _COL_LAST_OUTCOME, latest.outcome)
+                self._set_cell(row, _COL_LAST_OUTCOME, self._outcome_cell_text(latest))
             else:
                 self._set_cell(row, _COL_LAST_CONTACTED, "")
                 self._set_cell(row, _COL_LAST_OUTCOME, "")
+
+    def _outcome_cell_text(self, latest: CallOutcome) -> str:
+        if latest.outcome == "Call Back" and latest.callback_end_date is not None:
+            due = latest.callback_end_date.strftime("%Y-%m-%d")
+            return f"{latest.outcome} — due {due}"
+        return latest.outcome
 
     def _latest_outcome(self, contact: Contact) -> CallOutcome | None:
         if self._call_outcome_repository is None or contact.id is None:
@@ -794,6 +838,21 @@ class ContactsPage(QWidget):
     def _is_not_interested(self, contact: Contact) -> bool:
         latest = self._latest_outcome(contact)
         return latest is not None and latest.outcome == "Not Interested"
+
+    def _callback_not_yet_due(self, contact: Contact) -> bool:
+        latest = self._latest_outcome(contact)
+        if latest is None or latest.outcome != "Call Back" or latest.callback_start_date is None:
+            return False
+        return latest.callback_start_date > date.today()
+
+    def _callback_sort_key(self, contact: Contact) -> tuple[int, date, str]:
+        latest = self._latest_outcome(contact)
+        if latest is not None and latest.outcome == "Call Back" and latest.callback_end_date:
+            today = date.today()
+            end = latest.callback_end_date
+            bucket = 0 if end < today else 1 if end == today else 2
+            return (bucket, end, contact.last_name)
+        return (3, date.max, contact.last_name)
 
     def _open_contact_form(self) -> None:
         if self._repository is None:
@@ -826,7 +885,14 @@ class ContactsPage(QWidget):
         outcome = dialog.selected_outcome()
         if self._call_outcome_repository is None or contact.id is None or outcome is None:
             return
-        self._call_outcome_repository.log(contact.id, outcome)
+        callback_start: date | None = None
+        callback_end: date | None = None
+        timeframe = dialog.selected_timeframe()
+        if outcome == "Call Back" and timeframe is not None:
+            callback_start, callback_end = timeframe_to_range(timeframe, date.today())
+        self._call_outcome_repository.log(
+            contact.id, outcome, callback_start=callback_start, callback_end=callback_end
+        )
         if outcome == "Became Client" and self._repository is not None:
             contact.category = "Current Client"
             self._repository.update(contact)

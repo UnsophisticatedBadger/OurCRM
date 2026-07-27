@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import date, datetime
 
-from sqlalchemy import DateTime, ForeignKey, String, Text
+from sqlalchemy import Date, DateTime, ForeignKey, String, Text
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
@@ -26,6 +26,8 @@ class CallOutcomeRow(Base):
     contact_id: Mapped[int] = mapped_column(ForeignKey("contacts.id"))
     outcome: Mapped[str] = mapped_column(String)
     logged_at: Mapped[datetime] = mapped_column(DateTime)
+    callback_start_date: Mapped[date | None] = mapped_column(Date, default=None)
+    callback_end_date: Mapped[date | None] = mapped_column(Date, default=None)
 
 
 class ContactRow(Base):

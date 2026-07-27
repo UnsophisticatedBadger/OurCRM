@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
+from datetime import date, timedelta
 from typing import Any, cast
 
+import pytest
 from PySide6.QtCore import QPoint, Qt
 from PySide6.QtWidgets import (
     QApplication,
@@ -1542,10 +1544,12 @@ _OUTCOME_BUTTON_NAMES = {
 # ── Givens ────────────────────────────────────────────────────────────────────
 
 
-def _window_in_call_list_with_contact(qtbot: QtBot) -> MainWindow:
+def _window_in_call_list_with_contact(
+    qtbot: QtBot,
+) -> tuple[MainWindow, CallOutcomeRepository, Contact]:
     contact_repo, category_repo, call_outcome_repo = _make_repositories()
     first, last = _CALL_OUTCOME_CONTACT_NAME.split(" ", 1)
-    contact_repo.create(Contact(first_name=first, last_name=last, phone="555-0100"))
+    contact = contact_repo.create(Contact(first_name=first, last_name=last, phone="555-0100"))
     window = MainWindow(
         contact_repository=contact_repo,
         category_repository=category_repo,
@@ -1555,7 +1559,46 @@ def _window_in_call_list_with_contact(qtbot: QtBot) -> MainWindow:
     window.show()
     window.navigate_to(Section.CONTACTS)
     _contacts_page(window).show_call_list()
-    return window
+    return window, call_outcome_repo, contact
+
+
+@pytest.fixture
+def callback_ctx() -> dict[str, Any]:
+    return {}
+
+
+def _end_of_this_week(today: date) -> date:
+    return today + timedelta(days=6 - today.weekday())
+
+
+def _ensure_callback_window(ctx: dict[str, Any], qtbot: QtBot) -> MainWindow:
+    if ctx.get("window") is None:
+        contact_repo, category_repo, call_outcome_repo = _make_repositories()
+        window = MainWindow(
+            contact_repository=contact_repo,
+            category_repository=category_repo,
+            call_outcome_repository=call_outcome_repo,
+        )
+        qtbot.addWidget(window)
+        window.show()
+        window.navigate_to(Section.CONTACTS)
+        ctx["contact_repo"] = contact_repo
+        ctx["call_outcome_repo"] = call_outcome_repo
+        ctx["window"] = window
+    return cast("MainWindow", ctx["window"])
+
+
+def _add_contact_with_callback(
+    ctx: dict[str, Any], name: str, start: date | None, end: date | None, qtbot: QtBot
+) -> None:
+    _ensure_callback_window(ctx, qtbot)
+    contact_repo = cast("ContactRepository", ctx["contact_repo"])
+    first, last = name.split(" ", 1)
+    contact = contact_repo.create(Contact(first_name=first, last_name=last, phone="555-0100"))
+    if start is not None:
+        assert contact.id is not None
+        call_outcome_repo = cast("CallOutcomeRepository", ctx["call_outcome_repo"])
+        call_outcome_repo.log(contact.id, "Call Back", callback_start=start, callback_end=end)
 
 
 def _back_to_list(main_window: MainWindow, qtbot: QtBot) -> None:
@@ -1575,6 +1618,14 @@ def _row_with_last_name(table: QTableWidget, last_name: str) -> int:
     raise AssertionError(f"no row with last name '{last_name}'")
 
 
+def _row_with_full_name(table: QTableWidget, name: str) -> int:
+    first, last = name.split(" ", 1)
+    for row in range(table.rowCount()):
+        if _cell_text(table, row, 0) == first and _cell_text(table, row, 1) == last:
+            return row
+    raise AssertionError(f"no row with name '{name}'")
+
+
 def _visible_log_outcome_dialogs() -> list[QDialog]:
     return [
         w
@@ -1583,7 +1634,15 @@ def _visible_log_outcome_dialogs() -> list[QDialog]:
     ]
 
 
-def _log_outcome(main_window: MainWindow, outcome: str, qtbot: QtBot) -> None:
+_TIMEFRAME_BUTTON_NAMES = {
+    "This Week": "timeframe_this_week_button",
+    "Next Week": "timeframe_next_week_button",
+    "In Two Weeks": "timeframe_in_two_weeks_button",
+    "This Month": "timeframe_this_month_button",
+}
+
+
+def _open_log_outcome_dialog(main_window: MainWindow, qtbot: QtBot) -> QDialog:
     view = _active_detail_view(main_window)
     log_btn = view.findChild(QPushButton, "log_outcome_button")
     assert log_btn is not None, "log_outcome_button not found"
@@ -1594,29 +1653,60 @@ def _log_outcome(main_window: MainWindow, outcome: str, qtbot: QtBot) -> None:
     assert dialogs, "log_outcome_dialog did not open"
     dialog = dialogs[0]
     qtbot.addWidget(dialog)
+    return dialog
 
+
+def _select_outcome_option(dialog: QDialog, outcome: str, qtbot: QtBot) -> None:
     option_name = _OUTCOME_BUTTON_NAMES[outcome]
     option_btn = dialog.findChild(QPushButton, option_name)
     assert option_btn is not None, f"{option_name} not found"
     qtbot.mouseClick(option_btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
     QApplication.processEvents()
 
+
+def _select_timeframe_option(dialog: QDialog, timeframe: str, qtbot: QtBot) -> None:
+    option_name = _TIMEFRAME_BUTTON_NAMES[timeframe]
+    option_btn = dialog.findChild(QPushButton, option_name)
+    assert option_btn is not None, f"{option_name} not found"
+    qtbot.mouseClick(option_btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+    QApplication.processEvents()
+
+
+def _confirm_log_outcome_dialog(dialog: QDialog, qtbot: QtBot) -> None:
     confirm_btn = dialog.findChild(QPushButton, "confirm_outcome_button")
     assert confirm_btn is not None, "confirm_outcome_button not found"
     qtbot.mouseClick(confirm_btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
     QApplication.processEvents()
 
 
+def _log_outcome(main_window: MainWindow, outcome: str, qtbot: QtBot) -> None:
+    dialog = _open_log_outcome_dialog(main_window, qtbot)
+    _select_outcome_option(dialog, outcome, qtbot)
+    if outcome == "Call Back":
+        _select_timeframe_option(dialog, "This Week", qtbot)
+    _confirm_log_outcome_dialog(dialog, qtbot)
+
+
+def _log_call_back_with_timeframe(main_window: MainWindow, timeframe: str, qtbot: QtBot) -> None:
+    dialog = _open_log_outcome_dialog(main_window, qtbot)
+    _select_outcome_option(dialog, "Call Back", qtbot)
+    _select_timeframe_option(dialog, timeframe, qtbot)
+    _confirm_log_outcome_dialog(dialog, qtbot)
+
+
 @given("a contact is open in the call list detail view", target_fixture="main_window")
-def contact_open_in_call_list_detail_view(qtbot: QtBot) -> MainWindow:
-    window = _window_in_call_list_with_contact(qtbot)
+def contact_open_in_call_list_detail_view(callback_ctx: dict[str, Any], qtbot: QtBot) -> MainWindow:
+    window, call_outcome_repo, contact = _window_in_call_list_with_contact(qtbot)
     _open_details(window, _CALL_OUTCOME_CONTACT_NAME)
+    callback_ctx["window"] = window
+    callback_ctx["call_outcome_repo"] = call_outcome_repo
+    callback_ctx["contact"] = contact
     return window
 
 
 @given(parsers.parse('a contact was logged as "{outcome}"'), target_fixture="main_window")
 def a_contact_was_logged_as(outcome: str, qtbot: QtBot) -> MainWindow:
-    window = _window_in_call_list_with_contact(qtbot)
+    window, _call_outcome_repo, _contact = _window_in_call_list_with_contact(qtbot)
     _open_details(window, _CALL_OUTCOME_CONTACT_NAME)
     _log_outcome(window, outcome, qtbot)
     _back_to_list(window, qtbot)
@@ -1628,7 +1718,7 @@ def a_contact_was_logged_as(outcome: str, qtbot: QtBot) -> MainWindow:
     target_fixture="main_window",
 )
 def a_contact_has_been_logged_with_outcome(outcome: str, qtbot: QtBot) -> MainWindow:
-    window = _window_in_call_list_with_contact(qtbot)
+    window, _call_outcome_repo, _contact = _window_in_call_list_with_contact(qtbot)
     _open_details(window, _CALL_OUTCOME_CONTACT_NAME)
     _log_outcome(window, outcome, qtbot)
     return window
@@ -1674,7 +1764,7 @@ def last_contacted_and_outcome_updated(
     contacted_col = headers.index("Last Contacted")
     outcome_col = headers.index("Last Outcome")
     assert _cell_text(table, row, contacted_col) != ""
-    assert _cell_text(table, row, outcome_col) == logged_outcome
+    assert _cell_text(table, row, outcome_col).startswith(logged_outcome)
 
 
 @then("the contact no longer appears in the call list")
@@ -1725,3 +1815,154 @@ def both_outcomes_appear_in_call_history(main_window: MainWindow) -> None:
     assert len(items_text) == 2, f"expected 2 history entries, got {len(items_text)}"
     assert any("No Answer" in text for text in items_text)
     assert any("Call Back" in text for text in items_text)
+
+
+# ── Story #46: Set Callback Timeframe ───────────────────────────────────────
+
+# ── Givens ────────────────────────────────────────────────────────────────────
+
+
+@given("a contact has a callback due this week")
+def contact_has_callback_due_this_week(callback_ctx: dict[str, Any], qtbot: QtBot) -> None:
+    today = date.today()
+    end = _end_of_this_week(today)
+    _add_contact_with_callback(callback_ctx, _CALL_OUTCOME_CONTACT_NAME, today, end, qtbot)
+
+
+@given("a contact has a callback starting today")
+def contact_has_callback_starting_today(callback_ctx: dict[str, Any], qtbot: QtBot) -> None:
+    today = date.today()
+    _add_contact_with_callback(callback_ctx, _CALL_OUTCOME_CONTACT_NAME, today, today, qtbot)
+
+
+@given(
+    parsers.re(r'a contact "(?P<name>[^"]+)" has a callback that was due (?P<days>\d+) days? ago')
+)
+def contact_has_overdue_callback_named_days(
+    name: str, days: str, callback_ctx: dict[str, Any], qtbot: QtBot
+) -> None:
+    today = date.today()
+    due = today - timedelta(days=int(days))
+    _add_contact_with_callback(callback_ctx, name, due - timedelta(days=2), due, qtbot)
+
+
+@given(parsers.parse('a contact "{name}" has an overdue callback'))
+def contact_has_overdue_callback(name: str, callback_ctx: dict[str, Any], qtbot: QtBot) -> None:
+    today = date.today()
+    _add_contact_with_callback(
+        callback_ctx, name, today - timedelta(days=5), today - timedelta(days=2), qtbot
+    )
+
+
+@given(parsers.parse('a contact "{name}" has a callback due today'))
+def contact_has_callback_due_today_named(
+    name: str, callback_ctx: dict[str, Any], qtbot: QtBot
+) -> None:
+    today = date.today()
+    _add_contact_with_callback(callback_ctx, name, today, today, qtbot)
+
+
+@given(parsers.parse('a contact "{name}" has a callback due later this week'))
+def contact_has_callback_due_later_this_week_named(
+    name: str, callback_ctx: dict[str, Any], qtbot: QtBot
+) -> None:
+    today = date.today()
+    end = _end_of_this_week(today)
+    _add_contact_with_callback(callback_ctx, name, today, end, qtbot)
+
+
+@given(parsers.parse('a contact "{name}" has no callback set'))
+def contact_has_no_callback_set(name: str, callback_ctx: dict[str, Any], qtbot: QtBot) -> None:
+    _add_contact_with_callback(callback_ctx, name, None, None, qtbot)
+
+
+# ── Whens ─────────────────────────────────────────────────────────────────────
+
+
+@when(parsers.parse('the user selects the outcome "{outcome}"'))
+def user_selects_the_outcome(main_window: MainWindow, outcome: str, qtbot: QtBot) -> None:
+    dialog = _open_log_outcome_dialog(main_window, qtbot)
+    _select_outcome_option(dialog, outcome, qtbot)
+
+
+@when(parsers.parse('the user logs the outcome "Call Back" with timeframe "{timeframe}" selected'))
+def user_logs_call_back_with_timeframe(
+    main_window: MainWindow, timeframe: str, qtbot: QtBot
+) -> None:
+    _log_call_back_with_timeframe(main_window, timeframe, qtbot)
+
+
+@when("the user opens the call list", target_fixture="main_window")
+def user_opens_the_call_list(callback_ctx: dict[str, Any], qtbot: QtBot) -> MainWindow:
+    window = cast("MainWindow", callback_ctx["window"])
+    _contacts_page(window).show_call_list()
+    QApplication.processEvents()
+    return window
+
+
+# ── Thens ─────────────────────────────────────────────────────────────────────
+
+
+@then(
+    parsers.parse(
+        'a timeframe picker is shown with options "This Week", "Next Week", '
+        '"In Two Weeks", and "This Month"'
+    )
+)
+def timeframe_picker_is_shown(main_window: MainWindow) -> None:
+    dialogs = _visible_log_outcome_dialogs()
+    assert dialogs, "log_outcome_dialog did not open"
+    dialog = dialogs[0]
+    for object_name in _TIMEFRAME_BUTTON_NAMES.values():
+        btn = dialog.findChild(QPushButton, object_name)
+        assert btn is not None, f"{object_name} not found"
+        assert btn.isVisible()
+
+
+@then("the contact's callback date range is saved for next week")
+def callback_date_range_saved_for_next_week(callback_ctx: dict[str, Any]) -> None:
+    call_outcome_repo = cast("CallOutcomeRepository", callback_ctx["call_outcome_repo"])
+    contact = cast("Contact", callback_ctx["contact"])
+    assert contact.id is not None
+    latest = call_outcome_repo.latest_for_contact(contact.id)
+    assert latest is not None
+    assert latest.outcome == "Call Back"
+    today = date.today()
+    expected_start = today + timedelta(days=(7 - today.weekday()))
+    expected_end = expected_start + timedelta(days=6)
+    assert latest.callback_start_date == expected_start
+    assert latest.callback_end_date == expected_end
+
+
+@then("the contact appears in the call list")
+def the_contact_appears_in_call_list(main_window: MainWindow) -> None:
+    assert _CALL_OUTCOME_CONTACT_NAME in _contact_names(main_window)
+
+
+@then("its next callback due date is shown")
+def next_callback_due_date_is_shown(main_window: MainWindow) -> None:
+    table = _contact_table(main_window)
+    headers = _header_texts(table)
+    assert "Last Outcome" in headers, "Last Outcome column not found"
+    outcome_col = headers.index("Last Outcome")
+    row = _row_with_last_name(table, "Caller")
+    text = _cell_text(table, row, outcome_col)
+    assert text != "Call Back", "expected a due date shown alongside the outcome"
+
+
+@then(parsers.parse('"{name1}" appears above "{name2}"'))
+def name_appears_above(main_window: MainWindow, name1: str, name2: str) -> None:
+    table = _contact_table(main_window)
+    row1 = _row_with_full_name(table, name1)
+    row2 = _row_with_full_name(table, name2)
+    assert row1 < row2, f"expected {name1} (row {row1}) above {name2} (row {row2})"
+
+
+@then(parsers.parse('the contacts appear in the order "{name1}", "{name2}", "{name3}", "{name4}"'))
+def contacts_appear_in_order(
+    main_window: MainWindow, name1: str, name2: str, name3: str, name4: str
+) -> None:
+    table = _contact_table(main_window)
+    names = [name1, name2, name3, name4]
+    rows = [_row_with_full_name(table, name) for name in names]
+    assert rows == sorted(rows), f"expected order {names}, got row indices {rows}"
