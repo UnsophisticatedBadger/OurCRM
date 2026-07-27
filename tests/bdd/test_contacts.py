@@ -1996,18 +1996,18 @@ def contact_has_callback_due_in_days(
 
 
 @when(parsers.parse('the user checks the "{label}" filter'))
-def user_checks_the_filter(main_window: MainWindow, label: str, qtbot: QtBot) -> None:
+def user_checks_the_filter(main_window: MainWindow, label: str) -> None:
     checkbox = _contacts_page(main_window).findChild(QCheckBox, _DUE_THIS_WEEK_FILTER_CHECKBOX)
     assert checkbox is not None, f"{_DUE_THIS_WEEK_FILTER_CHECKBOX} not found"
-    qtbot.mouseClick(checkbox, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+    checkbox.setChecked(True)
     QApplication.processEvents()
 
 
 @when(parsers.parse('the user unchecks the "{label}" filter'))
-def user_unchecks_the_filter(main_window: MainWindow, label: str, qtbot: QtBot) -> None:
+def user_unchecks_the_filter(main_window: MainWindow, label: str) -> None:
     checkbox = _contacts_page(main_window).findChild(QCheckBox, _DUE_THIS_WEEK_FILTER_CHECKBOX)
     assert checkbox is not None, f"{_DUE_THIS_WEEK_FILTER_CHECKBOX} not found"
-    qtbot.mouseClick(checkbox, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+    checkbox.setChecked(False)
     QApplication.processEvents()
 
 
