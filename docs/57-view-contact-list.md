@@ -18,7 +18,7 @@ As a real estate agent, I want to see all my contacts in a sortable list, so tha
 1. The Contacts section displays a table of all contacts with first name, last name, street address, city, email, phone, and tags columns; sorted by last name by default
 2. Clicking a column header sorts by that column; clicking the same header again reverses the order
 3. Double-clicking a contact row opens its details view
-4. When no contacts exist, an empty state message "No contacts yet" is shown with a "Create Your First Contact" button
+4. When no contacts exist, an empty state message "No contacts yet" is shown and the persistent "New Contact" button relabels itself to "Create Your First Contact", reverting to "New Contact" once a contact is added
 5. Sort column, sort direction, and scroll position are preserved when the user navigates away and returns
 
 ## BDD Scenarios
@@ -38,7 +38,7 @@ Scenario: User with no contacts sees an empty state
   Given the user has no contacts
   When the user opens the Contacts section
   Then "No contacts yet" is shown
-  And a "Create Your First Contact" button is visible
+  And the "New Contact" button reads "Create Your First Contact"
 
 @story_57
 Scenario: User sorts the contact list by clicking a column header
@@ -75,7 +75,8 @@ Scenario: Sort order is preserved when the user navigates away and back
 1. Open the app with a fresh database (no contacts)
 2. Navigate to the Contacts section
 3. Confirm "No contacts yet" message appears
-4. Confirm the "Create Your First Contact" button is visible and opens the new contact form
+4. Confirm the "New Contact" button now reads "Create Your First Contact" and opens the new contact form
+5. Add a contact and confirm the button reverts to reading "New Contact"
 
 ### User sorts by column
 1. View the contact list with several contacts (sorted by last name ascending by default)

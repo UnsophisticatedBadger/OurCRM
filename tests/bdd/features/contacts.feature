@@ -45,7 +45,7 @@ Feature: Contacts
     Given the user has no contacts
     When the user opens the Contacts section
     Then "No contacts yet" is shown
-    And a "Create Your First Contact" button is visible
+    And the "New Contact" button reads "Create Your First Contact"
 
   @story_57
   Scenario: User sorts the contact list by clicking a column header

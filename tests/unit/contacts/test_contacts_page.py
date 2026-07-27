@@ -188,8 +188,8 @@ def test_empty_state_label_shown_when_no_contacts(page: ContactsPage) -> None:
     assert label.text() == "No contacts yet"
 
 
-def test_create_first_contact_button_shown_when_no_contacts(page: ContactsPage) -> None:
-    btn = page.findChild(QPushButton, "create_first_contact_button")
+def test_new_contact_button_relabels_when_no_contacts(page: ContactsPage) -> None:
+    btn = page.findChild(QPushButton, "new_contact_button")
     assert btn is not None
     assert btn.isVisible()
     assert btn.text() == "Create Your First Contact"
@@ -217,11 +217,22 @@ def test_table_visible_when_contacts_exist(repository: ContactRepository, qtbot:
     assert table.isVisible()
 
 
-def test_clicking_create_first_contact_button_opens_form(
+def test_new_contact_button_reverts_to_default_label_when_contacts_exist(
+    repository: ContactRepository, qtbot: QtBot
+) -> None:
+    repository.create(Contact(first_name="Jane", last_name="Smith"))
+    w, _ = _build_page_and_table(repository, qtbot)
+    btn = w.findChild(QPushButton, "new_contact_button")
+    assert btn is not None
+    assert btn.text() == "New Contact"
+
+
+def test_clicking_new_contact_button_while_empty_opens_form(
     page_with_repo: ContactsPage, qtbot: QtBot
 ) -> None:
-    btn = page_with_repo.findChild(QPushButton, "create_first_contact_button")
+    btn = page_with_repo.findChild(QPushButton, "new_contact_button")
     assert btn is not None
+    assert btn.text() == "Create Your First Contact"
     btn.click()
     QApplication.processEvents()
     visible = [

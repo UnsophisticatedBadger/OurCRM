@@ -671,10 +671,6 @@ class ContactsPage(QWidget):
         self._empty_state_label = QLabel("No contacts yet")
         self._empty_state_label.setObjectName("empty_state_label")
         empty_layout.addWidget(self._empty_state_label)
-        self._create_first_contact_btn = QPushButton("Create Your First Contact")
-        self._create_first_contact_btn.setObjectName("create_first_contact_button")
-        empty_layout.addWidget(self._create_first_contact_btn)
-        self._create_first_contact_btn.clicked.connect(self._open_contact_form)
 
         self._no_results_state = QWidget()
         self._no_results_state.setObjectName("no_results_state")
@@ -777,7 +773,11 @@ class ContactsPage(QWidget):
         else:
             self._contact_table.sortItems(_COL_LAST_NAME, Qt.SortOrder.AscendingOrder)
         self._contact_table.setSortingEnabled(True)
-        self._stack.setCurrentWidget(self._list_state_widget(query))
+        list_state = self._list_state_widget(query)
+        self._stack.setCurrentWidget(list_state)
+        self._new_contact_btn.setText(
+            "Create Your First Contact" if list_state is self._empty_state else "New Contact"
+        )
 
     def _refresh_category_filter_items(self) -> None:
         self._category_filter.blockSignals(True)

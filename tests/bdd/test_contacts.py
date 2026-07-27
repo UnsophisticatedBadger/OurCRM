@@ -442,10 +442,10 @@ def message_is_shown(main_window: MainWindow, message: str) -> None:
     assert label.text() == message
 
 
-@then(parsers.parse('a "{label}" button is visible'))
-def create_first_contact_button_visible(main_window: MainWindow, label: str) -> None:
-    btn = _contacts_page(main_window).findChild(QPushButton, "create_first_contact_button")
-    assert btn is not None, "create_first_contact_button not found"
+@then(parsers.parse('the "New Contact" button reads "{label}"'))
+def new_contact_button_reads(main_window: MainWindow, label: str) -> None:
+    btn = _contacts_page(main_window).findChild(QPushButton, "new_contact_button")
+    assert btn is not None, "new_contact_button not found"
     assert btn.isVisible()
     assert btn.text() == label
 

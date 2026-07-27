@@ -14,7 +14,8 @@
 1. Open the app with a fresh database (no contacts)
 2. Navigate to the Contacts section
 3. Confirm "No contacts yet" message appears
-4. Confirm the "Create Your First Contact" button is visible and opens the new contact form
+4. Confirm the "New Contact" button now reads "Create Your First Contact" and opens the new contact form
+5. Add a contact and confirm the button reverts to reading "New Contact"
 
 ## User sorts by column
 
