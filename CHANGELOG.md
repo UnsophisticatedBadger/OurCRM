@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v0.25.0 (2026-07-27)
+
+### Features
+
+- Add View Due Callbacks ([#47](https://github.com/UnsophisticatedBadger/OurCRM/pull/47),
+  [`d06e2a9`](https://github.com/UnsophisticatedBadger/OurCRM/commit/d06e2a90febc8229d7f44c63675b4d1d238ea26d))
+
+
 ## v0.24.0 (2026-07-27)
 
 ### Features
