@@ -399,3 +399,51 @@ Feature: Contacts
     And a contact "Frank NoCallback" has no callback set
     When the user opens the call list
     Then the contacts appear in the order "Carol Overdue", "Dana Today", "Erin ThisWeek", "Frank NoCallback"
+
+  @story_47
+  Scenario: The due-this-week filter is available in the call list
+    Given a contact "Mona NoCallback" has no callback set
+    When the user opens the call list
+    Then a "Show only callbacks due this week" checkbox is shown
+
+  @story_47
+  Scenario: Checking the filter hides contacts with no callback due
+    Given a contact "Gina NoCallback" has no callback set
+    And a contact "Hank ThisWeek" has a callback due later this week
+    When the user opens the call list
+    And the user checks the "Show only callbacks due this week" filter
+    Then "Hank ThisWeek" appears in the call list
+    And "Gina NoCallback" does not appear in the call list
+
+  @story_47
+  Scenario: Unchecking the filter restores the full call list
+    Given a contact "Ivan NoCallback" has no callback set
+    When the user opens the call list
+    And the user checks the "Show only callbacks due this week" filter
+    And the user unchecks the "Show only callbacks due this week" filter
+    Then "Ivan NoCallback" appears in the call list
+
+  @story_47
+  Scenario: An overdue callback is highlighted with a red row and a badge
+    Given a contact "Judy Overdue" has an overdue callback
+    When the user opens the call list
+    Then "Judy Overdue" is shown with a red-tinted row
+    And "Judy Overdue" is shown with an "⚠ Overdue" badge
+
+  @story_47
+  Scenario: An overdue callback shows how many days overdue
+    Given a contact "Ken Overdue" has a callback that was due 3 days ago
+    When the user opens the call list
+    Then "Ken Overdue" shows "3 days overdue"
+
+  @story_47
+  Scenario: A callback due today shows "due today"
+    Given a contact "Mia DueToday" has a callback due today
+    When the user opens the call list
+    Then "Mia DueToday" shows "due today"
+
+  @story_47
+  Scenario: A callback due later this week shows how many days remain
+    Given a contact "Liz ThisWeek" has a callback due in 2 days
+    When the user opens the call list
+    Then "Liz ThisWeek" shows "due in 2 days"

@@ -1,29 +1,19 @@
 # View Due Callbacks — Manual Tests
 
-**Story:** [US-020 — View Due Callbacks](../../../docs/020-view-due-callbacks.md)
+**Story:** [#47 — View Due Callbacks](../../../docs/47-view-due-callbacks.md)
 
-## Due This Week filter shows only callbacks due this week
+## Filtering to just this week's callbacks
+1. Open the Call List with a mix of contacts: some with overdue callbacks, some due this week, some with no callback set
+2. Check "Show only callbacks due this week"
+3. Confirm only the overdue/due-today/due-this-week contacts remain visible
+4. Uncheck the filter and confirm the full call list returns
 
-1. Add contacts with callbacks set for: this week, next week, and overdue (past week)
-2. Apply the "Due This Week" filter on the call list
-3. Confirm only contacts with callbacks due this week or overdue are shown
-4. Confirm contacts with callbacks scheduled for next week are hidden
+## Overdue callbacks are highlighted
+1. Arrange a contact with an overdue callback
+2. Open the Call List
+3. Confirm the row has a red tint and an "⚠ Overdue" badge on the contact's name
 
-## Overdue callbacks appear first and are highlighted
-
-1. Ensure at least one contact has a callback that is past due and one is due later this week
-2. Open the "Due This Week" filtered view
-3. Confirm overdue contacts appear above upcoming-this-week contacts
-4. Confirm overdue contacts are visually highlighted (e.g. different color or icon)
-
-## Days overdue and days remaining are displayed
-
-1. Open the "Due This Week" filtered view
-2. For an overdue contact, confirm the row shows how many days overdue (e.g. "2 days overdue")
-3. For a contact due in the future, confirm the row shows days remaining (e.g. "Due in 3 days")
-
-## Clearing the filter returns to the full call list
-
-1. Apply the "Due This Week" filter
-2. Clear or remove the filter
-3. Confirm the full call list reappears with all contacts in their normal sort order
+## Relative day counts display correctly
+1. Arrange contacts with an overdue callback, a callback due today, and a callback due later this week
+2. Open the Call List
+3. Confirm each shows the correct relative text: "N days overdue", "due today", or "due in N days"

@@ -9,6 +9,7 @@ import pytest
 from PySide6.QtCore import QPoint, Qt
 from PySide6.QtWidgets import (
     QApplication,
+    QCheckBox,
     QComboBox,
     QDialog,
     QLabel,
@@ -1618,10 +1619,17 @@ def _row_with_last_name(table: QTableWidget, last_name: str) -> int:
     raise AssertionError(f"no row with last name '{last_name}'")
 
 
+_NAME_BADGE_PREFIXES = ("⚠ ", "★ ")
+
+
 def _row_with_full_name(table: QTableWidget, name: str) -> int:
     first, last = name.split(" ", 1)
     for row in range(table.rowCount()):
-        if _cell_text(table, row, 0) == first and _cell_text(table, row, 1) == last:
+        first_cell = _cell_text(table, row, 0)
+        for prefix in _NAME_BADGE_PREFIXES:
+            if first_cell.startswith(prefix):
+                first_cell = first_cell[len(prefix) :]
+        if first_cell == first and _cell_text(table, row, 1) == last:
             return row
     raise AssertionError(f"no row with name '{name}'")
 
@@ -1966,3 +1974,87 @@ def contacts_appear_in_order(
     names = [name1, name2, name3, name4]
     rows = [_row_with_full_name(table, name) for name in names]
     assert rows == sorted(rows), f"expected order {names}, got row indices {rows}"
+
+
+# ── Story #47: View Due Callbacks ───────────────────────────────────────────
+
+_DUE_THIS_WEEK_FILTER_CHECKBOX = "due_this_week_filter_checkbox"
+
+# ── Givens ────────────────────────────────────────────────────────────────────
+
+
+@given(parsers.parse('a contact "{name}" has a callback due in {days:d} days'))
+def contact_has_callback_due_in_days(
+    name: str, days: int, callback_ctx: dict[str, Any], qtbot: QtBot
+) -> None:
+    today = date.today()
+    end = today + timedelta(days=days)
+    _add_contact_with_callback(callback_ctx, name, today, end, qtbot)
+
+
+# ── Whens ─────────────────────────────────────────────────────────────────────
+
+
+@when(parsers.parse('the user checks the "{label}" filter'))
+def user_checks_the_filter(main_window: MainWindow, label: str, qtbot: QtBot) -> None:
+    checkbox = _contacts_page(main_window).findChild(QCheckBox, _DUE_THIS_WEEK_FILTER_CHECKBOX)
+    assert checkbox is not None, f"{_DUE_THIS_WEEK_FILTER_CHECKBOX} not found"
+    qtbot.mouseClick(checkbox, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+    QApplication.processEvents()
+
+
+@when(parsers.parse('the user unchecks the "{label}" filter'))
+def user_unchecks_the_filter(main_window: MainWindow, label: str, qtbot: QtBot) -> None:
+    checkbox = _contacts_page(main_window).findChild(QCheckBox, _DUE_THIS_WEEK_FILTER_CHECKBOX)
+    assert checkbox is not None, f"{_DUE_THIS_WEEK_FILTER_CHECKBOX} not found"
+    qtbot.mouseClick(checkbox, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+    QApplication.processEvents()
+
+
+# ── Thens ─────────────────────────────────────────────────────────────────────
+
+
+@then(parsers.parse('a "{label}" checkbox is shown'))
+def a_filter_checkbox_is_shown(main_window: MainWindow, label: str) -> None:
+    checkbox = _contacts_page(main_window).findChild(QCheckBox, _DUE_THIS_WEEK_FILTER_CHECKBOX)
+    assert checkbox is not None, f"{_DUE_THIS_WEEK_FILTER_CHECKBOX} not found"
+    assert checkbox.text() == label
+
+
+@then(parsers.parse('"{name}" appears in the call list'))
+def named_contact_appears_in_call_list(main_window: MainWindow, name: str) -> None:
+    assert name in _contact_names(main_window)
+
+
+@then(parsers.parse('"{name}" does not appear in the call list'))
+def named_contact_does_not_appear_in_call_list(main_window: MainWindow, name: str) -> None:
+    assert name not in _contact_names(main_window)
+
+
+@then(parsers.parse('"{name}" is shown with a red-tinted row'))
+def named_contact_shown_with_red_tinted_row(main_window: MainWindow, name: str) -> None:
+    table = _contact_table(main_window)
+    row = _row_with_full_name(table, name)
+    item = table.item(row, 0)
+    assert item is not None
+    color = item.background().color()
+    assert color.red() > color.green() and color.red() > color.blue(), (
+        f"expected a red-tinted background for '{name}', got {color.name()}"
+    )
+
+
+@then(parsers.parse('"{name}" is shown with an "⚠ Overdue" badge'))
+def named_contact_shown_with_overdue_badge(main_window: MainWindow, name: str) -> None:
+    table = _contact_table(main_window)
+    row = _row_with_full_name(table, name)
+    assert "⚠" in _cell_text(table, row, 0), "overdue badge (⚠) not shown in First Name cell"
+
+
+@then(parsers.parse('"{name}" shows "{text}"'))
+def named_contact_shows_text(main_window: MainWindow, name: str, text: str) -> None:
+    table = _contact_table(main_window)
+    headers = _header_texts(table)
+    outcome_col = headers.index("Last Outcome")
+    row = _row_with_full_name(table, name)
+    cell_text = _cell_text(table, row, outcome_col)
+    assert text in cell_text, f"expected '{text}' in outcome cell, got '{cell_text}'"

@@ -6,10 +6,11 @@ from datetime import date
 from typing import override
 
 from PySide6.QtCore import QPoint, Qt, Signal
-from PySide6.QtGui import QKeyEvent, QKeySequence, QShortcut
+from PySide6.QtGui import QBrush, QColor, QKeyEvent, QKeySequence, QShortcut
 from PySide6.QtWidgets import (
     QAbstractItemView,
     QButtonGroup,
+    QCheckBox,
     QComboBox,
     QDialog,
     QFormLayout,
@@ -29,7 +30,7 @@ from PySide6.QtWidgets import (
 )
 
 from ourcrm.crm.contacts.call_outcome_repository import CallOutcome, CallOutcomeRepositoryProtocol
-from ourcrm.crm.contacts.callback_timeframe import timeframe_to_range
+from ourcrm.crm.contacts.callback_timeframe import days_relative_text, timeframe_to_range
 from ourcrm.crm.contacts.category_repository import Category, CategoryRepositoryProtocol
 from ourcrm.crm.contacts.models import Contact
 from ourcrm.crm.contacts.repository import ContactRepositoryProtocol
@@ -419,6 +420,8 @@ _COL_LAST_OUTCOME = 9
 _OTHER_CATEGORY = "Other"
 _ALL_CATEGORIES_LABEL = "All Categories"
 
+_OVERDUE_ROW_COLOR = QColor(90, 30, 30)
+
 
 class RenameCategoryDialog(QDialog):
     def __init__(self, current_name: str, parent: QWidget | None = None) -> None:
@@ -631,6 +634,12 @@ class ContactsPage(QWidget):
         self._all_contacts_toggle_btn.clicked.connect(self.show_all_contacts)
         self._call_list_toggle_btn.clicked.connect(self.show_call_list)
 
+        self._due_this_week_filter_checkbox = QCheckBox("Show only callbacks due this week")
+        self._due_this_week_filter_checkbox.setObjectName("due_this_week_filter_checkbox")
+        self._due_this_week_filter_checkbox.setVisible(False)
+        self._due_this_week_filter_checkbox.toggled.connect(self._refresh_list)
+        layout.addWidget(self._due_this_week_filter_checkbox)
+
         category_row = QHBoxLayout()
         self._category_filter = QComboBox()
         self._category_filter.setObjectName("category_filter")
@@ -733,6 +742,7 @@ class ContactsPage(QWidget):
         self._contact_table.setHorizontalHeaderLabels(headers)
 
     def _refresh_list(self) -> None:
+        self._due_this_week_filter_checkbox.setVisible(self._call_list_mode)
         self._apply_column_headers()
         self._contact_table.setSortingEnabled(False)
         self._contact_table.setRowCount(0)
@@ -748,6 +758,12 @@ class ContactsPage(QWidget):
                 if self._call_list_mode and self._is_not_interested(contact):
                     continue
                 if self._call_list_mode and self._callback_not_yet_due(contact):
+                    continue
+                if (
+                    self._call_list_mode
+                    and self._due_this_week_filter_checkbox.isChecked()
+                    and self._callback_bucket(contact) == 3
+                ):
                     continue
                 if category_filter != _ALL_CATEGORIES_LABEL and contact.category != category_filter:
                     continue
@@ -800,7 +816,10 @@ class ContactsPage(QWidget):
     def _add_row(self, contact: Contact) -> None:
         row = self._contact_table.rowCount()
         self._contact_table.insertRow(row)
+        is_overdue = self._call_list_mode and self._callback_bucket(contact) == 0
         first_name_text = contact.first_name
+        if is_overdue:
+            first_name_text = f"⚠ {first_name_text}"
         if contact.category == "Current Client":
             first_name_text = f"{first_name_text} ★ Client"
         first_item = QTableWidgetItem(first_name_text)
@@ -824,10 +843,19 @@ class ContactsPage(QWidget):
                 self._set_cell(row, _COL_LAST_CONTACTED, "")
                 self._set_cell(row, _COL_LAST_OUTCOME, "")
 
+        if is_overdue:
+            self._tint_row(row, _OVERDUE_ROW_COLOR)
+
+    def _tint_row(self, row: int, color: QColor) -> None:
+        for column in range(self._contact_table.columnCount()):
+            item = self._contact_table.item(row, column)
+            if item is not None:
+                item.setBackground(QBrush(color))
+
     def _outcome_cell_text(self, latest: CallOutcome) -> str:
         if latest.outcome == "Call Back" and latest.callback_end_date is not None:
-            due = latest.callback_end_date.strftime("%Y-%m-%d")
-            return f"{latest.outcome} — due {due}"
+            due = days_relative_text(latest.callback_end_date, date.today())
+            return f"{latest.outcome} — {due}"
         return latest.outcome
 
     def _latest_outcome(self, contact: Contact) -> CallOutcome | None:
@@ -845,14 +873,19 @@ class ContactsPage(QWidget):
             return False
         return latest.callback_start_date > date.today()
 
-    def _callback_sort_key(self, contact: Contact) -> tuple[int, date, str]:
+    def _callback_bucket(self, contact: Contact) -> int:
         latest = self._latest_outcome(contact)
         if latest is not None and latest.outcome == "Call Back" and latest.callback_end_date:
             today = date.today()
             end = latest.callback_end_date
-            bucket = 0 if end < today else 1 if end == today else 2
-            return (bucket, end, contact.last_name)
-        return (3, date.max, contact.last_name)
+            return 0 if end < today else 1 if end == today else 2
+        return 3
+
+    def _callback_sort_key(self, contact: Contact) -> tuple[int, date, str]:
+        latest = self._latest_outcome(contact)
+        bucket = self._callback_bucket(contact)
+        end = latest.callback_end_date if latest is not None and bucket != 3 else None
+        return (bucket, end or date.max, contact.last_name)
 
     def _open_contact_form(self) -> None:
         if self._repository is None:

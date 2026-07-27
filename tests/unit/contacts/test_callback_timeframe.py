@@ -135,7 +135,7 @@ def test_call_list_shows_the_callback_due_date_alongside_the_outcome(
     assert contact.id is not None
     outcome_repo = CallOutcomeRepository(sessionmaker(bind=engine))
     today = date.today()
-    end = timeframe_to_range("This Week", today)[1]
+    end = today + timedelta(days=3)
     outcome_repo.log(contact.id, "Call Back", callback_start=today, callback_end=end)
 
     page = ContactsPage(repository=repository, call_outcome_repository=outcome_repo)
@@ -150,7 +150,7 @@ def test_call_list_shows_the_callback_due_date_alongside_the_outcome(
     outcome_col = headers.index("Last Outcome")
     cell = table.item(0, outcome_col)
     assert cell is not None
-    assert cell.text() == f"Call Back — due {end.strftime('%Y-%m-%d')}"
+    assert cell.text() == "Call Back — due in 3 days"
 
 
 def test_call_list_priority_order_overdue_then_due_today_then_due_this_week_then_rest(
@@ -193,7 +193,7 @@ def test_call_list_priority_order_overdue_then_due_today_then_due_this_week_then
     assert table is not None
     rows = [(_cell_text(table, r, 0), _cell_text(table, r, 1)) for r in range(table.rowCount())]
     assert rows == [
-        ("Carol", "Overdue"),
+        ("⚠ Carol", "Overdue"),
         ("Dana", "Today"),
         ("Erin", "ThisWeek"),
         ("Frank", "NoCallback"),

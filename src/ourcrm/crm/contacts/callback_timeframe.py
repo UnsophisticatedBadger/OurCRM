@@ -21,3 +21,13 @@ def timeframe_to_range(timeframe: str, today: date) -> tuple[date, date]:
     start = today if weeks_ahead == 0 else today + timedelta(days=7 * weeks_ahead - today.weekday())
     end = start + timedelta(days=6 - start.weekday())
     return start, end
+
+
+def days_relative_text(end: date, today: date) -> str:
+    delta = (end - today).days
+    if delta < 0:
+        days = -delta
+        return f"{days} day{'s' if days != 1 else ''} overdue"
+    if delta == 0:
+        return "due today"
+    return f"due in {delta} day{'s' if delta != 1 else ''}"
