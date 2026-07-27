@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v0.24.0 (2026-07-27)
+
+### Features
+
+- Add Set Callback Timeframe ([#46](https://github.com/UnsophisticatedBadger/OurCRM/pull/46),
+  [`5ff4728`](https://github.com/UnsophisticatedBadger/OurCRM/commit/5ff472821ab0e5cf4fa2957a9fc5f17882565490))
+
+
 ## v0.23.0 (2026-07-26)
 
 ### Features
