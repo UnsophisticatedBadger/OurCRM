@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v0.25.1 (2026-07-27)
+
+### Bug Fixes
+
+- Use setChecked instead of mouseClick for due-this-week filter checkbox in BDD tests
+  ([`3d94954`](https://github.com/UnsophisticatedBadger/OurCRM/commit/3d949546579e1d67cd3dc1f860eb00ce5b0a6b49))
+
+
 ## v0.25.0 (2026-07-27)
 
 ### Features
