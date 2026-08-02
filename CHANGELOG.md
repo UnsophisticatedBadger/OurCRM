@@ -2,6 +2,15 @@
 
 <!-- version list -->
 
+## v0.26.0 (2026-08-02)
+
+### Features
+
+- Add guided MLS credentials setup walkthrough
+  ([#49](https://github.com/UnsophisticatedBadger/OurCRM/pull/49),
+  [`9efbd81`](https://github.com/UnsophisticatedBadger/OurCRM/commit/9efbd81c1164adf7bd1b658ae8e70a133377eb02))
+
+
 ## v0.25.2 (2026-07-27)
 
 ### Bug Fixes
