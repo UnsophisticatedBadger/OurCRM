@@ -62,6 +62,12 @@ class GeneralSettings:
     startup_behavior: StartupBehavior = StartupBehavior.LAST_VIEW
 
 
+@dataclasses.dataclass(frozen=True)
+class MlsSettings:
+    endpoint_url: str = ""
+    client_id: str = ""
+
+
 def _coerce[T: StrEnum](cls: type[T], raw: object, default: T) -> T:
     if not isinstance(raw, str):
         return default
@@ -76,6 +82,8 @@ class SettingsStoreProtocol(Protocol):
     def save_general(self, settings: GeneralSettings) -> ConfigSaveResult: ...
     def load_security(self) -> SecuritySettings: ...
     def save_security(self, settings: SecuritySettings) -> ConfigSaveResult: ...
+    def load_mls(self) -> MlsSettings: ...
+    def save_mls(self, settings: MlsSettings) -> ConfigSaveResult: ...
 
 
 class AppConfig:
@@ -140,6 +148,31 @@ class AppConfig:
         data = self._load_raw()
         data["security"] = {
             "auto_lock_timeout_minutes": settings.auto_lock_timeout_minutes,
+        }
+        try:
+            self._save_raw(data)
+        except OSError as exc:
+            return ConfigSaveResult(success=False, error=str(exc))
+        return ConfigSaveResult(success=True)
+
+    def load_mls(self) -> MlsSettings:
+        data = self._load_raw()
+        section: object = data.get("mls", {})
+        if not isinstance(section, dict):
+            return MlsSettings()
+        d = MlsSettings()
+        raw_endpoint = section.get("endpoint_url")
+        raw_client_id = section.get("client_id")
+        return MlsSettings(
+            endpoint_url=raw_endpoint if isinstance(raw_endpoint, str) else d.endpoint_url,
+            client_id=raw_client_id if isinstance(raw_client_id, str) else d.client_id,
+        )
+
+    def save_mls(self, settings: MlsSettings) -> ConfigSaveResult:
+        data = self._load_raw()
+        data["mls"] = {
+            "endpoint_url": settings.endpoint_url,
+            "client_id": settings.client_id,
         }
         try:
             self._save_raw(data)

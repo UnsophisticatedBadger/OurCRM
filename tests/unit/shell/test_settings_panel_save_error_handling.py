@@ -8,7 +8,13 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QApplication, QComboBox, QDialogButtonBox, QPushButton
 from pytestqt.qtbot import QtBot
 
-from ourcrm.core.config import ConfigSaveResult, GeneralSettings, SecuritySettings, Theme
+from ourcrm.core.config import (
+    ConfigSaveResult,
+    GeneralSettings,
+    MlsSettings,
+    SecuritySettings,
+    Theme,
+)
 from ourcrm.ui.general_page import GeneralPage
 from ourcrm.ui.settings_window import SettingsPanel
 
@@ -36,6 +42,12 @@ class _FakeSettingsStore:
         if self._security_ok:
             return ConfigSaveResult(success=True)
         return ConfigSaveResult(success=False, error="disk full")
+
+    def load_mls(self) -> MlsSettings:
+        return MlsSettings()
+
+    def save_mls(self, settings: MlsSettings) -> ConfigSaveResult:
+        return ConfigSaveResult(success=True)
 
 
 def _save_btn(panel: SettingsPanel) -> QPushButton:

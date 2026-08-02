@@ -21,6 +21,7 @@ repos:
           - argon2-cffi>=25.1.0
           - keyring>=25.7.0
           - cryptography
+          - httpx>=0.28.1
           - pytest
           - pytest-bdd
           - pytest-qt

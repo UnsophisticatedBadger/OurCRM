@@ -18,7 +18,10 @@ from PySide6.QtWidgets import (
 )
 
 from ourcrm.core.config import SettingsStoreProtocol
+from ourcrm.integrations.mls.connection_tester import HttpxClient, MlsConnectionTester
+from ourcrm.integrations.mls.credentials_service import MlsCredentialsService
 from ourcrm.ui.general_page import GeneralPage
+from ourcrm.ui.mls_page import MlsPage
 from ourcrm.ui.security_page import SecurityPage
 from ourcrm.ui.theme import apply_theme
 
@@ -55,6 +58,16 @@ class SettingsPanel(QWidget):
         self._security_page.change_master_password_requested.connect(
             self.change_master_password_requested
         )
+        mls_credentials_service = (
+            MlsCredentialsService(app_config) if app_config is not None else None
+        )
+        mls_connection_tester = (
+            MlsConnectionTester(HttpxClient()) if app_config is not None else None
+        )
+        self._mls_page = MlsPage(
+            credentials_service=mls_credentials_service,
+            connection_tester=mls_connection_tester,
+        )
         self._setup_ui()
         if app_config is not None:
             self._general_page.load(app_config.load_general())
@@ -78,6 +91,8 @@ class SettingsPanel(QWidget):
                 self._content.addWidget(self._general_page)
             elif cat == SettingsCategory.SECURITY:
                 self._content.addWidget(self._security_page)
+            elif cat == SettingsCategory.MLS:
+                self._content.addWidget(self._mls_page)
             else:
                 self._content.addWidget(QLabel(cat.value))
 
