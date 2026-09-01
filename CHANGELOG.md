@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v0.28.0 (2026-09-01)
+
+### Features
+
+- Wire real Contacts, Leads, and Due Today counts into the dashboard stats widget
+  ([`41bd662`](https://github.com/UnsophisticatedBadger/OurCRM/commit/41bd662beeb3b5957abf8323098a2e36c796b000))
+
+
 ## v0.27.0 (2026-09-01)
 
 ### Features
