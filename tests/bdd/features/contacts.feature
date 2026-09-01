@@ -393,7 +393,8 @@ Feature: Contacts
 
   @story_46
   Scenario: The call list priority order places overdue, then due today, then due this week, then everyone else
-    Given a contact "Carol Overdue" has an overdue callback
+    Given today is "2026-08-05"
+    And a contact "Carol Overdue" has an overdue callback
     And a contact "Dana Today" has a callback due today
     And a contact "Erin ThisWeek" has a callback due later this week
     And a contact "Frank NoCallback" has no callback set
@@ -447,3 +448,10 @@ Feature: Contacts
     Given a contact "Liz ThisWeek" has a callback due in 2 days
     When the user opens the call list
     Then "Liz ThisWeek" shows "due in 2 days"
+
+  @story_46
+  Scenario: A callback due today is correctly labeled even on the last day of the week
+    Given today is "2026-08-02"
+    And a contact "Gail DueToday" has a callback due today
+    When the user opens the call list
+    Then "Gail DueToday" shows "due today"

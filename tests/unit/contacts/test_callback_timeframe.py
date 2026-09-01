@@ -20,6 +20,22 @@ from ourcrm.crm.contacts.repository import ContactRepository
 from ourcrm.database.manager import DatabaseManager
 from ourcrm.ui.contacts_page import ContactsPage, LogOutcomeDialog
 
+
+def _frozen_date(value: date) -> type[date]:
+    """A `date` subclass whose `.today()` always returns `value`.
+
+    Used to make call-list bucket/sort tests deterministic instead of depending on
+    which day of the week the suite happens to run (see GitHub #211).
+    """
+
+    class _Frozen(date):
+        @classmethod
+        def today(cls) -> _Frozen:
+            return cls(value.year, value.month, value.day)
+
+    return _Frozen
+
+
 _TIMEFRAME_OPTION_BUTTON_NAMES = (
     "timeframe_this_week_button",
     "timeframe_next_week_button",
@@ -154,10 +170,11 @@ def test_call_list_shows_the_callback_due_date_alongside_the_outcome(
 
 
 def test_call_list_priority_order_overdue_then_due_today_then_due_this_week_then_rest(
-    repository: ContactRepository, engine: Engine, qtbot: QtBot
+    repository: ContactRepository, engine: Engine, qtbot: QtBot, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     outcome_repo = CallOutcomeRepository(sessionmaker(bind=engine))
-    today = date.today()
+    today = date(2026, 8, 5)  # a Wednesday -- has room left in the week, unlike Sunday (see #211)
+    monkeypatch.setattr("ourcrm.ui.contacts_page.date", _frozen_date(today))
 
     overdue = repository.create(Contact(first_name="Carol", last_name="Overdue", phone="555-0001"))
     due_today = repository.create(Contact(first_name="Dana", last_name="Today", phone="555-0002"))
@@ -198,6 +215,48 @@ def test_call_list_priority_order_overdue_then_due_today_then_due_this_week_then
         ("Erin", "ThisWeek"),
         ("Frank", "NoCallback"),
     ]
+
+
+def test_this_week_timeframe_collapses_to_today_on_the_last_day_of_the_week() -> None:
+    sunday = date(2026, 8, 2)  # the last day of the current Monday-Sunday week
+    assert sunday.weekday() == 6
+
+    start, end = timeframe_to_range("This Week", sunday)
+
+    assert start == sunday
+    assert end == sunday
+
+
+def test_a_callback_due_today_is_labeled_due_today_on_the_last_day_of_the_week(
+    repository: ContactRepository, engine: Engine, qtbot: QtBot, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    outcome_repo = CallOutcomeRepository(sessionmaker(bind=engine))
+    sunday = date(2026, 8, 2)  # the last day of the current Monday-Sunday week
+    monkeypatch.setattr("ourcrm.ui.contacts_page.date", _frozen_date(sunday))
+
+    due_today = repository.create(
+        Contact(first_name="Gail", last_name="DueToday", phone="555-0005")
+    )
+    repository.create(Contact(first_name="Hal", last_name="NoCallback", phone="555-0006"))
+    assert due_today.id is not None
+    outcome_repo.log(due_today.id, "Call Back", callback_start=sunday, callback_end=sunday)
+
+    page = ContactsPage(repository=repository, call_outcome_repository=outcome_repo)
+    qtbot.addWidget(page)
+    page.show()
+    page.show_call_list()
+    QApplication.processEvents()
+
+    table = page.findChild(QTableWidget, "contact_list")
+    assert table is not None
+    rows = [(_cell_text(table, r, 0), _cell_text(table, r, 1)) for r in range(table.rowCount())]
+    assert rows == [("Gail", "DueToday"), ("Hal", "NoCallback")]
+
+    headers = _header_texts(table)
+    outcome_col = headers.index("Last Outcome")
+    cell = table.item(0, outcome_col)
+    assert cell is not None
+    assert cell.text() == "Call Back — due today"
 
 
 def test_confirming_call_back_persists_the_computed_callback_range(

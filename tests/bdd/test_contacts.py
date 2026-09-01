@@ -1572,6 +1572,21 @@ def _end_of_this_week(today: date) -> date:
     return today + timedelta(days=6 - today.weekday())
 
 
+@given(parsers.parse('today is "{iso_date}"'))
+def today_is_frozen(iso_date: str, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Freezes "today" for date-boundary-sensitive scenarios (see GitHub #211) instead of
+    depending on which day of the week the suite happens to run."""
+    frozen = date.fromisoformat(iso_date)
+
+    class _Frozen(date):
+        @classmethod
+        def today(cls) -> _Frozen:
+            return cls(frozen.year, frozen.month, frozen.day)
+
+    monkeypatch.setattr(f"{__name__}.date", _Frozen)
+    monkeypatch.setattr("ourcrm.ui.contacts_page.date", _Frozen)
+
+
 def _ensure_callback_window(ctx: dict[str, Any], qtbot: QtBot) -> MainWindow:
     if ctx.get("window") is None:
         contact_repo, category_repo, call_outcome_repo = _make_repositories()
