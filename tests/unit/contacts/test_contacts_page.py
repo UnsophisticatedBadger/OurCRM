@@ -178,6 +178,17 @@ def test_contact_list_sorted_by_last_name_by_default(
     assert last_names == sorted(last_names)
 
 
+def test_contact_list_refreshes_when_the_page_is_shown_again(
+    repository: ContactRepository, qtbot: QtBot
+) -> None:
+    page, table = _build_page_and_table(repository, qtbot)
+    repository.create(Contact(first_name="Jane", last_name="Smith"))
+    page.hide()
+    page.show()
+    QApplication.processEvents()
+    assert "Jane Smith" in _row_names(table)
+
+
 # ── Empty state ──────────────────────────────────────────────────────────────
 
 

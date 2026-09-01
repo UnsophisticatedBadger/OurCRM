@@ -45,3 +45,20 @@ class ContactRow(Base):
     notes: Mapped[str] = mapped_column(Text, default="")
     tags: Mapped[str] = mapped_column(Text, default="")
     category_id: Mapped[int | None] = mapped_column(ForeignKey("categories.id"), default=None)
+
+
+class LeadRow(Base):
+    __tablename__ = "leads"
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    name: Mapped[str] = mapped_column(String, default="")
+    email: Mapped[str] = mapped_column(String, default="")
+    phone: Mapped[str] = mapped_column(String, default="")
+    status: Mapped[str] = mapped_column(String, default="")
+    source: Mapped[str] = mapped_column(String, default="")
+    budget_min: Mapped[int | None] = mapped_column(default=None)
+    budget_max: Mapped[int | None] = mapped_column(default=None)
+    desired_location: Mapped[str] = mapped_column(String, default="")
+    property_type: Mapped[str] = mapped_column(String, default="")
+    timeline: Mapped[str] = mapped_column(String, default="")
+    notes: Mapped[str] = mapped_column(Text, default="")

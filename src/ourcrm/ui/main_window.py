@@ -27,7 +27,9 @@ from ourcrm.core.config import LandingPage, SettingsStoreProtocol, StartupBehavi
 from ourcrm.core.security.recovery_generator import RecoveryPasswordGenerator
 from ourcrm.crm.contacts.call_outcome_repository import CallOutcomeRepositoryProtocol
 from ourcrm.crm.contacts.category_repository import CategoryRepositoryProtocol
+from ourcrm.crm.contacts.contact_linker import ContactLinker
 from ourcrm.crm.contacts.repository import ContactRepositoryProtocol
+from ourcrm.crm.leads.repository import LeadRepositoryProtocol
 from ourcrm.database.encrypted_database import EncryptedDatabase
 from ourcrm.database.manager import DatabaseManager
 from ourcrm.ui.calendar_page import CalendarPage
@@ -36,6 +38,7 @@ from ourcrm.ui.contacts_page import ContactsPage
 from ourcrm.ui.dashboard_page import DashboardPage
 from ourcrm.ui.help_window import AboutDialog, HelpWindow, KeyboardShortcutsDialog
 from ourcrm.ui.inactivity_timer import InactivityTimer
+from ourcrm.ui.leads_page import LeadsPage
 from ourcrm.ui.lock_screen import LockScreen
 from ourcrm.ui.login_screen import LoginScreen
 from ourcrm.ui.navigation import NavigationPanel, Section
@@ -73,12 +76,16 @@ class MainWindow(QMainWindow):
         contact_repository: ContactRepositoryProtocol | None = None,
         category_repository: CategoryRepositoryProtocol | None = None,
         call_outcome_repository: CallOutcomeRepositoryProtocol | None = None,
+        lead_repository: LeadRepositoryProtocol | None = None,
+        contact_linker: ContactLinker | None = None,
         encrypted_db: EncryptedDatabase | None = None,
         session_factory: sessionmaker[Session] | None = None,
     ) -> None:
         super().__init__()
         self._category_repository = category_repository
         self._call_outcome_repository = call_outcome_repository
+        self._lead_repository = lead_repository
+        self._contact_linker = contact_linker
         self._settings = settings if settings is not None else QSettings("OurCRM", "OurCRM")
         self._app_config = app_config
         self._qt_app = qt_app
@@ -212,6 +219,11 @@ class MainWindow(QMainWindow):
                 repository=self._contact_repository,
                 category_repository=self._category_repository,
                 call_outcome_repository=self._call_outcome_repository,
+            )
+        if section == Section.LEADS:
+            return LeadsPage(
+                repository=self._lead_repository,
+                contact_linker=self._contact_linker,
             )
         if section == Section.SETTINGS:
             panel = SettingsPanel(app_config=self._app_config, qt_app=self._qt_app)

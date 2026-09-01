@@ -6,7 +6,7 @@ from datetime import date
 from typing import override
 
 from PySide6.QtCore import QPoint, Qt, Signal
-from PySide6.QtGui import QBrush, QColor, QKeyEvent, QKeySequence, QShortcut
+from PySide6.QtGui import QBrush, QColor, QKeyEvent, QKeySequence, QShortcut, QShowEvent
 from PySide6.QtWidgets import (
     QAbstractItemView,
     QButtonGroup,
@@ -611,6 +611,11 @@ class ContactsPage(QWidget):
         self._call_list_mode: bool = False
         self._manage_categories_dialog: ManageCategoriesDialog | None = None
         self._setup_ui()
+
+    @override
+    def showEvent(self, event: QShowEvent) -> None:
+        super().showEvent(event)
+        self._refresh_list()
 
     def _setup_ui(self) -> None:
         layout = QVBoxLayout(self)

@@ -2,7 +2,7 @@
 
 **Capability:** Leads
 **Milestone:** MVP
-**Status:** Not Done
+**Status:** Done
 **GitHub Issue:** #70
 
 ## User Story
@@ -42,6 +42,12 @@ Scenario: User submits the lead form with no name and sees an error
   Then an error is shown and the form stays open
 
 @story_70
+Scenario: User submits the lead form with no status and sees an error
+  Given the new lead form is open
+  When the user enters name "Sara Lee", leaves status unselected, and clicks Save
+  Then an error is shown and the form stays open
+
+@story_70
 Scenario: User enters a min budget greater than max and sees an error
   Given the new lead form is open
   When the user enters min budget 500000 and max budget 300000 and clicks Save
@@ -52,6 +58,18 @@ Scenario: Creating a lead also creates a linked contact
   Given the user creates a lead "Sara Lee" with email "sara@example.com"
   When the user navigates to the Contacts section
   Then "Sara Lee" appears in the contact list
+
+@story_70
+Scenario: Creating a lead for an existing contact links to that contact instead of duplicating it
+  Given a contact "Sara Lee" already exists with email "sara@example.com"
+  When the user creates a lead named "Sara Lee" with email "sara@example.com"
+  Then the Contacts section shows exactly one "Sara Lee" contact
+
+@story_70
+Scenario: User cancels the new lead form and nothing is saved
+  Given the new lead form is open
+  When the user fills in name "Sara Lee" and clicks Cancel
+  Then the lead list does not show "Sara Lee"
 
 @story_70
 Scenario: Lead persists after an application restart
@@ -86,6 +104,16 @@ Scenario: Lead persists after an application restart
 2. Navigate to the Contacts section
 3. Confirm the contact appears with the same name and email
 
+### Creating a lead for an existing contact reuses that contact
+1. Create a contact "Sara Lee" with email "sara@example.com" in the Contacts section
+2. Create a new lead with the same name and email
+3. Navigate to Contacts and confirm there is still only one "Sara Lee" contact, not a duplicate
+
+### User cancels the form and nothing is saved
+1. Click "New Lead", fill in some fields, and click Cancel
+2. Confirm the form closes
+3. Confirm no new lead appears in the lead list
+
 ### Lead persists after restart
 1. Create a lead, close the application, and restart
 2. Navigate to Leads and confirm the lead is still there with all data intact
@@ -101,8 +129,8 @@ Scenario: Lead persists after an application restart
 
 ## Definition of Done
 
-- [ ] BDD scenarios pass end-to-end
-- [ ] Feature reachable from the running app
-- [ ] `ruff`, `mypy --strict` clean
-- [ ] Manual tests documented and verified
-- [ ] Wiki documentation written, or marked N/A with a reason
+- [x] BDD scenarios pass end-to-end
+- [x] Feature reachable from the running app
+- [x] `ruff`, `mypy --strict` clean
+- [ ] Manual tests documented and verified — documented in `tests/manual/leads/create_lead.md`; not yet walked through by a human tester
+- [x] Wiki documentation written — see [Leads](https://github.com/UnsophisticatedBadger/OurCRM/wiki/Leads)
