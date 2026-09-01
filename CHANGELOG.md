@@ -2,6 +2,15 @@
 
 <!-- version list -->
 
+## v0.27.0 (2026-09-01)
+
+### Features
+
+- Add Create A New Lead with contact linking
+  ([#70](https://github.com/UnsophisticatedBadger/OurCRM/pull/70),
+  [`e31e19b`](https://github.com/UnsophisticatedBadger/OurCRM/commit/e31e19b4c0a07afd7c11612583c8ace1fe109bb5))
+
+
 ## v0.26.1 (2026-09-01)
 
 ### Bug Fixes
