@@ -32,11 +32,19 @@ from PySide6.QtWidgets import (
 )
 from pytest_bdd import given, parsers, scenarios, then, when
 from pytestqt.qtbot import QtBot
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
 from ourcrm.calendar.models import CalendarEvent
 from ourcrm.calendar.repository import CalendarEventRepository
 from ourcrm.core.auth.auth_service import AuthService
 from ourcrm.core.config import AppConfig, DateFormat, GeneralSettings, TimeFormat
+from ourcrm.crm.contacts.call_outcome_repository import CallOutcomeRepository
+from ourcrm.crm.contacts.models import Contact
+from ourcrm.crm.contacts.repository import ContactRepository
+from ourcrm.crm.leads.models import Lead
+from ourcrm.crm.leads.repository import LeadRepository
+from ourcrm.database.manager import DatabaseManager
 from ourcrm.ui.calendar_page import CalendarPage, EventDetailDialog
 from ourcrm.ui.general_page import GeneralPage
 from ourcrm.ui.main_window import MainWindow
@@ -1144,6 +1152,60 @@ def every_stat_tile_shows_zero(main_window: MainWindow) -> None:
     assert len(count_labels) == 4, f"Expected 4 count labels, found {len(count_labels)}"
     for lbl in count_labels:
         assert lbl.text() == "0", f"Expected '0', got '{lbl.text()}'"
+
+
+@given(
+    parsers.parse("the user has created {contacts:d} contacts and {leads:d} lead"),
+    target_fixture="main_window",
+)
+def created_contacts_and_leads(contacts: int, leads: int, qtbot: QtBot) -> MainWindow:
+    engine = create_engine("sqlite:///:memory:")
+    DatabaseManager(engine).initialize_schema()
+    session_factory = sessionmaker(bind=engine)
+    contact_repo = ContactRepository(session_factory)
+    lead_repo = LeadRepository(session_factory)
+    for i in range(contacts):
+        contact_repo.create(Contact(first_name=f"Contact{i}", last_name="Test"))
+    for i in range(leads):
+        lead_repo.create(Lead(name=f"Lead{i}", status="Hot"))
+    window = MainWindow(contact_repository=contact_repo, lead_repository=lead_repo)
+    qtbot.addWidget(window)
+    window.show()
+    return window
+
+
+@given("a contact has a callback due today", target_fixture="main_window")
+def contact_with_callback_due_today(qtbot: QtBot) -> MainWindow:
+    engine = create_engine("sqlite:///:memory:")
+    DatabaseManager(engine).initialize_schema()
+    session_factory = sessionmaker(bind=engine)
+    contact_repo = ContactRepository(session_factory)
+    call_outcome_repo = CallOutcomeRepository(session_factory)
+    contact = contact_repo.create(Contact(first_name="Jane", last_name="Smith"))
+    assert contact.id is not None
+    today = datetime.date.today()
+    call_outcome_repo.log(contact.id, "Call Back", callback_start=today, callback_end=today)
+    window = MainWindow(contact_repository=contact_repo, call_outcome_repository=call_outcome_repo)
+    qtbot.addWidget(window)
+    window.show()
+    return window
+
+
+@when("the user views the dashboard")
+def views_the_dashboard(main_window: MainWindow) -> None:
+    main_window.navigate_to(Section.DASHBOARD)
+
+
+@then(parsers.parse('the "{label}" stat tile shows "{value}"'))
+def stat_tile_shows_value(main_window: MainWindow, label: str, value: str) -> None:
+    from ourcrm.ui.dashboard_page import _STAT_TILES, StatsWidget
+
+    stats = main_window.findChild(StatsWidget)
+    assert stats is not None, "StatsWidget not found in dashboard"
+    object_name = dict(_STAT_TILES)[label]
+    count_label = stats.findChild(QLabel, object_name)
+    assert count_label is not None, f"No count label for '{label}' tile"
+    assert count_label.text() == value, f"Expected '{value}', got '{count_label.text()}'"
 
 
 # ── US-015: Dashboard Quick Actions Navigation ─────────────────────────────────

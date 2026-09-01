@@ -210,7 +210,13 @@ class MainWindow(QMainWindow):
 
     def _create_section_widget(self, section: Section) -> QWidget:
         if section == Section.DASHBOARD:
-            return DashboardPage(navigate_to=self.navigate_to, open_call_list=self._open_call_list)
+            return DashboardPage(
+                navigate_to=self.navigate_to,
+                open_call_list=self._open_call_list,
+                contact_repository=self._contact_repository,
+                lead_repository=self._lead_repository,
+                call_outcome_repository=self._call_outcome_repository,
+            )
         if section == Section.CALENDAR:
             general = self._app_config.load_general() if self._app_config is not None else None
             return CalendarPage(repository=self._calendar_repository, general_settings=general)

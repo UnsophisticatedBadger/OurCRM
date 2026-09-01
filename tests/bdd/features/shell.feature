@@ -454,6 +454,19 @@ Feature: Shell
     And no CRM data has been entered
     Then every stat tile shows "0"
 
+  @story_20
+  Scenario: Stats widget shows the real contact and lead counts
+    Given the user has created 2 contacts and 1 lead
+    When the user views the dashboard
+    Then the "Contacts" stat tile shows "2"
+    And the "Active Leads" stat tile shows "1"
+
+  @story_20
+  Scenario: Stats widget shows the real due-today count
+    Given a contact has a callback due today
+    When the user views the dashboard
+    Then the "Due Today" stat tile shows "1"
+
   @story_15
   Scenario: Clicking New Contact navigates to Contacts
     Given the dashboard is the active section

@@ -14,6 +14,7 @@ from ourcrm.core.container import ApplicationContainer
 from ourcrm.core.crash_handler import format_crash_entry, write_crash_log
 from ourcrm.core.security.password_validator import PasswordValidator
 from ourcrm.core.security.recovery_generator import RecoveryPasswordGenerator
+from ourcrm.crm.contacts.call_outcome_repository import CallOutcomeRepository
 from ourcrm.crm.contacts.contact_linker import ContactLinker
 from ourcrm.crm.contacts.repository import ContactRepository
 from ourcrm.crm.leads.repository import LeadRepository
@@ -261,6 +262,7 @@ def main() -> None:
         contact_repository=contact_repository,
         lead_repository=LeadRepository(session_factory),
         contact_linker=ContactLinker(contact_repository),
+        call_outcome_repository=CallOutcomeRepository(session_factory),
         encrypted_db=db,
         session_factory=session_factory,
     )

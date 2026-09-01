@@ -4,9 +4,15 @@ from __future__ import annotations
 
 from collections.abc import Callable
 from dataclasses import dataclass
+from datetime import date
+from typing import override
 
+from PySide6.QtGui import QShowEvent
 from PySide6.QtWidgets import QHBoxLayout, QLabel, QPushButton, QVBoxLayout, QWidget
 
+from ourcrm.crm.contacts.call_outcome_repository import CallOutcomeRepositoryProtocol
+from ourcrm.crm.contacts.repository import ContactRepositoryProtocol
+from ourcrm.crm.leads.repository import LeadRepositoryProtocol
 from ourcrm.ui.navigation import Section
 
 
@@ -16,6 +22,37 @@ class StatsData:
     active_leads: int = 0
     properties: int = 0
     due_today: int = 0
+
+
+def compute_stats(
+    contact_repository: ContactRepositoryProtocol | None = None,
+    lead_repository: LeadRepositoryProtocol | None = None,
+    call_outcome_repository: CallOutcomeRepositoryProtocol | None = None,
+    properties: int = 0,
+) -> StatsData:
+    contacts = contact_repository.list_all() if contact_repository is not None else []
+    leads = lead_repository.list_all() if lead_repository is not None else []
+
+    due_today = 0
+    if call_outcome_repository is not None:
+        today = date.today()
+        for contact in contacts:
+            if contact.id is None:
+                continue
+            latest = call_outcome_repository.latest_for_contact(contact.id)
+            if (
+                latest is not None
+                and latest.outcome == "Call Back"
+                and latest.callback_end_date == today
+            ):
+                due_today += 1
+
+    return StatsData(
+        contacts=len(contacts),
+        active_leads=len(leads),
+        properties=properties,
+        due_today=due_today,
+    )
 
 
 _STAT_TILES: list[tuple[str, str]] = [
@@ -93,14 +130,35 @@ class DashboardPage(QWidget):
         self,
         navigate_to: Callable[[Section], None] | None = None,
         open_call_list: Callable[[], None] | None = None,
+        contact_repository: ContactRepositoryProtocol | None = None,
+        lead_repository: LeadRepositoryProtocol | None = None,
+        call_outcome_repository: CallOutcomeRepositoryProtocol | None = None,
         parent: QWidget | None = None,
     ) -> None:
         super().__init__(parent)
+        self._contact_repository = contact_repository
+        self._lead_repository = lead_repository
+        self._call_outcome_repository = call_outcome_repository
         layout = QVBoxLayout(self)
         schedule_placeholder = QLabel("Today's Schedule — coming soon")
         schedule_placeholder.setObjectName("todays_schedule_region")
         layout.addWidget(schedule_placeholder)
-        stats = StatsWidget()
-        stats.setObjectName("stats_region")
-        layout.addWidget(stats)
+        self._stats = StatsWidget()
+        self._stats.setObjectName("stats_region")
+        layout.addWidget(self._stats)
         layout.addWidget(QuickActionsWidget(navigate_to=navigate_to, open_call_list=open_call_list))
+        self._refresh_stats()
+
+    @override
+    def showEvent(self, event: QShowEvent) -> None:
+        super().showEvent(event)
+        self._refresh_stats()
+
+    def _refresh_stats(self) -> None:
+        self._stats.refresh(
+            compute_stats(
+                contact_repository=self._contact_repository,
+                lead_repository=self._lead_repository,
+                call_outcome_repository=self._call_outcome_repository,
+            )
+        )
