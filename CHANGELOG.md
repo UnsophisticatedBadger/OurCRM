@@ -2,6 +2,15 @@
 
 <!-- version list -->
 
+## v0.26.1 (2026-09-01)
+
+### Bug Fixes
+
+- Freeze today in call-list date-boundary tests to stop weekend flakiness
+  ([#211](https://github.com/UnsophisticatedBadger/OurCRM/pull/211),
+  [`730c549`](https://github.com/UnsophisticatedBadger/OurCRM/commit/730c5493c6fc4243cb893bd2286d62db67a89e73))
+
+
 ## v0.26.0 (2026-08-02)
 
 ### Features
