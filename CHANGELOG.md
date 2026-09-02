@@ -2,6 +2,15 @@
 
 <!-- version list -->
 
+## v0.29.0 (2026-09-02)
+
+### Features
+
+- View lead list with sort, filter, color coding, and details dialog
+  ([#71](https://github.com/UnsophisticatedBadger/OurCRM/pull/71),
+  [`b01f988`](https://github.com/UnsophisticatedBadger/OurCRM/commit/b01f98875a727157fdd4a70d998f626f17190e42))
+
+
 ## v0.28.0 (2026-09-01)
 
 ### Features
