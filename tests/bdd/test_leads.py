@@ -4,7 +4,8 @@ from __future__ import annotations
 
 from typing import Any
 
-from PySide6.QtCore import Qt
+from PySide6.QtCore import QPoint, Qt
+from PySide6.QtGui import QColor
 from PySide6.QtWidgets import (
     QApplication,
     QComboBox,
@@ -20,10 +21,11 @@ from sqlalchemy.orm import Session, sessionmaker
 
 from ourcrm.crm.contacts.contact_linker import ContactLinker
 from ourcrm.crm.contacts.repository import ContactRepository
+from ourcrm.crm.leads.models import Lead
 from ourcrm.crm.leads.repository import LeadRepository
 from ourcrm.database.manager import DatabaseManager
 from ourcrm.ui.contacts_page import ContactsPage
-from ourcrm.ui.leads_page import LeadForm, LeadsPage
+from ourcrm.ui.leads_page import LeadDetailsDialog, LeadForm, LeadsPage
 from ourcrm.ui.main_window import MainWindow
 from ourcrm.ui.navigation import Section
 
@@ -105,6 +107,50 @@ def _make_window(
         contact_repository=contact_repo,
         contact_linker=linker,
     )
+
+
+def _status_filter_combo(window: MainWindow) -> QComboBox:
+    combo = _leads_page(window).findChild(QComboBox, "status_filter")
+    assert combo is not None, "status_filter not found"
+    return combo
+
+
+def _click_column_header(qtbot: QtBot, table: QTableWidget, column: int) -> None:
+    header = table.horizontalHeader()
+    x = header.sectionViewportPosition(column) + header.sectionSize(column) // 2
+    y = header.height() // 2
+    qtbot.mouseClick(  # type: ignore[no-untyped-call]
+        header.viewport(), Qt.MouseButton.LeftButton, pos=QPoint(x, y)
+    )
+    QApplication.processEvents()
+
+
+def _status_texts(window: MainWindow) -> list[str]:
+    table = _lead_table(window)
+    status_col = _header_texts(table).index("Status")
+    return [_cell_text(table, row, status_col) for row in range(table.rowCount())]
+
+
+def _assert_sorted_by_name(window: MainWindow, *, reverse: bool = False) -> None:
+    names = _lead_names(window)
+    assert names == sorted(names, reverse=reverse)
+
+
+def _assert_only_status_shown(window: MainWindow, status: str) -> None:
+    statuses = _status_texts(window)
+    assert statuses, "no leads shown"
+    assert set(statuses) == {status}
+
+
+def _make_window_with_leads(qtbot: QtBot, *leads: Lead) -> MainWindow:
+    lead_repo, contact_repo, linker = _make_repositories()
+    for lead in leads:
+        lead_repo.create(lead)
+    window = _make_window(lead_repo, contact_repo, linker)
+    qtbot.addWidget(window)
+    window.show()
+    window.navigate_to(Section.LEADS)
+    return window
 
 
 # ── Givens ────────────────────────────────────────────────────────────────────
@@ -349,13 +395,18 @@ def error_is_shown_and_form_stays_open() -> None:
 
 
 @then(parsers.parse('"{message}" is shown'))
-def message_is_shown(message: str) -> None:
+def message_is_shown(leads_ctx: dict[str, Any], message: str) -> None:
     forms = _visible_lead_forms()
-    assert forms, "LeadForm closed unexpectedly"
-    budget_error_label = forms[0].findChild(QLabel, "budget_error_label")
-    assert budget_error_label is not None, "budget_error_label not found"
-    assert budget_error_label.isVisible()
-    assert budget_error_label.text() == message
+    if forms:
+        budget_error_label = forms[0].findChild(QLabel, "budget_error_label")
+        if budget_error_label is not None and budget_error_label.isVisible():
+            assert budget_error_label.text() == message
+            return
+    page = _leads_page(leads_ctx["main_window"])
+    empty_state_label = page.findChild(QLabel, "empty_state_label")
+    assert empty_state_label is not None, f'"{message}" not shown anywhere'
+    assert empty_state_label.isVisible()
+    assert empty_state_label.text() == message
 
 
 @then(parsers.parse('"{name}" appears in the contact list'))
@@ -379,3 +430,254 @@ def lead_list_does_not_show(leads_ctx: dict[str, Any], name: str) -> None:
 @then(parsers.parse('"{name}" appears in the lead list'))
 def named_lead_appears_in_lead_list(leads_ctx: dict[str, Any], name: str) -> None:
     assert name in _lead_names(leads_ctx["main_window"])
+
+
+# ── #71 Givens ───────────────────────────────────────────────────────────────
+
+
+@given(
+    parsers.parse('leads "{name1}" ({status1}) and "{name2}" ({status2}) exist'),
+    target_fixture="leads_ctx",
+)
+def two_leads_with_status_exist(
+    name1: str, status1: str, name2: str, status2: str, qtbot: QtBot
+) -> dict[str, Any]:
+    window = _make_window_with_leads(
+        qtbot, Lead(name=name1, status=status1), Lead(name=name2, status=status2)
+    )
+    return {"main_window": window}
+
+
+@given(
+    parsers.parse('a lead "{name}" with source, budget, and timeline set exists'),
+    target_fixture="leads_ctx",
+)
+def lead_with_source_budget_timeline_exists(name: str, qtbot: QtBot) -> dict[str, Any]:
+    lead = Lead(
+        name=name,
+        status="Hot",
+        source="Referral",
+        budget_min=200_000,
+        budget_max=400_000,
+        timeline="3 months",
+    )
+    window = _make_window_with_leads(qtbot, lead)
+    return {"main_window": window}
+
+
+@given("leads with Hot, Warm, and Cold statuses exist", target_fixture="leads_ctx")
+def leads_with_all_statuses_exist(qtbot: QtBot) -> dict[str, Any]:
+    window = _make_window_with_leads(
+        qtbot,
+        Lead(name="Holly Hot", status="Hot"),
+        Lead(name="Wendy Warm", status="Warm"),
+        Lead(name="Chris Cold", status="Cold"),
+    )
+    return {"main_window": window}
+
+
+@given("no leads exist", target_fixture="leads_ctx")
+def no_leads_exist(qtbot: QtBot) -> dict[str, Any]:
+    window = _make_window_with_leads(qtbot)
+    return {"main_window": window}
+
+
+@given("leads with Hot and Cold statuses exist", target_fixture="leads_ctx")
+def leads_with_hot_and_cold_exist(qtbot: QtBot) -> dict[str, Any]:
+    window = _make_window_with_leads(
+        qtbot, Lead(name="Holly Hot", status="Hot"), Lead(name="Chris Cold", status="Cold")
+    )
+    return {"main_window": window}
+
+
+@given(parsers.parse('the user has the "{status}" filter active'), target_fixture="leads_ctx")
+def user_has_status_filter_active(status: str, qtbot: QtBot) -> dict[str, Any]:
+    window = _make_window_with_leads(
+        qtbot, Lead(name="Holly Hot", status="Hot"), Lead(name="Chris Cold", status="Cold")
+    )
+    _status_filter_combo(window).setCurrentText(status)
+    return {"main_window": window}
+
+
+@given(parsers.parse('a lead "{name}" with full details exists'), target_fixture="leads_ctx")
+def lead_with_full_details_exists(name: str, qtbot: QtBot) -> dict[str, Any]:
+    lead = Lead(
+        name=name,
+        status="Hot",
+        email="sara@example.com",
+        phone="555-1234",
+        source="Referral",
+        budget_min=200_000,
+        budget_max=400_000,
+        desired_location="Downtown",
+        property_type="Condo",
+        timeline="3 months",
+        notes="Looking for 2BR",
+    )
+    window = _make_window_with_leads(qtbot, lead)
+    return {"main_window": window}
+
+
+@given("the user has sorted the lead list by name", target_fixture="leads_ctx")
+def user_has_sorted_the_lead_list_by_name(qtbot: QtBot) -> dict[str, Any]:
+    window = _make_window_with_leads(
+        qtbot, Lead(name="Bob Kim", status="Cold"), Lead(name="Sara Lee", status="Hot")
+    )
+    table = _lead_table(window)
+    name_col = _header_texts(table).index("Name")
+    _click_column_header(qtbot, table, name_col)
+    return {"main_window": window}
+
+
+# ── #71 Whens ────────────────────────────────────────────────────────────────
+
+
+@when("the user opens the Leads section")
+def opens_leads_section(leads_ctx: dict[str, Any]) -> None:
+    leads_ctx["main_window"].navigate_to(Section.LEADS)
+
+
+@when("the user views the lead list")
+def views_the_lead_list(leads_ctx: dict[str, Any]) -> None:
+    leads_ctx["main_window"].navigate_to(Section.LEADS)
+
+
+@when(parsers.parse('the user clicks the "{column}" column header'))
+def clicks_column_header_once(leads_ctx: dict[str, Any], column: str, qtbot: QtBot) -> None:
+    table = _lead_table(leads_ctx["main_window"])
+    col_index = _header_texts(table).index(column)
+    _click_column_header(qtbot, table, col_index)
+
+
+@when(parsers.parse('the user clicks the "{column}" column header twice'))
+def clicks_column_header_twice(leads_ctx: dict[str, Any], column: str, qtbot: QtBot) -> None:
+    table = _lead_table(leads_ctx["main_window"])
+    col_index = _header_texts(table).index(column)
+    _click_column_header(qtbot, table, col_index)
+    _click_column_header(qtbot, table, col_index)
+
+
+@when(parsers.parse('the user selects the "{status}" status filter'))
+def selects_status_filter(leads_ctx: dict[str, Any], status: str) -> None:
+    _status_filter_combo(leads_ctx["main_window"]).setCurrentText(status)
+
+
+@when(parsers.parse('the user double-clicks "{name}" in the lead list'))
+def double_clicks_named_lead(leads_ctx: dict[str, Any], name: str) -> None:
+    table = _lead_table(leads_ctx["main_window"])
+    name_col = _header_texts(table).index("Name")
+    row = next(r for r in range(table.rowCount()) if _cell_text(table, r, name_col) == name)
+    table.cellDoubleClicked.emit(row, name_col)
+
+
+@when("the user navigates to Contacts and returns to Leads")
+def navigates_to_contacts_and_back(leads_ctx: dict[str, Any]) -> None:
+    window = leads_ctx["main_window"]
+    window.navigate_to(Section.CONTACTS)
+    window.navigate_to(Section.LEADS)
+
+
+# ── #71 Thens ────────────────────────────────────────────────────────────────
+
+
+@then(parsers.parse('the list shows "{name1}" and "{name2}"'))
+def list_shows_two_names(leads_ctx: dict[str, Any], name1: str, name2: str) -> None:
+    names = _lead_names(leads_ctx["main_window"])
+    assert name1 in names
+    assert name2 in names
+
+
+@then(parsers.parse('"{name1}" appears before "{name2}" (Hot sorted first)'))
+def name_appears_before_other(leads_ctx: dict[str, Any], name1: str, name2: str) -> None:
+    names = _lead_names(leads_ctx["main_window"])
+    assert names.index(name1) < names.index(name2)
+
+
+@then("the lead list shows columns for name, status, source, budget range, and timeline")
+def lead_list_shows_expected_columns(leads_ctx: dict[str, Any]) -> None:
+    table = _lead_table(leads_ctx["main_window"])
+    assert _header_texts(table) == ["Name", "Status", "Source", "Budget Range", "Timeline"]
+
+
+@then("the Hot status indicator is red, Warm is orange, and Cold is blue")
+def status_indicator_colors_are_correct(leads_ctx: dict[str, Any]) -> None:
+    window = leads_ctx["main_window"]
+    table = _lead_table(window)
+    headers = _header_texts(table)
+    status_col = headers.index("Status")
+    expected = {"Hot": QColor("red"), "Warm": QColor("orange"), "Cold": QColor("blue")}
+    for row in range(table.rowCount()):
+        status = _cell_text(table, row, status_col)
+        item = table.item(row, status_col)
+        assert item is not None
+        assert item.foreground().color().name() == expected[status].name()
+
+
+@then(parsers.parse('a "{text}" button is visible'))
+def named_button_is_visible(leads_ctx: dict[str, Any], text: str) -> None:
+    page = _leads_page(leads_ctx["main_window"])
+    btn = page.findChild(QPushButton, "new_lead_button")
+    assert btn is not None, "new_lead_button not found"
+    assert btn.isVisible()
+    assert btn.text() == text
+
+
+@then("the leads are sorted alphabetically by name")
+def leads_sorted_alphabetically(leads_ctx: dict[str, Any]) -> None:
+    _assert_sorted_by_name(leads_ctx["main_window"])
+
+
+@then("the leads are sorted in reverse alphabetical order by name")
+def leads_sorted_reverse_alphabetically(leads_ctx: dict[str, Any]) -> None:
+    _assert_sorted_by_name(leads_ctx["main_window"], reverse=True)
+
+
+@then("only Hot leads are shown in the list")
+def only_hot_leads_shown_in_list(leads_ctx: dict[str, Any]) -> None:
+    _assert_only_status_shown(leads_ctx["main_window"], "Hot")
+
+
+@then("leads of every status are shown again")
+def leads_of_every_status_shown_again(leads_ctx: dict[str, Any]) -> None:
+    statuses = _status_texts(leads_ctx["main_window"])
+    assert set(statuses) == {"Hot", "Cold"}
+
+
+@then(
+    parsers.parse(
+        'a details dialog opens showing "{name}"\'s name, status, source, budget range, '
+        "desired location, property type, timeline, and notes"
+    )
+)
+def details_dialog_shows_all_fields(leads_ctx: dict[str, Any], name: str) -> None:
+    dialogs = [
+        w
+        for w in QApplication.topLevelWidgets()
+        if isinstance(w, LeadDetailsDialog) and w.isVisible()
+    ]
+    assert dialogs, "LeadDetailsDialog did not open"
+    dialog = dialogs[0]
+    name_label = dialog.findChild(QLabel, "name_value")
+    assert name_label is not None, "name_value not found"
+    assert name_label.text() == name
+    for object_name in (
+        "status_value",
+        "source_value",
+        "budget_range_value",
+        "desired_location_value",
+        "property_type_value",
+        "timeline_value",
+        "notes_value",
+    ):
+        label = dialog.findChild(QLabel, object_name)
+        assert label is not None, f"{object_name} not found"
+
+
+@then("only Hot leads are still shown")
+def only_hot_leads_still_shown(leads_ctx: dict[str, Any]) -> None:
+    _assert_only_status_shown(leads_ctx["main_window"], "Hot")
+
+
+@then("the lead list is still sorted by name")
+def lead_list_still_sorted_by_name(leads_ctx: dict[str, Any]) -> None:
+    _assert_sorted_by_name(leads_ctx["main_window"])
