@@ -115,3 +115,75 @@ Feature: Leads
     Given the user has sorted the lead list by name
     When the user navigates to Contacts and returns to Leads
     Then the lead list is still sorted by name
+
+  @story_72
+  Scenario: Opening the edit form pre-populates it with the lead's current data
+    Given a lead "Sara Lee" exists with status "Warm", email "sara@example.com", and budget 200000 to 400000
+    When the user opens "Sara Lee"'s details and clicks Edit
+    Then the edit form shows name "Sara Lee", status "Warm", email "sara@example.com", and budget 200000 to 400000
+
+  @story_72
+  Scenario: User edits a lead's status and sees the update in list and details
+    Given the user is viewing a lead with status "Warm"
+    When the user clicks Edit, changes the status to "Hot", and clicks Save
+    Then the details view shows status "Hot"
+    And the lead list row also shows "Hot"
+
+  @story_72
+  Scenario: User edits a lead's budget and sees the formatted range
+    Given the user is editing a lead
+    When the user sets min budget to 300000 and max budget to 500000 and saves
+    Then the details view shows "$300,000 - $500,000"
+
+  @story_72
+  Scenario: User edits a lead's notes and sees the change in the details view
+    Given the user is editing a lead
+    When the user changes the notes to "Follow up next week" and clicks Save
+    Then the details view shows notes "Follow up next week"
+
+  @story_72
+  Scenario: Saving with min budget greater than max shows an error
+    Given the user is editing a lead's budget
+    When the user enters min 500000 and max 300000 and clicks Save
+    Then "Minimum budget cannot be greater than maximum budget" is shown and the form stays open
+
+  @story_72
+  Scenario: Saving the edit form with no name shows an error
+    Given the user is editing a lead
+    When the user clears the name field and clicks Save
+    Then an error is shown and the edit form stays open
+
+  @story_72
+  Scenario: Saving the edit form with no status shows an error
+    Given the user is editing a lead
+    When the user clears the status field and clicks Save
+    Then an error is shown and the edit form stays open
+
+  @story_72
+  Scenario: User selects Other as source and enters a custom value
+    Given the user is editing a lead
+    When the user selects "Other" from the source dropdown, types "Real Estate Expo", and saves
+    Then the details view shows source "Real Estate Expo"
+
+  @story_72
+  Scenario: The edit form's source dropdown offers the same options as the create form
+    Given the user is editing a lead
+    Then the source dropdown shows the same options as the New Lead form
+
+  @story_72
+  Scenario: User cancels an edit and the original data is unchanged
+    Given the user is editing a lead with status "Cold"
+    When the user changes the status to "Hot" and clicks Cancel
+    Then the details view still shows status "Cold"
+
+  @story_72
+  Scenario: User changes status directly from the lead list
+    Given the user is viewing the lead list
+    When the user right-clicks a lead and selects "Change Status" then "Cold"
+    Then the lead's status in the list updates to "Cold" immediately
+
+  @story_72
+  Scenario: All edits persist after an application restart
+    Given the user has set a lead's status to "Hot" and budget to 400000-600000
+    When the application is restarted and the user opens that lead
+    Then the status is "Hot" and the budget shows "$400,000 - $600,000"

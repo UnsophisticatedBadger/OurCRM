@@ -1,4 +1,4 @@
-"""BDD step definitions for Leads: create a new lead (US-070)."""
+"""BDD step definitions for Leads (US-070, US-071, US-072)."""
 
 from __future__ import annotations
 
@@ -13,6 +13,7 @@ from PySide6.QtWidgets import (
     QLineEdit,
     QPushButton,
     QTableWidget,
+    QTextEdit,
 )
 from pytest_bdd import given, parsers, scenarios, then, when
 from pytestqt.qtbot import QtBot
@@ -681,3 +682,385 @@ def only_hot_leads_still_shown(leads_ctx: dict[str, Any]) -> None:
 @then("the lead list is still sorted by name")
 def lead_list_still_sorted_by_name(leads_ctx: dict[str, Any]) -> None:
     _assert_sorted_by_name(leads_ctx["main_window"])
+
+
+# ── #72 helpers ──────────────────────────────────────────────────────────────
+
+
+def _visible_lead_details_dialogs() -> list[LeadDetailsDialog]:
+    return [
+        w
+        for w in QApplication.topLevelWidgets()
+        if isinstance(w, LeadDetailsDialog) and w.isVisible()
+    ]
+
+
+def _open_lead_details_by_name(window: MainWindow, qtbot: QtBot, name: str) -> LeadDetailsDialog:
+    page = _leads_page(window)
+    table = _lead_table(window)
+    name_col = _header_texts(table).index("Name")
+    row = next(r for r in range(table.rowCount()) if _cell_text(table, r, name_col) == name)
+    table.cellDoubleClicked.emit(row, name_col)
+    QApplication.processEvents()
+    dialogs = [d for d in _visible_lead_details_dialogs() if d.parent() is page]
+    assert dialogs, "LeadDetailsDialog did not open"
+    qtbot.addWidget(dialogs[0])
+    return dialogs[0]
+
+
+def _click_edit_button(dialog: LeadDetailsDialog, qtbot: QtBot) -> LeadForm:
+    edit_btn = dialog.findChild(QPushButton, "edit_button")
+    assert edit_btn is not None, "edit_button not found"
+    qtbot.mouseClick(edit_btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+    QApplication.processEvents()
+    forms = [f for f in _visible_lead_forms() if f.parent() is dialog]
+    assert forms, "edit LeadForm did not open"
+    qtbot.addWidget(forms[0])
+    return forms[0]
+
+
+def _set_budget_fields(form: LeadForm, qtbot: QtBot, min_budget: int, max_budget: int) -> None:
+    min_field = form.findChild(QLineEdit, "budget_min_field")
+    max_field = form.findChild(QLineEdit, "budget_max_field")
+    assert min_field is not None
+    assert max_field is not None
+    min_field.clear()
+    max_field.clear()
+    qtbot.keyClicks(min_field, str(min_budget))  # type: ignore[no-untyped-call]
+    qtbot.keyClicks(max_field, str(max_budget))  # type: ignore[no-untyped-call]
+
+
+def _click_save(form: LeadForm, qtbot: QtBot) -> None:
+    save_btn = form.findChild(QPushButton, "save_button")
+    assert save_btn is not None, "save_button not found"
+    qtbot.mouseClick(save_btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+
+
+def _create_editing_context(
+    qtbot: QtBot, *, status: str = "Hot", name: str = "Sara Lee", open_edit: bool = True
+) -> dict[str, Any]:
+    window = _make_window_with_leads(qtbot, Lead(name=name, status=status))
+    dialog = _open_lead_details_by_name(window, qtbot, name)
+    ctx: dict[str, Any] = {"main_window": window, "details_dialog": dialog}
+    if open_edit:
+        ctx["lead_form"] = _click_edit_button(dialog, qtbot)
+    return ctx
+
+
+# ── #72 Givens ───────────────────────────────────────────────────────────────
+
+
+@given(
+    parsers.parse(
+        'a lead "{name}" exists with status "{status}", email "{email}", '
+        "and budget {min_budget:d} to {max_budget:d}"
+    ),
+    target_fixture="leads_ctx",
+)
+def lead_exists_with_full_details(
+    name: str, status: str, email: str, min_budget: int, max_budget: int, qtbot: QtBot
+) -> dict[str, Any]:
+    window = _make_window_with_leads(
+        qtbot,
+        Lead(name=name, status=status, email=email, budget_min=min_budget, budget_max=max_budget),
+    )
+    return {"main_window": window}
+
+
+@given(
+    parsers.parse('the user is viewing a lead with status "{status}"'),
+    target_fixture="leads_ctx",
+)
+def user_is_viewing_a_lead_with_status(status: str, qtbot: QtBot) -> dict[str, Any]:
+    return _create_editing_context(qtbot, status=status, open_edit=False)
+
+
+@given("the user is editing a lead", target_fixture="leads_ctx")
+def user_is_editing_a_lead(qtbot: QtBot) -> dict[str, Any]:
+    return _create_editing_context(qtbot)
+
+
+@given("the user is editing a lead's budget", target_fixture="leads_ctx")
+def user_is_editing_a_leads_budget(qtbot: QtBot) -> dict[str, Any]:
+    return _create_editing_context(qtbot)
+
+
+@given(
+    parsers.parse('the user is editing a lead with status "{status}"'), target_fixture="leads_ctx"
+)
+def user_is_editing_a_lead_with_status(status: str, qtbot: QtBot) -> dict[str, Any]:
+    return _create_editing_context(qtbot, status=status)
+
+
+@given("the user is viewing the lead list", target_fixture="leads_ctx")
+def user_is_viewing_the_lead_list(qtbot: QtBot) -> dict[str, Any]:
+    window = _make_window_with_leads(qtbot, Lead(name="Sara Lee", status="Warm"))
+    return {"main_window": window}
+
+
+@given(
+    parsers.parse(
+        'the user has set a lead\'s status to "{status}" and budget to '
+        "{min_budget:d}-{max_budget:d}"
+    ),
+    target_fixture="leads_ctx",
+)
+def user_has_set_status_and_budget(status: str, min_budget: int, max_budget: int) -> dict[str, Any]:
+    engine = create_engine("sqlite:///:memory:")
+    DatabaseManager(engine).initialize_schema()
+    session_factory: sessionmaker[Session] = sessionmaker(bind=engine)
+    lead_repo = LeadRepository(session_factory)
+    lead_repo.create(
+        Lead(name="Sara Lee", status=status, budget_min=min_budget, budget_max=max_budget)
+    )
+    return {"engine": engine}
+
+
+# ── #72 Whens ────────────────────────────────────────────────────────────────
+
+
+@when(parsers.parse('the user opens "{name}"\'s details and clicks Edit'))
+def opens_details_and_clicks_edit(leads_ctx: dict[str, Any], name: str, qtbot: QtBot) -> None:
+    dialog = _open_lead_details_by_name(leads_ctx["main_window"], qtbot, name)
+    leads_ctx["details_dialog"] = dialog
+    leads_ctx["lead_form"] = _click_edit_button(dialog, qtbot)
+
+
+@when(parsers.parse('the user clicks Edit, changes the status to "{status}", and clicks Save'))
+def clicks_edit_changes_status_and_saves(
+    leads_ctx: dict[str, Any], status: str, qtbot: QtBot
+) -> None:
+    form = _click_edit_button(leads_ctx["details_dialog"], qtbot)
+    status_combo = form.findChild(QComboBox, "status_field")
+    assert status_combo is not None
+    status_combo.setCurrentText(status)
+    _click_save(form, qtbot)
+
+
+@when(
+    parsers.parse(
+        "the user sets min budget to {min_budget:d} and max budget to {max_budget:d} and saves"
+    )
+)
+def sets_budget_and_saves(
+    leads_ctx: dict[str, Any], min_budget: int, max_budget: int, qtbot: QtBot
+) -> None:
+    form = leads_ctx["lead_form"]
+    _set_budget_fields(form, qtbot, min_budget, max_budget)
+    _click_save(form, qtbot)
+
+
+@when(parsers.parse('the user changes the notes to "{notes}" and clicks Save'))
+def changes_notes_and_saves(leads_ctx: dict[str, Any], notes: str, qtbot: QtBot) -> None:
+    form = leads_ctx["lead_form"]
+    notes_field = form.findChild(QTextEdit, "notes_field")
+    assert notes_field is not None, "notes_field not found"
+    notes_field.setPlainText(notes)
+    _click_save(form, qtbot)
+
+
+@when(parsers.parse("the user enters min {min_budget:d} and max {max_budget:d} and clicks Save"))
+def enters_min_max_and_saves(
+    leads_ctx: dict[str, Any], min_budget: int, max_budget: int, qtbot: QtBot
+) -> None:
+    form = leads_ctx["lead_form"]
+    _set_budget_fields(form, qtbot, min_budget, max_budget)
+    _click_save(form, qtbot)
+
+
+@when("the user clears the name field and clicks Save")
+def clears_name_field_and_saves(leads_ctx: dict[str, Any], qtbot: QtBot) -> None:
+    form = leads_ctx["lead_form"]
+    name_field = form.findChild(QLineEdit, "name_field")
+    assert name_field is not None
+    name_field.clear()
+    _click_save(form, qtbot)
+
+
+@when("the user clears the status field and clicks Save")
+def clears_status_field_and_saves(leads_ctx: dict[str, Any], qtbot: QtBot) -> None:
+    form = leads_ctx["lead_form"]
+    status_combo = form.findChild(QComboBox, "status_field")
+    assert status_combo is not None
+    status_combo.setCurrentText("")
+    _click_save(form, qtbot)
+
+
+@when(
+    parsers.parse(
+        'the user selects "{option}" from the source dropdown, types "{value}", and saves'
+    )
+)
+def selects_other_source_and_saves(
+    leads_ctx: dict[str, Any], option: str, value: str, qtbot: QtBot
+) -> None:
+    form = leads_ctx["lead_form"]
+    source_combo = form.findChild(QComboBox, "source_field")
+    assert source_combo is not None
+    source_combo.setCurrentText(option)
+    other_field = form.findChild(QLineEdit, "source_other_field")
+    assert other_field is not None
+    qtbot.keyClicks(other_field, value)  # type: ignore[no-untyped-call]
+    _click_save(form, qtbot)
+
+
+@when(parsers.parse('the user changes the status to "{status}" and clicks Cancel'))
+def changes_status_and_cancels(leads_ctx: dict[str, Any], status: str, qtbot: QtBot) -> None:
+    form = leads_ctx["lead_form"]
+    status_combo = form.findChild(QComboBox, "status_field")
+    assert status_combo is not None
+    status_combo.setCurrentText(status)
+    cancel_btn = form.findChild(QPushButton, "cancel_button")
+    assert cancel_btn is not None
+    qtbot.mouseClick(cancel_btn, Qt.MouseButton.LeftButton)  # type: ignore[no-untyped-call]
+
+
+@when(parsers.parse('the user right-clicks a lead and selects "Change Status" then "{status}"'))
+def right_clicks_and_changes_status(leads_ctx: dict[str, Any], status: str) -> None:
+    window = leads_ctx["main_window"]
+    page = _leads_page(window)
+    table = _lead_table(window)
+    item = table.item(0, 0)
+    assert item is not None
+    lead = item.data(Qt.ItemDataRole.UserRole)
+    assert isinstance(lead, Lead)
+    page._change_lead_status(lead, status)
+
+
+@when(
+    "the application is restarted and the user opens that lead",
+    target_fixture="leads_ctx",
+)
+def restarts_and_opens_that_lead(leads_ctx: dict[str, Any], qtbot: QtBot) -> dict[str, Any]:
+    session_factory: sessionmaker[Session] = sessionmaker(bind=leads_ctx["engine"])
+    contact_repo = ContactRepository(session_factory)
+    lead_repo = LeadRepository(session_factory)
+    linker = ContactLinker(contact_repo)
+    window = _make_window(lead_repo, contact_repo, linker)
+    qtbot.addWidget(window)
+    window.show()
+    window.navigate_to(Section.LEADS)
+    dialog = _open_lead_details_by_name(window, qtbot, "Sara Lee")
+    return {"main_window": window, "details_dialog": dialog}
+
+
+# ── #72 Thens ────────────────────────────────────────────────────────────────
+
+
+@then(
+    parsers.parse(
+        'the edit form shows name "{name}", status "{status}", email "{email}", '
+        "and budget {min_budget:d} to {max_budget:d}"
+    )
+)
+def edit_form_shows_pre_populated_data(
+    leads_ctx: dict[str, Any], name: str, status: str, email: str, min_budget: int, max_budget: int
+) -> None:
+    form = leads_ctx["lead_form"]
+    name_field = form.findChild(QLineEdit, "name_field")
+    status_combo = form.findChild(QComboBox, "status_field")
+    email_field = form.findChild(QLineEdit, "email_field")
+    min_field = form.findChild(QLineEdit, "budget_min_field")
+    max_field = form.findChild(QLineEdit, "budget_max_field")
+    assert name_field is not None
+    assert status_combo is not None
+    assert email_field is not None
+    assert min_field is not None
+    assert max_field is not None
+    assert name_field.text() == name
+    assert status_combo.currentText() == status
+    assert email_field.text() == email
+    assert min_field.text() == str(min_budget)
+    assert max_field.text() == str(max_budget)
+
+
+@then(parsers.parse('the details view shows status "{status}"'))
+def details_view_shows_status(leads_ctx: dict[str, Any], status: str) -> None:
+    label = leads_ctx["details_dialog"].findChild(QLabel, "status_value")
+    assert label is not None
+    assert label.text() == status
+
+
+@then(parsers.parse('the lead list row also shows "{status}"'))
+def lead_list_row_also_shows_status(leads_ctx: dict[str, Any], status: str) -> None:
+    assert status in _status_texts(leads_ctx["main_window"])
+
+
+@then(parsers.parse('the details view shows "{formatted}"'))
+def details_view_shows_formatted_budget(leads_ctx: dict[str, Any], formatted: str) -> None:
+    label = leads_ctx["details_dialog"].findChild(QLabel, "budget_range_value")
+    assert label is not None
+    assert label.text() == formatted
+
+
+@then(parsers.parse('the details view shows notes "{notes}"'))
+def details_view_shows_notes(leads_ctx: dict[str, Any], notes: str) -> None:
+    label = leads_ctx["details_dialog"].findChild(QLabel, "notes_value")
+    assert label is not None
+    assert label.text() == notes
+
+
+@then(parsers.parse('"{message}" is shown and the form stays open'))
+def message_shown_and_form_stays_open(leads_ctx: dict[str, Any], message: str) -> None:
+    form = leads_ctx["lead_form"]
+    label = form.findChild(QLabel, "budget_error_label")
+    assert label is not None
+    assert label.isVisible()
+    assert label.text() == message
+    assert form.isVisible()
+
+
+@then("an error is shown and the edit form stays open")
+def error_shown_and_edit_form_stays_open(leads_ctx: dict[str, Any]) -> None:
+    form = leads_ctx["lead_form"]
+    assert form.isVisible()
+    name_label = form.findChild(QLabel, "name_error_label")
+    status_label = form.findChild(QLabel, "status_error_label")
+    assert name_label is not None
+    assert status_label is not None
+    assert name_label.isVisible() or status_label.isVisible()
+
+
+@then(parsers.parse('the details view shows source "{source}"'))
+def details_view_shows_source(leads_ctx: dict[str, Any], source: str) -> None:
+    label = leads_ctx["details_dialog"].findChild(QLabel, "source_value")
+    assert label is not None
+    assert label.text() == source
+
+
+@then("the source dropdown shows the same options as the New Lead form")
+def source_dropdown_matches_new_lead_form(leads_ctx: dict[str, Any]) -> None:
+    edit_combo = leads_ctx["lead_form"].findChild(QComboBox, "source_field")
+    assert edit_combo is not None
+    edit_items = [edit_combo.itemText(i) for i in range(edit_combo.count())]
+
+    lead_repo, _, linker = _make_repositories()
+    create_form = LeadForm(lead_repo, linker)
+    create_combo = create_form.findChild(QComboBox, "source_field")
+    assert create_combo is not None
+    create_items = [create_combo.itemText(i) for i in range(create_combo.count())]
+
+    assert edit_items == create_items
+
+
+@then(parsers.parse('the details view still shows status "{status}"'))
+def details_view_still_shows_status(leads_ctx: dict[str, Any], status: str) -> None:
+    label = leads_ctx["details_dialog"].findChild(QLabel, "status_value")
+    assert label is not None
+    assert label.text() == status
+
+
+@then(parsers.parse('the lead\'s status in the list updates to "{status}" immediately'))
+def leads_status_in_list_updates_immediately(leads_ctx: dict[str, Any], status: str) -> None:
+    assert status in _status_texts(leads_ctx["main_window"])
+
+
+@then(parsers.parse('the status is "{status}" and the budget shows "{formatted}"'))
+def status_and_budget_after_restart(leads_ctx: dict[str, Any], status: str, formatted: str) -> None:
+    dialog = leads_ctx["details_dialog"]
+    status_label = dialog.findChild(QLabel, "status_value")
+    budget_label = dialog.findChild(QLabel, "budget_range_value")
+    assert status_label is not None
+    assert budget_label is not None
+    assert status_label.text() == status
+    assert budget_label.text() == formatted

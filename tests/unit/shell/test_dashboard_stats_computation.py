@@ -45,6 +45,9 @@ class _FakeLeadRepository:
     def create(self, lead: Lead) -> Lead:
         raise NotImplementedError
 
+    def update(self, lead: Lead) -> Lead:
+        raise NotImplementedError
+
     def list_all(self) -> list[Lead]:
         return self.leads
 

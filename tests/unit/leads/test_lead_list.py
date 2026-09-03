@@ -22,7 +22,7 @@ from sqlalchemy.orm import sessionmaker
 from ourcrm.crm.leads.models import Lead
 from ourcrm.crm.leads.repository import LeadRepository
 from ourcrm.database.manager import DatabaseManager
-from ourcrm.ui.leads_page import LeadDetailsDialog, LeadsPage
+from ourcrm.ui.leads_page import LeadDetailsDialog, LeadForm, LeadsPage
 
 # ── Fixtures ─────────────────────────────────────────────────────────────────
 
@@ -296,17 +296,20 @@ def test_lead_details_dialog_shows_all_fields(qtbot: QtBot) -> None:
     )
     dialog = LeadDetailsDialog(lead)
     qtbot.addWidget(dialog)
-    assert dialog.findChild(QLabel, "name_value").text() == "Sara Lee"  # type: ignore[union-attr]
-    assert dialog.findChild(QLabel, "status_value").text() == "Hot"  # type: ignore[union-attr]
-    assert dialog.findChild(QLabel, "source_value").text() == "Referral"  # type: ignore[union-attr]
-    assert (
-        dialog.findChild(QLabel, "budget_range_value").text()  # type: ignore[union-attr]
-        == "$200,000 - $400,000"
-    )
-    assert dialog.findChild(QLabel, "desired_location_value").text() == "Downtown"  # type: ignore[union-attr]
-    assert dialog.findChild(QLabel, "property_type_value").text() == "Condo"  # type: ignore[union-attr]
-    assert dialog.findChild(QLabel, "timeline_value").text() == "3 months"  # type: ignore[union-attr]
-    assert dialog.findChild(QLabel, "notes_value").text() == "Looking for 2BR"  # type: ignore[union-attr]
+
+    def _value(object_name: str) -> str:
+        label = dialog.findChild(QLabel, object_name)
+        assert label is not None, f"{object_name} not found"
+        return label.text()
+
+    assert _value("name_value") == "Sara Lee"
+    assert _value("status_value") == "Hot"
+    assert _value("source_value") == "Referral"
+    assert _value("budget_range_value") == "$200,000 - $400,000"
+    assert _value("desired_location_value") == "Downtown"
+    assert _value("property_type_value") == "Condo"
+    assert _value("timeline_value") == "3 months"
+    assert _value("notes_value") == "Looking for 2BR"
 
 
 def test_lead_details_dialog_has_no_editable_fields_or_save_button(qtbot: QtBot) -> None:
@@ -336,4 +339,69 @@ def test_double_clicking_a_lead_row_opens_its_details_dialog(
         if isinstance(w, LeadDetailsDialog) and w.isVisible()
     ]
     assert dialogs, "LeadDetailsDialog did not open"
-    assert dialogs[0].findChild(QLabel, "name_value").text() == "Bob"  # type: ignore[union-attr]
+    name_label = dialogs[0].findChild(QLabel, "name_value")
+    assert name_label is not None
+    assert name_label.text() == "Bob"
+
+
+# ── Details dialog: editing ─────────────────────────────────────────────────
+
+
+def test_details_dialog_has_an_edit_button(lead_repository: LeadRepository, qtbot: QtBot) -> None:
+    lead = lead_repository.create(Lead(name="Sara Lee", status="Hot"))
+    dialog = LeadDetailsDialog(lead, repository=lead_repository)
+    qtbot.addWidget(dialog)
+    assert dialog.findChild(QPushButton, "edit_button") is not None
+
+
+def test_clicking_edit_opens_a_pre_populated_form(
+    lead_repository: LeadRepository, qtbot: QtBot
+) -> None:
+    lead = lead_repository.create(Lead(name="Sara Lee", status="Hot"))
+    dialog = LeadDetailsDialog(lead, repository=lead_repository)
+    qtbot.addWidget(dialog)
+    edit_btn = dialog.findChild(QPushButton, "edit_button")
+    assert edit_btn is not None
+    edit_btn.click()
+    forms = [w for w in QApplication.topLevelWidgets() if isinstance(w, LeadForm) and w.isVisible()]
+    assert forms, "edit form did not open"
+    name_field = forms[0].findChild(QLineEdit, "name_field")
+    assert name_field is not None
+    assert name_field.text() == "Sara Lee"
+
+
+def test_saving_the_edit_form_refreshes_the_details_dialog(
+    lead_repository: LeadRepository, qtbot: QtBot
+) -> None:
+    lead = lead_repository.create(Lead(name="Sara Lee", status="Warm"))
+    dialog = LeadDetailsDialog(lead, repository=lead_repository)
+    qtbot.addWidget(dialog)
+    edit_btn = dialog.findChild(QPushButton, "edit_button")
+    assert edit_btn is not None
+    edit_btn.click()
+    forms = [w for w in QApplication.topLevelWidgets() if isinstance(w, LeadForm) and w.isVisible()]
+    assert forms
+    status_combo = forms[0].findChild(QComboBox, "status_field")
+    assert status_combo is not None
+    status_combo.setCurrentText("Hot")
+    forms[0]._on_save()
+    status_value = dialog.findChild(QLabel, "status_value")
+    assert status_value is not None
+    assert status_value.text() == "Hot"
+
+
+def test_saving_the_edit_form_emits_lead_updated(
+    lead_repository: LeadRepository, qtbot: QtBot
+) -> None:
+    lead = lead_repository.create(Lead(name="Sara Lee", status="Warm"))
+    dialog = LeadDetailsDialog(lead, repository=lead_repository)
+    qtbot.addWidget(dialog)
+    updated: list[bool] = []
+    dialog.lead_updated.connect(lambda: updated.append(True))
+    edit_btn = dialog.findChild(QPushButton, "edit_button")
+    assert edit_btn is not None
+    edit_btn.click()
+    forms = [w for w in QApplication.topLevelWidgets() if isinstance(w, LeadForm) and w.isVisible()]
+    assert forms
+    forms[0]._on_save()
+    assert updated

@@ -2,7 +2,7 @@
 
 **Capability:** Leads
 **Milestone:** MVP
-**Status:** Not Done
+**Status:** Done
 **GitHub Issue:** #72
 
 ## User Story
@@ -16,7 +16,7 @@ As a real estate agent, I want to edit a lead's information at any time, so that
 ## Acceptance Criteria
 
 1. The Edit button on the lead details view opens an edit form pre-populated with all of the lead's current data
-2. All fields can be changed; validation rules match the create form (#62) — name and status are required; if both budget fields are filled, min must not exceed max
+2. All fields can be changed; validation rules match the create form (#70) — name and status are required; if both budget fields are filled, min must not exceed max
 3. The source dropdown has the same predefined options as the create form; selecting "Other" shows a free-text field for a custom source
 4. Saving updates the lead, returns to the details view with the new values shown immediately, and reflects the changes in the lead list row
 5. Lead status can also be changed directly from the lead list via right-click > Change Status without opening the full edit form
@@ -28,6 +28,12 @@ As a real estate agent, I want to edit a lead's information at any time, so that
 > These scenarios are not yet implemented. Add them to `tests/bdd/features/leads.feature`.
 
 ```gherkin
+@story_72
+Scenario: Opening the edit form pre-populates it with the lead's current data
+  Given a lead "Sara Lee" exists with status "Warm", email "sara@example.com", and budget 200000 to 400000
+  When the user opens "Sara Lee"'s details and clicks Edit
+  Then the edit form shows name "Sara Lee", status "Warm", email "sara@example.com", and budget 200000 to 400000
+
 @story_72
 Scenario: User edits a lead's status and sees the update in list and details
   Given the user is viewing a lead with status "Warm"
@@ -42,16 +48,39 @@ Scenario: User edits a lead's budget and sees the formatted range
   Then the details view shows "$300,000 – $500,000"
 
 @story_72
+Scenario: User edits a lead's notes and sees the change in the details view
+  Given the user is editing a lead
+  When the user changes the notes to "Follow up next week" and clicks Save
+  Then the details view shows notes "Follow up next week"
+
+@story_72
 Scenario: Saving with min budget greater than max shows an error
   Given the user is editing a lead's budget
   When the user enters min 500000 and max 300000 and clicks Save
   Then "Minimum budget cannot be greater than maximum budget" is shown and the form stays open
 
 @story_72
+Scenario: Saving the edit form with no name shows an error
+  Given the user is editing a lead
+  When the user clears the name field and clicks Save
+  Then an error is shown and the edit form stays open
+
+@story_72
+Scenario: Saving the edit form with no status shows an error
+  Given the user is editing a lead
+  When the user clears the status field and clicks Save
+  Then an error is shown and the edit form stays open
+
+@story_72
 Scenario: User selects Other as source and enters a custom value
   Given the user is editing a lead
   When the user selects "Other" from the source dropdown, types "Real Estate Expo", and saves
   Then the details view shows source "Real Estate Expo"
+
+@story_72
+Scenario: The edit form's source dropdown offers the same options as the create form
+  Given the user is editing a lead
+  Then the source dropdown shows the same options as the New Lead form
 
 @story_72
 Scenario: User cancels an edit and the original data is unchanged
@@ -74,7 +103,7 @@ Scenario: All edits persist after an application restart
 
 ## Manual Tests
 
-**Story:** [#72 — Edit a Lead](72-assign-lead-status.md)
+**Story:** [#72 — Edit a Lead](72-edit-a-lead.md)
 ### User opens the edit form and sees all fields pre-populated
 1. Open any lead's details and click Edit
 2. Confirm every field is pre-populated with the lead's current data
@@ -126,8 +155,8 @@ Scenario: All edits persist after an application restart
 
 ## Definition of Done
 
-- [ ] BDD scenarios pass end-to-end
-- [ ] Feature reachable from the running app
-- [ ] `ruff`, `mypy --strict` clean
-- [ ] Manual tests documented and verified
-- [ ] Wiki documentation written, or marked N/A with a reason
+- [x] BDD scenarios pass end-to-end
+- [x] Feature reachable from the running app
+- [x] `ruff`, `mypy --strict` clean
+- [ ] Manual tests documented and verified — documented; not yet human-verified against the running app
+- [x] Wiki documentation written, or marked N/A with a reason

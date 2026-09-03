@@ -13,6 +13,7 @@ from ourcrm.database.models import LeadRow
 
 class LeadRepositoryProtocol(Protocol):
     def create(self, lead: Lead) -> Lead: ...
+    def update(self, lead: Lead) -> Lead: ...
     def list_all(self) -> list[Lead]: ...
 
 
@@ -56,6 +57,14 @@ class LeadRepository:
             row = LeadRow()
             _apply_to_row(row, lead)
             session.add(row)
+            session.commit()
+            session.refresh(row)
+            return _to_domain(row)
+
+    def update(self, lead: Lead) -> Lead:
+        with self._session_factory() as session:
+            row = session.get_one(LeadRow, lead.id)
+            _apply_to_row(row, lead)
             session.commit()
             session.refresh(row)
             return _to_domain(row)
