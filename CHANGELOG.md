@@ -2,6 +2,15 @@
 
 <!-- version list -->
 
+## v0.30.0 (2026-09-03)
+
+### Features
+
+- Edit a lead with pre-populated form and quick status change
+  ([#72](https://github.com/UnsophisticatedBadger/OurCRM/pull/72),
+  [`da1c8f8`](https://github.com/UnsophisticatedBadger/OurCRM/commit/da1c8f803bec00dac18df80faa5e81d7f09c8557))
+
+
 ## v0.29.0 (2026-09-02)
 
 ### Features
