@@ -18,4 +18,6 @@ class Lead:
     property_type: str = field(default="")
     timeline: str = field(default="")
     notes: str = field(default="")
+    stage: str = field(default="New Lead")
+    stage_reason: str = field(default="")
     id: int | None = field(default=None)

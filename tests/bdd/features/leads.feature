@@ -187,3 +187,57 @@ Feature: Leads
     Given the user has set a lead's status to "Hot" and budget to 400000-600000
     When the application is restarted and the user opens that lead
     Then the status is "Hot" and the budget shows "$400,000 - $600,000"
+
+  @story_73
+  Scenario: User advances a lead to the next pipeline stage
+    Given the user is viewing a lead in the "New Lead" stage
+    When the user changes the stage to "Contacted" and saves
+    Then the lead details show the stage "Contacted"
+
+  @story_73
+  Scenario: User marks a lead as Lost and provides a reason
+    Given the user is viewing a lead
+    When the user changes the stage to "Lost" and enters reason "Chose another agent"
+    Then the lead details show stage "Lost" and reason "Chose another agent"
+
+  @story_73
+  Scenario: User moves a lead backward in the pipeline
+    Given the user is viewing a lead in the "Qualified" stage
+    When the user changes the stage to "Contacted" and saves
+    Then the lead details show the stage "Contacted"
+
+  @story_73
+  Scenario: Pipeline stage is visible in the lead list
+    Given a lead "Sara Lee" exists with stage "Showing Scheduled"
+    When the user views the lead list
+    Then the row for "Sara Lee" shows stage "Showing Scheduled"
+
+  @story_73
+  Scenario: Stage change persists after an application restart
+    Given the user has set a lead's stage to "Offer Made"
+    When the application is restarted and the user opens that lead
+    Then the stage still shows "Offer Made"
+
+  @story_73
+  Scenario: User marks a lead as Lost without entering a reason
+    Given the user is viewing a lead
+    When the user changes the stage to "Lost" and saves without entering a reason
+    Then the lead details show stage "Lost" with no reason shown
+
+  @story_73
+  Scenario: Reason is cleared after a lead is moved off the Lost stage
+    Given a lead is in the "Lost" stage with reason "Chose another agent"
+    When the user changes the stage to "Contacted" and saves
+    Then the lead details show the stage "Contacted" with no reason shown
+
+  @story_73
+  Scenario: A newly created lead starts in the New Lead stage
+    Given the user is creating a new lead
+    When the user saves the new lead without touching the stage selector
+    Then the lead details show the stage "New Lead"
+
+  @story_73
+  Scenario: Changing a lead's stage does not affect its status
+    Given the user is viewing a lead with status "Hot"
+    When the user changes the stage to "Qualified" and saves
+    Then the lead details show the stage "Qualified" and the status "Hot"

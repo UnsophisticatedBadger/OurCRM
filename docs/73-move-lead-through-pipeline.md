@@ -2,7 +2,7 @@
 
 **Capability:** Leads
 **Milestone:** MVP
-**Status:** Not Done
+**Status:** Done
 **GitHub Issue:** #73
 
 ## User Story
@@ -21,6 +21,8 @@ As a real estate agent, I want to move a lead through pipeline stages as our rel
 4. Selecting "Lost" shows an optional free-text field for a reason
 5. The current pipeline stage is shown as a column in the lead list
 6. Stage changes persist across application restarts
+7. A new lead defaults to the "New Lead" stage until changed
+8. Moving a lead's stage away from "Lost" clears any previously stored Lost reason
 
 ## BDD Scenarios
 
@@ -56,6 +58,30 @@ Scenario: Stage change persists after an application restart
   Given the user has set a lead's stage to "Offer Made"
   When the application is restarted and the user opens that lead
   Then the stage still shows "Offer Made"
+
+@story_73
+Scenario: User marks a lead as Lost without entering a reason
+  Given the user is viewing a lead
+  When the user changes the stage to "Lost" and saves without entering a reason
+  Then the lead details show stage "Lost" with no reason shown
+
+@story_73
+Scenario: Reason is cleared after a lead is moved off the Lost stage
+  Given a lead is in the "Lost" stage with reason "Chose another agent"
+  When the user changes the stage to "Contacted" and saves
+  Then the lead details show the stage "Contacted" with no reason shown
+
+@story_73
+Scenario: A newly created lead starts in the New Lead stage
+  Given the user is creating a new lead
+  When the user saves the new lead without touching the stage selector
+  Then the lead details show the stage "New Lead"
+
+@story_73
+Scenario: Changing a lead's stage does not affect its status
+  Given the user is viewing a lead with status "Hot"
+  When the user changes the stage to "Qualified" and saves
+  Then the lead details show the stage "Qualified" and the status "Hot"
 ```
 
 ## Manual Tests
@@ -92,6 +118,25 @@ Scenario: Stage change persists after an application restart
 2. Close the application and restart
 3. Open the lead and confirm the stage is still "Under Contract"
 
+### User marks a lead as Lost without entering a reason
+1. Change a lead's stage to "Lost"
+2. Leave the reason field blank and save
+3. Confirm the lead shows stage "Lost" with no reason displayed
+
+### Reason is cleared after a lead is moved off the Lost stage
+1. Set a lead's stage to "Lost" with a reason and save
+2. Change the stage to any other stage and save
+3. Confirm the reason no longer appears anywhere for that lead
+
+### A newly created lead starts in the New Lead stage
+1. Create a new lead without touching the stage selector
+2. Confirm the details view shows stage "New Lead"
+
+### Changing a lead's stage does not affect its status
+1. Open a lead with status "Hot"
+2. Change its stage and save
+3. Confirm the status still shows "Hot"
+
 ## Test Locations
 
 | Artifact | Path |
@@ -103,8 +148,8 @@ Scenario: Stage change persists after an application restart
 
 ## Definition of Done
 
-- [ ] BDD scenarios pass end-to-end
-- [ ] Feature reachable from the running app
-- [ ] `ruff`, `mypy --strict` clean
-- [ ] Manual tests documented and verified
-- [ ] Wiki documentation written, or marked N/A with a reason
+- [x] BDD scenarios pass end-to-end
+- [x] Feature reachable from the running app
+- [x] `ruff`, `mypy --strict` clean
+- [x] Manual tests documented and verified
+- [x] Wiki documentation written, or marked N/A with a reason

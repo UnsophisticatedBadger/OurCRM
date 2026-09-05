@@ -30,6 +30,16 @@ from ourcrm.crm.leads.repository import LeadRepositoryProtocol
 from ourcrm.crm.leads.validator import LeadValidator
 
 _STATUS_OPTIONS = ("Hot", "Warm", "Cold")
+_STAGE_OPTIONS = (
+    "New Lead",
+    "Contacted",
+    "Qualified",
+    "Showing Scheduled",
+    "Offer Made",
+    "Under Contract",
+    "Closed",
+    "Lost",
+)
 _SOURCE_OPTIONS = (
     "Referral",
     "Website",
@@ -41,8 +51,8 @@ _SOURCE_OPTIONS = (
 )
 _STATUS_PRIORITY = {"Hot": 0, "Warm": 1, "Cold": 2}
 _STATUS_COLORS = {"Hot": QColor("red"), "Warm": QColor("orange"), "Cold": QColor("blue")}
-_COLUMN_HEADERS = ["Name", "Status", "Source", "Budget Range", "Timeline"]
-_COL_NAME, _COL_STATUS, _COL_SOURCE, _COL_BUDGET, _COL_TIMELINE = range(5)
+_COLUMN_HEADERS = ["Name", "Status", "Stage", "Source", "Budget Range", "Timeline"]
+_COL_NAME, _COL_STATUS, _COL_STAGE, _COL_SOURCE, _COL_BUDGET, _COL_TIMELINE = range(6)
 
 
 def _format_budget_range(lead: Lead) -> str:
@@ -84,6 +94,9 @@ class LeadForm(QDialog):
             self._name.setText(lead.name)
             if lead.status:
                 self._status.setCurrentText(lead.status)
+            if lead.stage:
+                self._stage.setCurrentText(lead.stage)
+            self._stage_reason.setText(lead.stage_reason)
             self._email.setText(lead.email)
             self._phone.setText(lead.phone)
             if lead.source and lead.source in _SOURCE_OPTIONS:
@@ -137,6 +150,20 @@ class LeadForm(QDialog):
         form.addRow("Status", self._status)
         self._status_error_label = self._add_error_label(form, "status_error_label")
 
+        self._stage = QComboBox()
+        self._stage.setObjectName("stage_field")
+        for stage in _STAGE_OPTIONS:
+            self._stage.addItem(stage)
+        form.addRow("Stage", self._stage)
+
+        self._stage_reason_label = QLabel("Reason")
+        self._stage_reason = QLineEdit()
+        self._stage_reason.setObjectName("stage_reason_field")
+        form.addRow(self._stage_reason_label, self._stage_reason)
+        self._stage_reason_label.setVisible(False)
+        self._stage_reason.setVisible(False)
+        self._stage.currentTextChanged.connect(self._on_stage_changed)
+
         self._email = self._add_field(form, "email_field", "Email")
         self._phone = self._add_field(form, "phone_field", "Phone")
 
@@ -187,6 +214,11 @@ class LeadForm(QDialog):
         self._source_other_label.setVisible(is_other)
         self._source_other.setVisible(is_other)
 
+    def _on_stage_changed(self, text: str) -> None:
+        is_lost = text == "Lost"
+        self._stage_reason_label.setVisible(is_lost)
+        self._stage_reason.setVisible(is_lost)
+
     def _current_source(self) -> str:
         if self._source.currentText() == "Other":
             return self._source_other.text()
@@ -199,6 +231,8 @@ class LeadForm(QDialog):
             phone=self._phone.text(),
             status=self._status.currentText(),
             source=self._current_source(),
+            stage=self._stage.currentText(),
+            stage_reason=self._stage_reason.text() if self._stage.currentText() == "Lost" else "",
             budget_min=_parse_budget(self._budget_min.text()),
             budget_max=_parse_budget(self._budget_max.text()),
             desired_location=self._desired_location.text(),
@@ -228,6 +262,7 @@ class LeadForm(QDialog):
 _DETAIL_FIELDS: list[tuple[str, str, Callable[[Lead], str]]] = [
     ("name_value", "Name", lambda lead: lead.name),
     ("status_value", "Status", lambda lead: lead.status),
+    ("stage_value", "Stage", lambda lead: lead.stage),
     ("source_value", "Source", lambda lead: lead.source),
     ("budget_range_value", "Budget Range", _format_budget_range),
     ("desired_location_value", "Desired Location", lambda lead: lead.desired_location),
@@ -258,6 +293,11 @@ class LeadDetailsDialog(QDialog):
             value_label.setObjectName(object_name)
             self._value_labels[object_name] = value_label
             form.addRow(label, value_label)
+
+        self._reason_row_label = QLabel("Reason")
+        self._reason_value = QLabel()
+        self._reason_value.setObjectName("stage_reason_value")
+        form.addRow(self._reason_row_label, self._reason_value)
         layout.addLayout(form)
 
         btn_row = QHBoxLayout()
@@ -278,6 +318,10 @@ class LeadDetailsDialog(QDialog):
         self.setWindowTitle(f"Lead: {self._lead.name}")
         for object_name, _label, getter in _DETAIL_FIELDS:
             self._value_labels[object_name].setText(getter(self._lead))
+        show_reason = self._lead.stage == "Lost" and bool(self._lead.stage_reason)
+        self._reason_row_label.setVisible(show_reason)
+        self._reason_value.setVisible(show_reason)
+        self._reason_value.setText(self._lead.stage_reason)
 
     def _open_edit_form(self) -> None:
         if self._repository is None:
@@ -379,6 +423,7 @@ class LeadsPage(QWidget):
         if color is not None:
             status_item.setForeground(color)
         self._table.setItem(row, _COL_STATUS, status_item)
+        self._table.setItem(row, _COL_STAGE, QTableWidgetItem(lead.stage))
         self._table.setItem(row, _COL_SOURCE, QTableWidgetItem(lead.source))
         self._table.setItem(row, _COL_BUDGET, QTableWidgetItem(_format_budget_range(lead)))
         self._table.setItem(row, _COL_TIMELINE, QTableWidgetItem(lead.timeline))

@@ -62,3 +62,5 @@ class LeadRow(Base):
     property_type: Mapped[str] = mapped_column(String, default="")
     timeline: Mapped[str] = mapped_column(String, default="")
     notes: Mapped[str] = mapped_column(Text, default="")
+    stage: Mapped[str] = mapped_column(String, default="New Lead")
+    stage_reason: Mapped[str] = mapped_column(String, default="")

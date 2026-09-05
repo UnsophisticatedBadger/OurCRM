@@ -73,12 +73,19 @@ def _click_header(qtbot: QtBot, table: QTableWidget, column: int) -> None:
 # ── Columns and default sort ────────────────────────────────────────────────
 
 
-def test_lead_list_shows_name_status_source_budget_and_timeline_columns(
+def test_lead_list_shows_name_status_stage_source_budget_and_timeline_columns(
     lead_repository: LeadRepository, qtbot: QtBot
 ) -> None:
     page = LeadsPage(repository=lead_repository)
     qtbot.addWidget(page)
-    assert _header_texts(_table(page)) == ["Name", "Status", "Source", "Budget Range", "Timeline"]
+    assert _header_texts(_table(page)) == [
+        "Name",
+        "Status",
+        "Stage",
+        "Source",
+        "Budget Range",
+        "Timeline",
+    ]
 
 
 def test_lead_list_shows_source_budget_range_and_timeline_values(

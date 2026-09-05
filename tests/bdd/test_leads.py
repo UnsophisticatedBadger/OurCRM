@@ -1,4 +1,4 @@
-"""BDD step definitions for Leads (US-070, US-071, US-072)."""
+"""BDD step definitions for Leads (US-070, US-071, US-072, US-073)."""
 
 from __future__ import annotations
 
@@ -597,7 +597,14 @@ def name_appears_before_other(leads_ctx: dict[str, Any], name1: str, name2: str)
 @then("the lead list shows columns for name, status, source, budget range, and timeline")
 def lead_list_shows_expected_columns(leads_ctx: dict[str, Any]) -> None:
     table = _lead_table(leads_ctx["main_window"])
-    assert _header_texts(table) == ["Name", "Status", "Source", "Budget Range", "Timeline"]
+    assert _header_texts(table) == [
+        "Name",
+        "Status",
+        "Stage",
+        "Source",
+        "Budget Range",
+        "Timeline",
+    ]
 
 
 @then("the Hot status indicator is red, Warm is orange, and Cold is blue")
@@ -737,9 +744,17 @@ def _click_save(form: LeadForm, qtbot: QtBot) -> None:
 
 
 def _create_editing_context(
-    qtbot: QtBot, *, status: str = "Hot", name: str = "Sara Lee", open_edit: bool = True
+    qtbot: QtBot,
+    *,
+    status: str = "Hot",
+    name: str = "Sara Lee",
+    stage: str | None = None,
+    open_edit: bool = True,
 ) -> dict[str, Any]:
-    window = _make_window_with_leads(qtbot, Lead(name=name, status=status))
+    lead_kwargs: dict[str, Any] = {"name": name, "status": status}
+    if stage is not None:
+        lead_kwargs["stage"] = stage
+    window = _make_window_with_leads(qtbot, Lead(**lead_kwargs))
     dialog = _open_lead_details_by_name(window, qtbot, name)
     ctx: dict[str, Any] = {"main_window": window, "details_dialog": dialog}
     if open_edit:
@@ -1064,3 +1079,195 @@ def status_and_budget_after_restart(leads_ctx: dict[str, Any], status: str, form
     assert budget_label is not None
     assert status_label.text() == status
     assert budget_label.text() == formatted
+
+
+# ── #73 helpers ──────────────────────────────────────────────────────────────
+
+
+def _assert_no_reason_shown(dialog: LeadDetailsDialog) -> None:
+    label = dialog.findChild(QLabel, "stage_reason_value")
+    assert label is None or not label.isVisible() or label.text() == ""
+
+
+# ── #73 Givens ───────────────────────────────────────────────────────────────
+
+
+@given(
+    parsers.parse('the user is viewing a lead in the "{stage}" stage'),
+    target_fixture="leads_ctx",
+)
+def user_is_viewing_a_lead_in_stage(stage: str, qtbot: QtBot) -> dict[str, Any]:
+    return _create_editing_context(qtbot, stage=stage)
+
+
+@given("the user is viewing a lead", target_fixture="leads_ctx")
+def user_is_viewing_a_lead(qtbot: QtBot) -> dict[str, Any]:
+    return _create_editing_context(qtbot)
+
+
+@given(
+    parsers.parse('a lead "{name}" exists with stage "{stage}"'),
+    target_fixture="leads_ctx",
+)
+def lead_exists_with_stage(name: str, stage: str, qtbot: QtBot) -> dict[str, Any]:
+    window = _make_window_with_leads(qtbot, Lead(name=name, status="Hot", stage=stage))
+    return {"main_window": window}
+
+
+@given(
+    parsers.parse('the user has set a lead\'s stage to "{stage}"'),
+    target_fixture="leads_ctx",
+)
+def user_has_set_a_leads_stage(stage: str) -> dict[str, Any]:
+    engine = create_engine("sqlite:///:memory:")
+    DatabaseManager(engine).initialize_schema()
+    session_factory: sessionmaker[Session] = sessionmaker(bind=engine)
+    lead_repo = LeadRepository(session_factory)
+    lead_repo.create(Lead(name="Sara Lee", status="Hot", stage=stage))
+    return {"engine": engine}
+
+
+@given(
+    parsers.parse('a lead is in the "{stage}" stage with reason "{reason}"'),
+    target_fixture="leads_ctx",
+)
+def lead_is_in_stage_with_reason(stage: str, reason: str, qtbot: QtBot) -> dict[str, Any]:
+    window = _make_window_with_leads(
+        qtbot, Lead(name="Sara Lee", status="Hot", stage=stage, stage_reason=reason)
+    )
+    dialog = _open_lead_details_by_name(window, qtbot, "Sara Lee")
+    form = _click_edit_button(dialog, qtbot)
+    return {"main_window": window, "details_dialog": dialog, "lead_form": form}
+
+
+@given("the user is creating a new lead", target_fixture="leads_ctx")
+def user_is_creating_a_new_lead(qtbot: QtBot) -> dict[str, Any]:
+    lead_repo, contact_repo, linker = _make_repositories()
+    window = _make_window(lead_repo, contact_repo, linker)
+    qtbot.addWidget(window)
+    window.show()
+    window.navigate_to(Section.LEADS)
+    form = _open_new_lead_form(window, qtbot)
+    return {"main_window": window, "lead_form": form}
+
+
+# ── #73 Whens ────────────────────────────────────────────────────────────────
+
+
+@when(parsers.parse('the user changes the stage to "{stage}" and saves'))
+def changes_stage_and_saves(leads_ctx: dict[str, Any], stage: str, qtbot: QtBot) -> None:
+    form = leads_ctx.get("lead_form")
+    if form is None or not form.isVisible():
+        form = _click_edit_button(leads_ctx["details_dialog"], qtbot)
+        leads_ctx["lead_form"] = form
+    stage_combo = form.findChild(QComboBox, "stage_field")
+    assert stage_combo is not None, "stage_field not found"
+    stage_combo.setCurrentText(stage)
+    _click_save(form, qtbot)
+
+
+@when(parsers.parse('the user changes the stage to "{stage}" and enters reason "{reason}"'))
+def changes_stage_and_enters_reason(
+    leads_ctx: dict[str, Any], stage: str, reason: str, qtbot: QtBot
+) -> None:
+    form = leads_ctx["lead_form"]
+    stage_combo = form.findChild(QComboBox, "stage_field")
+    assert stage_combo is not None, "stage_field not found"
+    stage_combo.setCurrentText(stage)
+    reason_field = form.findChild(QLineEdit, "stage_reason_field")
+    assert reason_field is not None, "stage_reason_field not found"
+    qtbot.keyClicks(reason_field, reason)  # type: ignore[no-untyped-call]
+    _click_save(form, qtbot)
+
+
+@when(parsers.parse('the user changes the stage to "{stage}" and saves without entering a reason'))
+def changes_stage_and_saves_without_reason(
+    leads_ctx: dict[str, Any], stage: str, qtbot: QtBot
+) -> None:
+    form = leads_ctx["lead_form"]
+    stage_combo = form.findChild(QComboBox, "stage_field")
+    assert stage_combo is not None, "stage_field not found"
+    stage_combo.setCurrentText(stage)
+    _click_save(form, qtbot)
+
+
+@when("the user saves the new lead without touching the stage selector")
+def saves_new_lead_without_touching_stage(leads_ctx: dict[str, Any], qtbot: QtBot) -> None:
+    form = leads_ctx["lead_form"]
+    name_field = form.findChild(QLineEdit, "name_field")
+    assert name_field is not None, "name_field not found"
+    qtbot.keyClicks(name_field, "Sara Lee")  # type: ignore[no-untyped-call]
+    status_combo = form.findChild(QComboBox, "status_field")
+    assert status_combo is not None, "status_field not found"
+    status_combo.setCurrentText("Hot")
+    _click_save(form, qtbot)
+    window = leads_ctx["main_window"]
+    dialog = _open_lead_details_by_name(window, qtbot, "Sara Lee")
+    leads_ctx["details_dialog"] = dialog
+
+
+# ── #73 Thens ────────────────────────────────────────────────────────────────
+
+
+@then(parsers.parse('the lead details show the stage "{stage}"'))
+def lead_details_show_stage(leads_ctx: dict[str, Any], stage: str) -> None:
+    label = leads_ctx["details_dialog"].findChild(QLabel, "stage_value")
+    assert label is not None, "stage_value not found"
+    assert label.text() == stage
+
+
+@then(parsers.parse('the lead details show stage "{stage}" and reason "{reason}"'))
+def lead_details_show_stage_and_reason(leads_ctx: dict[str, Any], stage: str, reason: str) -> None:
+    dialog = leads_ctx["details_dialog"]
+    stage_label = dialog.findChild(QLabel, "stage_value")
+    reason_label = dialog.findChild(QLabel, "stage_reason_value")
+    assert stage_label is not None, "stage_value not found"
+    assert reason_label is not None, "stage_reason_value not found"
+    assert stage_label.text() == stage
+    assert reason_label.text() == reason
+
+
+@then(parsers.parse('the row for "{name}" shows stage "{stage}"'))
+def row_for_lead_shows_stage(leads_ctx: dict[str, Any], name: str, stage: str) -> None:
+    table = _lead_table(leads_ctx["main_window"])
+    headers = _header_texts(table)
+    name_col = headers.index("Name")
+    stage_col = headers.index("Stage")
+    row = next(r for r in range(table.rowCount()) if _cell_text(table, r, name_col) == name)
+    assert _cell_text(table, row, stage_col) == stage
+
+
+@then(parsers.parse('the stage still shows "{stage}"'))
+def stage_still_shows(leads_ctx: dict[str, Any], stage: str) -> None:
+    label = leads_ctx["details_dialog"].findChild(QLabel, "stage_value")
+    assert label is not None, "stage_value not found"
+    assert label.text() == stage
+
+
+@then(parsers.parse('the lead details show stage "{stage}" with no reason shown'))
+def lead_details_show_stage_with_no_reason_shown_a(leads_ctx: dict[str, Any], stage: str) -> None:
+    dialog = leads_ctx["details_dialog"]
+    stage_label = dialog.findChild(QLabel, "stage_value")
+    assert stage_label is not None, "stage_value not found"
+    assert stage_label.text() == stage
+    _assert_no_reason_shown(dialog)
+
+
+@then(parsers.parse('the lead details show the stage "{stage}" with no reason shown'))
+def lead_details_show_stage_with_no_reason_shown_b(leads_ctx: dict[str, Any], stage: str) -> None:
+    dialog = leads_ctx["details_dialog"]
+    stage_label = dialog.findChild(QLabel, "stage_value")
+    assert stage_label is not None, "stage_value not found"
+    assert stage_label.text() == stage
+    _assert_no_reason_shown(dialog)
+
+
+@then(parsers.parse('the lead details show the stage "{stage}" and the status "{status}"'))
+def lead_details_show_stage_and_status(leads_ctx: dict[str, Any], stage: str, status: str) -> None:
+    dialog = leads_ctx["details_dialog"]
+    stage_label = dialog.findChild(QLabel, "stage_value")
+    status_label = dialog.findChild(QLabel, "status_value")
+    assert stage_label is not None, "stage_value not found"
+    assert status_label is not None, "status_value not found"
+    assert stage_label.text() == stage
+    assert status_label.text() == status

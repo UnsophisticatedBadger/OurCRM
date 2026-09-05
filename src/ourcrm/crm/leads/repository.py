@@ -30,6 +30,8 @@ def _to_domain(row: LeadRow) -> Lead:
         property_type=row.property_type,
         timeline=row.timeline,
         notes=row.notes,
+        stage=row.stage,
+        stage_reason=row.stage_reason,
         id=row.id,
     )
 
@@ -46,6 +48,8 @@ def _apply_to_row(row: LeadRow, lead: Lead) -> None:
     row.property_type = lead.property_type
     row.timeline = lead.timeline
     row.notes = lead.notes
+    row.stage = lead.stage
+    row.stage_reason = lead.stage_reason
 
 
 class LeadRepository:
