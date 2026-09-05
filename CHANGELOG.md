@@ -2,6 +2,15 @@
 
 <!-- version list -->
 
+## v0.31.0 (2026-09-05)
+
+### Features
+
+- Move lead through pipeline stages with reason tracking
+  ([#73](https://github.com/UnsophisticatedBadger/OurCRM/pull/73),
+  [`5ec4fcf`](https://github.com/UnsophisticatedBadger/OurCRM/commit/5ec4fcf9ca578f760c19f55426139d29ec5776cc))
+
+
 ## v0.30.0 (2026-09-03)
 
 ### Features
